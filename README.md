@@ -28,7 +28,7 @@ Dependencies auto-install: installing `reviewing-claude-skills` also installs
 | --- | --- | --- |
 | [committing-conventionally](plugins/committing-conventionally/README.md) | git | Authors Conventional-Commits commits and enforces them with a `PreToolUse` deny-hook. Reads the host project's commit vocabulary from `.brokenrobot-xyz/commits.json`; falls back to vanilla Conventional Commits defaults. |
 | [writing-simplified-technical-english](plugins/writing-simplified-technical-english/README.md) | writing | Revises agent-facing prose — skills, agent definitions, specs, technical docs — so an agent cannot read a sentence two ways. Twelve conventions adapted from ASD-STE100 Simplified Technical English. |
-| [reviewing-claude-skills](plugins/reviewing-claude-skills/SKILL.md) | skill-authoring | Reviews a Claude Code skill against skill-authoring and prompting best practices, producing a severity-ranked gap analysis with optional fixes. Depends on `writing-simplified-technical-english`. |
+| [reviewing-claude-skills](plugins/reviewing-claude-skills/README.md) | skill-authoring | Reviews a Claude Code skill against skill-authoring and prompting best practices, producing a severity-ranked gap analysis with optional fixes. Depends on `writing-simplified-technical-english`. |
 
 ## Category vocabulary
 
