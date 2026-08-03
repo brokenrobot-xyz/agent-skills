@@ -60,15 +60,19 @@ consumer repo's `.brokenrobot-xyz/` folder — never inside a bundle.
 
 ## Development
 
-Validate everything and run the tests:
+Node 26 (see `.node-version`) and the Claude Code CLI. Validate everything
+and run the checks:
 
 ```sh
+npm ci
+npm run format:check
 claude plugin validate --strict .
 for p in plugins/*/; do claude plugin validate --strict "$p"; done
-node plugins/committing-conventionally/tests/commit-message-cases.mjs
+npm test
 ```
 
-CI runs the same checks on every push and pull request.
+The Pipeline workflow runs the same checks on every push and pull request
+to `main`.
 
 ## License
 
