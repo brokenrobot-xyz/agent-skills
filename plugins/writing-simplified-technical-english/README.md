@@ -2,10 +2,11 @@
 
 Revises agent-facing prose — SKILL.md bodies, agent definitions, specs,
 plans, and technical docs — so that an agent cannot read a sentence two ways.
-It applies twelve conventions adapted from ASD-STE100 Simplified Technical
-English, Issue 9: the rules that remove ambiguity, without the standard's
-controlled dictionary or sentence-length caps. An adaptation, not a
-conforming implementation.
+It applies twelve conventions adapted from
+[ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/),
+Issue 9: the rules that remove ambiguity, without the standard's controlled
+dictionary or sentence-length caps. An adaptation, not a conforming
+implementation.
 
 This README documents what the skill does and how to steer it. The working
 rules live in [SKILL.md](SKILL.md) and
@@ -80,3 +81,8 @@ violating-line/rewrite pair per convention in
 Deliberately absent: any sentence-length or word-count rule. Long sentences
 are usually guardrails binding a condition to an action, and splitting one
 creates exactly the ambiguity the conventions exist to remove.
+
+The standard itself is published free of charge at
+[asd-ste100.org](https://www.asd-ste100.org/); ASD retains copyright in it,
+these conventions are written in original wording as house rules, and ASD
+does not endorse them.
