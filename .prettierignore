@@ -1,0 +1,2 @@
+# npm owns the lockfile's formatting; npm regenerates it 2-space on every install.
+package-lock.json
