@@ -127,10 +127,10 @@ now follows a rule that has lost its limit.
 Report every change as a row in one table with four columns: the file, the line number, the
 convention, and a one-line reason.
 
-| File                  | Line | Convention                | Reason                                            |
-| --------------------- | ---- | ------------------------- | ------------------------------------------------- |
-| `SKILL.md`            | 42   | 1 — name the actor        | Names the commit hook as the actor the passive hid. |
-| `references/guide.md` | 17   | 9 — one term per concept  | Replaces "preflight" with "gate" at every occurrence. |
+| File                  | Line | Convention               | Reason                                                |
+| --------------------- | ---- | ------------------------ | ----------------------------------------------------- |
+| `SKILL.md`            | 42   | 1 — name the actor       | Names the commit hook as the actor the passive hid.   |
+| `references/guide.md` | 17   | 9 — one term per concept | Replaces "preflight" with "gate" at every occurrence. |
 
 Report every unresolved line in a second table with the same four columns, and give the readings
 you weighed in place of the reason, because a line you could not settle is work the author still

@@ -27,28 +27,35 @@ writeFileSync(join(tmp, 'trailer.txt'), 'docs: add a setup guide\n\nBody line.\n
 // defaults), a config that only flips attributionTrailers, and a config the hook cannot parse.
 for (const root of ['full', 'defaults', 'allowed', 'broken']) mkdirSync(join(tmp, root), { recursive: true });
 for (const root of ['full', 'allowed', 'broken']) mkdirSync(join(tmp, root, '.brokenrobot-xyz'));
-writeFileSync(join(tmp, 'full', '.brokenrobot-xyz', 'commits.json'), JSON.stringify({
-  types: {
-    feat: 'a new feature',
-    fix: 'a bug fix',
-    post: 'publishing an article (custom type)',
-    docs: 'documentation only',
-    style: 'formatting with no behaviour change',
-    refactor: 'neither a fix nor a feature',
-    perf: 'a performance improvement',
-    test: 'adding or adjusting tests',
-    build: 'build system or dependency changes',
-    ci: 'CI/CD pipeline changes',
-    chore: 'maintenance that fits none of the above',
-  },
-  scopes: {
-    blog: 'the article pages',
-    rss: 'the feed',
-    layout: 'site-wide layout',
-    deps: 'dependency updates',
-  },
-  attributionTrailers: 'forbidden',
-}, null, 2));
+writeFileSync(
+    join(tmp, 'full', '.brokenrobot-xyz', 'commits.json'),
+    JSON.stringify(
+        {
+            types: {
+                feat: 'a new feature',
+                fix: 'a bug fix',
+                post: 'publishing an article (custom type)',
+                docs: 'documentation only',
+                style: 'formatting with no behaviour change',
+                refactor: 'neither a fix nor a feature',
+                perf: 'a performance improvement',
+                test: 'adding or adjusting tests',
+                build: 'build system or dependency changes',
+                ci: 'CI/CD pipeline changes',
+                chore: 'maintenance that fits none of the above'
+            },
+            scopes: {
+                blog: 'the article pages',
+                rss: 'the feed',
+                layout: 'site-wide layout',
+                deps: 'dependency updates'
+            },
+            attributionTrailers: 'forbidden'
+        },
+        null,
+        2
+    )
+);
 writeFileSync(join(tmp, 'allowed', '.brokenrobot-xyz', 'commits.json'), '{"attributionTrailers": "allowed"}\n');
 writeFileSync(join(tmp, 'broken', '.brokenrobot-xyz', 'commits.json'), 'not json\n');
 
@@ -57,19 +64,19 @@ let fail = 0;
 let PROJ = join(tmp, 'full');
 
 function run(expect, label, cmd) {
-  const res = spawnSync(process.execPath, [HOOK], {
-    input: JSON.stringify({ tool_input: { command: cmd } }),
-    env: { ...process.env, CLAUDE_PROJECT_DIR: PROJ },
-    encoding: 'utf8',
-  });
-  const decision = /"permissionDecision": *"deny"/.test(res.stdout ?? '') ? 'deny' : 'allow';
-  if (decision === expect) {
-    pass += 1;
-    console.log(`ok   [${expect.padEnd(5)}] ${label}`);
-  } else {
-    fail += 1;
-    console.log(`FAIL exp=${expect.padEnd(5)} got=${decision.padEnd(5)} :: ${label}\n     cmd: ${cmd}`);
-  }
+    const res = spawnSync(process.execPath, [HOOK], {
+        input: JSON.stringify({ tool_input: { command: cmd } }),
+        env: { ...process.env, CLAUDE_PROJECT_DIR: PROJ },
+        encoding: 'utf8'
+    });
+    const decision = /"permissionDecision": *"deny"/.test(res.stdout ?? '') ? 'deny' : 'allow';
+    if (decision === expect) {
+        pass += 1;
+        console.log(`ok   [${expect.padEnd(5)}] ${label}`);
+    } else {
+        fail += 1;
+        console.log(`FAIL exp=${expect.padEnd(5)} got=${decision.padEnd(5)} :: ${label}\n     cmd: ${cmd}`);
+    }
 }
 
 const hdGood = `git commit -m "$(cat <<'EOF'

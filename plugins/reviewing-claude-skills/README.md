@@ -33,11 +33,11 @@ A run starts with a short brief and three scoping questions (each with a
 default, so "use the defaults" works):
 
 1. **Deliverable** — gap analysis only, or also apply approved fixes
-   *(default: analysis only)*.
+   _(default: analysis only)_.
 2. **Focus** — all criteria groups equal, or weight some
-   *(default: all equal)*.
+   _(default: all equal)_.
 3. **Change appetite** — surgical tweaks only, or open to restructuring
-   *(default: surgical)*.
+   _(default: surgical)_.
 
 ## What the review checks
 

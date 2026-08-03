@@ -21,24 +21,24 @@ this file and notes the staleness in the report.
 
 ## Sources
 
-| Key | Doc | URL |
-|---|---|---|
-| A | **Agent Skills specification** (the open standard) | https://agentskills.io/specification |
-| A | Agent & skill best practices | https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
-| B | Prompting Claude Sonnet 5 | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5 |
-| B | Prompting Claude Opus 5 | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5 |
-| B | Prompting Claude Opus 4.8 | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8 |
-| B | Prompting Claude Fable 5 (covers Mythos 5 too) | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5 |
-| C | Claude prompting best practices | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices |
-| D | Reduce hallucinations | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations |
-| E | Increase output consistency | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency |
-| F | Mitigate jailbreaks | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks |
-| G | Reduce prompt leak | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-prompt-leak |
-| H | Define success criteria & build evaluations | https://platform.claude.com/docs/en/test-and-evaluate/develop-tests |
-| H | **Evaluating skill output quality** (the open standard) | https://agentskills.io/skill-creation/evaluating-skills |
+| Key | Doc                                                     | URL                                                                                                      |
+| --- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| A   | **Agent Skills specification** (the open standard)      | https://agentskills.io/specification                                                                     |
+| A   | Agent & skill best practices                            | https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices                         |
+| B   | Prompting Claude Sonnet 5                               | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5       |
+| B   | Prompting Claude Opus 5                                 | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5         |
+| B   | Prompting Claude Opus 4.8                               | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8       |
+| B   | Prompting Claude Fable 5 (covers Mythos 5 too)          | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5        |
+| C   | Claude prompting best practices                         | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices |
+| D   | Reduce hallucinations                                   | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations        |
+| E   | Increase output consistency                             | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency         |
+| F   | Mitigate jailbreaks                                     | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks          |
+| G   | Reduce prompt leak                                      | https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-prompt-leak           |
+| H   | Define success criteria & build evaluations             | https://platform.claude.com/docs/en/test-and-evaluate/develop-tests                                      |
+| H   | **Evaluating skill output quality** (the open standard) | https://agentskills.io/skill-creation/evaluating-skills                                                  |
 
 **Precedence — the open standard is the base.** The Agent Skills specification defines what a
-valid skill *is*; a conflict with it is a finding. Anthropic's and Claude Code's docs *extend* the
+valid skill _is_; a conflict with it is a finding. Anthropic's and Claude Code's docs _extend_ the
 standard with platform guidance and extra frontmatter. Those extensions are permitted and often
 useful, but they never override the spec, and a skill that leans on one is not portable to other
 agents. Where a client **relaxes** a spec requirement, the spec's stricter form holds — Claude Code
@@ -56,13 +56,13 @@ inline, so a re-sync checks the page the item actually came from.
 - **A1 — name.** Required. 1–64 characters, lowercase letters, digits, and hyphens only; must not
   start or end with a hyphen, must not contain consecutive hyphens (`--`), and **must match the
   parent directory name** — a mismatch means other agents resolve the skill under a different name
-  than it declares. No XML. Gerund preferred; noun phrase acceptable. *Platform note:* Anthropic
+  than it declares. No XML. Gerund preferred; noun phrase acceptable. _Platform note:_ Anthropic
   reserves `anthropic` and `claude` in names, which the open standard does not — report that as a
   Claude Code constraint, not a spec violation.
 - **A2 — description POV.** Third person ("Reviews…", not "Review…" or "I/you"). It is injected
   into the system prompt; mixed POV hurts discovery.
-- **A3 — description content.** Required and non-empty. States both *what* the skill does and
-  *when* to use it, with concrete trigger terms. 1–1024 chars. Not vague ("helps with X").
+- **A3 — description content.** Required and non-empty. States both _what_ the skill does and
+  _when_ to use it, with concrete trigger terms. 1–1024 chars. Not vague ("helps with X").
 - **A4 — length.** SKILL.md body under ~500 lines **and** under ~5000 tokens; overflow pushed to
   reference files. The two bounds are independent — dense prose can clear the line count and still
   blow the token budget, which is what actually competes with conversation context.
@@ -133,20 +133,20 @@ exactly one model is fragile. (`SKILL.md` Step 5 carries the rule for reporting 
   effort parameter already do.
 - **B3 — tool nudges.** If the skill relies on tool use with thinking off, it nudges explicitly.
 - **B4 — coverage before filtering.** A skill that finds, reviews, or audits must not cap the
-  *finding* stage with "only report high-severity", "be conservative", or "don't nitpick". Current
+  _finding_ stage with "only report high-severity", "be conservative", or "don't nitpick". Current
   models follow such a bar literally — they investigate just as deeply, then drop findings below
   it, so measured recall falls while the underlying ability is unchanged. Ask for coverage at the
   finding stage and filter in a separate step. (Stated for Sonnet 5, Opus 5, and Opus 4.8.)
 - **B5 — progress-update scaffolding.** Current models narrate agentic work well unprompted.
   Scaffolding that forces interim status ("after every 3 tool calls, summarize progress") should be
   removed; describe the cadence and shape wanted instead, with positive examples. **Carve-out:** a
-  workflow checklist the skill tells the model to copy into its reply and tick off is *not* a `B5`
+  workflow checklist the skill tells the model to copy into its reply and tick off is _not_ a `B5`
   finding — the `A` authoring doc endorses that pattern by name for complex multi-step workflows.
   `B5` governs narration cadence, not task tracking.
 
 **Sonnet 5:** literal instruction following (state scope — see `C8`); verbosity self-calibrates;
 more agentic than its predecessor and reaches for tools and self-verification loops readily — with
-thinking disabled it is *less* likely to reach for tools, so `B3` applies then.
+thinking disabled it is _less_ likely to reach for tools, so `B3` applies then.
 
 **Opus 5:** self-verifies and self-corrects unprompted — explicit "verify/double-check" steps
 cause over-verification, so a skill should only script verification that the model wouldn't do
@@ -168,7 +168,7 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
 
 > **The verification rule inverts between Opus 5 and Fable 5.**
 > On Opus 5, scripted "verify your work" steps cause over-verification and should be removed. On
-> Fable 5 long runs, the opposite holds: self-verification should be made *explicit*, and separate
+> Fable 5 long runs, the opposite holds: self-verification should be made _explicit_, and separate
 > fresh-context verifier subagents outperform self-critique. A skill pinned to one model can carry
 > guidance that is wrong for the other.
 
@@ -182,7 +182,7 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
 - **C6 — chaining.** Genuinely complex tasks are split into sequential sub-steps rather than one
   mega-instruction.
 - **C7 — no reasoning-echo.** The skill never instructs the model to transcribe, echo, or explain
-  its internal reasoning *as response text*. Beyond being noise, this trips the
+  its internal reasoning _as response text_. Beyond being noise, this trips the
   `reasoning_extraction` refusal on Fable 5 (and elevated fallbacks). If reasoning visibility is
   needed, read structured `thinking` blocks — do not ask the model to narrate them into output.
   (Sourced from the Fable 5 doc in group `B`, not from this group's doc.)
@@ -204,7 +204,7 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
 ## D. Reduce hallucinations
 
 - **D1 — permit "I don't know".** The skill tells the model to omit/abstain/ask rather than
-  fabricate when evidence is missing (e.g. a commit body's *why*, an inferred value).
+  fabricate when evidence is missing (e.g. a commit body's _why_, an inferred value).
 - **D2 — ground in evidence.** Claims/outputs are tied to observable inputs (diffs, files,
   provided docs), not the model's priors, for factual tasks.
 - **D3 — verification.** A verify/feedback step checks the output against a source or validator.
@@ -245,7 +245,7 @@ indirect model.
 - **F4 — untrusted content is labeled and isolated.** Third-party content reaches the model in
   `tool_result` blocks — never in a system prompt or a plain user turn — and its nature and source
   are named ("body of an inbound email from an unknown sender"). JSON-encoding it removes any
-  delimiter an attacker could break out of. Corollary: the skill's *own* instructions must not sit
+  delimiter an attacker could break out of. Corollary: the skill's _own_ instructions must not sit
   in tool results, where the model is trained to distrust them.
 - **F5 — screen and red-team.** For a skill that acts on tool output, the checks are whether
   suspicious output is screened before it is acted on, and whether the skill's evals include a
@@ -282,7 +282,7 @@ indirect model.
   the gaps by running the task without a skill, write three scenarios against those gaps, measure
   the baseline, then write the minimum instructions that pass. A skill whose evals were clearly
   written after the fact is at risk of documenting imagined problems rather than real ones. The
-  order *within* a scenario is the reverse of what that implies: `prompt` and `expected_output`
+  order _within_ a scenario is the reverse of what that implies: `prompt` and `expected_output`
   come first, and `assertions` are added **after** the first run shows what the output actually
   looks like. Assertions invented before any run tend to be brittle or unverifiable, so do not
   fault a scenario set for reaching its assertions on the second pass.
@@ -297,7 +297,7 @@ indirect model.
   separate session — with no state left over from a previous run or from developing the skill. A
   run that inherits the authoring conversation is testing the conversation, not the `SKILL.md`.
 - **H12 — cost recorded against benefit.** Runs capture token count and duration alongside the
-  pass rate, and the skill's value is read as the *delta* against the baseline. Without the cost
+  pass rate, and the skill's value is read as the _delta_ against the baseline. Without the cost
   side, a skill that triples token usage for a two-point gain looks identical to one that is both
   better and cheaper.
 - **H13 — assertion hygiene.** Assertions that pass in both the with-skill and without-skill runs
@@ -321,7 +321,7 @@ narrow any other item in this group; when one does, cite the project's document 
 
 - **R1 — simplicity first.** No speculative features/abstractions/config beyond what the skill's
   job requires.
-- **R2 — surgical.** The skill's own *apply* edits touch only what a finding requires.
+- **R2 — surgical.** The skill's own _apply_ edits touch only what a finding requires.
 - **R3 — single source of truth / no drift.** The skill references its authoritative sources
   rather than restating their rules; any restated rule is sourced and kept in sync. Unsourced
   restated rules are a drift finding.
@@ -334,7 +334,7 @@ narrow any other item in this group; when one does, cite the project's document 
   one exists — a project rule that narrows `A1`'s "gerund preferred" to mandatory is the common
   case. Skills the project's tooling vendors under generated names are exempt when the project
   says so. `N/A` when the project defines no naming convention.
-- **R7 — prose conventions.** Skill *body* prose (`SKILL.md` body, the prose fields of
+- **R7 — prose conventions.** Skill _body_ prose (`SKILL.md` body, the prose fields of
   `evals/evals.json` or a legacy `evals.md`, `references/`) follows the twelve conventions the
   `writing-simplified-technical-english` skill carries. Invoke that skill in check mode to grade all twelve;
   when it is not installed, judge holistically against `R8`–`R11` below and report that the other

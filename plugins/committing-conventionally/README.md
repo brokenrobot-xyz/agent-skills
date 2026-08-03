@@ -39,22 +39,22 @@ non-conforming commit message anywhere you work, not just when the skill runs.
 ## Configuration
 
 Create `.brokenrobot-xyz/commits.json` at the root of the repository where the
-commits happen (the *consumer* repo — not this marketplace). Without the file,
+commits happen (the _consumer_ repo — not this marketplace). Without the file,
 the plugin behaves as vanilla Conventional Commits:
 
-| Key | Default |
-| --- | --- |
-| `types` | `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` |
-| `scopes` | No allowlist — any short lowercase token (letters, digits, hyphens), or no scope at all |
-| `attributionTrailers` | `"forbidden"` |
+| Key                   | Default                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| `types`               | `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`      |
+| `scopes`              | No allowlist — any short lowercase token (letters, digits, hyphens), or no scope at all |
+| `attributionTrailers` | `"forbidden"`                                                                           |
 
 The full schema:
 
 ```json
 {
-  "types":  { "<type>": "what the type is for", "…": "…" },
-  "scopes": { "<scope>": "the area of the codebase it covers", "…": "…" },
-  "attributionTrailers": "forbidden"
+    "types": { "<type>": "what the type is for", "…": "…" },
+    "scopes": { "<scope>": "the area of the codebase it covers", "…": "…" },
+    "attributionTrailers": "forbidden"
 }
 ```
 
@@ -64,7 +64,7 @@ keys.
 
 > [!IMPORTANT]
 > Resolution is **per-key replacement, not merge**. A key present in the file
-> is the *complete* set for that key. If you add
+> is the _complete_ set for that key. If you add
 > `"types": { "post": "a new article" }`, then `post` is the **only** allowed
 > type — `feat`, `fix`, and the rest are gone until you list them too. An
 > absent key (or an absent file) falls back to the default.
@@ -87,17 +87,17 @@ want must be restated):
 
 ```json
 {
-  "types": {
-    "feat": "a new capability of the site",
-    "fix": "a bug fix",
-    "post": "a new article or an edit to one",
-    "chore": "maintenance with no user-visible effect"
-  },
-  "scopes": {
-    "rss": "the feed",
-    "layout": "templates and components",
-    "styles": "global styling"
-  }
+    "types": {
+        "feat": "a new capability of the site",
+        "fix": "a bug fix",
+        "post": "a new article or an edit to one",
+        "chore": "maintenance with no user-visible effect"
+    },
+    "scopes": {
+        "rss": "the feed",
+        "layout": "templates and components",
+        "styles": "global styling"
+    }
 }
 ```
 
@@ -137,7 +137,7 @@ When you ask Claude to commit, the skill stages explicit paths for **one
 logical change per invocation**, picks the type and scope from the resolved
 vocabulary, omits the scope rather than inventing one when no allowlisted
 area fits, and adds a body only when the subject alone cannot carry the
-*why*. See [SKILL.md](SKILL.md) for the full recipe.
+_why_. See [SKILL.md](SKILL.md) for the full recipe.
 
 ## Development
 

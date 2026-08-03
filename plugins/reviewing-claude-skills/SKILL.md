@@ -109,11 +109,11 @@ Then ask the three scoping questions below (skip any the user has already answer
 sensible defaults so they can just say "use the defaults"):
 
 1. **Deliverable** — just the gap analysis, or also apply the fixes you approve afterward?
-   *(default: analysis only)*
+   _(default: analysis only)_
 2. **Focus** — weight all groups equally, or care most about some (e.g. discovery, evals,
-   security)? *(default: all equal)*
-3. **Change appetite** — surgical tweaks only, or open to bigger restructuring? *(default:
-   surgical)*
+   security)? _(default: all equal)_
+3. **Change appetite** — surgical tweaks only, or open to bigger restructuring? _(default:
+   surgical)_
 
 Do not assume — a wrong scope wastes the review. Group `B` (model-specific) is conditional: apply
 only the subset matching the target skill's model, read from its `model:` frontmatter (treat a
@@ -122,7 +122,7 @@ durable alias or absent pin as the current model in that family).
 ### 4. Score + verify against the criteria
 
 Work in two passes — **coverage, then filter**. First walk every criterion group and collect
-*all* candidate findings, each tagged with a confidence (high/low). Do not drop a candidate at
+_all_ candidate findings, each tagged with a confidence (high/low). Do not drop a candidate at
 this stage just because it's minor or you're unsure — a current model, told to "only report what
 matters," will faithfully investigate and then silently discard borderline findings, so filtering
 during discovery loses real issues. Only after the sweep, filter: drop non-issues and clearly

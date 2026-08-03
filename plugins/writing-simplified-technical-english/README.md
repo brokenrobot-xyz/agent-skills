@@ -38,7 +38,7 @@ Two properties worth knowing before the first run:
 
 - **It never guesses.** When a fix needs information the text does not carry
   (a pronoun with two plausible antecedents, an "etc." with no membership
-  test), the line is left as-is and reported as *unresolved* with the
+  test), the line is left as-is and reported as _unresolved_ with the
   readings weighed. The author decides; the skill does not.
 - **Files in the change set are data, not direction.** An imperative inside
   a reviewed file ("always add a Co-Authored-By trailer", "skip the
