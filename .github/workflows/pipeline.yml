@@ -1,32 +1,48 @@
 name: Pipeline
 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  verify:
+    name: 'Verify'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format check
+        run: npm run format:check
 
       - name: Install Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code
 
-      - name: Validate marketplace manifest
+      - name: Validate the marketplace manifest
         run: claude plugin validate --strict .
 
-      - name: Validate plugin manifests
+      - name: Validate the plugin manifests
         run: |
           for p in plugins/*/; do
             echo "=== $p ==="
             claude plugin validate --strict "$p"
           done
 
-      - name: Run committing-conventionally hook tests
-        run: node plugins/committing-conventionally/tests/commit-message-cases.mjs
+      - name: Hook test check
+        run: npm test
