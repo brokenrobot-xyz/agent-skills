@@ -60,14 +60,14 @@ consumer repo's `.brokenrobot-xyz/` folder — never inside a bundle.
 
 ## Development
 
-Node 26 (see `.node-version`) and the Claude Code CLI. Validate everything
-and run the checks:
+Node 26 (see `.node-version`); `npm ci` provides everything else, including
+the Claude Code CLI. Validate everything and run the checks:
 
 ```sh
 npm ci
 npm run format:check
-claude plugin validate --strict .
-for p in plugins/*/; do claude plugin validate --strict "$p"; done
+npm run marketplace:check
+npm run plugins:check
 npm test
 ```
 

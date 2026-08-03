@@ -15,9 +15,12 @@
     "scripts": {
         "format:check": "prettier '**/*.{js,mjs,cjs,json,md,yml}' --check",
         "format:fix": "prettier '**/*.{js,mjs,cjs,json,md,yml}' --write",
+        "marketplace:check": "claude plugin validate --strict .",
+        "plugins:check": "for p in plugins/*/; do claude plugin validate --strict \"$p\" || exit 1; done",
         "test": "node plugins/committing-conventionally/tests/commit-message-cases.mjs"
     },
     "devDependencies": {
+        "@anthropic-ai/claude-code": "2.1.220",
         "prettier": "3.9.6"
     }
 }

@@ -31,18 +31,11 @@ jobs:
       - name: Format check
         run: npm run format:check
 
-      - name: Install Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code
+      - name: Marketplace manifest check
+        run: npm run marketplace:check
 
-      - name: Validate the marketplace manifest
-        run: claude plugin validate --strict .
-
-      - name: Validate the plugin manifests
-        run: |
-          for p in plugins/*/; do
-            echo "=== $p ==="
-            claude plugin validate --strict "$p"
-          done
+      - name: Plugin manifests check
+        run: npm run plugins:check
 
       - name: Hook test check
         run: npm test
