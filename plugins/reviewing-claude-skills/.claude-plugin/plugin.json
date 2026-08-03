@@ -7,6 +7,15 @@
     "url": "https://www.brokenrobot.xyz"
   },
   "license": "MIT",
-  "keywords": ["skills", "review", "audit", "skill-authoring", "quality"],
-  "dependencies": ["writing-simplified-technical-english"]
+  "keywords": [
+    "skills",
+    "review",
+    "audit",
+    "skill-authoring",
+    "quality"
+  ],
+  "dependencies": [
+    "writing-simplified-technical-english"
+  ],
+  "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/reviewing-claude-skills"
 }

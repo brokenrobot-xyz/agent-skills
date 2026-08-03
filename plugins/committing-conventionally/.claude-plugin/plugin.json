@@ -7,5 +7,11 @@
     "url": "https://www.brokenrobot.xyz"
   },
   "license": "MIT",
-  "keywords": ["git", "commit", "conventional-commits", "hooks"]
+  "keywords": [
+    "git",
+    "commit",
+    "conventional-commits",
+    "hooks"
+  ],
+  "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/committing-conventionally"
 }

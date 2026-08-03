@@ -21,7 +21,7 @@
         "vocabulary"
       ],
       "license": "MIT",
-      "homepage": "https://www.brokenrobot.xyz"
+      "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/committing-conventionally"
     },
     {
       "name": "writing-simplified-technical-english",
@@ -36,7 +36,7 @@
         "simplified-technical-english"
       ],
       "license": "MIT",
-      "homepage": "https://www.brokenrobot.xyz"
+      "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/writing-simplified-technical-english"
     },
     {
       "name": "reviewing-claude-skills",
@@ -51,7 +51,7 @@
         "quality"
       ],
       "license": "MIT",
-      "homepage": "https://www.brokenrobot.xyz"
+      "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/reviewing-claude-skills"
     }
   ]
 }

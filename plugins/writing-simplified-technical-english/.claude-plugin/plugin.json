@@ -7,5 +7,12 @@
     "url": "https://www.brokenrobot.xyz"
   },
   "license": "MIT",
-  "keywords": ["writing", "simplified-technical-english", "documentation", "prompting", "clarity"]
+  "keywords": [
+    "writing",
+    "simplified-technical-english",
+    "documentation",
+    "prompting",
+    "clarity"
+  ],
+  "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/writing-simplified-technical-english"
 }
