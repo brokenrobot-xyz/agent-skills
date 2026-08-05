@@ -1,0 +1,12 @@
+{
+    "name": "prompt-quality-criteria",
+    "description": "Supplies criteria groups B–G for grading a Markdown prompt that steers Claude — model-specific prompting, general prompting, hallucination guards, output consistency, injection defenses, and prompt-leak defenses. Returns the criteria; the caller scores against them.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Tamas Mezei",
+        "url": "https://www.brokenrobot.xyz"
+    },
+    "license": "MIT",
+    "keywords": ["prompting", "criteria", "rubric", "review", "quality"],
+    "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/prompt-quality-criteria"
+}

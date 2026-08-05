@@ -17,12 +17,18 @@ on any conflict, those are canonical.
 /plugin install reviewing-claude-skills@brokenrobot-xyz
 ```
 
-This also auto-installs
-[writing-simplified-technical-english](../writing-simplified-technical-english/README.md),
-a declared dependency: the reviewer invokes it in check mode to grade the
-target skill's prose. On a host with no dependency resolution, the reviewer
-still runs — it grades the condensed prose criteria on its own and states in
-the report that the other conventions went ungraded.
+This also auto-installs two declared dependencies:
+
+- [prompt-quality-criteria](../prompt-quality-criteria/README.md) — supplies
+  criteria groups **B–G**, which this plugin's checklist does not carry. They
+  are artifact-independent prompting criteria shared with the subagent
+  reviewer, so they live in one place rather than drifting between two copies.
+- [writing-simplified-technical-english](../writing-simplified-technical-english/README.md)
+  — invoked in check mode to grade the target skill's prose.
+
+On a host with no dependency resolution the reviewer still runs, and names in
+the report which groups went ungraded — so a partial review never reads as a
+clean one.
 
 ## Usage
 
@@ -41,10 +47,20 @@ default, so "use the defaults" works):
 
 ## What the review checks
 
-Criteria come grouped; findings cite their keys (e.g. `A2`, `H10`, `R3`):
+Criteria come grouped; findings cite their keys (e.g. `A2`, `B4`, `R3`). The
+keys are unchanged by where a group lives, so reports stay comparable across
+versions:
+
+From this plugin's [checklist](references/best-practices-checklist.md):
 
 - **A** — skill authoring: Agent Skills spec conformance, naming,
   description, structure, progressive disclosure
+- **H** — success criteria and evals
+- **R** — craft and the host project's own conventions, including the prose
+  check
+
+From [prompt-quality-criteria](../prompt-quality-criteria/README.md):
+
 - **B** — model-specific prompting, matched to the target skill's pinned
   model
 - **C** — general prompting: clarity, examples, task chaining
@@ -52,9 +68,6 @@ Criteria come grouped; findings cite their keys (e.g. `A2`, `H10`, `R3`):
 - **E** — output consistency
 - **F** — injection and jailbreak defenses
 - **G** — prompt-leak defenses
-- **H** — success criteria and evals
-- **R** — craft and the host project's own conventions, including the prose
-  check
 
 The report is a verdict, a list of what the skill already does right, the
 findings ranked High → Medium → Low with concrete recommendations, and a

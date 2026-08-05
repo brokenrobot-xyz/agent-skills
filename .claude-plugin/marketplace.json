@@ -29,10 +29,20 @@
             "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/writing-simplified-technical-english"
         },
         {
+            "name": "prompt-quality-criteria",
+            "source": "./plugins/prompt-quality-criteria",
+            "description": "Supplies criteria groups B–G for grading a Markdown prompt that steers Claude — model-specific prompting, general prompting, hallucination guards, output consistency, injection defenses, and prompt-leak defenses. Returns the criteria; the caller scores against them.",
+            "version": "1.0.0",
+            "category": "skill-authoring",
+            "tags": ["prompting", "criteria", "rubric", "review", "quality"],
+            "license": "MIT",
+            "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/prompt-quality-criteria"
+        },
+        {
             "name": "reviewing-claude-skills",
             "source": "./plugins/reviewing-claude-skills",
             "description": "Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — against skill-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes.",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "category": "skill-authoring",
             "tags": ["skills", "review", "audit", "quality"],
             "license": "MIT",

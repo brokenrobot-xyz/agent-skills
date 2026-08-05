@@ -20,21 +20,25 @@
         "After grading, drop assertions that passed in BOTH configurations — the model handles them without the skill, so they inflate the with-skill pass rate without measuring anything this skill contributes (H13)."
     ],
     "universal_assertions": [
-        "Every finding carries a real key — each cited criterion key resolves to an item that exists in references/best-practices-checklist.md",
+        "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
         "Finding IDs are plain rank numbers (Finding 1, Finding 2, …) — a letter-prefixed ID (F1, N3) would collide with the criterion-key grep in the grading script",
         "Every finding carries a locator — a file plus a line or section in the reviewed bundle",
         "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 3"
     ],
-    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule.",
+    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover Step 2's invocation of prompt-quality-criteria and its degradation when that skill is absent, which is the branch where a partial review could read as a clean one.",
     "grading": {
         "machine_checkable": {
-            "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep directly against the checklist.",
+            "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep against BOTH criteria files — groups A, H, and R in this bundle's checklist, groups B–G in the prompt-quality-criteria bundle. Checking only the local checklist would fail every legitimate B–G citation.",
             "script": [
-                "# every criterion key cited in the report must exist in the checklist",
-                "# run from the reviewing-claude-skills bundle root, so the path holds wherever the skill is installed",
+                "# every criterion key cited in the report must be defined in one of the two criteria files",
+                "# run from the reviewing-claude-skills bundle root",
                 "CL=references/best-practices-checklist.md",
+                "# groups B–G live in the prompt-quality-criteria plugin; try the marketplace-repo layout, then the installed sibling layout",
+                "PC=$(ls ../prompt-quality-criteria/references/prompt-criteria.md ../../prompt-quality-criteria/references/prompt-criteria.md 2>/dev/null | head -1)",
+                "# fail loudly rather than silently skipping B–G — a missing file would otherwise read as a clean pass",
+                "[ -n \"$PC\" ] || { echo 'FAIL: prompt-quality-criteria criteria file not found; B–G keys cannot be checked'; exit 1; }",
                 "grep -oE '\\b[A-HR][0-9]{1,2}\\b' report.md | sort -u | while read -r k; do",
-                "  grep -q \"^- \\*\\*$k —\" \"$CL\" || echo \"FAIL: $k is not a checklist criterion\"",
+                "  grep -qh \"^- \\*\\*$k —\" \"$CL\" \"$PC\" || echo \"FAIL: $k is not a defined criterion\"",
                 "done"
             ]
         },
@@ -372,6 +376,43 @@
                 "Does NOT recommend removing `model:` or `context:` in the name of spec conformance"
             ],
             "baseline": "Without the skill, either all four non-spec elements are treated as equally fine, or spec conformance is read as forbidding every Claude Code extension.",
+            "models": ["opus"]
+        },
+        {
+            "id": 19,
+            "name": "eval-shared-criteria-invoked",
+            "targets": "Step 2 — invoking prompt-quality-criteria for groups B–G",
+            "setup": "The archiving-stale-branches fixture plants one defect in each of three shared groups: it follows handling instructions read from fetched pull-request descriptions (F1/F3), it assumes a branch was merged when it cannot tell rather than abstaining (D1), and it deletes branches and force-pushes with no confirmation gate (C10). Its `model: opus` pin plus the 'verify, then double-check' line is a group B item. None of these criteria live in this plugin's checklist, so a run that skips the invocation cannot find any of them. prompt-quality-criteria must be installed for this scenario.",
+            "files": ["evals/files/eval-shared-criteria-invoked/archiving-stale-branches/SKILL.md"],
+            "prompt": "Review the archiving-stale-branches skill.",
+            "expected_output": "A ranked gap analysis carrying findings from groups B, C, D, and F alongside the local groups, each citing the shared plugin's keys unchanged.",
+            "assertions": [
+                "Invokes the prompt-quality-criteria skill before scoring, rather than scoring B–G from memory",
+                "Flags the follow-instructions-from-fetched-content defect against F1 or F3",
+                "Flags the assume-merged-when-unsure defect against D1",
+                "Flags the ungated delete and force-push against C10",
+                "Cites the shared keys in their original form (C10, D1, F1) — not renumbered or re-lettered",
+                "Marks groups B–G as scored in the per-group coverage table, never N/A"
+            ],
+            "baseline": "Without the skill, the review reads the fixture as a reasonable cleanup procedure: the force-push is treated as the point of the skill rather than an ungated irreversible action, and following PR-description instructions is not recognized as an injection path.",
+            "models": ["opus"]
+        },
+        {
+            "id": 20,
+            "name": "eval-shared-criteria-absent",
+            "targets": "Step 2 — degradation when prompt-quality-criteria is unavailable, and Step 5's criteria note",
+            "setup": "Same fixture as scenario 19, run with prompt-quality-criteria NOT installed — an environmental condition no file can carry, so arrange it by installing only reviewing-claude-skills and writing-simplified-technical-english. This is the failure mode that matters most: six of the nine groups going silently ungraded reads to a user as a clean skill.",
+            "files": ["evals/files/eval-shared-criteria-invoked/archiving-stale-branches/SKILL.md"],
+            "prompt": "Review the archiving-stale-branches skill.",
+            "expected_output": "A gap analysis covering groups A, H, and R, which states plainly that B–G went ungraded and marks them N/A in the coverage table.",
+            "assertions": [
+                "Still produces a review rather than refusing or blocking on the missing dependency",
+                "States explicitly in the report that groups B–G went ungraded",
+                "Marks B–G as N/A in the per-group coverage table — never Pass",
+                "Does not silently omit the B–G rows from the coverage table",
+                "Does not invent B–G findings from memory of the criteria"
+            ],
+            "baseline": "Without the skill, there is no dependency to be missing and no notion of an ungraded group, so the report presents whatever it covered as the whole review.",
             "models": ["opus"]
         }
     ]

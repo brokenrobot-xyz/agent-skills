@@ -20,15 +20,17 @@ Then install plugins from it:
 ```
 
 Dependencies auto-install: installing `reviewing-claude-skills` also installs
+`prompt-quality-criteria`, which supplies its B–G criteria, and
 `writing-simplified-technical-english`, which it invokes for its prose check.
 
 ## Catalog
 
-| Plugin                                                                                         | Category        | What it does                                                                                                                                                                                                                |
-| ---------------------------------------------------------------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [committing-conventionally](plugins/committing-conventionally/README.md)                       | git             | Authors Conventional-Commits commits and enforces them with a `PreToolUse` deny-hook. Reads the host project's commit vocabulary from `.brokenrobot-xyz/commits.json`; falls back to vanilla Conventional Commits defaults. |
-| [writing-simplified-technical-english](plugins/writing-simplified-technical-english/README.md) | writing         | Revises agent-facing prose — skills, agent definitions, specs, technical docs — so an agent cannot read a sentence two ways. Twelve conventions adapted from ASD-STE100 Simplified Technical English.                       |
-| [reviewing-claude-skills](plugins/reviewing-claude-skills/README.md)                           | skill-authoring | Reviews a Claude Code skill against skill-authoring and prompting best practices, producing a severity-ranked gap analysis with optional fixes. Depends on `writing-simplified-technical-english`.                          |
+| Plugin                                                                                         | Category        | What it does                                                                                                                                                                                                                       |
+| ---------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [committing-conventionally](plugins/committing-conventionally/README.md)                       | git             | Authors Conventional-Commits commits and enforces them with a `PreToolUse` deny-hook. Reads the host project's commit vocabulary from `.brokenrobot-xyz/commits.json`; falls back to vanilla Conventional Commits defaults.        |
+| [writing-simplified-technical-english](plugins/writing-simplified-technical-english/README.md) | writing         | Revises agent-facing prose — skills, agent definitions, specs, technical docs — so an agent cannot read a sentence two ways. Twelve conventions adapted from ASD-STE100 Simplified Technical English.                              |
+| [prompt-quality-criteria](plugins/prompt-quality-criteria/README.md)                           | skill-authoring | Supplies criteria groups B–G for grading any Markdown prompt that steers Claude — model-specific prompting, hallucination guards, output consistency, injection and prompt-leak defenses. Returns the criteria; the caller scores. |
+| [reviewing-claude-skills](plugins/reviewing-claude-skills/README.md)                           | skill-authoring | Reviews a Claude Code skill against skill-authoring and prompting best practices, producing a severity-ranked gap analysis with optional fixes. Depends on `prompt-quality-criteria` and `writing-simplified-technical-english`.   |
 
 ## Category vocabulary
 
