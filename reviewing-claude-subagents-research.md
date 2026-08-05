@@ -57,24 +57,24 @@ documentation is normative for the format, full stop. Two consequences:
 **[DOC]** A subagent is a Markdown file with YAML frontmatter. The frontmatter configures; the body becomes the
 system prompt. Only `name` and `description` are required. Sixteen fields are supported:
 
-| Field | Required | Notes |
-| :-- | :-- | :-- |
-| `name` | Yes | Lowercase letters and hyphens. Unique identifier; **the filename need not match**. **Cannot contain `:`** — that is reserved for plugin-scoped identifiers. A file whose name contains one is **not loaded**, and the error goes only to the debug log. Before v2.1.218 such names were accepted. Hooks receive this value as `agent_type`. |
-| `description` | Yes | When Claude should delegate to this subagent. |
-| `tools` | No | Allowlist. Inherits every tool available to subagents if omitted. **To preload skills, use the `skills` field rather than listing `Skill` here.** |
-| `disallowedTools` | No | Denylist, removed from the inherited or specified list. |
-| `model` | No | `sonnet`, `opus`, `haiku`, `fable`, a full model ID, or `inherit`. Defaults to `inherit`. |
-| `permissionMode` | No | `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`, or `manual` (alias for `default`, v2.1.200+). |
-| `maxTurns` | No | Maximum agentic turns before the subagent stops. |
-| `skills` | No | Skills preloaded into context at startup. **Full content is injected, not just the description.** |
-| `mcpServers` | No | Server names referencing configured servers, or inline definitions. |
-| `hooks` | No | Lifecycle hooks scoped to this subagent. |
-| `memory` | No | `user`, `project`, or `local`. |
-| `background` | No | `true` forces background execution. Unset lets Claude choose. |
-| `effort` | No | `low`, `medium`, `high`, `xhigh`, `max`. Overrides session effort. |
-| `isolation` | No | `worktree` is the only valid value. |
-| `color` | No | `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, `cyan`. |
-| `initialPrompt` | No | Auto-submitted as the first user turn when the agent runs as the **main** session. |
+| Field             | Required | Notes                                                                                                                                                                                                                                                                                                                                       |
+| :---------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`            | Yes      | Lowercase letters and hyphens. Unique identifier; **the filename need not match**. **Cannot contain `:`** — that is reserved for plugin-scoped identifiers. A file whose name contains one is **not loaded**, and the error goes only to the debug log. Before v2.1.218 such names were accepted. Hooks receive this value as `agent_type`. |
+| `description`     | Yes      | When Claude should delegate to this subagent.                                                                                                                                                                                                                                                                                               |
+| `tools`           | No       | Allowlist. Inherits every tool available to subagents if omitted. **To preload skills, use the `skills` field rather than listing `Skill` here.**                                                                                                                                                                                           |
+| `disallowedTools` | No       | Denylist, removed from the inherited or specified list.                                                                                                                                                                                                                                                                                     |
+| `model`           | No       | `sonnet`, `opus`, `haiku`, `fable`, a full model ID, or `inherit`. Defaults to `inherit`.                                                                                                                                                                                                                                                   |
+| `permissionMode`  | No       | `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`, or `manual` (alias for `default`, v2.1.200+).                                                                                                                                                                                                                     |
+| `maxTurns`        | No       | Maximum agentic turns before the subagent stops.                                                                                                                                                                                                                                                                                            |
+| `skills`          | No       | Skills preloaded into context at startup. **Full content is injected, not just the description.**                                                                                                                                                                                                                                           |
+| `mcpServers`      | No       | Server names referencing configured servers, or inline definitions.                                                                                                                                                                                                                                                                         |
+| `hooks`           | No       | Lifecycle hooks scoped to this subagent.                                                                                                                                                                                                                                                                                                    |
+| `memory`          | No       | `user`, `project`, or `local`.                                                                                                                                                                                                                                                                                                              |
+| `background`      | No       | `true` forces background execution. Unset lets Claude choose.                                                                                                                                                                                                                                                                               |
+| `effort`          | No       | `low`, `medium`, `high`, `xhigh`, `max`. Overrides session effort.                                                                                                                                                                                                                                                                          |
+| `isolation`       | No       | `worktree` is the only valid value.                                                                                                                                                                                                                                                                                                         |
+| `color`           | No       | `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, `cyan`.                                                                                                                                                                                                                                                                       |
+| `initialPrompt`   | No       | Auto-submitted as the first user turn when the agent runs as the **main** session.                                                                                                                                                                                                                                                          |
 
 **[DOC]** The `--agents` CLI flag accepts the same fields as JSON for session-scoped subagents, using `prompt`
 in place of the Markdown body.
@@ -90,13 +90,13 @@ persist between Bash calls and does not affect the main conversation.
 
 **[DOC]** When several definitions share a `name`, the higher-priority location wins:
 
-| Priority | Location | Scope |
-| :-- | :-- | :-- |
-| 1 | Managed settings | Organisation-wide |
-| 2 | `--agents` CLI flag | Current session |
-| 3 | `.claude/agents/` | Current project |
-| 4 | `~/.claude/agents/` | All the user's projects |
-| 5 | Plugin's `agents/` directory | Where the plugin is enabled |
+| Priority | Location                     | Scope                       |
+| :------- | :--------------------------- | :-------------------------- |
+| 1        | Managed settings             | Organisation-wide           |
+| 2        | `--agents` CLI flag          | Current session             |
+| 3        | `.claude/agents/`            | Current project             |
+| 4        | `~/.claude/agents/`          | All the user's projects     |
+| 5        | Plugin's `agents/` directory | Where the plugin is enabled |
 
 **[DOC]** Both `.claude/agents/` and `~/.claude/agents/` are scanned **recursively**; the subfolder path does
 not affect identity, which comes only from `name`.
@@ -343,7 +343,7 @@ point; the work is self-contained and returns a summary.
 
 ## 13. Anthropic's engineering guidance on agent prompts
 
-### Right altitude — from *Effective context engineering for AI agents* [DOC]
+### Right altitude — from _Effective context engineering for AI agents_ [DOC]
 
 Two failure modes bracket the target:
 
@@ -369,7 +369,7 @@ Other rules from the same source:
   returning **condensed summaries of roughly 1,000–2,000 tokens** to the coordinating main agent. That is a
   usable order-of-magnitude anchor for the return-contract criterion.
 
-### The eight multi-agent principles — from *How we built our multi-agent research system* [DOC]
+### The eight multi-agent principles — from _How we built our multi-agent research system_ [DOC]
 
 1. **Think like your agents** — simulate to observe behaviour step by step and find failure modes.
 2. **Teach the orchestrator how to delegate** — give "objective, output format, guidance on tools and sources,
@@ -399,16 +399,16 @@ human testing alongside, which caught source-selection biases automation missed.
 
 ## 14. Subagent vs skill vs hook vs `CLAUDE.md`
 
-**[DOC]** From *Steering Claude Code*:
+**[DOC]** From _Steering Claude Code_:
 
-| Method | Best for |
-| :-- | :-- |
-| `CLAUDE.md` | Project overview, build commands, structure, team conventions |
-| Rules | Specific constraints; path-scoped to limit context cost |
-| Skills | Procedural workflows invoked via slash commands |
-| Subagents | Isolated side tasks returning only final results |
-| Hooks | Deterministic automation — linters, notifications, blocking commands |
-| Output styles | Significant role changes; highest instruction weight |
+| Method        | Best for                                                             |
+| :------------ | :------------------------------------------------------------------- |
+| `CLAUDE.md`   | Project overview, build commands, structure, team conventions        |
+| Rules         | Specific constraints; path-scoped to limit context cost              |
+| Skills        | Procedural workflows invoked via slash commands                      |
+| Subagents     | Isolated side tasks returning only final results                     |
+| Hooks         | Deterministic automation — linters, notifications, blocking commands |
+| Output styles | Significant role changes; highest instruction weight                 |
 
 **[DOC] The key distinction is isolation and visibility.** Skills execute in the main conversation thread: each
 step is visible and steerable, and intermediate results stay in context. Subagents run in isolated context
@@ -446,61 +446,61 @@ writing any of it into a checklist as a rule.
 
 The delta that drives the new checklist.
 
-| Dimension | Skill | Subagent |
-| :-- | :-- | :-- |
-| Open standard | Yes — agentskills.io, under the Linux Foundation | **None.** Claude Code docs are normative |
-| Portability | 30+ agent products | Claude Code only |
-| Required frontmatter | `name`, `description` | `name`, `description` |
-| Total frontmatter fields | 6 in the spec, plus Claude Code extensions | 16, no spec |
-| Progressive disclosure | Yes — body loads on activation, references on demand | **No.** The body loads whole, on every delegation |
-| Reference files | First-class, `references/`, one level deep | Only if the body has `Read` and a resolvable path |
-| Execution context | Main conversation; visible and steerable | Isolated window; only the final message returns |
-| Sees conversation history | Yes | **No** (except a fork) |
-| Sees `CLAUDE.md` | Yes | **Yes** — so restating it in the body is waste |
-| Sees output style | Yes | **No** |
-| Body enters parent context | Yes | **Never** |
-| Discovery mechanism | Description, matched against the task | Description, matched for delegation routing |
-| Tool control | `allowed-tools` (experimental in the spec) | `tools` + `disallowedTools`, two runtime filters, resolution order, launch failure on zero-resolve |
-| Eval convention | `evals/evals.json` in the standard | **None** |
-| Cross-artifact interference | Minimal | **Real** — overlapping descriptions degrade routing for all of them |
+| Dimension                   | Skill                                                | Subagent                                                                                           |
+| :-------------------------- | :--------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
+| Open standard               | Yes — agentskills.io, under the Linux Foundation     | **None.** Claude Code docs are normative                                                           |
+| Portability                 | 30+ agent products                                   | Claude Code only                                                                                   |
+| Required frontmatter        | `name`, `description`                                | `name`, `description`                                                                              |
+| Total frontmatter fields    | 6 in the spec, plus Claude Code extensions           | 16, no spec                                                                                        |
+| Progressive disclosure      | Yes — body loads on activation, references on demand | **No.** The body loads whole, on every delegation                                                  |
+| Reference files             | First-class, `references/`, one level deep           | Only if the body has `Read` and a resolvable path                                                  |
+| Execution context           | Main conversation; visible and steerable             | Isolated window; only the final message returns                                                    |
+| Sees conversation history   | Yes                                                  | **No** (except a fork)                                                                             |
+| Sees `CLAUDE.md`            | Yes                                                  | **Yes** — so restating it in the body is waste                                                     |
+| Sees output style           | Yes                                                  | **No**                                                                                             |
+| Body enters parent context  | Yes                                                  | **Never**                                                                                          |
+| Discovery mechanism         | Description, matched against the task                | Description, matched for delegation routing                                                        |
+| Tool control                | `allowed-tools` (experimental in the spec)           | `tools` + `disallowedTools`, two runtime filters, resolution order, launch failure on zero-resolve |
+| Eval convention             | `evals/evals.json` in the standard                   | **None**                                                                                           |
+| Cross-artifact interference | Minimal                                              | **Real** — overlapping descriptions degrade routing for all of them                                |
 
 ## 17. Sources
 
 **Normative — Anthropic documentation**
 
-| Doc | URL |
-| :-- | :-- |
-| Create custom subagents | `https://code.claude.com/docs/en/sub-agents` |
-| Plugins reference (agents section) | `https://code.claude.com/docs/en/plugins-reference` |
-| Skill authoring best practices | `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices` |
-| Define success criteria & build evaluations | `https://platform.claude.com/docs/en/test-and-evaluate/develop-tests` |
+| Doc                                         | URL                                                                                |
+| :------------------------------------------ | :--------------------------------------------------------------------------------- |
+| Create custom subagents                     | `https://code.claude.com/docs/en/sub-agents`                                       |
+| Plugins reference (agents section)          | `https://code.claude.com/docs/en/plugins-reference`                                |
+| Skill authoring best practices              | `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices` |
+| Define success criteria & build evaluations | `https://platform.claude.com/docs/en/test-and-evaluate/develop-tests`              |
 
 **Anthropic guidance and engineering writing**
 
-| Doc | URL |
-| :-- | :-- |
-| How and when to use subagents in Claude Code | `https://claude.com/blog/subagents-in-claude-code` |
+| Doc                                                       | URL                                                                                  |
+| :-------------------------------------------------------- | :----------------------------------------------------------------------------------- |
+| How and when to use subagents in Claude Code              | `https://claude.com/blog/subagents-in-claude-code`                                   |
 | Steering Claude Code: CLAUDE.md, skills, hooks, subagents | `https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more` |
-| Effective context engineering for AI agents | `https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents` |
-| How we built our multi-agent research system | `https://www.anthropic.com/engineering/multi-agent-research-system` |
-| Writing effective tools for AI agents | `https://www.anthropic.com/engineering/writing-tools-for-agents` |
-| Building effective agents | `https://www.anthropic.com/research/building-effective-agents` |
+| Effective context engineering for AI agents               | `https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents`  |
+| How we built our multi-agent research system              | `https://www.anthropic.com/engineering/multi-agent-research-system`                  |
+| Writing effective tools for AI agents                     | `https://www.anthropic.com/engineering/writing-tools-for-agents`                     |
+| Building effective agents                                 | `https://www.anthropic.com/research/building-effective-agents`                       |
 
 **Standards context**
 
-| Doc | URL |
-| :-- | :-- |
-| Agent Skills specification | `https://agentskills.io/specification` |
-| Agent Skills repository | `https://github.com/agentskills/agentskills` |
+| Doc                        | URL                                          |
+| :------------------------- | :------------------------------------------- |
+| Agent Skills specification | `https://agentskills.io/specification`       |
+| Agent Skills repository    | `https://github.com/agentskills/agentskills` |
 
 **Third-party, marked [3P] above**
 
-| Source | URL |
-| :-- | :-- |
-| Tembo — Claude Code Subagents: A 2026 Practical Guide | `https://www.tembo.io/blog/claude-code-subagents` |
-| Nimbalyst — Claude Code Subagents: A Practical 2026 Guide | `https://nimbalyst.com/blog/claude-code-subagents-guide/` |
-| Leland — Claude Code Subagents vs. Agents | `https://www.joinleland.com/library/a/claude-subagents` |
-| Developers Digest — Subagent Frontmatter | `https://www.developersdigest.tech/guides/subagent-frontmatter` |
+| Source                                                    | URL                                                             |
+| :-------------------------------------------------------- | :-------------------------------------------------------------- |
+| Tembo — Claude Code Subagents: A 2026 Practical Guide     | `https://www.tembo.io/blog/claude-code-subagents`               |
+| Nimbalyst — Claude Code Subagents: A Practical 2026 Guide | `https://nimbalyst.com/blog/claude-code-subagents-guide/`       |
+| Leland — Claude Code Subagents vs. Agents                 | `https://www.joinleland.com/library/a/claude-subagents`         |
+| Developers Digest — Subagent Frontmatter                  | `https://www.developersdigest.tech/guides/subagent-frontmatter` |
 
 **Not consulted, and deliberately so.** The Agent SDK and workflow-agent documentation, and Cursor's and
 Codex's subagent implementations. Decision D4 in the brief scopes the plugin to Claude Code subagent `.md`

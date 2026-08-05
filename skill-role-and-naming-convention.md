@@ -100,12 +100,12 @@ cross-check.
 
 After Change 1 there are four invocation edges, and each needs all four statements above:
 
-| Caller | Invoked skill | Mode | Consumed as |
-| :-- | :-- | :-- | :-- |
-| `reviewing-claude-skills` | `prompt-quality-criteria` | supply | Criteria the caller scores against, for groups B–G |
-| `reviewing-claude-skills` | `writing-simplified-technical-english` | check | Violations folded into `R7` |
-| `reviewing-claude-subagents` | `prompt-quality-criteria` | supply | Criteria the caller scores against, for groups B–G |
-| `reviewing-claude-subagents` | `writing-simplified-technical-english` | check | Violations folded into `R7` |
+| Caller                       | Invoked skill                          | Mode   | Consumed as                                        |
+| :--------------------------- | :------------------------------------- | :----- | :------------------------------------------------- |
+| `reviewing-claude-skills`    | `prompt-quality-criteria`              | supply | Criteria the caller scores against, for groups B–G |
+| `reviewing-claude-skills`    | `writing-simplified-technical-english` | check  | Violations folded into `R7`                        |
+| `reviewing-claude-subagents` | `prompt-quality-criteria`              | supply | Criteria the caller scores against, for groups B–G |
+| `reviewing-claude-subagents` | `writing-simplified-technical-english` | check  | Violations folded into `R7`                        |
 
 ### Why there is no role field
 
@@ -128,14 +128,14 @@ What survived is the part that decides something: the split test above.
 
 **Sourced — re-check when the source changes:**
 
-| Rule | Source |
-| :-- | :-- |
-| Gerund form is preferred for a skill name; a noun phrase is acceptable | [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) |
-| `name` and `description` load at startup for all skills, at roughly 100 tokens each | [Agent Skills specification](https://agentskills.io/specification) |
-| The `description` drives selection among many skills | [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) |
-| Too many specialist agents reduces automatic delegation reliability | [How and when to use subagents](https://claude.com/blog/subagents-in-claude-code) — stated for subagents; applied here to skills by inference from the shared selection mechanism |
-| `references/` plus progressive disclosure holds bulky material without a second skill | [Agent Skills specification](https://agentskills.io/specification) |
-| A skill runs in the caller's context; a subagent runs isolated | [Steering Claude Code](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) |
+| Rule                                                                                  | Source                                                                                                                                                                            |
+| :------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gerund form is preferred for a skill name; a noun phrase is acceptable                | [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)                                                                |
+| `name` and `description` load at startup for all skills, at roughly 100 tokens each   | [Agent Skills specification](https://agentskills.io/specification)                                                                                                                |
+| The `description` drives selection among many skills                                  | [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)                                                                |
+| Too many specialist agents reduces automatic delegation reliability                   | [How and when to use subagents](https://claude.com/blog/subagents-in-claude-code) — stated for subagents; applied here to skills by inference from the shared selection mechanism |
+| `references/` plus progressive disclosure holds bulky material without a second skill | [Agent Skills specification](https://agentskills.io/specification)                                                                                                                |
+| A skill runs in the caller's context; a subagent runs isolated                        | [Steering Claude Code](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more)                                                                        |
 
 **House rules — no external source. Change them by deciding to, not by re-syncing:**
 

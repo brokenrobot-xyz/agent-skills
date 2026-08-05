@@ -32,22 +32,22 @@ plugins carry two copies of the same five criteria groups and drift apart at the
 Each row records a decision and the reason it was taken. Do not re-open one without a reason the brief
 does not already answer.
 
-| # | Decision | Reason |
-| :-- | :-- | :-- |
-| D1 | Review only. The plugin audits; it does not author subagents. | Mirrors `reviewing-claude-skills`. An authoring skill is a different job with different evals. |
-| D2 | One subagent per run. | Matches the skill reviewer's scope rule. Keeps the report focused and the evals gradeable. |
-| D3 | Shared criteria move to a separate plugin. | Groups B–G apply to any markdown prompt that steers Claude. Two copies drift. |
-| D4 | Claude Code subagent `.md` files only. | The documented, testable case. The Agent SDK and workflow agents have no shared criteria and no local examples. |
-| D5 | Extract first, then build the reviewer. | The extraction changes a shipped plugin. It gets its own change and its own verification pass. |
-| D6 | Static analysis only. The reviewer never spawns the target subagent. | No side effects, no token cost, deterministic. See [risk R1](#9-risks-and-open-questions) for what this costs. |
-| D7 | Evals: score `N/A` when absent, grade quality when present. | Subagents have no eval convention. Inventing one would fail every existing subagent on day one. |
-| D8 | Fit-for-purpose is the first check, and it can produce a High finding. | "This should be a skill" is the highest-value finding available for a subagent. |
-| D9 | The reviewer reads sibling subagents' `name` and `description` only. | Enough to judge overlap for D8. Not a fleet audit — no per-sibling findings. |
-| D10 | The shared plugin supplies criteria; the caller grades. | Skills run in the caller's context. A grading skill would have to be artifact-agnostic and would take severity calibration away from each reviewer. |
-| D11 | Groups B–G move; H and R stay with each reviewer. | B–G port cleanly. H and R each split into a portable half and an artifact-specific half; splitting them across plugins risks losing a criterion. |
-| D12 | Each reviewer keeps its own `writing-simplified-technical-english` dependency. | Flatter dependency graph. The shared plugin stays dependency-free and therefore portable. |
-| D13 | Names: `reviewing-claude-subagents` and `prompt-quality-criteria`. | "Subagents" matches Claude Code's own term. The shared plugin is a noun phrase because it supplies a rubric rather than performing an action. |
-| D14 | Apply mode mirrors the skill reviewer: analysis by default, optional surgical fixes one finding at a time. | Consistent behaviour across the pair. |
+| #   | Decision                                                                                                                                                                                                                             | Reason                                                                                                                                                   |
+| :-- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | Review only. The plugin audits; it does not author subagents.                                                                                                                                                                        | Mirrors `reviewing-claude-skills`. An authoring skill is a different job with different evals.                                                           |
+| D2  | One subagent per run.                                                                                                                                                                                                                | Matches the skill reviewer's scope rule. Keeps the report focused and the evals gradeable.                                                               |
+| D3  | Shared criteria move to a separate plugin.                                                                                                                                                                                           | Groups B–G apply to any markdown prompt that steers Claude. Two copies drift.                                                                            |
+| D4  | Claude Code subagent `.md` files only.                                                                                                                                                                                               | The documented, testable case. The Agent SDK and workflow agents have no shared criteria and no local examples.                                          |
+| D5  | Extract first, then build the reviewer.                                                                                                                                                                                              | The extraction changes a shipped plugin. It gets its own change and its own verification pass.                                                           |
+| D6  | Static analysis only. The reviewer never spawns the target subagent.                                                                                                                                                                 | No side effects, no token cost, deterministic. See [risk R1](#9-risks-and-open-questions) for what this costs.                                           |
+| D7  | Evals: score `N/A` when absent, grade quality when present.                                                                                                                                                                          | Subagents have no eval convention. Inventing one would fail every existing subagent on day one.                                                          |
+| D8  | Fit-for-purpose is the first check, and it can produce a High finding.                                                                                                                                                               | "This should be a skill" is the highest-value finding available for a subagent.                                                                          |
+| D9  | The reviewer reads sibling subagents' `name` and `description` only.                                                                                                                                                                 | Enough to judge overlap for D8. Not a fleet audit — no per-sibling findings.                                                                             |
+| D10 | The shared plugin supplies criteria; the caller grades.                                                                                                                                                                              | Skills run in the caller's context. A grading skill would have to be artifact-agnostic and would take severity calibration away from each reviewer.      |
+| D11 | Groups B–G move; H and R stay with each reviewer.                                                                                                                                                                                    | B–G port cleanly. H and R each split into a portable half and an artifact-specific half; splitting them across plugins risks losing a criterion.         |
+| D12 | Each reviewer keeps its own `writing-simplified-technical-english` dependency.                                                                                                                                                       | Flatter dependency graph. The shared plugin stays dependency-free and therefore portable.                                                                |
+| D13 | Names: `reviewing-claude-subagents` and `prompt-quality-criteria`.                                                                                                                                                                   | "Subagents" matches Claude Code's own term. The shared plugin is a noun phrase because it supplies a rubric rather than performing an action.            |
+| D14 | Apply mode mirrors the skill reviewer: analysis by default, optional surgical fixes one finding at a time.                                                                                                                           | Consistent behaviour across the pair.                                                                                                                    |
 | D15 | A shared component grades when its criteria are artifact-independent, and supplies criteria when correct scoring depends on knowing the artifact. `writing-simplified-technical-english` grades; `prompt-quality-criteria` supplies. | Both reviewers keep severity calibration either way. The split turns on whether the component can judge correctly without knowing what it is looking at. |
 
 **On `claude` in the name.** Anthropic's platform docs reserve `anthropic` and `claude` in skill names.
@@ -135,18 +135,18 @@ grading, asks the user nothing, and writes nothing.
 Group letters stay stable across the pair. The two reviewers never appear in one report, so both may use `A`
 for their own artifact's authoring criteria.
 
-| Group | Content | Lives in |
-| :-- | :-- | :-- |
-| A | Agent Skills spec conformance, skill naming, progressive disclosure | `reviewing-claude-skills` |
-| A | Subagent frontmatter, description-as-router, return contract, context inheritance | `reviewing-claude-subagents` |
-| B | Model-specific prompting | `prompt-quality-criteria` |
-| C | General Claude prompting | `prompt-quality-criteria` |
-| D | Hallucination guards | `prompt-quality-criteria` |
-| E | Output consistency | `prompt-quality-criteria` |
-| F | Injection and jailbreak defences | `prompt-quality-criteria` |
-| G | Prompt-leak defences | `prompt-quality-criteria` |
-| H | Success criteria and evals | Each reviewer, adapted |
-| R | Craft and host-project conventions | Each reviewer |
+| Group | Content                                                                           | Lives in                     |
+| :---- | :-------------------------------------------------------------------------------- | :--------------------------- |
+| A     | Agent Skills spec conformance, skill naming, progressive disclosure               | `reviewing-claude-skills`    |
+| A     | Subagent frontmatter, description-as-router, return contract, context inheritance | `reviewing-claude-subagents` |
+| B     | Model-specific prompting                                                          | `prompt-quality-criteria`    |
+| C     | General Claude prompting                                                          | `prompt-quality-criteria`    |
+| D     | Hallucination guards                                                              | `prompt-quality-criteria`    |
+| E     | Output consistency                                                                | `prompt-quality-criteria`    |
+| F     | Injection and jailbreak defences                                                  | `prompt-quality-criteria`    |
+| G     | Prompt-leak defences                                                              | `prompt-quality-criteria`    |
+| H     | Success criteria and evals                                                        | Each reviewer, adapted       |
+| R     | Craft and host-project conventions                                                | Each reviewer                |
 
 **Group F needs one subagent-specific addition**, kept in the subagent reviewer rather than the shared plugin:
 a subagent that reads third-party content and reports upward is an injection path **into the parent session**.
@@ -166,19 +166,19 @@ convention rather than its skill-naming convention.
 
 Record these in the new checklist as deliberate omissions, so a later reader does not "restore" them.
 
-| Skill criterion | Status for subagents |
-| :-- | :-- |
-| A1 name / directory match | Replaced. Subagent identity comes from the `name` field alone; the filename is free. New rule: `name` must not contain `:`. |
-| A4 length caps | **Inverted.** A subagent body has no progressive disclosure — it loads whole, on every delegation. Length discipline is stricter, not looser. |
-| A5 progressive disclosure | Does not apply. |
-| A6 references one level deep | Does not apply as written. New rule: a body that points at a file needs `Read` in its tools and a path that resolves from the working directory. |
-| A7 reference TOC | Does not apply. |
-| A14 scripts solve, don't defer | Rarely applies; subagents seldom bundle scripts. |
-| A16 `allowed-tools` form | Replaced by the `tools` / `disallowedTools` semantics, which resolve differently. |
-| A18 optional spec frontmatter | Replaced by the subagent frontmatter table. |
-| A19 directory layout | Replaced by the subagent scope-precedence table. |
-| A20 spec core vs client extensions | **No analogue.** There is no open standard for subagents. Claude Code's documentation is normative for the format. |
-| H1 `evals/evals.json` | No equivalent convention. See the group H adaptation above. |
+| Skill criterion                    | Status for subagents                                                                                                                             |
+| :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1 name / directory match          | Replaced. Subagent identity comes from the `name` field alone; the filename is free. New rule: `name` must not contain `:`.                      |
+| A4 length caps                     | **Inverted.** A subagent body has no progressive disclosure — it loads whole, on every delegation. Length discipline is stricter, not looser.    |
+| A5 progressive disclosure          | Does not apply.                                                                                                                                  |
+| A6 references one level deep       | Does not apply as written. New rule: a body that points at a file needs `Read` in its tools and a path that resolves from the working directory. |
+| A7 reference TOC                   | Does not apply.                                                                                                                                  |
+| A14 scripts solve, don't defer     | Rarely applies; subagents seldom bundle scripts.                                                                                                 |
+| A16 `allowed-tools` form           | Replaced by the `tools` / `disallowedTools` semantics, which resolve differently.                                                                |
+| A18 optional spec frontmatter      | Replaced by the subagent frontmatter table.                                                                                                      |
+| A19 directory layout               | Replaced by the subagent scope-precedence table.                                                                                                 |
+| A20 spec core vs client extensions | **No analogue.** There is no open standard for subagents. Claude Code's documentation is normative for the format.                               |
+| H1 `evals/evals.json`              | No equivalent convention. See the group H adaptation above.                                                                                      |
 
 ## 5. Draft group A — subagent authoring criteria
 
@@ -304,16 +304,16 @@ extraction that also edits content cannot be verified by comparison.
    [section 5](#5-draft-group-a--subagent-authoring-criteria) refined against the live docs, the group F
    addition, the adapted group H, and group R.
 3. Write `SKILL.md` as a numbered procedure mirroring the skill reviewer's:
-   1. Load the target subagent definition and the host project's convention documents.
-   2. Refresh criteria — best-effort fetch of the source URLs; fall back to the baked checklist and say so in
-      the report.
-   3. Invoke `prompt-quality-criteria` for groups B–G.
-   4. Interview: deliverable (analysis only / also apply), focus, change appetite. Each with a default.
-   5. Grade fit-for-purpose first, reading sibling `name` and `description` fields.
-   6. Score every group, in two passes — discovery, then filter. Never cap the discovery pass by severity;
-      current models follow such a bar literally and recall falls.
-   7. Write the ranked gap analysis.
-   8. Apply approved fixes, one finding at a time, on request.
+    1. Load the target subagent definition and the host project's convention documents.
+    2. Refresh criteria — best-effort fetch of the source URLs; fall back to the baked checklist and say so in
+       the report.
+    3. Invoke `prompt-quality-criteria` for groups B–G.
+    4. Interview: deliverable (analysis only / also apply), focus, change appetite. Each with a default.
+    5. Grade fit-for-purpose first, reading sibling `name` and `description` fields.
+    6. Score every group, in two passes — discovery, then filter. Never cap the discovery pass by severity;
+       current models follow such a bar literally and recall falls.
+    7. Write the ranked gap analysis.
+    8. Apply approved fixes, one finding at a time, on request.
 4. Write `README.md` on the model of the skill reviewer's: install, usage, what the review checks, behaviour
    notes.
 5. Write `evals/evals.json`. See [section 8](#8-testing).
@@ -323,17 +323,17 @@ extraction that also edits content cannot be verified by comparison.
 
 **Sources table for the new checklist.** Different from the skill reviewer's, because no open standard exists:
 
-| Key | Doc | Role |
-| :-- | :-- | :-- |
-| A | `https://code.claude.com/docs/en/sub-agents` | **Normative** for the format |
-| A | `https://code.claude.com/docs/en/plugins-reference` | Normative for plugin-shipped subagents |
-| A | `https://claude.com/blog/subagents-in-claude-code` | Anthropic's usage guidance |
-| A | `https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more` | The fit-for-purpose framework |
-| A | `https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents` | Right altitude, body craft |
-| A | `https://www.anthropic.com/engineering/multi-agent-research-system` | Delegation instructions, fan-out |
-| B–G | (supplied by `prompt-quality-criteria`) | |
-| H | `https://platform.claude.com/docs/en/test-and-evaluate/develop-tests` | Eval methodology |
-| R | The host project's `CLAUDE.md` and the documents it links | Project-scoped items |
+| Key | Doc                                                                                  | Role                                   |
+| :-- | :----------------------------------------------------------------------------------- | :------------------------------------- |
+| A   | `https://code.claude.com/docs/en/sub-agents`                                         | **Normative** for the format           |
+| A   | `https://code.claude.com/docs/en/plugins-reference`                                  | Normative for plugin-shipped subagents |
+| A   | `https://claude.com/blog/subagents-in-claude-code`                                   | Anthropic's usage guidance             |
+| A   | `https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more` | The fit-for-purpose framework          |
+| A   | `https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents`  | Right altitude, body craft             |
+| A   | `https://www.anthropic.com/engineering/multi-agent-research-system`                  | Delegation instructions, fan-out       |
+| B–G | (supplied by `prompt-quality-criteria`)                                              |                                        |
+| H   | `https://platform.claude.com/docs/en/test-and-evaluate/develop-tests`                | Eval methodology                       |
+| R   | The host project's `CLAUDE.md` and the documents it links                            | Project-scoped items                   |
 
 ## 8. Testing
 
