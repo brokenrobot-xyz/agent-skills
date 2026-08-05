@@ -1,11 +1,12 @@
 # Prompt quality criteria
 
-Criteria groups `B`–`G` for grading a Markdown prompt that steers Claude. A reviewer invokes this
-skill, reads these criteria, and scores its own artifact against them. This file grades nothing and
-assigns no severity — see [Who scores](#who-scores).
+This file holds criteria groups `B`–`G`. A caller reads these criteria and scores its own prompt
+against them. This file scores nothing and assigns no severity, for the reason
+[Who scores](#who-scores) gives.
 
-**last-synced:** 2026-07-29 — re-fetch the URLs below and reconcile any new guidance when this is
-stale.
+**last-synced:** 2026-07-29. When this date is stale, refresh the source URLs below. Then reconcile
+any new guidance into this file. A maintainer makes both changes; a caller that refreshes the
+criteria during a review records the staleness in the caller's own report instead.
 
 ## Contents
 
@@ -20,25 +21,24 @@ stale.
 
 ## Who scores
 
-**The caller scores.** These criteria read differently per artifact — `B4` bites hardest on a
-review-shaped artifact, `C8`'s "broadly" depends on what the artifact spans, and `F4` gains a second
-dimension when the artifact's output flows into a parent session. A grader here would need the
-caller to hand over that context, and would then be doing the caller's job with less information
-than the caller already has. So this file supplies criteria; the caller assigns severity and writes
-the finding.
+**The caller scores the prompt.** These criteria read differently for each kind of prompt. `B4`
+applies hardest to a prompt that finds, reviews, or audits. `C8`'s "broadly" depends on what the
+prompt spans. `F4` gains a second dimension when the prompt's output reaches a parent session. A
+scorer inside this file would need the caller to supply that context, and would then do the caller's
+work with less information than the caller already holds. This file therefore supplies the criteria,
+and the caller assigns each severity and writes each finding.
 
-**"The prompt"** in every criterion below means the artifact under review: a skill's `SKILL.md` body,
-a subagent definition's body, or any Markdown that becomes instructions for Claude.
+**"The prompt"** in every criterion below means the prompt under review: a skill's `SKILL.md` body, a
+subagent definition's body, or any other Markdown that becomes instructions for Claude.
 
-**Cross-references to criteria this file does not hold.** A few criteria overlap one the caller
-keeps — skill-authoring conformance, eval coverage, and the like. Those name the caller's criterion
-by description rather than by key, because the key differs per caller. Resolve each against your own
-checklist.
+**Four criteria overlap a criterion this file does not hold.** `C2`, `E2`, `F2`, and `F5` each name
+the caller's criterion by description rather than by key, because the key differs for each caller.
+Resolve each description against your own checklist.
 
-Each item below is a pass criterion. Cite the criterion key (e.g. `B4`, `D1`) in findings; the keys
-are stable across every caller, so two reviewers' reports stay comparable. A few items carry their
-evidence from a doc outside their own group; each of those names its source inline, so a re-sync
-checks the page the item actually came from.
+Every item below is a pass criterion. Cite the criterion key in each finding — `B4`, `D1`, `F5`. The
+keys are stable for every caller, so two callers' reports stay comparable. Some items carry their
+evidence from a document outside their own group, and each of those items names its source inline,
+so a refresh checks the page the item came from.
 
 ## Sources
 

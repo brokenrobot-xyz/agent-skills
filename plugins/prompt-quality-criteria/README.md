@@ -1,15 +1,14 @@
 # prompt-quality-criteria
 
-Supplies criteria groups **B–G** for grading a Markdown prompt that steers
-Claude — a skill's `SKILL.md` body, a subagent definition's body, or any
-agent-facing instructions. It returns the criteria and **grades nothing**; the
-caller holds the artifact, so the caller assigns severity and writes the
-findings.
+This skill supplies criteria groups **B–G** for scoring a Markdown prompt that steers Claude: a
+skill's `SKILL.md` body, a subagent definition's body, or any other agent-facing instructions. The
+skill returns the criteria and scores nothing. The caller holds the prompt under review, so the
+caller assigns each severity and writes each finding.
 
-This README says what the rubric covers and why it supplies rather than
-grades. The criteria live in
-[references/prompt-criteria.md](references/prompt-criteria.md) and the
-procedure in [SKILL.md](SKILL.md); on any conflict, those are canonical.
+This README states what the criteria cover and why the skill supplies them instead of scoring them.
+The criteria live in [references/prompt-criteria.md](references/prompt-criteria.md) and the
+procedure lives in [SKILL.md](SKILL.md). When this README conflicts with either file, those two
+files are canonical.
 
 ## Install
 
@@ -18,70 +17,62 @@ procedure in [SKILL.md](SKILL.md); on any conflict, those are canonical.
 /plugin install prompt-quality-criteria@brokenrobot-xyz
 ```
 
-It auto-installs alongside
-[reviewing-claude-skills](../reviewing-claude-skills/README.md), which
-declares it as a dependency. Installing it directly is also fine — the
-criteria are useful on their own.
+Claude Code also installs this plugin alongside
+[reviewing-claude-skills](../reviewing-claude-skills/README.md), which declares this plugin as a
+dependency. You may also install this plugin on its own, because the criteria are useful without a
+caller.
 
 ## Usage
 
-Two callers, two behaviors:
+Two kinds of caller reach the skill, and the skill behaves differently for each:
 
-- **Another skill invokes it** — the criteria load into that skill's context
-  and it scores its own artifact against them. The rubric asks the user
-  nothing and edits nothing, so it never interrupts a review the user already
-  scoped.
-- **You invoke it directly** — ask what to check in a prompt you name, and it
-  presents the criteria and scores that prompt, because in that case there is
-  no other caller to do the scoring.
+- **Another skill invokes the skill.** The criteria load into the caller's context, and the caller
+  scores its own prompt against them. `prompt-quality-criteria` asks the user nothing and edits
+  nothing, so `prompt-quality-criteria` never interrupts a review that the caller already scoped.
+- **You invoke the skill directly.** Name a prompt, and the skill presents the criteria and scores
+  that prompt, because no other caller is present to score it.
 
 ## What the criteria cover
 
-Findings cite the keys as written (e.g. `B4`, `D1`, `F5`). The keys are stable
-across callers, so two reviewers' reports stay comparable. Thirty-two criteria
-in six groups:
+Every finding cites the criterion key as `references/prompt-criteria.md` writes it — `B4`, `D1`,
+`F5`. The keys are stable for every caller, so two callers' reports stay comparable. The file holds
+thirty-two criteria in six groups:
 
-- **B** — model-specific prompting, matched to the artifact's pinned model
-  (Sonnet 5, Opus 5, Opus 4.8, Fable 5/Mythos 5). Conditional: apply only the
-  matching subset.
-- **C** — general Claude prompting: clarity, examples, structure, chaining,
-  explicit scope, confirmation before irreversible actions.
-- **D** — hallucination guards: permitting "I don't know", grounding in
-  evidence, verification, auditing progress claims against tool results.
-- **E** — output consistency: specified formats, examples over abstraction,
+- **B** — model-specific prompting, matched to the prompt's pinned model (Sonnet 5, Opus 5, Opus
+  4.8, and Fable 5 with Mythos 5). Apply only the subset that matches the model.
+- **C** — general Claude prompting: clarity, examples, structure, chaining, explicit scope, and
+  confirmation before an irreversible action.
+- **D** — hallucination guards: permitting "I do not know", grounding in evidence, verifying, and
+  auditing progress claims against tool results.
+- **E** — output consistency: specified formats, examples instead of abstract description, and
   structured output.
-- **F** — injection and jailbreak defenses: content-as-data, least privilege,
-  labeling and isolating untrusted content, red-teaming.
-- **G** — prompt-leak defenses, proportionate to the secrets the artifact
-  actually holds.
+- **F** — injection and jailbreak defenses: content as data, least privilege, labeling and isolating
+  untrusted content, and red-teaming.
+- **G** — prompt-leak defenses, proportionate to the secrets that the prompt actually holds.
 
-## Why it supplies criteria instead of grading them
+## Why the skill supplies criteria instead of scoring them
 
-The rule is artifact-dependence. A component may grade when its criteria hold
-regardless of what it is reading. These do not: `B4` bites hardest on a
-review-shaped prompt, `C8`'s "broadly" depends on what the artifact spans, and
-`F4` gains a second dimension when the artifact's output flows into a parent
-session. A grader here would need the caller to hand over that context, and
-would then be doing the caller's job with less information than the caller
-already has.
+The rule is the following test: a shared component may score when its criteria apply unchanged to
+every kind of prompt that the component reads. These criteria fail that test. `B4` applies hardest
+to a prompt that finds, reviews, or audits. `C8`'s "broadly" depends on what the prompt spans. `F4`
+gains a second dimension when the prompt's
+output reaches a parent session. A scorer inside this skill would need the caller to supply that
+context, and would then do the caller's work with less information than the caller already holds.
 
-The contrast is
-[writing-simplified-technical-english](../writing-simplified-technical-english/README.md),
-which does grade: a passive construction with an ambiguous actor is a
-violation in a `SKILL.md`, in a subagent definition, and in a proposal alike,
-so its conventions never need to ask what the artifact is.
+[writing-simplified-technical-english](../writing-simplified-technical-english/README.md) is the
+contrasting case, and that skill does score. A passive construction with an ambiguous actor is a
+violation in a `SKILL.md`, in a subagent definition, and in a proposal alike, so an agent applying
+those twelve conventions never needs to ask which kind of prompt it is reading.
 
 ## Behavior notes
 
-- **The keys are a contract.** Renaming one breaks every caller's reports and
-  every eval that greps for it. Add criteria rather than renumbering.
-- **A few criteria overlap ones the caller keeps** — skill-authoring
-  conformance, eval coverage, tool permissions. Those name the caller's
-  criterion by description rather than by key, because the key differs per
-  caller.
-- **It fetches nothing.** The file carries a `last-synced` date and the source
-  URL behind each group; a caller that refreshes criteria live fetches those
-  and notes staleness in its own report. This skill holds no report to note it
-  in.
-- **No model pin.** It does no judgment work of its own, so it runs on
-  whatever the caller runs on.
+- **The criterion keys are a contract.** Renaming a key breaks every caller's report and every eval
+  that greps for that key. Add a criterion rather than renumbering the existing keys.
+- **Four criteria overlap a criterion that the caller keeps.** `C2`, `E2`, `F2`, and `F5` each name
+  the caller's criterion by description rather than by key, because the key differs for each caller.
+- **The skill fetches no URL.** `references/prompt-criteria.md` carries a `last-synced` date and the
+  source URL behind each group. A caller that refreshes the criteria fetches those URLs and records
+  the staleness in the caller's own report, because this skill writes no report to record the
+  staleness in.
+- **The skill pins no model.** The skill judges nothing, so the skill runs on whatever model the
+  caller runs on.
