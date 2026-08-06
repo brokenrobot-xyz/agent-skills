@@ -176,7 +176,13 @@ narrow any other item in this group; when one does, cite the project's document 
 - **R2 — surgical.** The skill's own _apply_ edits touch only what a finding requires.
 - **R3 — single source of truth / no drift.** The skill references its authoritative sources
   rather than restating their rules; any restated rule is sourced and kept in sync. Unsourced
-  restated rules are a drift finding.
+  restated rules are a drift finding. This also covers the manifest-versus-procedure cross-check:
+  every skill an invoking step names is declared as a dependency in the caller's
+  `.claude-plugin/plugin.json`, and every declared dependency is invoked by some step. The overlap
+  is deliberate, because the two sides carry different information about the same edge — the
+  manifest says what gets installed and the step says what it is for — so a disagreement is
+  detectable. A declared dependency nothing invokes is dead weight; an invoked skill nothing
+  declares fails on a clean install.
 - **R4 — ask when uncertain.** The skill surfaces ambiguity/tradeoffs rather than guessing
   silently.
 - **R5 — commit hygiene.** If the skill authors commits, it conforms to the host project's commit
@@ -205,3 +211,24 @@ narrow any other item in this group; when one does, cite the project's document 
   must act on (it invites invented members) — state the membership test instead. No bare `this` /
   `it` / `they` where two antecedents are plausible, because a pronoun with two plausible
   antecedents is a coin flip.
+- **R12 — scope coherence.** The skill does one job. Apply the split test: the same subject and the
+  same criteria producing a different output is **one skill with two modes**, not two skills; a
+  different subject or different criteria is a second skill; and criteria a consumer must score with
+  itself are extracted into their own skill regardless of the first two. Modes are not a reason to
+  split. Two responsibilities in one skill make its `description` vague, and a vague description is
+  what stops the right skill being selected. **Splitting has a permanent cost** — every skill's
+  `name` and `description` load at startup in every session, used or not, a sibling with an adjacent
+  description competes for the same prompts, and the half doing the work gains a dependency that can
+  fail — so recommending a split for tidiness alone is a finding in the other direction. When the
+  motivation is only that a body of criteria is bulky, `references/` and progressive disclosure
+  already solve that without a second skill.
+- **R13 — invocation completeness.** Every step that invokes another skill states four things, and
+  it states them **in the step itself** rather than in a separate dependencies section, which would
+  restate the step and then drift from it: **the plugin-scoped name** in `plugin:skill` form, doubled
+  where a plugin's name matches its skill's name, because an unscoped name is not guaranteed to
+  resolve when several plugins are installed; **the mode**, where the invoked skill has more than
+  one, because the wrong mode returns the wrong kind of result; **what the step consumes** from the
+  result and where that goes, because a step that invokes a skill without saying what it does with
+  the answer leaves the model to guess and the guess varies by run; and **what the step does when the
+  skill is unavailable, and what is lost**, because dependency resolution is not guaranteed on every
+  host and a silent degradation reads to the user as a clean result rather than an ungraded one.

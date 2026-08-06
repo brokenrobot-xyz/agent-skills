@@ -156,13 +156,21 @@ What survived is the part that decides something: the split test above.
    rule. No metadata field exists for it to grade.
 3. **Nothing to add to any `SKILL.md`.** The earlier instruction to add a `brokenrobot-xyz-role`
    field to four skills is void. If you already added the field anywhere, remove it.
-4. **Decide during Change 2 whether the split test becomes a criterion.** It gives
-   `reviewing-claude-skills` a concrete basis for observing that a skill is doing two jobs. Making it
-   a scored criterion is a separate decision; do not invent a criterion key for it before then.
+4. **Settled during Change 2: the split test became `R12` in both reviewers.** It is a portable craft
+   criterion rather than a project-scoped one, because "does this artifact do one job" holds
+   regardless of whose repository the artifact lives in. It is scored in group `R` rather than group
+   `A`, because it is a house rule with no external source. The criterion carries the split cost in
+   both directions, so it can produce a finding against an unnecessary split as well as against an
+   overloaded artifact.
 5. **Apply the invocation rule to all four edges during Change 1 and Change 2.**
    `reviewing-claude-skills` already states the absent-dependency behaviour for
    `writing-simplified-technical-english` in `R7`; that is the pattern to follow for the other three
    edges rather than a special case.
-6. **Decide during Change 2 whether invocation completeness becomes a criterion.** The `R` group
-   already lets a project convention narrow an existing item, and `R3` covers the manifest-versus-
-   procedure cross-check, so a new key may not be needed. Settle it then, not now.
+6. **Settled during Change 2: invocation completeness became `R13` in both reviewers, and the
+   manifest cross-check went into `R3`.** The two were separated because they check different things.
+   `R3` compares the manifest against the procedure, which is a consistency check between two files.
+   `R13` scores whether one invoking step says enough to act on, which no cross-check reaches: a step
+   naming the right skill in the manifest can still omit the mode, the consumed result, and the
+   absent-dependency behaviour. The subagent reviewer's `R13` scores the reviewed subagent's own
+   instructions to invoke a skill, and pairs with `A11`, which scores whether that invocation is
+   possible at all.
