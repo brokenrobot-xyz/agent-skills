@@ -14,25 +14,31 @@ repository, so the agreed substitute is a **mechanical equivalence proof**: show
 changed the location of the criteria and nothing else. A proof by comparison only holds if every
 difference is enumerated in advance, which is what the tables below do.
 
+The two scenarios that Change 1 added then ran headless, so the behavioral claim the equivalence
+proof cannot reach carries its own evidence. See § Eval scenarios 19 and 20.
+
 ## Contents
 
 - [What was verified](#what-was-verified)
 - [The lexical substitution](#the-lexical-substitution)
 - [The eight reference resolutions](#the-eight-reference-resolutions)
 - [Changes outside the moved text](#changes-outside-the-moved-text)
+- [Eval scenarios 19 and 20](#eval-scenarios-19-and-20)
 - [Reproducing the proof](#reproducing-the-proof)
 - [What this proof does not cover](#what-this-proof-does-not-cover)
 
 ## What was verified
 
-| Claim                                             | Method                                                              | Result                      |
-| :------------------------------------------------ | :------------------------------------------------------------------ | :-------------------------- |
-| The removal took exactly the `B`–`G` slice        | `diff` of the deleted lines against the pre-edit slice              | identical                   |
-| No criterion was lost or gained across the split  | key inventory before vs. union of both files after                  | 77 = 77, identical set      |
-| No criterion's meaning changed                    | word-level `diff` of the moved text, every difference accounted for | 27 lexical + 8 resolutions  |
-| Every per-model paragraph and carve-out survived  | presence count for each, before vs. after                           | 6 of 6 present              |
-| `B`–`G` keys still resolve for the grading script | updated two-file lookup run against a synthetic report              | resolves real, catches fake |
-| Manifests and formatting stay valid               | `format:check`, `marketplace:check`, `plugins:check`, `test`        | all pass                    |
+| Claim                                                    | Method                                                              | Result                      |
+| :------------------------------------------------------- | :------------------------------------------------------------------ | :-------------------------- |
+| The removal took exactly the `B`–`G` slice               | `diff` of the deleted lines against the pre-edit slice              | identical                   |
+| No criterion was lost or gained across the split         | key inventory before vs. union of both files after                  | 77 = 77, identical set      |
+| No criterion's meaning changed                           | word-level `diff` of the moved text, every difference accounted for | 27 lexical + 8 resolutions  |
+| Every per-model paragraph and carve-out survived         | presence count for each, before vs. after                           | 6 of 6 present              |
+| `B`–`G` keys still resolve for the grading script        | updated two-file lookup run against a synthetic report              | resolves real, catches fake |
+| Manifests and formatting stay valid                      | `format:check`, `marketplace:check`, `plugins:check`, `test`        | all pass                    |
+| The reviewer invokes the shared skill and scores `B`–`G` | eval scenario 19, run headless                                      | 6 of 6 assertions pass      |
+| The reviewer degrades honestly without the shared skill  | eval scenario 20, run headless                                      | 5 of 5 assertions pass      |
 
 ## The lexical substitution
 
@@ -101,6 +107,58 @@ name, its mode, and what the caller consumes from it — the same four statement
 carries. That applies the naming document's invocation rule to both of Change 1's edges, per its
 follow-on item 5.
 
+## Eval scenarios 19 and 20
+
+Both scenarios ran on 2026-08-06 against `opus`, headless, from a clean context, which is what `H11`
+requires. Each run used a scratch workspace holding only the committed fixture
+`archiving-stale-branches`, so neither run read this repository. The raw reports are in
+[`change-1-eval-runs/`](change-1-eval-runs/).
+
+The two runs differ in one variable. Scenario 19 enabled `prompt-quality-criteria`; scenario 20 set
+it to `false`, and the Skill tool then returned `Unknown skill:
+prompt-quality-criteria:prompt-quality-criteria`. That error is the missing-dependency condition the
+scenario needs, and no file can carry it.
+
+| Scenario | Assertion                                                 | Result | Evidence                                                     |
+| :------- | :-------------------------------------------------------- | :----- | :----------------------------------------------------------- |
+| 19       | Invokes the shared skill before scoring                   | Pass   | the transcript records the `Skill` call                      |
+| 19       | Flags the fetched-instruction defect against `F1` or `F3` | Pass   | Finding 1 cites `F1`, `F3`, `F4`, `F5`                       |
+| 19       | Flags the assume-merged defect against `D1`               | Pass   | Finding 3 cites `D1` and `R4`                                |
+| 19       | Flags the ungated delete and force-push against `C10`     | Pass   | Finding 2 cites `C10`, `F2`, `A16`                           |
+| 19       | Cites the shared keys unchanged                           | Pass   | `C10`, `D1`, `F1` appear in their original form              |
+| 19       | Marks `B`–`G` as scored, never `N/A`                      | Pass   | five groups read `Gap`, group `G` reads `Pass`               |
+| 20       | Still produces a review                                   | Pass   | a full ranked gap analysis, no refusal                       |
+| 20       | States that `B`–`G` went ungraded                         | Pass   | § Criteria notes states it, and the brief states it up front |
+| 20       | Marks `B`–`G` as `N/A`, never `Pass`                      | Pass   | six rows read `N/A — ungraded`                               |
+| 20       | Does not silently omit the `B`–`G` rows                   | Pass   | all six rows present                                         |
+| 20       | Does not invent `B`–`G` findings from memory              | Pass   | the report cites no `B`–`G` key                              |
+
+Every universal assertion also held in both runs. The grading script resolved every cited key across
+the two criteria files and printed no `FAIL` line. Both runs numbered their findings `Finding 1`
+onward rather than by letter. Neither run called `Edit` or `Write`, and both fixtures stayed
+byte-identical to the committed copy.
+
+### What the runs showed beyond their assertions
+
+**The `§ Sources` fold-in works.** Step 2 tells the caller to fold the shared plugin's source rows
+into the refresh. Scenario 19 fetched all thirteen distinct URLs across the two criteria files.
+Scenario 20 fetched the four that the checklist still carries. The nine URLs behind groups `B`–`G`
+therefore reach the network only through the shared skill, which is the intended wiring.
+
+**Scenario 20 reported a group `F` defect without a key.** The reviewer named the injection defect,
+stated that group `F` was ungraded, and grounded the finding in prose convention 7 instead of a
+`B`–`G` key. That behavior is correct, because dropping the most dangerous defect in a fixture would
+misrepresent the fixture. Assertion 5 does not distinguish a keyed finding from an unkeyed one, so
+tighten its wording to "invents no `B`–`G` **criterion key**" on the next pass.
+
+**Both runs independently found the same checklist staleness.** Anthropic's skill-authoring
+best-practices page publishes an eval schema (`skills`, `query`, `expected_behavior`) that differs
+from the open standard's `evals/evals.json` schema that `H1` cites. Two runs converging on one
+staleness note from different criteria sets is good evidence that the note is real. Scenario 20 found
+a second item: that same page documents a plan-validate-execute pattern for destructive operations,
+and group `A` carries no criterion for gating an irreversible action. Both belong to the checklist's
+own maintenance, not to Change 1.
+
 ## Reproducing the proof
 
 From the repository root, against the commit before this change:
@@ -125,19 +183,37 @@ cat plugins/reviewing-claude-skills/references/best-practices-checklist.md \
 diff /tmp/keys-before /tmp/keys-after
 ```
 
+To repeat scenarios 19 and 20, copy the fixture into a scratch workspace's `.claude/skills/`, write a
+`.claude/settings.local.json` that enables the plugins from a `directory` marketplace source, and run
+the scenario prompt headless:
+
+```sh
+claude -p "Review the archiving-stale-branches skill." --model opus \
+  --allowedTools 'Read,Grep,Glob,Skill,WebFetch,Bash(git:*),Bash(wc:*),Bash(grep:*)' > report.md
+```
+
+Scenario 20 needs one change: set `"prompt-quality-criteria@brokenrobot-xyz": false` in that same
+settings file.
+
+**Reinstall the plugin before any run that follows an edit.** A `directory` marketplace source copies
+each plugin into `~/.claude/plugins/cache/` at install time, and `claude plugin update` compares
+version numbers rather than file contents. Editing a plugin without raising its version therefore
+leaves the installed copy stale, and the run then scores the old text. Uninstall and reinstall to
+refresh that copy.
+
 ## What this proof does not cover
 
 State these plainly rather than letting the passing checks imply more than they show.
 
-- **It verifies the text, not the behaviour.** The criteria are identical and the keys resolve, but
-  no run has confirmed that the reviewer actually invokes the shared skill and scores `B`–`G` from
-  what it returns. Scenarios 19 and 20 exist to test exactly that, and neither has been run.
-- **The two new eval scenarios are unrun**, so their assertions are written from the design rather
-  than from an observed output. The suite's own `H8` says assertions settle on the second pass; treat
-  them as provisional until a first run.
-- **No prose check was run.** `writing-simplified-technical-english` is not installed in this
-  session, so the new `SKILL.md`, `README.md`, and criteria file have not been graded against the
-  twelve conventions. Run it before Change 2 lands.
+- **No baseline run exists.** The suite's § How to run asks for a run without the skill first,
+  because that run is the `H6` evidence that the skill earns its cost. Scenarios 19 and 20 ran only
+  with the skill, so both `baseline` fields stay hypotheses.
+- **Each scenario ran once, on one model.** A single passing run measures no flake rate, and `opus`
+  is the only model in either scenario's `models` list. A later run may score the same fixture
+  differently.
+- **The author graded the judgment assertions.** The graded runs were separate headless sessions, so
+  no run graded itself, which is what `H10` forbids. The same author wrote the scenarios and read the
+  results, so the grading is not independent in the sense `H10` intends.
 - **The `N/A` reading of `R6` is unchanged.** The naming document is not reachable from `CLAUDE.md`,
   so a reviewer run against this repository still scores the project-scoped items `N/A`. That was a
   deliberate decision, not an oversight.

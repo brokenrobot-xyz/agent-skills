@@ -410,7 +410,7 @@
                 "States explicitly in the report that groups B–G went ungraded",
                 "Marks B–G as N/A in the per-group coverage table — never Pass",
                 "Does not silently omit the B–G rows from the coverage table",
-                "Does not invent B–G findings from memory of the criteria"
+                "Invents no B–G criterion key from memory — naming an ungraded group's defect without a key is correct, not a failure"
             ],
             "baseline": "Without the skill, there is no dependency to be missing and no notion of an ungraded group, so the report presents whatever it covered as the whole review.",
             "models": ["opus"]
