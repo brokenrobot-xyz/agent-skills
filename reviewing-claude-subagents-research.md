@@ -12,8 +12,11 @@
 Claude Code's behaviour is version-gated in many places. Where the documentation names a version, this
 document repeats it. A rule without a version note was current as of the research date.
 
+**Refreshed:** 2026-08-06. Every source in § 17 was re-fetched. § 0 lists what changed.
+
 ## Contents
 
+- [0. Refresh log — 2026-08-06](#0-refresh-log--2026-08-06)
 - [1. Headline finding — no open standard for subagents](#1-headline-finding--no-open-standard-for-subagents)
 - [2. The subagent file format](#2-the-subagent-file-format)
 - [3. Scopes and precedence](#3-scopes-and-precedence)
@@ -31,6 +34,53 @@ document repeats it. A rule without a version note was current as of the researc
 - [15. Third-party anti-patterns](#15-third-party-anti-patterns)
 - [16. Skills and subagents compared](#16-skills-and-subagents-compared)
 - [17. Sources](#17-sources)
+
+## 0. Refresh log — 2026-08-06
+
+Two days after the original research, seven of the eight source documents still matched. The rest of
+this document was corrected in place, so read the sections below as current. This log states what
+moved, so a reader who compared the two dates does not have to.
+
+**One claim was withdrawn.**
+
+- **§ 12's list of four stated best practices no longer exists.** The sub-agents page carried "Design
+  focused subagents", "Write detailed descriptions", "Limit tool access", and "Check into version
+  control" as a labelled list. The page now carries no best-practices section. Only the
+  version-control advice survives, inside the project-scope paragraph. **Do not anchor a criterion to
+  that list.** The underlying advice still appears in Anthropic's blog writing, which is where a
+  criterion should cite it.
+
+**Four claims were narrowed.**
+
+| §   | Was                                                             | Now                                                                                                                                                                                  |
+| :-- | :-------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4   | Zero-resolution refuses to launch                               | The page hedges twice: the subagent **usually** fails to launch. State the consequence with that hedge.                                                                              |
+| 7   | A blocked model value runs the subagent on the inherited model  | From v2.1.222 a blocked **family alias** such as `opus` runs on the newest version of that family the allowlist permits. Only other blocked values fall back to the inherited model. |
+| 6   | Git status is part of every non-fork subagent's initial context | Git status is absent when the working directory is not a Git repository, and when `includeGitInstructions` is `false`.                                                               |
+| 14  | Four-tier context cost hierarchy                                | Seven tiers, and subagents now sit alongside hooks and skills at "low" rather than in a lowest tier of their own. Appending a system prompt is a new middle tier.                    |
+
+**Five behaviours were added.**
+
+- **`--append-subagent-system-prompt` (v2.1.205)** appends text to every subagent's system prompt in
+  non-interactive mode, nested subagents included. A subagent definition is therefore not the whole
+  system prompt, and a criterion must not assume that it is.
+- **`CLAUDE_CODE_SUBAGENT_MODEL=inherit` (v2.1.196)** now behaves as though the variable were unset.
+  Earlier versions forced every subagent onto the main conversation's model.
+- **A per-invocation `model` survives a resume (v2.1.211).**
+- **The `isolation: worktree` working-directory check widened (v2.1.203, v2.1.210)** to the whole
+  repository, and to the main checkout when the session itself runs in a linked worktree.
+- **`--add-dir` directories are scanned for subagents**, so the set of loaded definitions depends on
+  how the session was launched.
+
+**Two quotations got sharper**, and both strengthen a draft criterion.
+
+- On sibling duplication: "flooding Claude with options makes automatic delegation less reliable."
+- On grader independence, from the eval methodology doc: "Generally best practice to use a different
+  model to evaluate than the model used to generate the evaluated output." That asks for a different
+  **model**, which is stricter than a different instance.
+
+**One case was added to the suit-the-work list**: verification before committing, where "a second
+opinion is warranted before committing code."
 
 ## 1. Headline finding — no open standard for subagents
 
@@ -86,6 +136,10 @@ started, and sessions launched with `--disable-slash-commands`.
 **[DOC]** A subagent starts in the main conversation's working directory. Inside a subagent, `cd` does not
 persist between Bash calls and does not affect the main conversation.
 
+**[DOC]** From v2.1.205, the `--append-subagent-system-prompt` flag appends text to **every** subagent's system
+prompt in non-interactive mode, nested subagents included. The definition's body is therefore not necessarily
+the whole system prompt, so a criterion must not assume that the body is all the subagent reads.
+
 ## 3. Scopes and precedence
 
 **[DOC]** When several definitions share a `name`, the higher-priority location wins:
@@ -100,6 +154,10 @@ persist between Bash calls and does not affect the main conversation.
 
 **[DOC]** Both `.claude/agents/` and `~/.claude/agents/` are scanned **recursively**; the subfolder path does
 not affect identity, which comes only from `name`.
+
+**[DOC]** A `.claude/agents/` directory inside a path passed with `--add-dir` loads alongside the project's own
+subagents. The set of loaded definitions therefore depends on how the session was launched, which a reviewer
+cannot read from a definition file.
 
 **[DOC] A real hazard.** If two files under the same `.claude/agents/` tree declare the same `name`, Claude Code
 loads **only one, chosen by filesystem read order** — no documented precedence. `/doctor` reports same-directory
@@ -142,9 +200,10 @@ different tools in the foreground and the background**, and the removal reports 
 against what remains. A tool named in both is removed.
 
 **[DOC] Zero-resolution is a launch failure.** When nothing in `tools` resolves — every entry misspelled, or
-naming a tool unavailable to subagents — Claude Code refuses to launch the subagent and the Agent tool returns
-an error naming the unresolved entries. Before v2.1.208 the subagent launched with no tools and returned empty
-or confusing results.
+naming a tool unavailable to subagents — Claude Code **usually** refuses to launch the subagent, and the Agent
+tool returns an error naming the unresolved entries. The page hedges with "usually" twice and states no
+exception, so a criterion states the consequence with the same hedge. Before v2.1.208 the subagent launched
+with no tools and returned empty or confusing results.
 
 **[DOC] MCP patterns.** Both fields accept `mcp__<server>` and `mcp__<server>__*` for server-level grants or
 removals. In `disallowedTools`, `mcp__*` removes every MCP tool from every server.
@@ -178,7 +237,8 @@ has no safety measure, and nothing warns the author.
 - **Task message** — the delegation prompt Claude writes at hand-off.
 - **`CLAUDE.md` files** — every level of the hierarchy the main conversation loads, including
   `~/.claude/CLAUDE.md`, project rules, `CLAUDE.local.md`, and managed policy files.
-- **Git status** — a snapshot taken at the start of the parent session.
+- **Git status** — a snapshot taken at the start of the parent session. Absent when the working directory is
+  not a Git repository, and when `includeGitInstructions` is `false`.
 - **Preloaded skills** — full content of anything named in `skills`.
 - **Sibling roster** — v2.1.206+, only when the subagent's tools include `SendMessage` and another agent is named.
 
@@ -208,9 +268,17 @@ context, so most rules don't need to reach the subagent itself."
 3. The definition's `model` frontmatter
 4. The main conversation's model
 
-**[DOC]** Values are checked against an organisation's `availableModels` allowlist; an excluded value is skipped
-and the subagent runs on the inherited model. So **a definition depending on the quirks of exactly one model is
-fragile** — the pin can be overridden from three directions.
+**[DOC]** Values are checked against an organisation's `availableModels` allowlist. From v2.1.222 a blocked
+**family alias** such as `opus` runs the subagent on the newest version of that family the allowlist permits.
+Any other blocked value, and a family the allowlist permits no version of, falls back to the inherited model.
+Either way **a definition depending on the quirks of exactly one model is fragile** — the pin can be overridden
+from three directions.
+
+**[DOC]** From v2.1.196, setting `CLAUDE_CODE_SUBAGENT_MODEL` to `inherit` behaves as though the variable were
+unset, and resolution continues down the list. Earlier versions forced every subagent onto the main
+conversation's model.
+
+**[DOC]** A per-invocation `model` parameter survives a resume from v2.1.211. Earlier versions dropped it.
 
 **[DOC]** From v2.1.198, subagents inherit the main conversation's extended-thinking configuration. There is no
 per-subagent thinking setting. Before v2.1.198, subagents ran with extended thinking disabled regardless.
@@ -301,7 +369,9 @@ knowledge base.
 
 **`isolation: worktree` [DOC].** Gives the subagent an isolated repository copy, branched **from the default
 branch rather than the parent session's `HEAD`**. Auto-removed if the subagent makes no changes. Bash and
-PowerShell run inside the worktree; a command resolving to the main checkout fails. For Bash, Claude Code also
+PowerShell run inside the worktree; a command resolving to the main checkout fails (v2.1.203+). From v2.1.210
+the check covers the whole repository rather than only the launch directory, and it also covers the main
+checkout when the session itself runs in a linked worktree. For Bash, Claude Code also
 inspects the command itself and fails anything redirecting git into the main checkout via `git -C`, `--git-dir`,
 `GIT_DIR`, `GIT_WORK_TREE`, or a `cd`. A command too complex to check also fails.
 
@@ -319,17 +389,19 @@ Useful for keeping a server's tool descriptions out of the main conversation's c
 
 ## 12. Anthropic's stated best practices
 
-**[DOC]** From the sub-agents documentation, verbatim:
-
-- **Design focused subagents** — each should excel at one specific task.
-- **Write detailed descriptions** — Claude uses the description to decide when to delegate.
-- **Limit tool access** — grant only necessary permissions for security and focus.
-- **Check into version control** — share project subagents with the team.
+**Withdrawn on the 2026-08-06 refresh.** The sub-agents page carried a labelled list of four best practices —
+design focused subagents, write detailed descriptions, limit tool access, and check into version control. That
+list is gone, and the page now carries no best-practices section. **Do not cite it.** The one sentence that
+survives sits in the project-scope paragraph: "Check them into version control so your team can use and
+improve them collaboratively." Anchor the other three to the blog writing quoted below, which still states
+them.
 
 **[DOC]** From Anthropic's subagents blog post — when subagents suit the work: research-heavy tasks where
 gathering context means reading dozens of files; multiple independent tasks with no dependencies between them;
-work needing a fresh perspective or unbiased review; pipeline workflows with distinct sequential phases. The
-rough thresholds given are tasks exploring 10+ files or involving 3+ independent pieces of work.
+work needing a fresh perspective or unbiased review; **verification before committing, where "a second opinion
+is warranted before committing code"**; and pipeline workflows with distinct sequential phases. The stated
+threshold: "When a task requires exploring ten or more files, or involves three or more independent pieces of
+work, that's a strong signal to direct Claude toward subagents."
 
 **[DOC]** When to avoid delegation: sequential work where step two needs step one's full output; multiple edits
 to the same file; small quick tasks where overhead exceeds benefit; work requiring subagent-to-subagent
@@ -418,9 +490,10 @@ conversation at all**.
 **[DOC] Rule of thumb, as stated:** choose subagents when side-task clutter would distract from the primary
 work; choose skills when collaborative visibility matters.
 
-**[DOC] Context cost hierarchy:** lowest — subagents and hooks (code runs outside context); low — skills (body
-loads only when invoked); medium — path-scoped rules; highest — `CLAUDE.md` root, output styles, unscoped rules
-(always loaded).
+**[DOC] Context cost hierarchy**, corrected on the 2026-08-06 refresh. Seven tiers, from cheapest: hooks,
+skills, and subagents all at **low**; path-scoped rules at **medium**; an appended system prompt at
+**moderate**; output styles and the `CLAUDE.md` root at **high**. Subagents no longer occupy a cheapest tier of
+their own, so "a subagent costs less context than a skill" is not a claim this source supports.
 
 ## 15. Third-party anti-patterns
 
