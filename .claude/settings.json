@@ -1,0 +1,207 @@
+{
+    "env": {
+        "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1",
+        "DO_NOT_TRACK": "1",
+        "HOMEBREW_NO_ANALYTICS": "1"
+    },
+    "enabledMcpjsonServers": ["github"],
+    "enabledPlugins": {
+        "writing-simplified-technical-english@brokenrobot-xyz": true,
+        "reviewing-claude-skills@brokenrobot-xyz": true,
+        "prompt-quality-criteria@brokenrobot-xyz": true,
+        "reviewing-claude-subagents@brokenrobot-xyz": true
+    },
+    "extraKnownMarketplaces": {},
+    "sandbox": {
+        "enabled": true,
+        "failIfUnavailable": true,
+        "autoAllowBashIfSandboxed": true,
+        "allowUnsandboxedCommands": false,
+        "filesystem": {
+            "denyRead": [
+                "~/.ssh",
+                "~/.aws",
+                "~/.gnupg",
+                "~/.kube",
+                "~/.netrc",
+                "~/.npmrc",
+                "~/.config/gh",
+                "~/.config/gcloud",
+                "~/.git-credentials",
+                "~/Library/Keychains"
+            ],
+            "allowRead": ["."],
+            "denyWrite": ["/tmp", "/etc", "/usr", "/opt"],
+            "allowWrite": [
+                ".",
+                "../../../.git",
+                "~/.npm",
+                "~/.docker/buildx",
+                "/var/folders",
+                "~/Library/Preferences/astro"
+            ]
+        },
+        "network": {
+            "allowedDomains": [
+                "localhost",
+                "127.0.0.1",
+                "api.anthropic.com",
+                "host.docker.internal",
+                "github.com",
+                "raw.githubusercontent.com",
+                "ghcr.io",
+                "pkg-containers.githubusercontent.com"
+            ],
+            "allowLocalBinding": true,
+            "allowAllUnixSockets": true
+        },
+        "credentials": {
+            "files": [
+                { "path": ".claude/settings.local.json", "mode": "deny" },
+                { "path": "~/.claude/settings.json", "mode": "deny" }
+            ],
+            "envVars": [
+                {
+                    "name": "AGENT_SKILLS_GITHUB_PERSONAL_ACCESS_TOKEN",
+                    "mode": "deny"
+                }
+            ]
+        }
+    },
+    "permissions": {
+        "allow": [
+            "Read(/**)",
+
+            "Bash(git status)",
+            "Bash(git status *)",
+            "Bash(git log)",
+            "Bash(git log *)",
+            "Bash(git diff)",
+            "Bash(git diff *)",
+            "Bash(git show)",
+            "Bash(git show *)",
+            "Bash(git branch)",
+            "Bash(git branch -*)",
+            "Bash(git rev-parse *)",
+            "Bash(git config --get *)",
+            "Bash(git config --show-origin *)",
+            "Bash(git config --list*)",
+            "Bash(git remote -v)",
+            "Bash(git remote show *)",
+            "Bash(git symbolic-ref *)",
+            "Bash(git ls-files*)",
+            "Bash(git blame *)",
+            "Bash(git worktree list*)",
+            "Bash(git stash list*)",
+            "Bash(git stash show*)",
+            "Bash(git tag)",
+            "Bash(git tag -l*)",
+            "Bash(git tag --list*)",
+
+            "Bash(git add *)",
+            "Bash(git commit *)",
+            "Bash(git switch *)",
+            "Bash(git stash)",
+            "Bash(git stash push *)",
+            "Bash(git stash pop*)",
+            "Bash(git stash apply*)",
+            "Bash(git stash drop*)",
+            "Bash(git reset)",
+            "Bash(git reset --soft*)",
+            "Bash(git reset --mixed*)",
+            "Bash(git merge *)",
+            "Bash(git rebase *)",
+            "Bash(git cherry-pick *)",
+            "Bash(git tag *)",
+            "Bash(git mv *)",
+            "Bash(git rm *)",
+
+            "Bash(pwd)",
+            "Bash(cd *)",
+            "Bash(echo *)",
+            "Bash(ls *)",
+            "Bash(find *)",
+            "Bash(cat *)",
+            "Bash(grep *)",
+            "Bash(head *)",
+            "Bash(tail *)",
+            "Bash(wc *)",
+            "Bash(stat *)",
+            "Bash(du *)",
+            "Bash(diff *)",
+            "Bash(xargs *)",
+            "Bash(awk *)",
+            "Bash(sed *)",
+            "Bash(tr *)",
+            "Bash(cut *)",
+            "Bash(sort *)",
+            "Bash(sort)",
+            "Bash(uniq *)",
+            "Bash(printf *)",
+            "Bash(test *)",
+            "Bash(which *)",
+            "Bash(command *)",
+            "Bash(type *)",
+            "Bash(realpath *)",
+            "Bash(basename *)",
+            "Bash(dirname *)",
+            "Bash(tree *)",
+            "Bash(jq *)",
+            "Bash(yq *)",
+            "Bash(mkdir *)",
+            "Bash(touch *)",
+            "Bash(cp *)",
+            "Bash(mv *)",
+            "Bash(ln *)",
+            "Bash(rm *)",
+
+            "Bash(npm run *)",
+            "Bash(npm run)",
+            "Bash(npm ci)",
+            "Bash(npm ci *)",
+            "Bash(npm install)",
+            "Bash(npm install *)",
+            "Bash(npm outdated)",
+            "Bash(npm outdated *)",
+
+            "Skill(committing-conventionally:committing-conventionally)",
+            "Skill(reviewing-claude-skills:reviewing-claude-skills)",
+            "Skill(writing-simplified-technical-english:writing-simplified-technical-english)",
+
+            "mcp__github"
+        ],
+        "deny": [
+            "Bash(cd /*)",
+            "Bash(cd * /*)",
+
+            "Read(/.env)",
+            "Read(/.env.*)",
+            "Read(/**/.env)",
+            "Read(/**/.env.*)",
+
+            "Read(/.claude/settings.local.json)",
+            "Read(/**/.claude/settings.local.json)",
+
+            "Bash(git push:*)",
+            "Bash(git fetch:*)",
+            "Bash(git pull:*)",
+            "Bash(git clone:*)",
+            "Bash(git ls-remote:*)",
+            "Bash(git submodule update:*)",
+
+            "Bash(git remote add *)",
+            "Bash(git remote set-url *)",
+            "Bash(git remote rename *)",
+            "Bash(git remote remove *)",
+            "Bash(git remote rm *)",
+
+            "Bash(git reset --hard*)",
+            "Bash(git clean -*)",
+            "Bash(git branch -D *)",
+            "Bash(git branch --delete --force*)",
+            "Bash(git restore --staged --worktree *)",
+
+            "Bash(gh *)"
+        ]
+    }
+}
