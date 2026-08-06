@@ -48,10 +48,11 @@ it is a finding and there is no portability criterion to score.
 
 Two consequences follow, and both raise the cost of a stale checklist.
 
-- **This checklist tracks a moving target.** Claude Code gates behavior by version, and Anthropic revises the
-  documentation often. Between 2026-08-04 and 2026-08-06 the sub-agents page dropped its
-  best-practices list, changed how a blocked model alias resolves, and added a flag that appends text
-  to every subagent's system prompt. Treat the `last-synced` date as load-bearing.
+- **This checklist tracks a moving target.** Claude Code gates behavior by version, and Anthropic
+  revises the documentation often. The sub-agents page once changed three normative rules inside a
+  single 48-hour window: it dropped its best-practices list, changed how a blocked model alias
+  resolves, and added a flag that appends text to every subagent's system prompt. Treat the
+  `last-synced` date as load-bearing.
 - **Report a version-gated rule with its version.** A reader running an older Claude Code needs to
   know which rules apply, so a finding that rests on a versioned behavior names the version.
 
@@ -111,7 +112,7 @@ _Unexercised:_ note.
   `CLAUDE.md` hierarchy that the main conversation loads. Restating those rules in the body spends
   tokens on every delegation and buys nothing, and the two copies drift. Read the host project's
   `CLAUDE.md` before scoring this, and quote the overlap. _Exception:_ the built-in `Explore` and
-  `Plan` agents skip `CLAUDE.md`, and a rule that must reach them belongs in the delegation prompt
+  `Plan` agents skip `CLAUDE.md`, and a rule that must reach them belongs in the delegation message
   rather than in a definition.
 - **A9 — the body assumes no conversation.** A non-fork subagent sees only its system prompt, the
   delegation message, and the context listed under `A8`. It does not see prior messages, the skills
@@ -138,7 +139,7 @@ _Unexercised:_ note.
   `Skill` in `tools`. A body that hands work to another subagent needs `Agent`. A body that asks
   anyone a question cannot work at all, because Claude Code strips `AskUserQuestion` from every subagent.
   This defect is silent at authoring time and produces a confused subagent at run time. It fired on
-  three of the five real subagents in the dry-run, which makes it the highest-yield item in this
+  three of the five real subagents in the dry run, which makes it the highest-yield item in this
   group.
 - **A12 — no always-stripped tool is listed.** Claude Code removes `AskUserQuestion`,
   `EndConversation`, `EnterPlanMode`, `ScheduleWakeup`, `TaskOutput`, `WaitForMcpServers`, and
@@ -153,7 +154,7 @@ _Unexercised:_ note.
   differently in the foreground and the background, and Claude Code reports no error when it removes
   the tool. `Agent` and
   `ExitPlanMode` are the exceptions: they follow `A12`'s conditions wherever the subagent runs.
-  _Unexercised:_ all five subagents in the dry-run used only background-safe tools.
+  _Unexercised:_ all five subagents in the dry run used only background-safe tools.
 - **A14 — `tools` resolves as intended.** Every entry names a real tool or a documented MCP pattern.
   When nothing in `tools` resolves, the subagent **usually** fails to launch and the Agent tool returns
   an error naming the entries — the documentation hedges with "usually" and states no exception, so

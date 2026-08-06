@@ -38,7 +38,11 @@
                 "  grep -q \"^- \\*\\*$k —\" \"$PC\" || echo \"FAIL: $k is not a defined criterion\"",
                 "done",
                 "# 2. no fixture was touched",
-                "git diff --quiet -- evals/files/ || echo 'FAIL: a fixture was modified'"
+                "# checksum the SCRATCH copies, not evals/files/ — how_to_run copies each fixture out, so this",
+                "# bundle is never touched and a check against it would pass no matter what the run did",
+                "# take BEFORE the run: find \"$SCRATCH\" -type f -exec shasum {} + | sort > /tmp/fx.before",
+                "find \"$SCRATCH\" -type f -exec shasum {} + | sort > /tmp/fx.after",
+                "diff -q /tmp/fx.before /tmp/fx.after >/dev/null || echo 'FAIL: a fixture was modified'"
             ]
         },
         "judgment_graded": "Whether the reply genuinely withholds severity rather than implying it, whether the group B subset matches the fixture's pinned model, and whether the direct-invocation branch in scenario 5 actually scores rather than only listing criteria. Grade these with a fresh instance, never the run under test (H10)."

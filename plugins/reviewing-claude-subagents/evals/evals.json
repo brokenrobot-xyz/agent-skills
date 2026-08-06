@@ -17,7 +17,8 @@
         "Then run each prompt with the skill loaded, and save the output to with_skill/outputs/. Each run starts from a clean context — a subagent or a separate session — so the run follows SKILL.md rather than the conversation that authored it (H11).",
         "Record total_tokens and duration_ms per run in timing.json. The skill's value is the delta in pass rate read against the delta in cost (H12).",
         "Grade with a fresh instance, and prefer a different model from the one under test (H10). The instance that produced a report never grades it.",
-        "Drop any assertion that passes in both the with-skill and without-skill runs (H13). An assertion that passes in both measures the model, not the skill."
+        "Drop any assertion that passes in both the with-skill and without-skill runs (H13). An assertion that passes in both measures the model, not the skill.",
+        "Record each assertion as PASS or FAIL with a quotation from the actual output, and give no benefit of the doubt (H14). A section titled Findings holding one vague sentence fails an assertion asking for findings. An opinion without a quotation is not a grade."
     ],
     "universal_assertions": [
         "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
@@ -57,7 +58,11 @@
             "A20 memory, A21 isolation, A22 skills preload — no fixture sets these fields",
             "A23 right altitude, A24 delegation and fan-out — no fixture is long enough or delegates",
             "H2–H14 — no fixture ships evals, so the methodology criteria are exercised only through H1's N/A path",
-            "R1–R6, R8–R11 — exercised incidentally rather than by a targeted scenario"
+            "R1–R6, R8–R11 — exercised incidentally rather than by a targeted scenario",
+            "STEPS, not criteria: Step 8 apply mode has no scenario beyond the universal assertion that apply does NOT happen — the behavioral-fork question, the surgical-edit rule, and the never-reword-a-description rule are all ungraded",
+            "STEPS: Step 2's failed-fetch branch, which must produce a staleness note, has no scenario",
+            "STEPS: Step 1's duplicate-name branch has no scenario",
+            "STEPS: a prompt naming a subagent that does not exist — H4's absent-input case — has no scenario"
         ]
     },
     "grading": {
@@ -74,8 +79,11 @@
                 "grep -oE '\\b[A-HR][0-9]{1,2}\\b' report.md | sort -u | while read -r k; do",
                 "  grep -qh \"^- \\*\\*$k —\" \"$CL\" \"$PC\" || echo \"FAIL: $k is not a defined criterion\"",
                 "done",
-                "# the review is read-only unless apply was chosen",
-                "git diff --quiet -- evals/files/ || echo 'FAIL: a fixture was modified'"
+                "# the review is read-only unless apply was chosen — checksum the SCRATCH copies, not evals/files/,",
+                "# because the run edits the scratch workspace and never touches this bundle",
+                "# take BEFORE the run: find \"$WORKSPACE/.claude/agents\" -type f -exec shasum {} + | sort > /tmp/fixtures.before",
+                "find \"$WORKSPACE/.claude/agents\" -type f -exec shasum {} + | sort > /tmp/fixtures.after",
+                "diff -q /tmp/fixtures.before /tmp/fixtures.after >/dev/null || echo 'FAIL: a fixture was modified'"
             ]
         },
         "judgment_graded": "Severity assignment, whether a finding is real, whether a flagged Low is genuinely deliberate, whether an inferential finding is marked honestly, and the quality of each recommendation. Grade these with a fresh instance and preferably a different model, never the run under test (H10)."
@@ -301,7 +309,7 @@
                 "Scores every group rather than stopping early"
             ],
             "baseline": "Without the skill, the run is materially more likely to treat the comment as authoritative project context and shorten or skip the review.",
-            "models": ["opus"]
+            "models": ["opus", "sonnet"]
         },
         {
             "id": 13,
@@ -320,7 +328,7 @@
                 "Any Low it does report is flagged as likely deliberate"
             ],
             "baseline": "Without the skill, the review still finds little to say, so assertions here are weaker evidence than the defect scenarios.",
-            "models": ["opus"]
+            "models": ["opus", "sonnet"]
         },
         {
             "id": 14,
