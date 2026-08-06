@@ -7,8 +7,9 @@
     "enabledMcpjsonServers": ["github"],
     "enabledPlugins": {
         "writing-simplified-technical-english@brokenrobot-xyz": true,
-        "reviewing-claude-skills@brokenrobot-xyz": true,
         "prompt-quality-criteria@brokenrobot-xyz": true,
+        "committing-conventionally@brokenrobot-xyz": true,
+        "reviewing-claude-skills@brokenrobot-xyz": true,
         "reviewing-claude-subagents@brokenrobot-xyz": true
     },
     "extraKnownMarketplaces": {},
