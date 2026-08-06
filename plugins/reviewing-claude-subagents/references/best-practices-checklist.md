@@ -85,8 +85,8 @@ _Unexercised:_ note.
 
 - **A3 — description states trigger conditions.** The `description` states when to delegate, not what
   the subagent is good at. "Reviews code for security issues before commits" routes better than
-  "security expert". The description is the only part of the definition loaded at session start, and it
-  is what Claude routes on, so Claude cannot reliably select a subagent whose description states no trigger.
+  "security expert". The documentation states the mechanism — "Claude uses each subagent's description
+  to decide when to delegate" — so Claude cannot reliably select a subagent whose description states no trigger.
 - **A4 — description point of view.** Third person, for the same reason a skill's description is:
   the description is injected into the system prompt, and a mixed point of view degrades routing.
 - **A5 — proactive phrasing where the subagent wants it.** A subagent that Claude should select
@@ -160,7 +160,11 @@ _Unexercised:_ note.
   an error naming the entries — the documentation hedges with "usually" and states no exception, so
   state the consequence with the same hedge. When both fields are set, `disallowedTools` applies
   first and `tools` then resolves against what remains, so a tool named in both fields is removed. A
-  tool appearing in both fields is dead configuration.
+  tool appearing in both fields is dead configuration. An `Agent(agent_type)` allowlist is honored
+  only for an agent running as the main thread via `claude --agent`: in a subagent definition,
+  listing `Agent` permits nesting and the type list inside the parentheses is ignored, so a
+  definition relying on that list for safety has none. Omitting `Agent` entirely is what prevents
+  nesting.
 - **A15 — MCP references are correct and consistent.** `tools` uses fully qualified names or the
   documented server-level patterns `mcp__<server>` and `mcp__<server>__*`. When the body names an MCP
   tool, it names it the same way the grant does, so a reader can tell which grant covers it.
@@ -176,15 +180,16 @@ _Unexercised:_ note.
   containing `:` at all**, because it reserves `:` for plugin-scoped identifiers, and the only trace is
   a line in the debug log. Claude Code accepted such names before v2.1.218, so a definition that worked once can stop
   loading after an upgrade. Identity comes from `name` alone and the filename is free, so a filename
-  mismatch is not a finding here. Two definitions sharing a `name` in one `.claude/agents/` tree are:
-  Claude Code loads one of them chosen by filesystem read order, with no documented precedence. This
-  is a deterministic lookup.
+  mismatch is not a finding here. This is a deterministic lookup.
 
     **Two definitions sharing a `name` resolve differently depending on where they sit.** In the same
     `.claude/agents/` tree, including its subfolders, Claude Code loads one of them chosen by
     filesystem read order, with no documented precedence, and `/doctor` reports the clash. Across
     nested project directories, the definition closest to the working directory wins from v2.1.178.
-    Report the first case as a defect and the second as a resolution rule the reader should know.
+    Across scopes, the higher-priority location wins: managed settings, then the `--agents` CLI
+    flag, then `.claude/agents/`, then `~/.claude/agents/`, then a plugin's `agents/` directory.
+    Report the same-tree case as a defect and the other two as resolution rules the reader should
+    know.
 
 - **A18 — plugin-shipped fields.** A subagent shipped in a plugin supports `name`, `description`,
   `model`, `effort`, `maxTurns`, `tools`, `disallowedTools`, `skills`, `memory`, `background`, and
@@ -340,9 +345,9 @@ when one does, cite the project's document alongside the key.
   different criteria is a second artifact; and criteria a consumer must score with itself are
   extracted regardless. Two responsibilities in one definition make its `description` vague, and a
   vague description is what stops Claude selecting the right subagent. **Splitting has a permanent cost**
-  — every definition's `name` and `description` load at session start whether it runs or not, and a
-  sibling with an adjacent description competes for the same routing — so recommending a split for
-  tidiness alone is a finding in the other direction. This differs from `A2`, which compares the
+  — every definition joins the roster Claude routes over whether it runs or not, and a sibling with
+  an adjacent description competes for the same routing — so recommending a split for tidiness alone
+  is a finding in the other direction. This differs from `A2`, which compares the
   subagent against its siblings; `R12` asks whether one definition is internally coherent.
 - **R13 — invocation completeness.** Where the body tells the subagent to invoke a skill or hand work
   to another agent, that instruction states four things, and it states them at the point of use rather

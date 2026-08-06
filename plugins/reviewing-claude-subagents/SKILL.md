@@ -175,7 +175,9 @@ defaults so the user can say "use the defaults".
    the return contract? _(default: all equal)_
 3. **Change appetite** — surgical tweaks only, or open to bigger restructuring? _(default: surgical)_
 
-Do not assume the answers, because a wrong scope wastes the review.
+When the session can ask, do not assume the answers, because a wrong scope wastes the review. When
+it cannot — a headless or otherwise non-interactive run — proceed on the three defaults and state in
+the report that the defaults were assumed.
 
 ### 5. Grade fit-for-purpose first
 
