@@ -10,7 +10,7 @@ they live in the `prompt-quality-criteria` skill, which `SKILL.md` Step 3 invoke
 against. Their keys are unchanged, and a finding cites `B4` or `F1` exactly as the shared file writes
 it.
 
-**last-synced:** 2026-08-06. When this date is stale, re-fetch the URLs below and reconcile any new
+**last-synced:** 2026-08-07. When this date is stale, re-fetch the URLs below and reconcile any new
 guidance into this file. The shared criteria carry their own `last-synced` date for the docs behind
 groups `B`–`G`.
 
@@ -103,8 +103,9 @@ _Unexercised:_ note.
   description of topics.
 - **A7 — the body constrains verbosity.** A subagent that returns everything it read cancels the
   context saving that justified delegating to it. Anthropic's own anchor is "a condensed, distilled
-  summary of its work (often 1,000-2,000 tokens)". A body that lists what to report without bounding
-  how much is a finding.
+  summary of its work (often 1,000-2,000 tokens)", from _Effective context engineering for AI
+  agents_ — not from the multi-agent research post, so a re-sync checks the page the quote actually
+  came from. A body that lists what to report without bounding how much is a finding.
 
 ### Context inheritance
 
@@ -132,8 +133,10 @@ _Unexercised:_ note.
   exist: a `PreToolUse` hook in the definition's frontmatter, which the documentation names for
   exactly this case as "finer control than the `tools` field provides", or a `permissions.deny` rule
   in settings. State the trade-off when you recommend either: a frontmatter hook does not apply to a
-  plugin-shipped subagent at all (`A18`) and is skipped until the workspace is trusted, and a
-  `permissions.deny` rule applies to the whole session rather than to this subagent alone.
+  plugin-shipped subagent at all (`A18`) and is skipped until the workspace is trusted — a gate on
+  project-level definitions only, because hooks from `~/.claude/agents/` and from `--agents`
+  definitions run without it — and a `permissions.deny` rule applies to the whole session rather
+  than to this subagent alone.
 - **A11 — the body's instructions are possible with the declared tools.** Every action the body tells
   the subagent to take is reachable through a declared tool. A body that says "use the X skill" needs
   `Skill` in `tools`. A body that hands work to another subagent needs `Agent`. A body that asks
@@ -145,19 +148,23 @@ _Unexercised:_ note.
   `EndConversation`, `EnterPlanMode`, `ScheduleWakeup`, `TaskOutput`, `WaitForMcpServers`, and
   `Workflow` from every subagent, even when `tools` names them. It also removes `ExitPlanMode` unless
   `permissionMode` is `plan`, and `Agent` at the depth limit. Listing one is dead configuration that
-  misleads a reader about what the subagent can do. This is a deterministic lookup, not a judgment.
+  misleads a reader about what the subagent can do. A fork is the exception: forks skip both tool
+  filters and receive the main conversation's exact tool pool, and in a fork at the depth limit
+  `Agent` stays listed but returns an error instead of spawning. This is a deterministic lookup, not
+  a judgment.
 - **A13 — the toolset survives background mode.** Subagents run in the background by default from
   v2.1.198, and a background subagent keeps every MCP tool but only these built-in tools: `Read`,
   `Grep`, `Glob`, `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`, `WebSearch`,
   `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`, `Monitor`, `TaskStop`,
   `SendMessage`, and `Artifact`. A definition depending on a built-in tool outside that list behaves
   differently in the foreground and the background, and Claude Code reports no error when it removes
-  the tool. `Agent` and
+  the tool unless the removal leaves `tools` resolving to nothing. `Agent` and
   `ExitPlanMode` are the exceptions: they follow `A12`'s conditions wherever the subagent runs.
   _Unexercised:_ all five subagents in the dry run used only background-safe tools.
 - **A14 — `tools` resolves as intended.** Every entry names a real tool or a documented MCP pattern.
   When nothing in `tools` resolves, the subagent **usually** fails to launch and the Agent tool returns
-  an error naming the entries — the documentation hedges with "usually" and states no exception, so
+  an error naming the entries, from v2.1.208 — before that version, the subagent launched with no
+  tools. The documentation hedges with "usually" and states no exception, so
   state the consequence with the same hedge. When both fields are set, `disallowedTools` applies
   first and `tools` then resolves against what remains, so a tool named in both fields is removed. A
   tool appearing in both fields is dead configuration. An `Agent(agent_type)` allowlist is honored
@@ -166,7 +173,9 @@ _Unexercised:_ note.
   definition relying on that list for safety has none. Omitting `Agent` entirely is what prevents
   nesting.
 - **A15 — MCP references are correct and consistent.** `tools` uses fully qualified names or the
-  documented server-level patterns `mcp__<server>` and `mcp__<server>__*`. When the body names an MCP
+  documented server-level patterns `mcp__<server>` and `mcp__<server>__*`. `disallowedTools`
+  additionally accepts the bare `mcp__*` wildcard, which removes every MCP tool from every server.
+  When the body names an MCP
   tool, it names it the same way the grant does, so a reader can tell which grant covers it.
 - **A16 — `permissionMode` is safe and effective.** A `bypassPermissions` grant is justified where it
   appears. **A definition cannot rely on `permissionMode` for safety**, because a parent on
@@ -229,8 +238,10 @@ _Unexercised:_ note.
   subagents states each child's objective, output format, guidance on tools and sources, and task
   boundaries, because "without detailed task descriptions, agents duplicate work, leave gaps, or fail
   to find necessary information." It also states how many children and when: subagents nest three
-  layers below the main conversation by default from v2.1.219. Score `N/A` when the subagent has no
-  `Agent` tool, which is the common case.
+  layers below the main conversation by default from v2.1.219, and Claude Code runs at most 20
+  subagents concurrently by default from v2.1.217, adjustable with
+  `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, so a wider fan-out queues rather than failing. Score `N/A`
+  when the subagent has no `Agent` tool, which is the common case.
 - **A25 — file references are reachable.** A body that references a path needs `Read` in its `tools`
   list and a path that resolves. **A subagent starts in the main conversation's working directory, not in the
   directory holding the definition file**, so a path written relative to the definition resolves

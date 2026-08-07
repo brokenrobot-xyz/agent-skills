@@ -2,7 +2,7 @@
 name: reviewing-claude-subagents
 description: Reviews a Claude Code subagent definition — its frontmatter, body, declared tools, and the siblings it competes with for routing — against subagent-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis and optionally applying approved fixes. Use when the user asks to review, audit, or improve a subagent or an agent definition.
 compatibility: Designed for Claude Code — reviews a subagent definition in .claude/agents/, ~/.claude/agents/, or a plugin's agents/ directory. Network access keeps the criteria current; without network access, the review uses the baked checklist and says so.
-allowed-tools: Read Edit Bash Grep Glob WebFetch Skill
+allowed-tools: Read Edit Write Bash Grep Glob WebFetch Skill
 model: opus
 ---
 

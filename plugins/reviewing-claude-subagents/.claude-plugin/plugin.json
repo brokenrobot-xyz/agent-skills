@@ -1,6 +1,6 @@
 {
     "name": "reviewing-claude-subagents",
-    "description": "Reviews a Claude Code subagent definition — its frontmatter, body, and the tools it declares — against subagent-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes.",
+    "description": "Reviews a Claude Code subagent definition — its frontmatter, body, declared tools, and routing siblings — against subagent-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes.",
     "version": "1.0.0",
     "author": {
         "name": "Tamas Mezei",
