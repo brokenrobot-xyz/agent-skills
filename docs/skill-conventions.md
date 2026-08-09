@@ -1,19 +1,12 @@
 # Skill naming, splitting, and dependency conventions
 
-**For:** `brokenrobot-xyz/agent-skills`.
-**Note:** this file's name is left over from an earlier draft. The section it carries is what
-matters; the filename does not travel.
-**Action required:** this **replaces** the `## Skill role and naming convention` section already
-pasted into that repository's `CLAUDE.md`. Delete that section entirely — including its Roles table,
-membership test, "Declaring the role" block, and Scope subsection — and paste the section below in
-its place. Do not merge the two; the old section's central claim was withdrawn.
-**Related:** decision `D15` in `reviewing-claude-subagents-brief.md`.
+Conventions for `brokenrobot-xyz/agent-skills`. Codes cited here resolve as follows: `A…` and
+`R…` codes are criteria in the two reviewers' checklists,
+`plugins/reviewing-claude-skills/references/best-practices-checklist.md` and
+`plugins/reviewing-claude-subagents/references/best-practices-checklist.md`; `D15` is a decision
+recorded in `reviewing-claude-subagents-brief.md`.
 
----
-
-## Skill naming, splitting, and dependency conventions
-
-### When to create a new skill
+## When to create a new skill
 
 A skill may offer more than one mode. Modes are not a reason to split. Apply this test:
 
@@ -33,7 +26,10 @@ exists. The twelve prose conventions are artifact-independent, so
 `writing-simplified-technical-english` grades for every caller and nothing needs its conventions
 alone. That asymmetry, not tidiness, decides where a skill's boundary falls.
 
-### What splitting costs
+Both reviewers score this test as `R12`. The criterion carries the split cost in both directions, so
+it can produce a finding against an unnecessary split as well as against an overloaded artifact.
+
+## What splitting costs
 
 Weigh these before splitting for tidiness alone. They are permanent; the benefits of a split are
 usually conceptual.
@@ -50,21 +46,22 @@ usually conceptual.
 - **Redundancy with progressive disclosure.** If the motivation is that a body of criteria is
   bulky, `references/` already solves that without a second skill.
 
-### Naming
+## Naming
 
 - **Gerund** (`verb` + `-ing`) names a skill that **does** something — `committing-conventionally`,
   `reviewing-claude-skills`.
 - **Noun phrase** names a skill that **is** content the caller works from — `prompt-quality-criteria`.
   Suffix a rubric with `-criteria`.
 
-`A1` permits both forms; this section narrows the choice to one form per kind.
+`A1` permits both forms; this section narrows the choice to one form per kind. Both reviewers score
+the name form as `R6`, which reads this section.
 
 **A known exception, left deliberately.** `writing-simplified-technical-english` is named for its
 revise mode, while check mode is what both reviewers depend on. Its `description` states check mode,
 and descriptions are what drive selection, so the name misleads a human reader more than it misleads
 Claude. Renaming would break every `R7` reference for a cosmetic gain. Leave it.
 
-### Invoking another skill
+## Invoking another skill
 
 A caller reaches another skill through the Skill tool. Four things must be true of the step that
 does the invoking, and **the step itself is where they belong**. A separate "Dependencies" section
@@ -86,7 +83,11 @@ Every step that invokes another skill states:
    not guaranteed on every host. A caller that omits this degrades silently, and a silent
    degradation reads to the user as a clean result rather than an ungraded one.
 
-### Keeping the manifest and the procedure in agreement
+Both reviewers score invocation completeness as `R13`. It is separate from the manifest cross-check
+below because no cross-check reaches it: a step naming the right skill in the manifest can still
+omit the mode, the consumed result, and the absent-dependency behaviour.
+
+## Keeping the manifest and the procedure in agreement
 
 Every skill named by an invoking step is declared as a dependency in the caller's
 `.claude-plugin/plugin.json`, and every declared dependency is invoked by some step.
@@ -98,7 +99,7 @@ declares fails on a clean install. That is the opposite of the `metadata`-restat
 case recorded below, where one side carried no information the other lacked. `R3` covers this
 cross-check.
 
-After Change 1 there are four invocation edges, and each needs all four statements above:
+There are four invocation edges, and each needs all four statements above:
 
 | Caller                       | Invoked skill                          | Mode   | Consumed as                                        |
 | :--------------------------- | :------------------------------------- | :----- | :------------------------------------------------- |
@@ -107,9 +108,9 @@ After Change 1 there are four invocation edges, and each needs all four statemen
 | `reviewing-claude-subagents` | `prompt-quality-criteria`              | supply | Criteria the caller scores against, for groups B–G |
 | `reviewing-claude-subagents` | `writing-simplified-technical-english` | check  | Violations folded into `R7`                        |
 
-### Why there is no role field
+## Why there is no role field
 
-An earlier version of this section defined three skill roles — `capability`, `grader`, `supplier` —
+An earlier version of this document defined three skill roles — `capability`, `grader`, `supplier` —
 and declared them in a `metadata` field. That was withdrawn. Three reasons, recorded so the idea is
 not proposed again:
 
@@ -124,7 +125,7 @@ not proposed again:
 
 What survived is the part that decides something: the split test above.
 
-### Sources
+## Sources
 
 **Sourced — re-check when the source changes:**
 
@@ -145,32 +146,3 @@ What survived is the part that decides something: the split test above.
 - `D15` itself, which rests on one sourced fact — a skill loads into the caller's context rather
   than an isolated one — and on a judgement that criteria groups B–G cannot be scored without
   knowing the artifact.
-
----
-
-## Follow-on work
-
-1. **Replace the section in `CLAUDE.md`**, per the action note at the top of this file. The old
-   section is superseded, not amended.
-2. **`R6` grades the name form only** in both reviewers' checklists. It reads this section's naming
-   rule. No metadata field exists for it to grade.
-3. **Nothing to add to any `SKILL.md`.** The earlier instruction to add a `brokenrobot-xyz-role`
-   field to four skills is void. If you already added the field anywhere, remove it.
-4. **Settled during Change 2: the split test became `R12` in both reviewers.** It is a portable craft
-   criterion rather than a project-scoped one, because "does this artifact do one job" holds
-   regardless of whose repository the artifact lives in. It is scored in group `R` rather than group
-   `A`, because it is a house rule with no external source. The criterion carries the split cost in
-   both directions, so it can produce a finding against an unnecessary split as well as against an
-   overloaded artifact.
-5. **Apply the invocation rule to all four edges during Change 1 and Change 2.**
-   `reviewing-claude-skills` already states the absent-dependency behaviour for
-   `writing-simplified-technical-english` in `R7`; that is the pattern to follow for the other three
-   edges rather than a special case.
-6. **Settled during Change 2: invocation completeness became `R13` in both reviewers, and the
-   manifest cross-check went into `R3`.** The two were separated because they check different things.
-   `R3` compares the manifest against the procedure, which is a consistency check between two files.
-   `R13` scores whether one invoking step says enough to act on, which no cross-check reaches: a step
-   naming the right skill in the manifest can still omit the mode, the consumed result, and the
-   absent-dependency behaviour. The subagent reviewer's `R13` scores the reviewed subagent's own
-   instructions to invoke a skill, and pairs with `A11`, which scores whether that invocation is
-   possible at all.

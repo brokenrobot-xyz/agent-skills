@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository conventions
+
+When creating, naming, splitting, or wiring a skill in this repository, follow
+`docs/skill-conventions.md`. It is also the convention document the reviewers' project-scoped
+criteria (`R5`, `R6`) read.
+
 ## Behavioral guidelines
 
 Behavioral guidelines to reduce common LLM coding mistakes.
