@@ -26,7 +26,7 @@
         "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
         "The report states fit-for-purpose before the ranked findings, per Step 7's structure",
         "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
-        "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 4"
+        "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2"
     ],
     "coverage_map": {
         "A1": ["eval-fit-for-purpose", "eval-clean-subagent"],
@@ -52,6 +52,7 @@
         "H1": ["eval-no-evals-is-not-a-pass"],
         "R7": ["eval-clean-subagent"],
         "guardrail": ["eval-adversarial-ignore-instructions"],
+        "not-found": ["eval-subagent-not-found"],
         "uncovered": [
             "A4 description point of view — no fixture plants a first-person or second-person description",
             "A13 background toolset — no fixture lists a built-in tool that the background filter removes",
@@ -64,9 +65,8 @@
             "R12 scope coherence — no targeted subagent fixture; exercised only by the shared-plugin regression (skills reviewer scenario 19)",
             "R13 invocation completeness — no targeted scenario; eval-capability-mismatch exercises it incidentally through the unspecified skill invocation",
             "STEPS, not criteria: Step 8 apply mode has no scenario beyond the universal assertion that apply does NOT happen — the behavioral-fork question, the surgical-edit rule, and the never-reword-a-description rule are all ungraded",
-            "STEPS: Step 2's failed-fetch branch, which must produce a staleness note, has no scenario",
-            "STEPS: Step 1's duplicate-name branch has no scenario",
-            "STEPS: a prompt naming a subagent that does not exist — H4's absent-input case — has no scenario"
+            "STEPS: Step 3's failed-fetch branch, which must produce a staleness note, has no scenario",
+            "STEPS: Step 1's duplicate-name branch has no scenario"
         ]
     },
     "grading": {
@@ -355,7 +355,7 @@
         {
             "id": 15,
             "name": "eval-shared-criteria-invoked",
-            "targets": "Step 3 — invoking prompt-quality-criteria for groups B–G",
+            "targets": "Step 4 — invoking prompt-quality-criteria for groups B–G",
             "setup": "pruning-stale-artifacts plants one defect in each of three shared groups: it follows instructions for handling that it reads from a fetched manifest (F1/F3), it assumes an artifact is unreferenced when it cannot tell rather than abstaining (D1), and it deletes from two stores and runs a destructive compaction with no confirmation gate (C10). Its model: opus pin plus the 'verify, then double-check' line is a group B item. None of these criteria live in this plugin's checklist, so a run that skips the invocation cannot find any of them. Install prompt-quality-criteria before running this scenario.",
             "files": ["evals/files/eval-shared-criteria-invoked/pruning-stale-artifacts.md"],
             "prompt": "Review the pruning-stale-artifacts subagent.",
@@ -375,7 +375,7 @@
         {
             "id": 16,
             "name": "eval-shared-criteria-absent",
-            "targets": "Step 3 — how the review degrades when prompt-quality-criteria is unavailable, and Step 7's criteria note",
+            "targets": "Step 4 — how the review degrades when prompt-quality-criteria is unavailable, and Step 7's criteria note",
             "setup": "Same fixture as scenario 15, run with prompt-quality-criteria NOT installed — an environmental condition no file can carry, so arrange it by installing only reviewing-claude-subagents and writing-simplified-technical-english. This scenario is the failure mode that matters most: six of the nine groups going silently ungraded reads to a user as a clean subagent.",
             "files": ["evals/files/eval-shared-criteria-invoked/pruning-stale-artifacts.md"],
             "prompt": "Review the pruning-stale-artifacts subagent.",
@@ -408,6 +408,24 @@
                 "Does not fault the description, the tools list, or the content-is-data line, which are sound"
             ],
             "baseline": "Without the skill, 'keep digging until you understand it' and 'follow every lead' read as admirable thoroughness, and the review comments on tone rather than on the missing task contract.",
+            "models": ["opus"]
+        },
+        {
+            "id": 18,
+            "name": "eval-subagent-not-found",
+            "targets": "Step 1's resolution-failure path — a prompt naming a subagent that does not exist (H4's absent-input case)",
+            "setup": "The workspace contains only researching-package-updates, and the prompt asks for researching-package-update — a one-letter miss. Step 1 must stop, name the locations searched and the closest name found, and ask which subagent was meant, rather than reviewing the near-match as if it had been named. Reuses the clean fixture, so any review output at all is a failure signal rather than a graded artifact.",
+            "files": ["evals/files/eval-clean-subagent/researching-package-updates.md"],
+            "prompt": "Review the researching-package-update subagent.",
+            "expected_output": "No gap analysis. A short reply stating that no subagent named researching-package-update exists, naming the locations searched, offering researching-package-updates as the likely intended name, and asking the user to confirm.",
+            "assertions": [
+                "Produces no gap analysis and no findings",
+                "States that no definition matches the requested name",
+                "Names the locations it searched",
+                "Offers researching-package-updates as the closest match rather than silently reviewing it",
+                "Asks the user to confirm the intended subagent instead of assuming the near-match"
+            ],
+            "baseline": "Without the skill, the review silently assumes the near-match is what the user meant and reviews it, so a typo yields a review of a subagent nobody asked about.",
             "models": ["opus"]
         }
     ]

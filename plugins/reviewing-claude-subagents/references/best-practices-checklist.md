@@ -1,12 +1,12 @@
 # Reviewing-claude-subagents checklist
 
-The baked half of the reviewer's hybrid criteria. `SKILL.md` Step 2 tries to refresh the source docs
+The baked half of the reviewer's hybrid criteria. `SKILL.md` Step 3 tries to refresh the source docs
 live by fetching the URLs below. When the network is unavailable, the reviewer uses this file
 and records the staleness in the report. This file calls Claude Code's subagent pages **the
 documentation** throughout.
 
 **Groups `B`–`G` are not in this file.** They are prompt criteria shared with the skill reviewer, so
-they live in the `prompt-quality-criteria` skill, which `SKILL.md` Step 3 invokes and Step 6 scores
+they live in the `prompt-quality-criteria` skill, which `SKILL.md` Step 4 invokes and Step 6 scores
 against. Their keys are unchanged, and a finding cites `B4` or `F1` exactly as the shared file writes
 it.
 
@@ -130,8 +130,8 @@ _Unexercised:_ note.
   on prose rather than on configuration. **The `tools` field cannot narrow a single tool's
   arguments** — it accepts tool names and the MCP server patterns `A15` covers, and nothing else, so
   a `Bash(git:*)` entry there is not a documented form. Recommend one of the two mechanisms that do
-  exist: a `PreToolUse` hook in the definition's frontmatter, which the documentation names for
-  exactly this case as "finer control than the `tools` field provides", or a `permissions.deny` rule
+  exist: a `PreToolUse` hook in the definition's frontmatter, which the documentation covers and
+  which can inspect and deny a single tool call, or a `permissions.deny` rule
   in settings. State the trade-off when you recommend either: a frontmatter hook does not apply to a
   plugin-shipped subagent at all (`A18`) and is skipped until the workspace is trusted — a gate on
   project-level definitions only, because hooks from `~/.claude/agents/` and from `--agents`
