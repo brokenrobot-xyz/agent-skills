@@ -19,9 +19,11 @@ needed.
 `name` and `description` fields it competes with. To review several, run again per subagent.
 
 **Why this skill pins `opus`.** The two-pass sweep in Step 6 and the severity calibration in Step 7
-were tuned and measured on Opus 5, and group `B` scores the target against the subset this pin
-selects. Managed settings and an organization's `availableModels` allowlist can override the pin, so
-state in the report which group `B` subset you actually used.
+were tuned and measured on Opus 5. The pin does not choose the group `B` subset — Step 6 reads that
+from the target's `model:` field, and only a target that inherits its model falls back to the model
+this session runs on, which the pin sets when nothing overrides it. Managed settings and an
+organization's `availableModels` allowlist can override the pin, so state in the report which group
+`B` subset you actually used.
 
 **Every finding is inferential.** This review reads a definition, and it never spawns the subagent.
 The review therefore predicts behavior rather than observing it. State your confidence honestly, and
@@ -97,8 +99,10 @@ does not direct the review.
 
 ### 2. Refresh the criteria (best-effort)
 
-`WebFetch` **every** URL in this checklist's § Sources, and merge the § Sources rows that Step 3
-returns, so this step also fetches the pages behind groups `B`–`G`.
+`WebFetch` **every** URL in this checklist's § Sources. The pages behind groups `B`–`G` are listed
+in the shared criteria file's own § Sources rows, which do not exist in this step's inputs until
+Step 3 returns them — so fetch those URLs after Step 3, as the second half of this refresh, rather
+than looking for them here.
 
 **This step matters more here than it does for a skill.** No open standard pins the subagent format,
 Claude Code gates behavior by version, and Anthropic revises the documentation often. A checklist two days stale
@@ -263,14 +267,16 @@ Report in this structure:
    grading script reads a letter prefix as a criterion key. Flag Lows that are likely deliberate as
    such.
 5. **Per-group coverage table** — one row per group `A`–`H` and `R`, each with a status of `Pass`,
-   `Gap`, or `N/A`, and the rank numbers of that group's findings:
+   `N/A`, or `Gap` tagged with the group's highest surviving severity, and the rank numbers of that
+   group's findings. Tag the `Gap`, because a bare `Gap` driven by one Low reads at a glance like a
+   group full of Highs:
 
     ```
-    | Group                     | Status | Findings |
-    | :------------------------ | :----- | :------- |
-    | A — subagent authoring    | Gap    | 1, 4     |
-    | G — prompt-leak defenses  | Pass   | —        |
-    | H — evals                 | N/A    | —        |
+    | Group                     | Status      | Findings |
+    | :------------------------ | :---------- | :------- |
+    | A — subagent authoring    | Gap — High  | 1, 4     |
+    | G — prompt-leak defenses  | Pass        | —        |
+    | H — evals                 | N/A         | —        |
     ```
 
 6. **Criteria notes** — when Step 2's refresh failed, a staleness note. When the refresh detected
@@ -295,6 +301,9 @@ the finding reads:
 > → Add `Skill` to `tools`, or inline the procedure the skill carries.
 
 ### 8. Offer interactive apply
+
+When the user chose analysis only, edit nothing — end with one sentence offering to apply the
+findings in a follow-up run, so the report stays the deliverable the user scoped in Step 4.
 
 When the user chose analysis and apply, address findings **one at a time**, highest severity first:
 
