@@ -62,8 +62,8 @@ actually came from.
 
 ## A. Subagent authoring
 
-Twenty-six criteria. Twelve of them fired on a real subagent during the dry run that produced this
-list. Five have never been exercised outside a fixture, and each of those five carries an
+Twenty-eight criteria. Twelve of them fired on a real subagent during the dry run that produced this
+list. Seven have never been exercised outside a fixture, and each of those seven carries an
 _Unexercised:_ note.
 
 ### Fit-for-purpose — score this first
@@ -257,6 +257,31 @@ _Unexercised:_ note.
   because the shared `prompt-quality-criteria` file holds `F1`–`F5` and this reviewer must not add a
   key to a file it does not own.
 
+### The task contract
+
+- **A27 — the objective is stated, and its placement is explicit.** A subagent's task is assembled
+  from two parts: the body, which is its standing system prompt, and the delegation message the
+  parent writes per run. The body states the remit — what the subagent is for and what a good result
+  is — and names what the per-run objective must add as delegation-message cargo, which is `A9`'s
+  rule extended from inputs to objectives. The source is the line `A24` already applies to spawned
+  children: "without detailed task descriptions, agents duplicate work, leave gaps, or fail to find
+  necessary information", from _How we built our multi-agent research system_ — and it binds the
+  definition itself as much as the children it spawns. A body that specifies neither half — a vague
+  remit and no stated delegation contract — leaves every run to guess the goal, and each run guesses
+  differently. _Unexercised:_ added after the dry run, so no real subagent has been scored against
+  it.
+- **A28 — an open-ended remit states a stopping condition.** For a bounded task, the return contract
+  is the completion criterion — the subagent is done when it can emit the shape `A6` requires — and
+  a separate stopping rule is redundant, which `R1` scores. An open-ended remit — "investigate
+  until", "keep fixing until", any loop whose iteration count the body does not bound — states a
+  condition the subagent can check against evidence, because without one the subagent either stops
+  arbitrarily early or burns tokens past the point of value, and the parent cannot tell which
+  happened. A condition like "until you understand it" fails this criterion too, because nothing can
+  check it. This can be a High finding on an iterative remit. Score `N/A` when the return contract
+  bounds the task, and do not demand a stopping condition a bounded remit does not need — that is
+  the padding failure mode in the other direction. _Unexercised:_ added after the dry run, so no
+  real subagent has been scored against it.
+
 ## H. Success criteria & evaluations
 
 **Subagents have no eval convention**, so this group scores the methodology and never the format.
@@ -268,7 +293,8 @@ numbering and meaning, so a reader who knows one reviewer's report can read the 
   subagent evals. When the subagent ships none, **score this group `N/A` and say so in the report** —
   never `Pass`. Inventing a convention would fail every existing subagent on day one, and passing an
   ungraded group silently would tell the reader the subagent is tested when nothing tested it. When
-  evals do exist, score `H2`–`H14` against them.
+  evals do exist, score `H2`–`H14` against them. When this group is `N/A`, `A27` and `A28` are the
+  only graded success-criteria surface, so weigh their findings accordingly.
 - **H2 — measurable and specific.** Expected behaviors are concrete and checkable. "Clearly define
   what you want to achieve. Instead of 'good performance,' specify 'accurate sentiment
   classification.'"

@@ -46,6 +46,8 @@
         "A19": ["eval-capability-mismatch"],
         "A25": ["eval-file-reference-unreachable"],
         "A26": ["eval-injection-return-path"],
+        "A27": ["eval-unbounded-remit"],
+        "A28": ["eval-unbounded-remit"],
         "B–G": ["eval-shared-criteria-invoked", "eval-shared-criteria-absent"],
         "H1": ["eval-no-evals-is-not-a-pass"],
         "R7": ["eval-clean-subagent"],
@@ -387,6 +389,25 @@
                 "Still reports the A26 return-path finding, which lives in the local checklist"
             ],
             "baseline": "Without the skill, there is no dependency to be missing and no notion of an ungraded group, so the report presents whatever it covered as the whole review.",
+            "models": ["opus"]
+        },
+        {
+            "id": 17,
+            "name": "eval-unbounded-remit",
+            "targets": "A27 and A28 — the task contract",
+            "setup": "investigating-performance-regressions is open-ended by design: it says 'keep digging until you understand it' and 'follow every lead you find', which no evidence can check, so the loop has no stopping condition (A28). The body also refers to 'the regression' without ever naming what the delegation message must carry — which regression, against what baseline — and states no definition of a good result, so neither half of the task contract is specified (A27). Its return line, 'report what you found', also states no output shape (A6). The tools list, description, and content-is-data line are sound, so a reviewer that scores only frontmatter and injection finds little wrong with it.",
+            "files": ["evals/files/eval-unbounded-remit/investigating-performance-regressions.md"],
+            "prompt": "Review the investigating-performance-regressions subagent.",
+            "expected_output": "A report flagging the unfalsifiable stopping condition under A28, the unstated objective and delegation contract under A27, and the unshaped return under A6.",
+            "assertions": [
+                "Flags 'until you understand it' against A28 as a condition nothing can check against evidence",
+                "States the A28 consequence — the subagent stops arbitrarily early or burns tokens past the point of value, and the parent cannot tell which",
+                "Flags against A27 that the body never names what the delegation message must carry — which regression, against what baseline",
+                "Recommends a checkable stopping condition or iteration bound, not a vaguer caution",
+                "Flags 'report what you found' against A6",
+                "Does not fault the description, the tools list, or the content-is-data line, which are sound"
+            ],
+            "baseline": "Without the skill, 'keep digging until you understand it' and 'follow every lead' read as admirable thoroughness, and the review comments on tone rather than on the missing task contract.",
             "models": ["opus"]
         }
     ]

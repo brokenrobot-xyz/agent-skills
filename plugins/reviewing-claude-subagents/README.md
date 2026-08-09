@@ -47,12 +47,13 @@ The reviewer resolves the subagent from `.claude/agents/`, `~/.claude/agents/`, 
 
 ## What the review checks
 
-Nine groups. This plugin's checklist defines fifty-three criteria, and `prompt-quality-criteria` supplies groups **B**–**G** on top of them. Findings cite the criterion key.
+Nine groups. This plugin's checklist defines fifty-five criteria, and `prompt-quality-criteria` supplies groups **B**–**G** on top of them. Findings cite the criterion key.
 
 **From this plugin's checklist**
 
-- **A — subagent authoring**, twenty-six criteria in seven parts: fit-for-purpose, routing, the return
-  contract, context inheritance, tools and permissions, frontmatter validity, and body craft.
+- **A — subagent authoring**, twenty-eight criteria in eight parts: fit-for-purpose, routing, the return
+  contract, context inheritance, tools and permissions, frontmatter validity, body craft, and the task
+  contract.
 - **H — evals methodology**, thirteen portable criteria plus one that replaces the skill standard's
   schema requirement. Subagents have no eval convention, so a subagent shipping no evals scores `N/A`
   and the report says the group went unmeasured.

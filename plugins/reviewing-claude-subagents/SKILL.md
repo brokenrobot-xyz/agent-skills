@@ -148,7 +148,7 @@ you a ranked list of what to fix.
 
 **What I'll check** (criteria groups):
 - A. Subagent authoring — fit-for-purpose, routing, the return contract, context
-  inheritance, tools and permissions, frontmatter, body craft
+  inheritance, tools and permissions, frontmatter, body craft, the task contract
 - B. Model-specific prompting — matched to the subagent's model, or to the session's when
   it inherits
 - C. General prompting — clarity, examples, task chaining
