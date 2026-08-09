@@ -3,8 +3,8 @@
 Conventions for `brokenrobot-xyz/agent-skills`. Codes cited here resolve as follows: `A…` and
 `R…` codes are criteria in the two reviewers' checklists,
 `plugins/reviewing-claude-skills/references/best-practices-checklist.md` and
-`plugins/reviewing-claude-subagents/references/best-practices-checklist.md`; `D15` is a decision
-recorded in `reviewing-claude-subagents-brief.md`.
+`plugins/reviewing-claude-subagents/references/best-practices-checklist.md`; `D15` is rule 3 of the
+split test below, which this document records.
 
 ## When to create a new skill
 
