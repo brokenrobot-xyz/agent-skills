@@ -1,0 +1,13 @@
+{
+    "name": "reviewing-claude-subagents",
+    "description": "Reviews a Claude Code subagent definition — its frontmatter, body, declared tools, and routing siblings — against subagent-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Tamas Mezei",
+        "url": "https://www.brokenrobot.xyz"
+    },
+    "license": "MIT",
+    "keywords": ["subagents", "agents", "review", "audit", "quality"],
+    "dependencies": ["prompt-quality-criteria", "writing-simplified-technical-english"],
+    "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/reviewing-claude-subagents"
+}
