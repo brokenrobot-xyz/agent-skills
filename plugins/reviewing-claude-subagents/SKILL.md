@@ -19,11 +19,14 @@ needed.
 `name` and `description` fields it competes with. To review several, run again per subagent.
 
 **Why this skill pins `opus`.** The two-pass sweep in Step 6 and the severity calibration in Step 7
-were tuned and measured on Opus 5. The pin does not choose the group `B` subset — Step 6 reads that
-from the target's `model:` field, and only a target that inherits its model falls back to the model
-this session runs on, which the pin sets when nothing overrides it. Managed settings and an
-organization's `availableModels` allowlist can override the pin, so state in the report which group
-`B` subset you actually used.
+were tuned on Opus 5, against the five real subagents behind the checklist's dry run. The pin is
+turn-scoped: it holds for the rest of the turn that invokes the skill, and the session model resumes
+on the user's next prompt. Ask the Step 2 scoping questions with `AskUserQuestion`, which stays
+inside the invoking turn; when a later user prompt moves the review onto the session model anyway,
+state that in the report. The pin does not choose the group `B` subset — Step 6 reads that from the
+target's `model:` field, and only a target that inherits its model falls back to the model the
+review runs on at Step 6. Managed settings and an organization's `availableModels` allowlist can
+override the pin, so state in the report which group `B` subset you actually used.
 
 **Every finding is inferential.** This review reads a definition, and it never spawns the subagent.
 The review therefore predicts behavior rather than observing it. State your confidence honestly, and
@@ -84,9 +87,9 @@ not name, because a typo would then buy a full review of the wrong file.
 
 Then read three things around it, because five criteria cannot be scored without them:
 
-1. **The sibling roster** — the `name` and `description` of every other subagent in the same scopes.
-   `A2` needs it. Read those two fields only, and write no per-sibling finding: this review covers one
-   subagent.
+1. **The sibling roster** — the `name` and `description` of every other subagent in the same scopes,
+   plus the built-in subagents `A2` names, which compete in the same roster. `A2` needs it. Read those
+   two fields only, and write no per-sibling finding: this review covers one subagent.
 2. **The host project's `CLAUDE.md` and the documents it links.** `A8` scores whether the body
    restates rules the subagent already receives, and you cannot score that without reading what it
    receives. `R5` and `R6` need the same documents.
@@ -182,6 +185,11 @@ written.
 Two of its criteria read differently for a subagent, and the shared criteria file says so. `F4` gains a second
 dimension, because a subagent's output flows into the parent session — score it alongside `A26`, which
 carries the subagent-specific half. `B4` applies hardest to a subagent that finds, reviews, or audits.
+
+Then finish Step 3's refresh: `WebFetch` every URL in the § Sources rows the invocation returned.
+The fetch runs here rather than in Step 3 because the rows do not exist until the invocation returns
+them, and a fetch no step orders is a fetch a run can skip. A failed fetch follows Step 3's rule:
+proceed on what the invocation returned, and say so in the report.
 
 If the skill is unavailable — dependency resolution is not guaranteed on every host — review against
 groups `A`, `H`, and `R` alone and **state in the report that `B`–`G` went ungraded**. Six of the nine
@@ -322,4 +330,6 @@ When the user chose analysis and apply, address findings **one at a time**, high
 - When the subagent ships evals and a fix changes behavior, add or refresh a scenario so the new
   guarantee is tested rather than asserted.
 
-Finish by summarizing which fixes you applied, which the user declined, and which findings remain.
+Finish by re-reading every edit you applied, so a malformed or misplaced change is caught before the
+user relies on it, then summarize which fixes you applied, which the user declined, and which
+findings remain.

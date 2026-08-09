@@ -87,7 +87,8 @@ Nine groups. This plugin's checklist defines fifty-five criteria, and `prompt-qu
   reviewer re-fetches its sources on every run, and a failed fetch becomes a staleness note in the
   report rather than a silent fallback.
 - **The reviewer reads two fields from each sibling.** `A2` needs each sibling's `name` and `description` to
-  judge overlapping remits. The review writes no per-sibling finding, because it covers one subagent.
+  judge overlapping remits, and its comparison set includes the built-in subagents, which compete in
+  the same roster. The review writes no per-sibling finding, because it covers one subagent.
 - **The reviewer never rewords a `description` for prose style.** It drives routing, so `R7` excludes it and
   only `A3`, `A4`, or `A5` can change it.
 - **Report-only by default.** Unless you chose analysis and apply, the reviewer edits no file. When

@@ -78,7 +78,10 @@ _Unexercised:_ note.
   them.
 - **A2 — no sibling duplication.** The subagent's remit does not substantially overlap a sibling's,
   because "flooding Claude with options makes automatic delegation less reliable" and an overlap
-  degrades routing for both definitions. Judge from sibling `name` and `description` fields only. Do
+  degrades routing for both definitions. The comparison set includes the built-in subagents the
+  documentation names — `Explore`, `Plan`, and `general-purpose` — because they sit in the same
+  roster Claude routes over, so a custom subagent that duplicates Explore's research remit degrades
+  routing the same way a custom sibling does. Judge from `name` and `description` fields only. Do
   not write a per-sibling finding; this review covers one subagent.
 
 ### Routing
