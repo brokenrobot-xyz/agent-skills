@@ -15,9 +15,11 @@ starts with one:
   commits or pushes** — you review the working tree and commit.
 
 The plugin also bundles two MCP servers — **playwright** and
-**chrome-devtools**, both headless and isolated — as the browser-automation
-foundation for the suite's future skills. Installing the plugin makes them
-available in every session where the plugin is enabled.
+**chrome-devtools**, both headless and isolated. They are general frontend
+tooling rather than a dependency of any skill here: installing the plugin makes
+browser automation and devtools access available to you and to Claude in every
+session where the plugin is enabled, whether or not a skill reaches for them.
+Disable the plugin when you do not want them loaded.
 
 This README documents the consumer's interface — installation, configuration,
 and scope. The workflow itself lives in
@@ -43,7 +45,7 @@ conflict, those files are canonical.
 ## Configuration
 
 Optional. Create `.brokenrobot-xyz/frontend.json` at the root of the
-repository being updated (the _consumer_ repo — not this marketplace). The
+repository being updated (the _host project_ — not this marketplace). The
 file is namespaced by skill, so future suite skills add sections rather
 than files:
 
@@ -73,12 +75,17 @@ Three rules bound what `autoApply` can do:
 1. **Research is the constant.** Only an auto-applied patch skips the
    subagent; minors and majors are always researched, and a gated patch is
    researched too, so an approval is never blind.
-2. **Auto applies only a `compatible` verdict.** A `needs-changes` or
-   `risky` verdict stops for your approval whatever the config says —
-   auto-apply removes the ceremony for clean bumps, never the safety net
-   for dirty ones.
+2. **Of the researched bumps, auto applies only a `compatible` verdict.** A
+   `needs-changes` or `risky` verdict stops for your approval whatever the
+   config says — auto-apply removes the ceremony for clean bumps, never the
+   safety net for dirty ones.
 3. **No config makes a `0.x` bump automatic.** 0.x semver promises
    nothing, so those always stop.
+
+A bump the researcher could not analyze at all — the subagent is missing, or
+the network is blocked — is gated for that reason and reported as **ungraded**,
+whatever `autoApply` says. A bump nothing analyzed is the one case where your
+config does not get to decide.
 
 ## What a run looks like
 
