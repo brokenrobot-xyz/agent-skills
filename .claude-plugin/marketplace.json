@@ -5,7 +5,7 @@
         "url": "https://www.brokenrobot.xyz"
     },
     "metadata": {
-        "description": "Agent skills from brokenrobot.xyz — one plugin per skill, installable individually."
+        "description": "Agent skills from brokenrobot.xyz — focused plugins, installable individually."
     },
     "plugins": [
         {
@@ -47,6 +47,16 @@
             "tags": ["skills", "review", "audit", "quality"],
             "license": "MIT",
             "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/reviewing-claude-skills"
+        },
+        {
+            "name": "frontend-toolkit",
+            "source": "./plugins/frontend-toolkit",
+            "description": "A suite of frontend skills, starting with updating-dependencies: auto-applies the configured npm update categories (patches by default), researches every other bump with a dedicated subagent, gates them on approval, and attributes new audit advisories to the update — honoring the host project's pinning policy. Never commits.",
+            "version": "1.0.0",
+            "category": "frontend",
+            "tags": ["frontend", "npm", "dependencies", "updates", "changelog-research"],
+            "license": "MIT",
+            "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/frontend-toolkit"
         },
         {
             "name": "reviewing-claude-subagents",

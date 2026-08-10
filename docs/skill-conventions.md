@@ -70,9 +70,10 @@ would restate the step and then drift from it.
 Every step that invokes another skill states:
 
 1. **The plugin-scoped name.** The form is `plugin:skill`. Where a plugin's name matches its skill's
-   name — which is the case for every plugin in this repository — the scoped form doubles, as in
-   `writing-simplified-technical-english:writing-simplified-technical-english`. An unscoped name is
-   not guaranteed to resolve when several plugins are installed.
+   name — the case for every single-skill plugin in this repository — the scoped form doubles, as in
+   `writing-simplified-technical-english:writing-simplified-technical-english`. A suite plugin's
+   skills scope under the suite's name, as in `frontend-toolkit:updating-dependencies`. An unscoped
+   name is not guaranteed to resolve when several plugins are installed.
 2. **The mode**, where the invoked skill has more than one. "Invoke it in check mode" rather than
    "invoke it", because the wrong mode returns the wrong kind of result: revise mode edits the file
    the caller only meant to grade.
