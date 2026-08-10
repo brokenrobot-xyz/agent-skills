@@ -8,7 +8,7 @@ metadata:
     version: '1.0.0'
 ---
 
-Refresh the host repo's npm dependencies safely. By default, patches are low-risk and applied directly, while minor and major bumps are researched first and applied only after the user approves. The research runs in the [`dependency-update-researcher`](../../agents/dependency-update-researcher.md) subagent, which ships with this plugin at `agents/dependency-update-researcher.md`. The host project's config can widen or narrow the auto-apply set — but research is the constant: a bump only ever skips the approval gate, never the analysis that would catch a breaking change. This skill edits `package.json` and `package-lock.json` and reports — it **never stages, commits, or pushes**. Committing the result is the user's job, after they review the working tree.
+Refresh the host repo's npm dependencies safely. By default, patches are low-risk and applied directly, while minor and major bumps are researched first and applied only after the user approves. The research runs in the [`dependency-update-researcher`](../../agents/dependency-update-researcher.md) subagent, which ships with this plugin at `agents/dependency-update-researcher.md`. The host project's config can widen or narrow the auto-apply set — but widening it removes the approval gate, never the research behind it: every minor and every major is researched whatever the config says, and only an auto-applied patch skips the analysis. This skill edits `package.json` and `package-lock.json` and reports — it **never stages, commits, or pushes**. Committing the result is the user's job, after they review the working tree.
 
 ## Supported package manager
 
