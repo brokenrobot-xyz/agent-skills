@@ -145,6 +145,12 @@ durable alias or absent pin as the current model in that family).
 Score all nine groups: `A`, `H`, and `R` from the checklist, and `B`–`G` from what Step 2's
 invocation returned. A group whose criteria you never loaded is ungraded, not passing.
 
+Score `R14` first, from the workflow's structure alone — the phases, the decision inputs, the
+shared rule sets — before any line-level reading. When it fires High, the structural finding
+leads the report, and every line-level finding inside the sections it implicates is reported as
+subordinate to it, because fixing corner cases of a multiplicative decision space one wording at
+a time is what produces the next review round's findings.
+
 Work in two passes — **coverage, then filter**. First walk every criterion group and collect
 _all_ candidate findings, each tagged with a confidence (high/low). Do not drop a candidate at
 this stage just because it's minor or you're unsure — a current model, told to "only report what

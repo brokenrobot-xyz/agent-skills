@@ -232,3 +232,14 @@ narrow any other item in this group; when one does, cite the project's document 
   the answer leaves the model to guess and the guess varies by run; and **what the step does when the
   skill is unavailable, and what is lost**, because dependency resolution is not guaranteed on every
   host and a silent degradation reads to the user as a clean result rather than an ungraded one.
+- **R14 — bounded decision space.** The workflow's decisions chain; they do not multiply. Signals
+  that the state space has outgrown the prose describing it: an outcome computed from three or
+  more independent inputs (a config value × a verdict × a category × an override); the same
+  operation specified in more than one phase with different semantics per phase; a shared rule set
+  cited by number from several sections, so a fix in one section goes stale in another; steps a
+  configuration can empty, each needing "skipped because" bookkeeping. One signal alone may be a
+  deliberate design; two or more compounding is a High, and the recommendation is structural —
+  collapse the phases, move a computed decision to the user, hardcode a knob — never a wording
+  fix, because rewording one corner of a multiplicative space produces the next review's finding
+  in another corner. Review churn is itself evidence: when the target's history shows repeated
+  review-fix rounds that fail to converge, cite this criterion alongside `A17`'s plateau rule.

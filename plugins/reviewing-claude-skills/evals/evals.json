@@ -25,7 +25,7 @@
         "Every finding carries a locator — a file plus a line or section in the reviewed bundle",
         "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 3"
     ],
-    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover Step 2's invocation of prompt-quality-criteria and its degradation when that skill is absent, which is the branch where a partial review could read as a clean one.",
+    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover Step 2's invocation of prompt-quality-criteria and its degradation when that skill is absent, which is the branch where a partial review could read as a clean one; 21 covers Step 4's structure-first R14 pass and its subordination rule, which every line-level scenario bypasses.",
     "grading": {
         "machine_checkable": {
             "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep against BOTH criteria files — groups A, H, and R in this bundle's checklist, groups B–G in the prompt-quality-criteria bundle. Checking only the local checklist would fail every legitimate B–G citation.",
@@ -413,6 +413,24 @@
                 "Invents no B–G criterion key from memory — naming an ungraded group's defect without a key is correct, not a failure"
             ],
             "baseline": "Without the skill, there is no dependency to be missing and no notion of an ungraded group, so the report presents whatever it covered as the whole review.",
+            "models": ["opus"]
+        },
+        {
+            "id": 21,
+            "name": "eval-multiplicative-spine",
+            "targets": "Step 4 — scoring R14 from the structure before the line-level sweep, and the subordination rule",
+            "setup": "The syncing-translations fixture is locally defensible everywhere — each rule carries a rationale, most guardrails a consequence — but its structure multiplies: a three-value autoSync config knob, an Action column computed from category × match score × a plural-form override, the same copy operation specified in two phases (step 2 pre-scoring, steps 4–5 post-scoring), a rule set cited by number from three sections, and steps the config can empty. Two genuine line-level nits sit inside the implicated sections so the run has something to subordinate: a bare 'Never edit locales/en.json' with no consequence (R10), and step 5's 're-run it' with two plausible antecedents (R11).",
+            "files": ["evals/files/eval-multiplicative-spine/syncing-translations/SKILL.md"],
+            "prompt": "Review the syncing-translations skill.",
+            "expected_output": "A report led by a High R14 structural finding that recommends a collapse — fewer apply phases, the knob hardcoded, or the computed Action decision moved to the user — with the line-level findings inside the implicated sections reported as subordinate to it.",
+            "assertions": [
+                "Flags the multiplicative structure against R14 and ranks it High, placed first in the ranked findings",
+                "Names at least two of the compounding signals: the computed Action column, the dual apply phases for the same operation, the config-emptied steps, or the rule set cited by number across sections",
+                "Recommends a structural collapse rather than wording fixes for the corner cases",
+                "Reports the R10 and R11 nits inside the implicated sections as subordinate to the structural finding, not as independent peer findings",
+                "Does NOT flag the individually well-formed rules one by one as R1 violations — the finding is the product of the branches, not any single branch"
+            ],
+            "baseline": "Without the skill, each branch reads as locally justified: the review produces a list of corner-case findings inside the multiplicative space and no structural recommendation — the non-converging review loop this criterion exists to catch.",
             "models": ["opus"]
         }
     ]
