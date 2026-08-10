@@ -1,6 +1,6 @@
 ---
 name: dependency-update-researcher
-description: Read-only research agent for a single npm dependency bump. Given one package and its current → target version, it reads the changelog, checks how the host repo actually uses the package, and returns a compatibility verdict with concrete required edits. Use from the updating-dependencies skill for each researched bump — every minor and major, plus patches when the host project gates them. Does not edit files or run installs — it only researches and reports.
+description: Read-only research agent for a single npm dependency bump. Given one package and its current → target version, it reads the changelog, checks how the host repo actually uses the package, and returns a compatibility verdict with concrete required edits. Use from the updating-dependencies skill for each bump the user selects to pursue — every selected bump is researched before it reaches the approval gate. Does not edit files or run installs — it only researches and reports.
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
 ---
 

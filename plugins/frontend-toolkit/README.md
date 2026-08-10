@@ -4,12 +4,12 @@ A suite of skills for frontend work. Unlike this marketplace's single-skill
 plugins, `frontend-toolkit` is designed to accumulate skills over time; it
 starts with one:
 
-- **`updating-dependencies`** — refreshes a project's npm dependencies.
-  By default, patch bumps are applied directly; every other bump is
-  researched by a dedicated read-only subagent
-  (**`dependency-update-researcher`**) that reads the changelog and traces
-  how the repo actually uses the package, and is applied only after you
-  approve. Which categories auto-apply is configurable. An audit baseline
+- **`updating-dependencies`** — refreshes a project's npm dependencies
+  through two stops. It categorizes every outdated package and **you select**
+  which bumps to pursue; each selected bump is researched by a dedicated
+  read-only subagent (**`dependency-update-researcher`**) that reads the
+  changelog and traces how the repo actually uses the package; then **you
+  approve** per bump, and only approved bumps are applied. An audit baseline
   taken before any change attributes only _new_ security advisories to the
   update. The skill edits `package.json` and the lockfile but **never
   commits or pushes** — you review the working tree and commit.
@@ -21,8 +21,8 @@ browser automation and devtools access available to you and to Claude in every
 session where the plugin is enabled, whether or not a skill reaches for them.
 Disable the plugin when you do not want them loaded.
 
-This README documents the consumer's interface — installation, configuration,
-and scope. The workflow itself lives in
+This README documents the consumer's interface — installation, pinning
+behavior, and scope. The workflow itself lives in
 [the skill](skills/updating-dependencies/SKILL.md) and
 [the agent definition](agents/dependency-update-researcher.md); on any
 conflict, those files are canonical.
@@ -42,75 +42,41 @@ conflict, those files are canonical.
 /plugin install frontend-toolkit@brokenrobot-xyz
 ```
 
-## Configuration
+## Pinning
 
-Optional. Create `.brokenrobot-xyz/frontend.json` at the root of the
-repository being updated (the _host project_ — not this marketplace). The
-file is namespaced by skill, so future suite skills add sections rather
-than files:
-
-```json
-{
-    "updating-dependencies": {
-        "pinning": "exact",
-        "autoApply": ["patch", "minor"]
-    }
-}
-```
-
-| Key         | Values                                           | Default                | Meaning                                                                                                                                     |
-| ----------- | ------------------------------------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pinning`   | `"exact"`, `"preserve"`                          | detected from the repo | `exact`: every update is written as an exact version (`--save-exact`). `preserve`: every dependency keeps its existing `^`/`~`/exact style. |
-| `autoApply` | array drawn from `"patch"`, `"minor"`, `"major"` | `["patch"]`            | Categories that apply without stopping for your approval. `[]` gates everything.                                                            |
-
-Without a `pinning` value, the skill detects the policy from the repo's own
-signals: `.npmrc` `save-exact=true` or an all-exact `package.json` means
-`exact`; any existing `^`/`~` range means `preserve`. The config file
-overrides detection. An invalid value for either key stops the run rather
-than guessing — a guessed policy would silently substitute behavior the
-repo did not choose.
-
-Three rules bound what `autoApply` can do:
-
-1. **Research is the constant.** Only an auto-applied patch skips the
-   subagent; minors and majors are always researched, and a gated patch is
-   researched too, so an approval is never blind.
-2. **Of the researched bumps, auto applies only a `compatible` verdict.** A
-   `needs-changes` or `risky` verdict stops for your approval whatever the
-   config says — auto-apply removes the ceremony for clean bumps, never the
-   safety net for dirty ones.
-3. **No config makes a `0.x` bump automatic.** 0.x semver promises
-   nothing, so those always stop.
-
-A bump the researcher could not analyze at all — the subagent is missing, or
-the network is blocked — is gated for that reason and reported as **ungraded**,
-whatever `autoApply` says. A bump nothing analyzed is the one case where your
-config does not get to decide.
+The skill has no configuration file. The one policy it follows — how
+versions are written — is detected from the repo's own signals: `.npmrc`
+`save-exact=true` or an all-exact `package.json` means `exact` (every
+update written with `--save-exact`); any existing `^`/`~` range means
+`preserve` (every dependency keeps its existing style). A repo that wants
+exact pinning states it the way npm itself understands: `save-exact=true`
+in `.npmrc`.
 
 ## What a run looks like
 
-1. Resolve the config (pinning policy + auto-apply set), list outdated
-   packages, and snapshot the audit baseline before anything changes.
-2. Categorize into patch / minor / major (any `0.x` bump counts as at least
-   minor) and show the table.
-3. Apply auto patches directly, then diff the audit against the baseline —
-   only advisories the update _introduced_ count against it; a bump that
-   introduces one is pinned back and reported.
-4. Research every remaining bump with one subagent per package and present
-   a consolidated verdict table with a **Gate** column: `auto` (in your
-   auto-apply set, `compatible`, not 0.x) or `approval`.
-5. Apply the `auto` rows without stopping, category by category, each with
-   its own audit diff.
-6. **Stop for your approval** on the rest, then apply what you approved the
-   same way.
-7. Report what was applied (auto vs approved), blocked, and deferred.
-   Nothing is committed; committing each category separately keeps
-   regressions bisectable.
+1. Confirm the repo is npm-managed and detect the pinning policy.
+2. List outdated packages and snapshot the audit baseline before anything
+   changes.
+3. Categorize into patch / minor / major (any `0.x` bump counts as at least
+   minor), show the table, and **stop: you select which bumps to pursue**.
+4. Research each selected bump with one subagent per package. A bump the
+   researcher could not analyze — the subagent is missing, or the network
+   is blocked — reaches the next step flagged **no verdict**, never graded
+   by the skill itself.
+5. Present the verdict table and **stop: you approve per bump** — a verdict
+   informs your decision, it never bypasses it.
+6. Apply the approved bumps one category at a time, each with its own audit
+   diff against the baseline — only advisories the update _introduced_
+   count against it; a bump that introduces one is pinned back and
+   reported.
+7. Report applied / blocked / deferred / not selected. Nothing is
+   committed; committing each category separately keeps regressions
+   bisectable.
 
 ## Scope
 
 Verification of the updated tree — running the project's checks, builds, or
 visual regression — is deliberately out of scope in this version. The skill
 guarantees attribution (which bump introduced which advisory) and process
-(research before majors, approval before risk), not that your test suite
-still passes. Run your own checks on the working tree before committing.
+(research before you decide, approval before anything is applied), not that
+your test suite still passes. Run your own checks on the working tree before committing.

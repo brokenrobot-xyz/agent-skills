@@ -1,6 +1,6 @@
 {
     "name": "frontend-toolkit",
-    "description": "A suite of frontend skills, starting with updating-dependencies: detects outdated npm packages, auto-applies the configured categories (patches by default), researches every other bump with a dedicated subagent, and gates them on user approval — honoring the host project's pinning policy and auto-apply set from .brokenrobot-xyz/frontend.json.",
+    "description": "A suite of frontend skills, starting with updating-dependencies: detects and categorizes outdated npm packages, researches the bumps the user selects with a dedicated subagent, and applies only the bumps the user approves — honoring the repo's detected pinning style and attributing new audit advisories to the update. Never commits.",
     "version": "1.0.0",
     "author": {
         "name": "Tamas Mezei",

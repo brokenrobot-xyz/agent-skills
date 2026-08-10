@@ -51,7 +51,7 @@
         {
             "name": "frontend-toolkit",
             "source": "./plugins/frontend-toolkit",
-            "description": "A suite of frontend skills, starting with updating-dependencies: auto-applies the configured npm update categories (patches by default), researches every other bump with a dedicated subagent, gates them on approval, and attributes new audit advisories to the update — honoring the host project's pinning policy. Never commits.",
+            "description": "A suite of frontend skills, starting with updating-dependencies: categorizes outdated npm packages, researches the bumps you select with a dedicated subagent, applies only what you approve, and attributes new audit advisories to the update — honoring the repo's detected pinning style. Never commits.",
             "version": "1.0.0",
             "category": "frontend",
             "tags": ["frontend", "npm", "dependencies", "updates", "changelog-research"],
