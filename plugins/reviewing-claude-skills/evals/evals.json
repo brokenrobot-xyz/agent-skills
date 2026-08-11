@@ -27,7 +27,7 @@
         "The report follows references/report-template.md: a Summary table of findings (Structure rows first, then Detail, severity-ranked within each) precedes the per-finding detail blocks, and the rank numbers match between the two",
         "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 2"
     ],
-    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform inline fallback when the review agents are unavailable.",
+    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform fallback ladder — substitution when the definition files are readable, inline when they are not.",
     "grading": {
         "machine_checkable": {
             "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep against BOTH criteria files — groups A, H, and R in this bundle's checklist, groups B–G in the prompt-quality-criteria bundle. Checking only the local checklist would fail every legitimate B–G citation.",
@@ -460,19 +460,19 @@
         {
             "id": 23,
             "name": "eval-agent-fallback-inline",
-            "targets": "The uniform fallback — a review agent that fails to resolve runs its stage inline in the main conversation, named in the report",
-            "setup": "The sound linting-frontmatter fixture from scenario 6, run with the reviewer's subagents unavailable — remove the plugin's agents/ directory or deny the Agent tool — an environmental condition no file can carry.",
+            "targets": "The uniform fallback ladder — substitution when an agent type fails to resolve but its definition file is readable, inline when substitution is impossible, both named in the report",
+            "setup": "The sound linting-frontmatter fixture from scenario 6. Two variants, each an environmental condition no file can carry: (A) the plugin agent types do not resolve but the agents/ definition files are readable — e.g. a stale installed cache alongside a readable working copy; (B) the agents/ directory is removed or the Agent tool is denied, so substitution is impossible.",
             "files": [
                 "evals/files/eval-clean-skill-no-padding/linting-frontmatter/SKILL.md",
                 "evals/files/eval-clean-skill-no-padding/linting-frontmatter/evals/evals.json"
             ],
             "prompt": "Review the linting-frontmatter skill.",
-            "expected_output": "A completed review in which Pass 1, the refresh, and Pass 2 each ran inline in the main conversation, with the report naming the inline stages — findings quality otherwise as scenario 6.",
+            "expected_output": "A completed review either way: variant A runs general-purpose agents carrying the definition files (model pins carried); variant B runs the stages inline. In both, the report names the fallback tier used — findings quality otherwise as scenario 6.",
             "assertions": [
-                "Still completes the review rather than refusing: Pass 1, the refresh, and the detail sweep run inline in the main conversation",
-                "The inline detail sweep invokes prompt-quality-criteria and writing-simplified-technical-english (check mode) through the Skill tool, as the fallback prescribes",
-                "The report names each stage that ran inline rather than presenting the run as agent-delegated",
-                "Does NOT invent findings or silently score fewer groups than the inline fallback can reach"
+                "Variant A: spawns general-purpose agents carrying the definition files verbatim, passes each definition's model pin as the spawn's model parameter (haiku for the criteria-refresher), and tells the substituted detail-reviewer to Read its criteria from the installed bundles",
+                "Variant B: Pass 1, the refresh, and the detail sweep run inline in the main conversation, and the inline sweep invokes prompt-quality-criteria and writing-simplified-technical-english (check mode) through the Skill tool",
+                "In both variants the report names each substituted or inline stage rather than presenting the run as a clean plugin-agent run",
+                "Does NOT invent findings or silently score fewer groups than the fallback tier can reach"
             ],
             "baseline": "Without the skill, there are no agents and no stages to fall back from, so nothing marks the run as degraded and no fallback discipline exists to test.",
             "models": ["opus"]

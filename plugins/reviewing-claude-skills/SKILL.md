@@ -21,13 +21,21 @@ with the [criteria-refresher](agents/criteria-refresher.md) agent fetching the l
 parallel, producing a **severity-ranked gap analysis**. Then, if the user wants, apply the fixes
 they approve, one finding at a time, in this conversation.
 
-**The uniform fallback.** When any review agent fails to resolve or returns no usable payload,
-run that stage inline in this conversation instead, and name the inline stage in the report —
-Pass 1 against the baked checklist, the refresh with your own `WebFetch`, the detail sweep by
-invoking `prompt-quality-criteria:prompt-quality-criteria` and
+**The uniform fallback — a two-tier ladder, one rule for all three agents, because a silently
+skipped stage reads to the user as a clean result.** When a plugin agent type fails to resolve
+but its definition file under this plugin's `agents/` is readable, **substitute**: spawn a
+`general-purpose` agent carrying that definition verbatim, pass the definition's `model:` pin as
+the spawn's model parameter, and — for the detail-reviewer, whose `skills` preload did not
+happen — point it at the installed `prompt-quality-criteria` and
+`writing-simplified-technical-english` bundles to `Read` its criteria from disk. The substitution
+keeps the heavy reading out of this conversation, which is what the delegation exists for. When
+substitution is impossible too — the definition unreadable, the Agent tool unavailable — or an
+agent returns no usable payload, run that stage **inline** in this conversation: Pass 1 against
+the baked checklist, the refresh with your own `WebFetch`, the detail sweep by invoking
+`prompt-quality-criteria:prompt-quality-criteria` and
 `writing-simplified-technical-english:writing-simplified-technical-english` (check mode — revise
-mode edits the file you meant only to grade) through the Skill tool. One rule for all three
-agents, because a silently skipped stage reads to the user as a clean result.
+mode edits the file you meant only to grade) through the Skill tool. Name every substituted or
+inline stage in the report.
 
 **Scope: one skill per invocation.** Review the named skill and its whole bundle (SKILL.md,
 evals, referenced files/hooks). To review several, run again per skill.

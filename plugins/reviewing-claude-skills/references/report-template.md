@@ -23,8 +23,11 @@ number, and the detail blocks below reuse the same numbers.
 | #   | Severity | Pass      | Key(s) | Finding                        | Notes                |
 | --- | -------- | --------- | ------ | ------------------------------ | -------------------- |
 | 1   | High     | Structure | R14    | <one-line statement>           |                      |
-| 2   | Medium   | Detail    | R3     | <one-line statement>           |                      |
-| 3   | Low      | Detail    | A17    | <one-line statement>           | likely deliberate    |
+| 2   | Low      | Structure | A17    | <one-line statement>           | likely deliberate    |
+| 3   | Medium   | Detail    | R3     | <one-line statement>           |                      |
+
+Note the order: the Structure Low outranks the Detail Medium, because the grouping comes first
+and severity sorts only within a group.
 
 ### What's already right
 

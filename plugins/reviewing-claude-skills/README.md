@@ -134,8 +134,11 @@ commands, not eyeballed.
   `structure-reviewer`, `detail-reviewer`, and `criteria-refresher` — which
   return findings only, so a review does not crowd the conversation it runs
   in. The main conversation reads just what it verifies (spot-checks of
-  quoted evidence) or edits (apply mode). When an agent is unavailable, that
-  stage runs inline instead and the report says so.
+  quoted evidence) or edits (apply mode). When an agent type can't resolve
+  but its definition file is readable, a general-purpose agent adopts the
+  definition (keeping the isolation and the definition's model pin); only
+  when that too is impossible does the stage run inline. Either way, the
+  report says so.
 - **Network is best-effort, and only after the gate.** The
   `criteria-refresher` subagent fetches the live best-practice docs to catch
   guidance newer than the baked checklist — but it is only spawned once the
