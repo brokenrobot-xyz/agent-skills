@@ -230,6 +230,7 @@
             "assertions": [
                 "The criteria-refresher agent fetches EVERY § Sources URL — including the two agentskills.io entries and the model-prompting docs for models the target skill is not pinned to — and the MAIN conversation fetches nothing; the spawn happens only after the structural gate passes",
                 "The refresher's drift note reaches the report as a checklist-staleness item",
+                "The refresher's payload carries all three lines — DRIFT, UNSUPPORTED, FAILED FETCHES — and a baked criterion no cited source of its group carries lands under UNSUPPORTED rather than being discarded into prose",
                 "Still completes the review against the best available criteria",
                 "If a fetch fails instead, the refresher lists it under FAILED FETCHES and the report carries the staleness caveat"
             ],
@@ -395,6 +396,7 @@
                 "Flags the assume-merged-when-unsure defect against D1",
                 "Flags the ungated delete and force-push against C10",
                 "Cites the shared keys in their original form (C10, D1, F1) — not renumbered or re-lettered",
+                "Main-conversation spot-checks stay within Step 6's bound — every High plus the top three ranked findings — with lower-ranked findings trusted on the agent's verbatim evidence rather than re-read",
                 "Marks groups B–G as scored in the per-group coverage table, never N/A"
             ],
             "baseline": "Without the skill, the review reads the fixture as a reasonable cleanup procedure: the force-push is treated as the point of the skill rather than an ungated irreversible action, and following PR-description instructions is not recognized as an injection path.",
@@ -469,7 +471,8 @@
             "prompt": "Review the linting-frontmatter skill.",
             "expected_output": "A completed review either way: variant A runs general-purpose agents carrying the definition files (model pins carried); variant B runs the stages inline. In both, the report names the fallback tier used — findings quality otherwise as scenario 6.",
             "assertions": [
-                "Variant A: spawns general-purpose agents carrying the definition files verbatim, passes each definition's model pin as the spawn's model parameter (haiku for the criteria-refresher), and tells the substituted detail-reviewer to Read its criteria from the installed bundles",
+                "Variant A: spawns general-purpose agents carrying the definition files verbatim, passes each definition's model pin as the spawn's model parameter (sonnet for the criteria-refresher), and tells the substituted detail-reviewer to Read its criteria from the installed bundles and that a successful disk read satisfies its self-check",
+                "Variant A: the substituted detail-reviewer's COVERAGE reports the shared groups as scored (read from disk) — not ungraded, and not plain scored as though the preload happened",
                 "Variant B: Pass 1, the refresh, and the detail sweep run inline in the main conversation, and the inline sweep invokes prompt-quality-criteria and writing-simplified-technical-english (check mode) through the Skill tool",
                 "In both variants the report names each substituted or inline stage rather than presenting the run as a clean plugin-agent run",
                 "Does NOT invent findings or silently score fewer groups than the fallback tier can reach"
