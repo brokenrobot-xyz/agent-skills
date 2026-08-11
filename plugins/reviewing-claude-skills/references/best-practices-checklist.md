@@ -1,14 +1,15 @@
 # Reviewing-claude-skills checklist
 
-The baked half of the reviewer's hybrid criteria. `SKILL.md`'s criteria-assembly step tries to
-refresh the source docs live (WebFetch the URLs below); when the network is unavailable it falls
-back to this file and notes the staleness in the report. The structural pass that precedes the
-gate scores from this file alone and never fetches.
+The baked half of the reviewer's hybrid criteria. The `criteria-refresher` agent fetches the
+source docs live (the URLs below) after the structural gate passes; when the network or the agent
+is unavailable, the review proceeds on this file and notes the staleness in the report. The
+structural pass that precedes the gate scores from this file alone and never fetches.
 
 **Groups `B`–`G` are not in this file.** They are artifact-independent prompting criteria shared
-with the subagent reviewer, so they live in the `prompt-quality-criteria` skill, which `SKILL.md`'s
-criteria-assembly step invokes and its detail pass scores against. Their keys are unchanged, and a
-finding cites `B4` or `F1` exactly as before.
+with the subagent reviewer, so they live in the `prompt-quality-criteria` skill, which the
+`detail-reviewer` agent preloads via its `skills` frontmatter (the inline fallback invokes it
+through the Skill tool). Their keys are unchanged, and a finding cites `B4` or `F1` exactly as
+before.
 
 **last-synced:** 2026-07-29 — re-fetch the URLs and reconcile any new guidance when this is stale.
 The shared criteria carry their own `last-synced` date for the docs behind groups `B`–`G`.

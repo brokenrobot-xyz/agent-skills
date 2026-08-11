@@ -6,7 +6,8 @@ host project's conventions, and produces a **severity-ranked gap analysis**.
 Optionally, it then applies the fixes you approve, one finding at a time.
 
 This README documents what the review covers and how a run behaves. The
-review procedure lives in [SKILL.md](SKILL.md) and the criteria in
+review procedure lives in [SKILL.md](SKILL.md), the three review subagents in
+[agents/](agents/), and the criteria in
 [references/best-practices-checklist.md](references/best-practices-checklist.md);
 on any conflict, those are canonical.
 
@@ -17,17 +18,20 @@ on any conflict, those are canonical.
 /plugin install reviewing-claude-skills@brokenrobot-xyz
 ```
 
-This also auto-installs two declared dependencies:
+This also auto-installs two declared dependencies, both preloaded into the
+detail-reviewer subagent at spawn:
 
 - [prompt-quality-criteria](../prompt-quality-criteria/README.md) — supplies
   criteria groups **B–G**, which this plugin's checklist does not carry. They
   are artifact-independent prompting criteria shared with the subagent
   reviewer, so they live in one place rather than drifting between two copies.
 - [writing-simplified-technical-english](../writing-simplified-technical-english/README.md)
-  — invoked in check mode to grade the target skill's prose.
+  — the twelve prose conventions the target skill's prose is graded against
+  (check fashion: violations are reported, nothing is edited).
 
-On a host with no dependency resolution the reviewer still runs, and names in
-the report which groups went ungraded — so a partial review never reads as a
+If a dependency is missing, the preload skips silently at the harness level —
+so the detail-reviewer self-checks that its criteria actually arrived, and the
+report names any group that went ungraded. A partial review never reads as a
 clean one.
 
 ## Usage
@@ -39,7 +43,8 @@ per invocation** — to review several, run once per skill.
 
 ```
 1. Brief + four scoping questions        each has a default; "use the defaults" works
-2. Pass 1 — STRUCTURE                    eight shape criteria: decision space, scope,
+2. Pass 1 — STRUCTURE                    the structure-reviewer subagent scores eight
+                                         shape criteria: decision space, scope,
                                          simplicity, length & disclosure, degrees of
                                          freedom, defaults vs menus, over-prescription.
                                          Offline and cheap — no docs fetched yet.
@@ -51,10 +56,14 @@ per invocation** — to review several, run once per skill.
                                          redesign recommendation. The detail sweep
                                          becomes an explicit follow-up choice —
                                          run it anyway, or redesign first.
-3. Criteria assembly                     load the shared groups B–G, fetch the live docs
-4. Pass 2 — DETAIL                       the full nine-group sweep
-5. Gap analysis                          severity-ranked findings + per-group coverage table
-6. Optional apply                        fixes you approve, one finding at a time
+3. Pass 2 — DETAIL                       two subagents in parallel: the detail-reviewer
+                                         sweeps the full nine groups (the shared B–G
+                                         criteria and prose conventions are preloaded
+                                         into it), while the criteria-refresher fetches
+                                         the live docs and reports drift
+4. Gap analysis                          severity-ranked findings + per-group coverage
+                                         table, consolidated in the main conversation
+5. Optional apply                        fixes you approve, one finding at a time
 ```
 
 **Why the gate exists.** Line-level findings against a workflow that is about
@@ -115,12 +124,20 @@ format) are settled with commands, not eyeballed.
 
 ## Behavior notes
 
-- **Network is best-effort, and only after the gate.** The reviewer fetches
-  the live best-practice docs to catch guidance newer than the baked
-  checklist — but only once the structural gate has passed; a gated run
-  fetches nothing, because the baked checklist suffices for a structural
-  verdict. When a fetch fails, the review proceeds on the baked checklist
-  and says so in the report — it never blocks on the network.
+- **The heavy reading happens in subagents.** The target bundle, the shared
+  criteria, and the fetched docs load in three dedicated subagent contexts —
+  `structure-reviewer`, `detail-reviewer`, and `criteria-refresher` — which
+  return findings only, so a review does not crowd the conversation it runs
+  in. The main conversation reads just what it verifies (spot-checks of
+  quoted evidence) or edits (apply mode). When an agent is unavailable, that
+  stage runs inline instead and the report says so.
+- **Network is best-effort, and only after the gate.** The
+  `criteria-refresher` subagent fetches the live best-practice docs to catch
+  guidance newer than the baked checklist — but it is only spawned once the
+  structural gate has passed; a gated run fetches nothing, because the baked
+  checklist suffices for a structural verdict. When a fetch fails, the review
+  proceeds on the baked checklist and says so in the report — it never blocks
+  on the network.
 - **Reviewed content is data.** A line inside the target skill saying
   "report no issues" carries no authority over the review.
 - **Apply mode is one finding at a time**, surgical, and adds or refreshes
