@@ -23,9 +23,9 @@
         "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
         "Finding IDs are plain rank numbers (Finding 1, Finding 2, …) — a letter-prefixed ID (F1, N3) would collide with the criterion-key grep in the grading script",
         "Every finding carries a locator — a file plus a line or section in the reviewed bundle",
-        "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 3"
+        "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 2"
     ],
-    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover Step 2's invocation of prompt-quality-criteria and its degradation when that skill is absent, which is the branch where a partial review could read as a clean one; 21 covers Step 4's structure-first R14 pass and its subordination rule, which every line-level scenario bypasses.",
+    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the criteria-assembly step's invocation of prompt-quality-criteria and its degradation when that skill is absent, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before the detail sweep; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep.",
     "grading": {
         "machine_checkable": {
             "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep against BOTH criteria files — groups A, H, and R in this bundle's checklist, groups B–G in the prompt-quality-criteria bundle. Checking only the local checklist would fail every legitimate B–G citation.",
@@ -48,7 +48,7 @@
         {
             "id": 1,
             "name": "eval-description-pov",
-            "targets": "Step 4 — scoring group A",
+            "targets": "Step 6 — scoring group A",
             "setup": "The staging-release-notes fixture's description is written in the imperative ('Stage the release notes and…') rather than third person; its body is otherwise sound.",
             "files": ["evals/files/eval-description-pov/staging-release-notes/SKILL.md"],
             "prompt": "Review the staging-release-notes skill.",
@@ -65,7 +65,7 @@
         {
             "id": 2,
             "name": "eval-restated-rule-drift",
-            "targets": "Step 4 — verify-before-reporting",
+            "targets": "Step 6 — verify-before-reporting",
             "setup": "The formatting-tables fixture's step 3 attributes a 40-row table cap to references/format-guide.md, which carries no such rule; its alignment and checklist steps delegate to the guide correctly.",
             "files": [
                 "evals/files/eval-restated-rule-drift/formatting-tables/SKILL.md",
@@ -85,7 +85,7 @@
         {
             "id": 3,
             "name": "eval-thin-evals",
-            "targets": "Step 4 — scoring group H",
+            "targets": "Step 6 — scoring group H",
             "setup": "The sorting-imports fixture carries a prose evals.md with two scenarios instead of an evals/evals.json.",
             "files": [
                 "evals/files/eval-thin-evals/sorting-imports/SKILL.md",
@@ -106,7 +106,7 @@
         {
             "id": 4,
             "name": "eval-grounded-findings",
-            "targets": "Step 4 — evidence and deterministic lookups",
+            "targets": "Step 6 — evidence and deterministic lookups",
             "setup": "The generating-sitemaps fixture references three rule files; two of the four bundle files carry a findable defect (a bare prohibition without a consequence in SKILL.md, an 'etc.' terminating an actionable skip list in url-rules.md).",
             "files": [
                 "evals/files/eval-grounded-findings/generating-sitemaps/SKILL.md",
@@ -128,7 +128,7 @@
         {
             "id": 5,
             "name": "eval-apply-adds-eval",
-            "targets": "Step 6 — interactive apply",
+            "targets": "Step 8 — interactive apply",
             "setup": "The summarizing-changelogs fixture's step 2 estimates a missing release date instead of abstaining — a High D1 finding whose fix changes runtime behavior. The fixture ships an evals/evals.json for the apply phase to extend.",
             "files": [
                 "evals/files/eval-apply-adds-eval/summarizing-changelogs/SKILL.md",
@@ -148,7 +148,7 @@
         {
             "id": 6,
             "name": "eval-clean-skill-no-padding",
-            "targets": "Step 4 — filter pass, false-positive guard",
+            "targets": "Step 6 — filter pass, false-positive guard",
             "setup": "The linting-frontmatter fixture is well-authored and conforms to the checklist.",
             "files": [
                 "evals/files/eval-clean-skill-no-padding/linting-frontmatter/SKILL.md",
@@ -167,7 +167,7 @@
         {
             "id": 7,
             "name": "eval-reasoning-echo",
-            "targets": "Step 4 — scoring C7",
+            "targets": "Step 6 — scoring C7",
             "setup": "The triaging-bug-reports fixture tells the model twice to write its reasoning into the response — in the overview and in step 3.",
             "files": ["evals/files/eval-reasoning-echo/triaging-bug-reports/SKILL.md"],
             "prompt": "Review the triaging-bug-reports skill.",
@@ -184,7 +184,7 @@
         {
             "id": 8,
             "name": "eval-model-subset",
-            "targets": "Step 3 — conditional group B",
+            "targets": "Step 2 — conditional group B",
             "setup": "The auditing-css-tokens fixture is pinned to `claude-sonnet-5` and is otherwise sound, including a copy-and-tick workflow checklist. Its prompt does not, and need not, address Opus-4.8 or Fable-5-specific behaviors (e.g. subagent spawning, long-turn timeouts).",
             "files": ["evals/files/eval-model-subset/auditing-css-tokens/SKILL.md"],
             "prompt": "Review the auditing-css-tokens skill.",
@@ -202,7 +202,7 @@
         {
             "id": 9,
             "name": "eval-coverage-then-filter",
-            "targets": "Step 4 — coverage before filtering",
+            "targets": "Step 6 — coverage before filtering",
             "setup": "The pruning-feature-flags fixture carries one clear High — a `--no-verify` retry around a rejecting pre-commit hook — plus borderline, low-confidence candidates: a comma-separated allowed-tools value and an 'and so on' terminating an actionable list of config entries.",
             "files": ["evals/files/eval-coverage-then-filter/pruning-feature-flags/SKILL.md"],
             "prompt": "Review the pruning-feature-flags skill — only flag what actually matters.",
@@ -220,13 +220,13 @@
         {
             "id": 10,
             "name": "eval-refresh-detects-drift",
-            "targets": "Step 2 — refresh the criteria",
-            "setup": "Network available — an environmental condition the fixture cannot carry. A live source doc contains guidance (or a new model-prompting guide in the § Sources family) that the baked checklist's `last-synced` version does not yet reflect. The counting-words fixture is a sound target, so the staleness note is the scenario's signal.",
+            "targets": "The criteria-assembly step — refresh the criteria after the structural gate passes",
+            "setup": "Network available — an environmental condition the fixture cannot carry. A live source doc contains guidance (or a new model-prompting guide in the § Sources family) that the baked checklist's `last-synced` version does not yet reflect. The counting-words fixture is structurally sound, so the run passes the gate and reaches the assembly step; the staleness note is the scenario's signal.",
             "files": ["evals/files/eval-refresh-detects-drift/counting-words/SKILL.md"],
             "prompt": "Review the counting-words skill.",
             "expected_output": "A completed review plus a checklist-staleness note naming the live guidance the baked checklist does not yet carry.",
             "assertions": [
-                "Fetches EVERY § Sources URL during Step 2 — including the two agentskills.io entries and the model-prompting docs for models the target skill is not pinned to — rather than relying only on the baked checklist",
+                "Fetches EVERY § Sources URL during the criteria-assembly step — including the two agentskills.io entries and the model-prompting docs for models the target skill is not pinned to — rather than relying only on the baked checklist; the fetches happen only after the structural gate passes",
                 "Detects the guidance the checklist does not reflect and records it as a checklist-staleness note in the report",
                 "Still completes the review against the best available criteria",
                 "If a fetch fails instead, notes the fallback to the baked checklist"
@@ -237,14 +237,15 @@
         {
             "id": 11,
             "name": "eval-brief-before-interview",
-            "targets": "Step 3 — brief, then interview",
+            "targets": "Step 2 — brief, then interview",
             "setup": "The checking-alt-text fixture is a sound target; the user has given no scoping preferences yet.",
             "files": ["evals/files/eval-brief-before-interview/checking-alt-text/SKILL.md"],
             "prompt": "Review the checking-alt-text skill.",
-            "expected_output": "A plain-language brief covering scope, files, deliverable and effort, followed by the three scoping questions with defaults named.",
+            "expected_output": "A plain-language brief covering the two passes, the structural gate, files, deliverable shapes, and effort, followed by the four scoping questions with defaults named.",
             "assertions": [
-                "Presents a brief BEFORE asking scoping questions: what will be checked (the A–H, R groups), what files will be read, what the deliverable is, and rough effort",
-                "Then asks the three scoping questions, noting sensible defaults so the user can accept them",
+                "Presents a brief BEFORE asking scoping questions: the two passes and the structural gate, what will be checked (the A–H, R groups), what files will be read, the two possible report shapes, and rough effort",
+                "Then asks the four scoping questions — deliverable, focus, change appetite, and the structural gate — noting sensible defaults so the user can accept them",
+                "Does not claim the live docs were already fetched — the refresh happens only after the structural gate",
                 "Does not dump the raw criterion keys as the brief — uses the plain-language group summaries",
                 "Accepts 'use the defaults' as a valid answer and proceeds with the stated per-question defaults"
             ],
@@ -294,7 +295,7 @@
         {
             "id": 14,
             "name": "eval-full-prose-conventions",
-            "targets": "Step 4 — scoring R7 across all twelve conventions",
+            "targets": "Step 6 — scoring R7 across all twelve conventions",
             "setup": "The rotating-api-keys fixture's prose violates conventions the checklist does NOT bake in as R8–R11: phrasal verbs ('Set up', 'point … to') per convention 8, and a contracted normative sentence (\"Don't retire the old key…\") per convention 12. Its R8–R11 behavior is clean. Guards the delegation: R7 hands prose scoring to the writing-simplified-technical-english skill precisely because the checklist condenses only five of the twelve conventions into R8–R11.",
             "files": ["evals/files/eval-full-prose-conventions/rotating-api-keys/SKILL.md"],
             "prompt": "Review the rotating-api-keys skill.",
@@ -312,7 +313,7 @@
         {
             "id": 15,
             "name": "eval-ungated-irreversible-action",
-            "targets": "Step 4 — scoring C10",
+            "targets": "Step 6 — scoring C10",
             "setup": "The publishing-docs fixture runs `git push --force origin gh-pages` with no instruction to confirm with the user first, and tells the model to retry with `--no-verify` when the pre-push hook rejects the push. Its build and local-commit steps are ordinary reversible work.",
             "files": ["evals/files/eval-ungated-irreversible-action/publishing-docs/SKILL.md"],
             "prompt": "Review the publishing-docs skill.",
@@ -329,7 +330,7 @@
         {
             "id": 16,
             "name": "eval-blanket-tool-default",
-            "targets": "Step 4 — scoring C9 against B3",
+            "targets": "Step 6 — scoring C9 against B3",
             "setup": "The mapping-redirects fixture is pinned to `claude-sonnet-5` and contains the line `If in doubt, use the Grep tool.` plus a separate, correctly scoped nudge in step 4, which runs with extended thinking disabled.",
             "files": ["evals/files/eval-blanket-tool-default/mapping-redirects/SKILL.md"],
             "prompt": "Review the mapping-redirects skill.",
@@ -346,7 +347,7 @@
         {
             "id": 17,
             "name": "eval-spec-name-violation",
-            "targets": "Step 4 — deterministic lookups against the Agent Skills spec (A1)",
+            "targets": "Step 6 — deterministic lookups against the Agent Skills spec (A1)",
             "setup": "The fixture sits in a directory named `foo-bar/` while its SKILL.md declares `name: foo--baz` — a name that both fails to match its parent directory and contains consecutive hyphens.",
             "files": ["evals/files/eval-spec-name-violation/foo-bar/SKILL.md"],
             "prompt": "Review the skill in the foo-bar directory.",
@@ -381,13 +382,13 @@
         {
             "id": 19,
             "name": "eval-shared-criteria-invoked",
-            "targets": "Step 2 — invoking prompt-quality-criteria for groups B–G",
+            "targets": "The criteria-assembly step — invoking prompt-quality-criteria for groups B–G once the structural gate passes",
             "setup": "The archiving-stale-branches fixture plants one defect in each of three shared groups: it follows handling instructions read from fetched pull-request descriptions (F1/F3), it assumes a branch was merged when it cannot tell rather than abstaining (D1), and it deletes branches and force-pushes with no confirmation gate (C10). Its `model: opus` pin plus the 'verify, then double-check' line is a group B item. None of these criteria live in this plugin's checklist, so a run that skips the invocation cannot find any of them. prompt-quality-criteria must be installed for this scenario.",
             "files": ["evals/files/eval-shared-criteria-invoked/archiving-stale-branches/SKILL.md"],
             "prompt": "Review the archiving-stale-branches skill.",
             "expected_output": "A ranked gap analysis carrying findings from groups B, C, D, and F alongside the local groups, each citing the shared plugin's keys unchanged.",
             "assertions": [
-                "Invokes the prompt-quality-criteria skill before scoring, rather than scoring B–G from memory",
+                "Invokes the prompt-quality-criteria skill before the Pass 2 sweep, rather than scoring B–G from memory",
                 "Flags the follow-instructions-from-fetched-content defect against F1 or F3",
                 "Flags the assume-merged-when-unsure defect against D1",
                 "Flags the ungated delete and force-push against C10",
@@ -400,7 +401,7 @@
         {
             "id": 20,
             "name": "eval-shared-criteria-absent",
-            "targets": "Step 2 — degradation when prompt-quality-criteria is unavailable, and Step 5's criteria note",
+            "targets": "The criteria-assembly step — degradation when prompt-quality-criteria is unavailable, and the report's criteria notes",
             "setup": "Same fixture as scenario 19, run with prompt-quality-criteria NOT installed — an environmental condition no file can carry, so arrange it by installing only reviewing-claude-skills and writing-simplified-technical-english. This is the failure mode that matters most: six of the nine groups going silently ungraded reads to a user as a clean skill.",
             "files": ["evals/files/eval-shared-criteria-invoked/archiving-stale-branches/SKILL.md"],
             "prompt": "Review the archiving-stale-branches skill.",
@@ -418,19 +419,38 @@
         {
             "id": 21,
             "name": "eval-multiplicative-spine",
-            "targets": "Step 4 — scoring R14 from the structure before the line-level sweep, and the subordination rule",
-            "setup": "The syncing-translations fixture is locally defensible everywhere — each rule carries a rationale, most guardrails a consequence — but its structure multiplies: a three-value autoSync config knob, an Action column computed from category × match score × a plural-form override, the same copy operation specified in two phases (step 2 pre-scoring, steps 4–5 post-scoring), a rule set cited by number from three sections, and steps the config can empty. Two genuine line-level nits sit inside the implicated sections so the run has something to subordinate: a bare 'Never edit locales/en.json' with no consequence (R10), and step 5's 're-run it' with two plausible antecedents (R11).",
+            "targets": "Pass 1 and the gate — a High structural finding stops the run before the detail sweep",
+            "setup": "The syncing-translations fixture is locally defensible everywhere — each rule carries a rationale, most guardrails a consequence — but its structure multiplies: a three-value autoSync config knob, an Action column computed from category × match score × a plural-form override, the same copy operation specified in two phases (step 2 pre-scoring, steps 4–5 post-scoring), a rule set cited by number from three sections, and steps the config can empty. Two genuine line-level nits sit inside the implicated sections — a bare 'Never edit locales/en.json' with no consequence (R10), and step 5's 're-run it' with two plausible antecedents (R11) — planted to prove the gated run does NOT report them: they belong to the sweep the gate skips.",
             "files": ["evals/files/eval-multiplicative-spine/syncing-translations/SKILL.md"],
             "prompt": "Review the syncing-translations skill.",
-            "expected_output": "A report led by a High R14 structural finding that recommends a collapse — fewer apply phases, the knob hardcoded, or the computed Action decision moved to the user — with the line-level findings inside the implicated sections reported as subordinate to it.",
+            "expected_output": "A structure-only report led by a High R14 finding with a concrete redesign recommendation, the unswept groups marked as gated in the coverage table, and an explicit offer of the full detail sweep — with no criteria assembly and no line-level findings.",
             "assertions": [
-                "Flags the multiplicative structure against R14 and ranks it High, placed first in the ranked findings",
+                "Flags the multiplicative structure against R14, ranks it High, and STOPS at the gate — no Pass 2 sweep runs",
                 "Names at least two of the compounding signals: the computed Action column, the dual apply phases for the same operation, the config-emptied steps, or the rule set cited by number across sections",
-                "Recommends a structural collapse rather than wording fixes for the corner cases",
-                "Reports the R10 and R11 nits inside the implicated sections as subordinate to the structural finding, not as independent peer findings",
+                "Does NOT invoke prompt-quality-criteria and does NOT fetch the § Sources URLs — a gated run spends nothing on the detail machinery",
+                "Does NOT report the R10 or R11 nits — line-level findings belong to the sweep the gate skipped",
+                "The gated report recommends a structural collapse (fewer phases, the knob hardcoded, or the computed decision moved to the user) and offers the detail sweep as an explicit follow-up choice",
+                "The coverage table marks every unswept group 'not scored — gated on structure', never N/A and never Pass"
+            ],
+            "baseline": "Without the skill, each branch reads as locally justified: the review produces a list of corner-case findings inside the multiplicative space and no structural recommendation — the non-converging review loop the gate exists to catch.",
+            "models": ["opus"]
+        },
+        {
+            "id": 22,
+            "name": "eval-gate-escape-hatch",
+            "targets": "Step 2's fourth scoping question and the gate's exception — a pre-authorized full sweep past a High structural finding, with subordination",
+            "setup": "Same fixture as scenario 21; the prompt pre-authorizes the full sweep, exercising the gate's escape hatch instead of its stop.",
+            "files": ["evals/files/eval-multiplicative-spine/syncing-translations/SKILL.md"],
+            "prompt": "Review the syncing-translations skill — run the full detail sweep even if the structure fails.",
+            "expected_output": "Both passes run: a full gap analysis led by the High R14 finding, with the R10 and R11 nits inside the implicated sections reported as subordinate to it and the collapse recommended before any wording fix.",
+            "assertions": [
+                "Honors the pre-authorization: proceeds past the High structural finding into criteria assembly and the full Pass 2 sweep rather than stopping",
+                "The R14 finding still leads the ranked findings",
+                "Reports the R10 and R11 nits as subordinate to the structural finding, not as independent peer findings",
+                "Recommends the structural collapse first, framing the subordinate fixes as moot until the redesign lands",
                 "Does NOT flag the individually well-formed rules one by one as R1 violations — the finding is the product of the branches, not any single branch"
             ],
-            "baseline": "Without the skill, each branch reads as locally justified: the review produces a list of corner-case findings inside the multiplicative space and no structural recommendation — the non-converging review loop this criterion exists to catch.",
+            "baseline": "Without the skill, there is no gate to escape: the run produces a flat findings list in which the corner-case nits sit as peers of — or in place of — any structural observation.",
             "models": ["opus"]
         }
     ]

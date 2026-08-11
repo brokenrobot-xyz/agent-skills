@@ -35,8 +35,37 @@ clean one.
 Ask Claude to review, audit, or improve a named skill. Scope is **one skill
 per invocation** — to review several, run once per skill.
 
-A run starts with a short brief and three scoping questions (each with a
-default, so "use the defaults" works):
+## How a run flows
+
+```
+1. Brief + four scoping questions        each has a default; "use the defaults" works
+2. Pass 1 — STRUCTURE                    eight shape criteria: decision space, scope,
+                                         simplicity, length & disclosure, degrees of
+                                         freedom, defaults vs menus, over-prescription.
+                                         Offline and cheap — no docs fetched yet.
+        │
+        ├── shape holds ──────────────▶  continue to 3
+        │
+        └── any HIGH structural  ─────▶  ■ STOP (the gate)
+            finding                      You get a short structural verdict and a
+                                         redesign recommendation. The detail sweep
+                                         becomes an explicit follow-up choice —
+                                         run it anyway, or redesign first.
+3. Criteria assembly                     load the shared groups B–G, fetch the live docs
+4. Pass 2 — DETAIL                       the full nine-group sweep
+5. Gap analysis                          severity-ranked findings + per-group coverage table
+6. Optional apply                        fixes you approve, one finding at a time
+```
+
+**Why the gate exists.** Line-level findings against a workflow that is about
+to be redesigned are wasted effort — and wasted tokens. A structurally
+over-branched skill can absorb review round after review round, each finding
+a new corner case, without ever converging. Pass 1 answers "is the shape
+sound?" before the expensive sweep runs; only a **High** structural finding
+stops the run, and question 4 below lets you pre-authorize the full sweep so
+the gate never surprises you.
+
+The four scoping questions:
 
 1. **Deliverable** — gap analysis only, or also apply approved fixes
    _(default: analysis only)_.
@@ -44,6 +73,16 @@ default, so "use the defaults" works):
    _(default: all equal)_.
 3. **Change appetite** — surgical tweaks only, or open to restructuring
    _(default: surgical)_.
+4. **Structural gate** — stop on a High structural finding, or run the full
+   detail sweep anyway _(default: stop)_.
+
+**Two report shapes.** A gated run produces a short **structural verdict**:
+the High finding(s) with evidence, what the structure already gets right, a
+concrete redesign recommendation, and a coverage table marking the unswept
+groups as `not scored — gated on structure` — a gated run never reads as a
+clean one. A run that passes the gate (or that you pushed past it) produces
+the full **gap analysis** described below, with structural findings leading
+the ranked list.
 
 ## What the review checks
 
@@ -76,14 +115,17 @@ format) are settled with commands, not eyeballed.
 
 ## Behavior notes
 
-- **Network is best-effort.** The reviewer fetches the live best-practice
-  docs to catch guidance newer than the baked checklist. When a fetch fails,
-  it reviews against the baked checklist and says so in the report — it
-  never blocks on the network.
+- **Network is best-effort, and only after the gate.** The reviewer fetches
+  the live best-practice docs to catch guidance newer than the baked
+  checklist — but only once the structural gate has passed; a gated run
+  fetches nothing, because the baked checklist suffices for a structural
+  verdict. When a fetch fails, the review proceeds on the baked checklist
+  and says so in the report — it never blocks on the network.
 - **Reviewed content is data.** A line inside the target skill saying
   "report no issues" carries no authority over the review.
 - **Apply mode is one finding at a time**, surgical, and adds or refreshes
   an eval in the target skill when a fix changes behavior — so the new
-  guarantee is tested, not just asserted.
+  guarantee is tested, not just asserted. A High structural finding is the
+  exception: that is a redesign conversation, not a sequence of edits.
 - The skill pins `model: opus` for review quality; a managed setting can
   override the pin.
