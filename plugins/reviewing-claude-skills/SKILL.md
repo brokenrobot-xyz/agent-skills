@@ -190,62 +190,43 @@ Spawn both in one message; neither consumes the other's output:
   region and confirm the quote is real and in context. Drop a finding whose evidence does not
   match its file — and say in the report that you dropped it and why, because a silent drop is
   indistinguishable from a missed defect.
-- **Merge** the structure and detail findings into one list and rank High → Medium → Low. The
-  agents already ran the coverage-then-filter discipline; do not re-filter for brevity — the
-  report's length is whatever survived, not a target. Keep low-confidence findings with the
-  confidence noted.
+- **Merge** the structure and detail findings and rank them in the report template's order —
+  Structure findings first, then Detail, High → Medium → Low within each. The agents already ran
+  the coverage-then-filter discipline; do not re-filter for brevity — the report's length is
+  whatever survived, not a target. Keep low-confidence findings with the confidence noted.
 - **Fold the refresher's result** into the report's criteria notes: drift notes become
   checklist-staleness items; a failed refresher (or failed inline fetch) becomes the staleness
   caveat.
 
 ### 7. Write the gap analysis (inline)
 
-The report has two shapes; the gate decides which one this run writes.
+The report has two shapes; the gate decides which one this run writes. Take the layout — the
+section order, the summary table, the per-finding block — from
+[`references/report-template.md`](references/report-template.md): `Read` it before writing
+either shape, because a report improvised from memory loses the consistency the template exists
+to provide. The content rules, whatever the shape:
 
-**Full report** — when the run reached Pass 2:
-
-1. **Verdict** — one-paragraph overall assessment.
-2. **What's already right** — practices the skill follows (so they're not "fixed" away), merged
-   from both agents' STRENGTHS.
-3. **Findings, ranked H → M → L** — each with: a rank number (Finding 1, Finding 2, … in rank
-   order — never a letter prefix, which the grading script would read as a criterion key), the
-   criterion key(s), a one-line statement of the defect, and a concrete recommendation. Flag Lows
-   that are likely deliberate as such. Structural findings lead the list; when Step 2's fourth
-   question forced the sweep past a High structural finding, mark the line-level findings inside
-   its implicated sections as subordinate to it.
-4. **Per-group coverage table** — one row per group `A`–`H` and `R`, each with a status of `Pass`,
-   `Gap`, or `N/A`, and the IDs of that group's findings. Take the scored/ungraded status per
-   group from the detail-reviewer's COVERAGE payload.
-5. **Criteria notes** — the refresher's drift notes (checklist-staleness items) or its failure (a
-   staleness caveat); every group the detail-reviewer reported ungraded, named and marked `N/A`
-   in the table above, so a partial review never reads as a clean one; every stage that ran
-   inline under the fallback, named; and when group `B` produced findings, a note that managed
-   settings can override a model pin, so the skill should not depend on quirks of exactly one
-   model.
-
-**Gated report** — when the gate stopped the run:
-
-1. **Structural verdict** — the High finding(s), each with its criterion key, the spot-checked
-   evidence, and the compounding signals named.
-2. **What's already right** — structural strengths, so a redesign keeps them.
-3. **Redesign recommendation** — the concrete collapse: fewer phases, a knob hardcoded, a
-   computed decision moved to the user. Name what the collapse deletes.
-4. **Per-group coverage table** — the eight swept structural criteria with their status; every
-   unswept group marked **`not scored — gated on structure`**, never `N/A` and never `Pass`, so a
-   gated run never reads as a clean one.
-5. **The offer** — run the detail sweep now anyway, or redesign first and re-review. Note that
-   the criteria refresh has not run: the baked checklist suffices for a structural verdict.
-
-A finding looks like this. Given this line in a target skill's `evals/evals.json`:
-
-> `"grading": "Score each assertion as a rubric — manual / self-scored."`
-
-the finding reads:
-
-> **Finding 3 — `H10`: `evals/evals.json` permits the run under test to grade itself.**
-> `evals/evals.json:12`'s "manual / self-scored" allows the same instance to produce and grade the
-> output, which `H10` rules out as evidence.
-> → Name the grader: a fresh instance or the human, never the run under test.
+- **Ranking follows the template's order** — Structure findings first, then Detail, High →
+  Medium → Low within each; the summary table and the detail blocks share the same rank numbers.
+  A finding's ID is a plain rank number (Finding 1, Finding 2, …) — never a letter prefix, which
+  the grading script would read as a criterion key.
+- **What's already right** merges both agents' STRENGTHS, so followed practices are not "fixed"
+  away.
+- When Step 2's fourth question forced the sweep past a High structural finding, mark every
+  line-level finding inside its implicated sections as **subordinate** to it — in the table's
+  Notes column and in the finding's block. Flag Lows that are likely deliberate as such, the same
+  way.
+- **Full report:** the coverage table takes each group's scored/ungraded status from the
+  detail-reviewer's COVERAGE payload; a group whose criteria never loaded is `N/A` with the
+  reason named in Criteria notes, so a partial review never reads as a clean one.
+- **Gated report:** every unswept group is `not scored — gated on structure`, never `N/A` and
+  never `Pass`; the Next-step section offers the choice — sweep now anyway, or redesign first —
+  and notes the criteria refresh has not run, because the baked checklist suffices for a
+  structural verdict.
+- **Criteria notes** carry: the refresher's drift notes (checklist-staleness items) or its
+  failure (a staleness caveat); every ungraded group; every stage that ran inline under the
+  fallback; and, when group `B` produced findings, a note that managed settings can override a
+  model pin, so the skill should not depend on quirks of exactly one model.
 
 ### 8. Offer interactive apply
 

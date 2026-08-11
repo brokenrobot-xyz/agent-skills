@@ -117,10 +117,15 @@ From [prompt-quality-criteria](../prompt-quality-criteria/README.md):
 - **F** — injection and jailbreak defenses
 - **G** — prompt-leak defenses
 
-The report is a verdict, a list of what the skill already does right, the
-findings ranked High → Medium → Low with concrete recommendations, and a
-per-group coverage table. Mechanical criteria (name rules, length caps, path
-format) are settled with commands, not eyeballed.
+Every report follows the same template
+([references/report-template.md](references/report-template.md)): a
+one-paragraph verdict, then a **summary table** of all findings — Structure
+findings first, then Detail, severity-ranked within each — then what the
+skill already does right, a consistent detail block per finding (evidence
+quote, defect, fix), a per-group coverage table, and criteria notes. The
+summary table is the skim layer; the detail blocks carry the depth.
+Mechanical criteria (name rules, length caps, path format) are settled with
+commands, not eyeballed.
 
 ## Behavior notes
 
