@@ -20,11 +20,11 @@ number, and the detail blocks below reuse the same numbers.
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                        | Notes                |
-| --- | -------- | --------- | ------ | ------------------------------ | -------------------- |
-| 1   | High     | Structure | R14    | <one-line statement>           |                      |
-| 2   | Low      | Structure | A17    | <one-line statement>           | likely deliberate    |
-| 3   | Medium   | Detail    | R3     | <one-line statement>           |                      |
+| #   | Severity | Pass      | Key(s) | Finding              | Notes             |
+| --- | -------- | --------- | ------ | -------------------- | ----------------- |
+| 1   | High     | Structure | R14    | <one-line statement> |                   |
+| 2   | Low      | Structure | A17    | <one-line statement> | likely deliberate |
+| 3   | Medium   | Detail    | R3     | <one-line statement> |                   |
 
 Note the order: the Structure Low outranks the Detail Medium, because the grouping comes first
 and severity sorts only within a group.
@@ -47,11 +47,11 @@ and severity sorts only within a group.
 
 ### Coverage
 
-| Group | Status         | Findings |
-| ----- | -------------- | -------- |
-| A     | <Pass|Gap|N/A> | <2, 5>   |
-| …     |                |          |
-| R     |                |          |
+| Group | Status             | Findings |
+| ----- | ------------------ | -------- |
+| A     | <Pass / Gap / N/A> | <2, 5>   |
+| …     |                    |          |
+| R     |                    |          |
 
 ### Criteria notes
 
@@ -100,10 +100,10 @@ user — and what the collapse deletes>
 
 ### Coverage
 
-| Group | Status                            |
-| ----- | --------------------------------- |
-| <swept structural criteria>: their status  |
-| <every unswept group>: not scored — gated on structure |
+| Group / criterion                 | Status                          |
+| --------------------------------- | ------------------------------- |
+| <each swept structural criterion> | <its status>                    |
+| <every unswept group>             | not scored — gated on structure |
 
 ### Next step
 

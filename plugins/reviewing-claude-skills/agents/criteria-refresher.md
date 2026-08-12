@@ -32,7 +32,7 @@ Return exactly this, and nothing else — your output is consumed by the parent 
 human:
 
 - **DRIFT:** `none`, or one bullet per item — `<criteria file> § <key>: <what the live doc says
-  that the baked file does not>` — concrete enough that the checklist maintainer can act on it.
+that the baked file does not>` — concrete enough that the checklist maintainer can act on it.
 - **UNSUPPORTED:** `none`, or one bullet per baked criterion that no cited source of its group
   carries — the reverse of drift, and equally maintenance material.
 - **FAILED FETCHES:** `none`, or one bullet per URL with the failure. A failed fetch is a
