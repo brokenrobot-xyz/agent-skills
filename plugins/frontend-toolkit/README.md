@@ -44,34 +44,32 @@ conflict, those files are canonical.
 
 ## Pinning
 
-The skill has no configuration file. The one policy it follows — how
-versions are written — is detected from the repo's own signals: `.npmrc`
-`save-exact=true` or an all-exact `package.json` means `exact` (every
-update written with `--save-exact`); any existing `^`/`~` range means
-`preserve` (every dependency keeps its existing style). A repo that wants
-exact pinning states it the way npm itself understands: `save-exact=true`
-in `.npmrc`.
+The skill has no configuration file and no pinning setting to choose. Each
+dependency keeps the version style it already has: the new version is
+written behind that entry's existing prefix, so a `^` entry stays `^`, a `~`
+entry stays `~`, and an exact pin stays exact. The skill never runs
+`npm install <pkg>@<version>`, which would write npm's own configured prefix
+over the entry's style.
 
 ## What a run looks like
 
-1. Confirm the repo is npm-managed and detect the pinning policy.
-2. List outdated packages and snapshot the audit baseline before anything
-   changes.
-3. Categorize into patch / minor / major (any `0.x` bump counts as at least
-   minor), show the table, and **stop: you select which bumps to pursue**.
+1. Confirm the repo is npm-managed.
+2. Categorize the outdated packages into patch / minor / major with a script
+   — any `0.x` bump counts as at least minor — and snapshot the audit
+   baseline before anything changes.
+3. Show the table, and **stop: you select which bumps to pursue**.
 4. Research each selected bump with one subagent per package. A bump the
    researcher could not analyze — the subagent is missing, or the network
    is blocked — reaches the next step flagged **no verdict**, never graded
    by the skill itself.
 5. Present the verdict table and **stop: you approve per bump** — a verdict
    informs your decision, it never bypasses it.
-6. Apply the approved bumps one category at a time, each with its own audit
-   diff against the baseline — only advisories the update _introduced_
-   count against it; a bump that introduces one is pinned back and
-   reported.
-7. Report applied / blocked / deferred / not selected. Nothing is
-   committed; committing each category separately keeps regressions
-   bisectable.
+6. Apply the approved bumps in one pass, then run the audit diff against the
+   baseline — only advisories the update _introduced_ count against it, and
+   the diff names the package each one reaches through, so a bump that
+   introduces one is pinned back and reported.
+7. Report applied / blocked / deferred / not selected. Nothing is committed;
+   the changes stay in the working tree for you to review.
 
 ## Scope
 

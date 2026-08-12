@@ -37,5 +37,5 @@ jobs:
       - name: Plugin manifests check
         run: npm run plugins:check
 
-      - name: Hook test check
+      - name: Script test check
         run: npm test

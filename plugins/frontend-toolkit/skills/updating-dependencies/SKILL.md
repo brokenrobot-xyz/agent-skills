@@ -14,24 +14,9 @@ Refresh the host repo's npm dependencies safely. Every bump takes the same path:
 
 npm only. In Step 1, confirm the repo is npm-managed: `package-lock.json` present, and no `pnpm-lock.yaml`, `yarn.lock`, or `bun.lockb`. On any other lockfile, stop and report the manager as unsupported — never translate the commands on the fly, because an untested translation can rewrite a lockfile wrongly.
 
-The npm-specific surface is deliberately confined so that a later port can swap it and nothing else: the detect command (Step 2), the install commands (Step 6 and the pinning-policy rules below), the lockfile name above, and `AUDIT_ARGS` in `scripts/audit-diff.mjs`.
-
-## Pinning policy — how versions are written
-
-Detect the policy from the repo's own signals, in Step 1:
-
-- `.npmrc` contains `save-exact=true` → **exact**.
-- Otherwise, no `^` or `~` prefix anywhere in `dependencies` + `devDependencies` → **exact**.
-- Otherwise → **preserve**.
-
-What each policy means at install time:
-
-- **exact** — every install uses `--save-exact`, and never writes a `^` or `~` range, because a range re-resolves the tree on the next install, so the lockfile stops describing the versions this run actually applied.
-- **preserve** — each dependency keeps its existing prefix. Edit that dependency's entry in `package.json` to the new version behind its existing prefix (`^`, `~`, or none), then run `npm install` so the lockfile follows. Never use `npm install <pkg>@<version>` under preserve, because npm writes its own configured prefix and would overwrite the dependency's style.
-
 ## Guardrails
 
-1. Follow the detected pinning policy on every version write, because a version written in the other style makes the repo's own signals disagree and the next run detects the wrong policy.
+1. Write every new version behind the entry's existing prefix — edit the entry in `package.json`, then run `npm install` so the lockfile follows. Never `npm install <pkg>@<version>`, because npm writes its own configured prefix over the entry's style: a `^` where the repo pinned exactly re-resolves the tree on the next install, so the lockfile stops describing the versions this run applied. Step 3's table carries each entry's prefix, so this takes no judgment.
 2. Never edit an unrelated file or downgrade an unrelated package to make the audit diff green, because that ships a clean report over a regression nobody has fixed.
 3. Never stage, commit, push, or use `gh`, because a commit the user has not reviewed puts an unverified dependency tree into the history. The changes stay in the working tree for the user to review and commit.
 
@@ -41,12 +26,12 @@ This is a long, stateful run with two stops: a selection and an approval. Copy t
 
 ```
 Update Progress:
-- [ ] Step 1: Preflight — confirm npm-managed, detect the pinning policy
-- [ ] Step 2: Detect (npm outdated) + snapshot the audit baseline
-- [ ] Step 3: Categorize into patch / minor / major (show the table) → STOP: the user selects bumps
+- [ ] Step 1: Preflight — confirm npm-managed
+- [ ] Step 2: Detect (categorize.mjs) + snapshot the audit baseline
+- [ ] Step 3: Present the table → STOP: the user selects bumps
 - [ ] Step 4: Research each selected bump (one subagent per package)
 - [ ] Step 5: Present the verdict table → STOP: the user approves
-- [ ] Step 6: Apply the approved bumps, one category at a time → audit diff each
+- [ ] Step 6: Apply the approved bumps → audit diff
 - [ ] Report (nothing committed)
 ```
 
@@ -54,17 +39,19 @@ Update Progress:
 
 ## Step 1 — Preflight
 
-Confirm the repo is npm-managed (see **Supported package manager**), then detect the pinning policy (see **Pinning policy**). Step 3 presents the policy with its provenance.
+Confirm the repo is npm-managed (see **Supported package manager**).
 
-## Step 2 — Detect
+## Step 2 — Detect and snapshot
 
 From the repo root:
 
 ```bash
-npm outdated --json
+node "${CLAUDE_PLUGIN_ROOT}/skills/updating-dependencies/scripts/categorize.mjs"
 ```
 
-`npm outdated` exits non-zero when anything is outdated. Treat that exit code as expected rather than as a failure. When the output is empty, report "everything is current" and stop.
+It runs `npm outdated` and prints one row per outdated **direct** dependency: `package`, `current`, `latest`, `category` (patch / minor / major, with any `0.x` bump floored at minor, because 0.x releases may break on any digit), `depType`, and `prefix` — the version prefix that entry uses in `package.json`. Take the categories from this output; deriving them by eye is what the script replaces. When `outdated` is empty, report "everything is current" and stop.
+
+Exit 2 means the categories cannot be computed at all — an unreachable registry, an outdated package that is not installed, a range the workflow cannot rewrite — and the message names which. Fix that and re-run; never proceed on a partial list, because a package missing from the table reads to the user as a package that is already current.
 
 **Snapshot the security baseline now, before changing anything.** `npm audit` reports the _whole_ tree's advisories, most of which pre-date this update and are not its fault. Record the baseline so the audit diff can attribute only _new_ advisories to the bump. The script ships with this skill at `scripts/audit-diff.mjs`, next to this SKILL.md:
 
@@ -76,15 +63,15 @@ The script audits the whole tree, `devDependencies` included — an upgrade chan
 
 When `npm audit` itself fails — an absent lockfile, a blocked registry — the script exits 2 rather than recording an empty baseline, because a baseline of zero advisories would make every later diff report a clean tree. Treat exit 2 as described in **Audit diff**.
 
-## Step 3 — Categorize, then stop for the user's selection
+## Step 3 — Present the table, then stop for the user's selection
 
-Bucket each package by the semver diff of `current` → `latest` into **patch**, **minor**, or **major**. Always target `latest` — under preserve, `npm outdated`'s `wanted` column may sit between `current` and `latest`, but a refresh that stops at `wanted` leaves the interesting bumps unexamined. Treat any bump of a `0.x` package as at least **minor** (0.x releases may break on any digit). Note prod `dependencies` separately from `devDependencies`, because the dep type informs risk. Present the table, alongside the detected pinning policy and its provenance:
+Present the script's rows as a table, keeping prod `dependencies` distinct from `devDependencies` because the dep type informs risk:
 
-| Package  | Current → Latest | Category | Dep type        |
-| -------- | ---------------- | -------- | --------------- |
-| prettier | 3.9.6 → 3.9.7    | patch    | devDependencies |
-| astro    | 7.1.3 → 7.4.0    | minor    | dependencies    |
-| eslint   | 8.57.0 → 9.42.0  | major    | devDependencies |
+| Package  | Current → Latest | Category | Dep type        | Prefix |
+| -------- | ---------------- | -------- | --------------- | ------ |
+| eslint   | 8.57.0 → 9.42.0  | major    | devDependencies | —      |
+| astro    | 7.1.3 → 7.4.0    | minor    | dependencies    | `^`    |
+| prettier | 3.9.6 → 3.9.7    | patch    | devDependencies | —      |
 
 Then **stop and ask the user which bumps to pursue** — all of them, none, or a subset. Nothing is researched or installed before the user chooses, because a subagent spent on a bump the user never intended to apply is pure cost. Never narrate the stop and continue. When the user selects nothing, tick Steps 4–6 as skipped and go to the report.
 
@@ -107,17 +94,16 @@ Collect the verdicts into a consolidated recommendation table:
 
 ## Step 6 — Apply the approved bumps
 
-Apply the approved bumps one category at a time — patches, then minors, then majors — each category as its own apply → audit-diff cycle, so a regression the diff surfaces cleanly identifies which category caused it. When the user approves nothing, tick this step as skipped and go to the report. Per category:
+When the user approves nothing, tick this step as skipped and go to the report. Otherwise apply every approved bump in one pass — the audit diff attributes an advisory to the package it reaches through, so applying in batches buys no attribution the diff does not already give:
 
-1. For each approved package, install per the detected policy:
-    - **exact:** `npm install <pkg>@<latest> --save-exact`
-    - **preserve:** edit the version in `package.json` behind its existing prefix, then `npm install`
-2. Make any code migrations the research flagged (`needs-changes`).
-3. Run the audit diff (see **Audit diff**).
+1. Edit each approved package's entry in `package.json` to its `latest`, behind the prefix Step 3's table carries for it (Guardrail 1).
+2. Run `npm install` so the lockfile follows.
+3. Make any code migrations the research flagged (`needs-changes`).
+4. Run the audit diff (see **Audit diff**).
 
 The changes stay uncommitted; the report tells the user what to commit.
 
-## Audit diff — run after each category
+## Audit diff — run after applying
 
 Do _not_ read the raw advisory count as pass/fail; a non-zero count is almost always pre-existing noise. Instead, from the repo root:
 
@@ -129,7 +115,7 @@ It echoes the baseline's provenance and prints `new`, `resolved`, and `preExisti
 
 - **`new`** → **introduced by this update.** Only a `new` advisory counts as a regression. For each one:
     1. Identify which updated package pulled the advisory in.
-    2. Pin that package back to its previous version, per the detected policy.
+    2. Pin that package back to its previous version, per Guardrail 1.
     3. Re-run the diff to confirm the advisory has cleared.
     4. Report the bump as blocked, with the advisory ID and severity, so the user can decide whether to accept the risk.
 
@@ -144,37 +130,30 @@ An exit code of 2 means the run cannot attribute advisories at all: `npm audit` 
 
 Before writing the report, check each claim against a tool result from this run. Report only what you can point at. Say plainly what was skipped, what is unverified, and what is still failing.
 
-Summarize:
-
-- **Applied** per category, with `<pkg> <old> → <new>` and the research verdict. Every applied bump was user-approved.
-- **Blocked** — bumps pinned back because they introduced a `new` advisory, with the advisory ID and severity.
-- **Deferred** — researched bumps the user chose not to apply, with the verdict and why. A row the researcher could not grade is flagged **no verdict** here rather than given one.
-- **Not selected** — outdated packages the user did not pick in Step 3, listed so the next run knows where it stands.
-- **Audit** — the baseline diff per category: advisories **introduced** (blocked and pinned back), **resolved** (a win), and **pre-existing** (informational) — never the raw count alone.
-- A reminder that **nothing was committed or pushed** — the changes sit in the working tree for the user to review, and committing each category separately keeps a regression bisectable.
-
-For example:
+Report what was applied, what was blocked, what was deferred, and what was never selected, then the audit as introduced / resolved / pre-existing — never the raw advisory count alone. A row the researcher could not grade is flagged **no verdict** rather than given one. Follow this shape:
 
 ```
-Pinning policy: exact (.npmrc save-exact=true)
-
 Applied (all user-approved)
-  patch   prettier 3.9.6 → 3.9.7, rimraf 6.1.3 → 6.1.4
-  minor   astro 7.1.3 → 7.4.0 (compatible)
-  major   — none approved
+  prettier 3.9.6 → 3.9.7 (patch, compatible)
+  rimraf   6.1.3 → 6.1.4 (patch, compatible)
+  astro    7.1.3 → 7.4.0 (minor, compatible)
+
+Blocked
+  vite 5.2.0 → 5.4.1 (minor) — introduced GHSA-dddd-eeee-ffff (high, in rollup);
+  pinned back to 5.2.0, diff re-run clean
 
 Deferred
-  eslint 8.57.0 → 9.42.0 (major, needs-changes) — flat-config port deferred to its own change
+  eslint  8.57.0 → 9.42.0 (major, needs-changes) — flat-config port deferred to its own change
+  esbuild 0.21.0 → 0.24.0 (minor, no verdict) — researcher unavailable, nothing analyzed it
 
 Not selected
   typescript 5.6.2 → 5.9.1 (minor) — not picked for research this run
 
 Audit
-  patch   0 new, 0 resolved
-  minor   0 new, 1 resolved (GHSA-xxxx-yyyy-zzzz, moderate, in astro)
-  baseline: 1 pre-existing advisory (GHSA-aaaa-bbbb-cccc, high, in esbuild via
-  devDependencies) — not this update's fault, unchanged throughout
+  1 new       GHSA-dddd-eeee-ffff (high, in rollup) — blocked and pinned back, above
+  1 resolved  GHSA-xxxx-yyyy-zzzz (moderate, in astro)
+  1 pre-existing  GHSA-aaaa-bbbb-cccc (high, in esbuild via devDependencies) — not this
+  update's fault, unchanged throughout
 
-Nothing was committed or pushed. The changes are in the working tree; committing the patch and
-minor sets separately keeps them individually revertable.
+Nothing was committed or pushed. The changes are in the working tree for you to review.
 ```

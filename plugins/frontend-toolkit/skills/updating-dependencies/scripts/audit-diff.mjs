@@ -2,8 +2,8 @@
 // advisories it introduces, not on the whole tree's pre-existing baseline.
 //
 // Used by the updating-dependencies skill: `snapshot` runs before any package changes and records
-// the advisories present at HEAD; `diff` runs after each category is applied and classifies the
-// current advisories against that baseline. Only `new` advisories are the update's fault.
+// the advisories present at HEAD; `diff` runs after the approved bumps are applied and classifies
+// the current advisories against that baseline. Only `new` advisories are the update's fault.
 //
 //   node <skill-dir>/scripts/audit-diff.mjs snapshot [baseline.json]
 //   node <skill-dir>/scripts/audit-diff.mjs diff [baseline.json]
@@ -83,14 +83,17 @@ function currentAdvisories() {
     try {
         report = JSON.parse(out);
     } catch {
-        fail(`npm audit did not return JSON, so advisories cannot be attributed. Its output began: ${out.slice(0, 200)}`);
+        fail(
+            `npm audit did not return JSON, so advisories cannot be attributed. Its output began: ${out.slice(0, 200)}`
+        );
     }
     // A failed audit — an absent lockfile, an unreachable registry — still prints JSON, but with an
     // `error` object and no `vulnerabilities` key. Reading that as an empty advisory set would
     // record a baseline of zero and make every later diff report a clean tree, so a missing
     // `vulnerabilities` key is a tooling failure rather than a clean result.
     if (typeof report?.vulnerabilities !== 'object' || report.vulnerabilities === null) {
-        const detail = report?.error?.summary ?? report?.error?.detail ?? JSON.stringify(report?.error ?? report).slice(0, 200);
+        const detail =
+            report?.error?.summary ?? report?.error?.detail ?? JSON.stringify(report?.error ?? report).slice(0, 200);
         fail(`npm audit failed, so advisories cannot be attributed: ${detail}`);
     }
     const advisories = new Map();
@@ -112,7 +115,9 @@ if (mode === 'snapshot') {
     const advisories = [...currentAdvisories().values()].sort(byId);
     const baseline = { head, takenAt: new Date().toISOString(), advisories };
     writeFileSync(baselinePath, `${JSON.stringify(baseline, null, 4)}\n`);
-    console.log(`Baseline: ${advisories.length} advisories at ${head ? head.slice(0, 12) : 'no commit'} -> ${baselinePath}`);
+    console.log(
+        `Baseline: ${advisories.length} advisories at ${head ? head.slice(0, 12) : 'no commit'} -> ${baselinePath}`
+    );
 } else if (mode === 'diff') {
     let baseline;
     try {
