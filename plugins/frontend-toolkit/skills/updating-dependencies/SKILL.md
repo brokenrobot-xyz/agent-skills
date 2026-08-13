@@ -16,9 +16,9 @@ npm only. In Step 1, confirm the repo is npm-managed: `package-lock.json` presen
 
 ## Guardrails
 
-1. Write every new version behind the entry's existing prefix — edit the entry in `package.json`, then run `npm install` so the lockfile follows. Never `npm install <pkg>@<version>`, because npm writes its own configured prefix over the entry's style: a `^` where the repo pinned exactly re-resolves the tree on the next install, so the lockfile stops describing the versions this run applied. Step 3's table carries each entry's prefix, so this takes no judgment.
-2. Never edit an unrelated file or downgrade an unrelated package to make the audit diff green, because that ships a clean report over a regression nobody has fixed.
-3. Never stage, commit, push, or use `gh`, because a commit the user has not reviewed puts an unverified dependency tree into the history. The changes stay in the working tree for the user to review and commit.
+1. **Existing prefix.** Write every new version behind the entry's existing prefix — edit the entry in `package.json`, then run `npm install` so the lockfile follows. Never `npm install <pkg>@<version>`, because npm writes its own configured prefix over the entry's style: a `^` where the repo pinned exactly re-resolves the tree on the next install, so the lockfile stops describing the versions this run applied. Step 3's table carries each entry's prefix, so this takes no judgment.
+2. **No unrelated edits.** Never edit an unrelated file or downgrade an unrelated package to make the audit diff green, because that ships a clean report over a regression nobody has fixed.
+3. **Never commit.** Never stage, commit, push, or use `gh`, because a commit the user has not reviewed puts an unverified dependency tree into the history. The changes stay in the working tree for the user to review and commit.
 
 ## Workflow checklist
 
@@ -83,12 +83,14 @@ When a researcher returns no verdict — the subagent does not resolve, or its r
 
 ## Step 5 — Approval gate
 
-Collect the verdicts into a consolidated recommendation table:
+Collect the verdicts into a consolidated recommendation table. Every field the researcher returns has a column here, so consolidation drops nothing: its **Confidence + gaps** goes in the last column verbatim, and its **Peer/engine notes** join **Breaking changes** when non-empty.
 
-| Package | Jump                    | Verdict         | Breaking changes (affects us?)                | Required edits                             |
-| ------- | ----------------------- | --------------- | --------------------------------------------- | ------------------------------------------ |
-| astro   | 7.1.3 → 7.4.0 (minor)   | `compatible`    | Adds a `session` config key; nothing removed  | none                                       |
-| eslint  | 8.57.0 → 9.42.0 (major) | `needs-changes` | Flat config is now mandatory — **affects us** | Port `.eslintrc.cjs` to `eslint.config.js` |
+| Package | Jump                    | Verdict         | Breaking changes (affects us?)                              | Required edits                             | Confidence / gaps                  |
+| ------- | ----------------------- | --------------- | ----------------------------------------------------------- | ------------------------------------------ | ---------------------------------- |
+| astro   | 7.1.3 → 7.4.0 (minor)   | `compatible`    | Adds a `session` config key; nothing removed                | none                                       | high — changelog + `npm pack` diff |
+| eslint  | 8.57.0 → 9.42.0 (major) | `needs-changes` | Flat config is now mandatory — **affects us**; needs Node ≥20.9 | Port `.eslintrc.cjs` to `eslint.config.js` | low — 9.1–9.3 changelogs missing   |
+
+Never leave the last column blank, because a verdict reached on a changelog nobody could fetch and one reached on a byte-level diff otherwise arrive at this gate looking identical, and the gate exists to inform exactly that difference. A row the researcher could not grade at all carries **no verdict**, as Step 4 describes.
 
 **Stop and await the user's choice on every row.** Recommend, but let the user decide — a verdict informs the decision, it never makes it. Never narrate a pause and then continue, because a run that announces a stop and keeps working applies a bump the user never approved.
 
@@ -96,7 +98,7 @@ Collect the verdicts into a consolidated recommendation table:
 
 When the user approves nothing, tick this step as skipped and go to the report. Otherwise apply every approved bump in one pass — the audit diff attributes an advisory to the package it reaches through, so applying in batches buys no attribution the diff does not already give:
 
-1. Edit each approved package's entry in `package.json` to its `latest`, behind the prefix Step 3's table carries for it (Guardrail 1).
+1. Edit each approved package's entry in `package.json` to its `latest`, behind the prefix Step 3's table carries for it (the **Existing prefix** guardrail).
 2. Run `npm install` so the lockfile follows.
 3. Make any code migrations the research flagged (`needs-changes`).
 4. Run the audit diff (see **Audit diff**).
@@ -115,7 +117,7 @@ It echoes the baseline's provenance and prints `new`, `resolved`, and `preExisti
 
 - **`new`** → **introduced by this update.** Only a `new` advisory counts as a regression. For each one:
     1. Identify which updated package pulled the advisory in.
-    2. Pin that package back to its previous version, per Guardrail 1.
+    2. Pin that package back to its previous version, per the **Existing prefix** guardrail.
     3. Re-run the diff to confirm the advisory has cleared.
     4. Report the bump as blocked, with the advisory ID and severity, so the user can decide whether to accept the risk.
 
@@ -124,7 +126,13 @@ It echoes the baseline's provenance and prints `new`, `resolved`, and `preExisti
 - **`resolved`** → a security win the update delivered. Note it in the report.
 - **`preExisting`** → **not this update's fault.** Report as informational baseline noise, never as a problem this update caused.
 
-An exit code of 2 means the run cannot attribute advisories at all: `npm audit` itself failed, or the baseline is missing, unreadable, malformed, or stale. Exit 2 is a tooling problem, never a security failure. Only when no package has changed yet, re-run `snapshot`, because a baseline taken after an install would hide that install's advisories. When packages have already changed, mark the audit attribution as unavailable in the report, rather than diffing against a baseline that is not this run's.
+An exit code of 2 means the run cannot attribute advisories at all: `npm audit` itself failed, or the baseline is missing, unreadable, malformed, or stale. Exit 2 is a tooling problem, never a security failure. Whether a re-`snapshot` is still safe turns on whether any package has changed yet, so settle that with a command rather than from memory:
+
+```bash
+git status --porcelain -- package.json package-lock.json
+```
+
+Empty output means nothing has changed yet: re-run `snapshot`. Any output means a package has already changed: mark the audit attribution as unavailable in the report, rather than diffing against a baseline that is not this run's. A baseline taken after an install would hide that install's advisories, so `snapshot` refuses that case itself and exits 2 — treat that refusal as the same "attribution unavailable" outcome, never as a reason to retry.
 
 ## Report
 

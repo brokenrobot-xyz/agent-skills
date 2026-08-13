@@ -66,7 +66,7 @@ function run({ manifest, stdout = '', stderr = '', code = 0, noManifest = false 
 }
 
 // Asserts the run succeeded and emitted exactly these rows, in this order — the order matters
-// because Step 3 presents the table as-is, and the riskiest bumps belong at the top.
+// because the skill presents the table as-is, and the riskiest bumps belong at the top.
 function expectRows(label, fixture, expected) {
     const res = run(fixture);
     if (res.status !== 0) {
@@ -224,7 +224,7 @@ expectRows(
 );
 
 expectRows(
-    'each prefix travels with its row, so Step 6 writes behind it without re-reading package.json',
+    'each prefix travels with its row, so the apply step writes behind it without re-reading package.json',
     {
         manifest: { dependencies: { caret: '^1.0.0', tilde: '~1.0.0', pinned: '1.0.0' } },
         code: 1,

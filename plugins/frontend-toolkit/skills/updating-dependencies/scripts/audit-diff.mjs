@@ -20,8 +20,9 @@
 // update pulls in is the update's fault and has to surface, even when the affected package never
 // ships to the site.
 //
-// Exit 2 always means the run cannot attribute advisories at all: `npm audit` itself failed, or the
-// baseline is missing, unreadable, malformed, or stale. Exit 2 never means "advisories found".
+// Exit 2 always means the run cannot attribute advisories at all: `npm audit` itself failed, the
+// baseline is missing, unreadable, malformed, or stale, or `snapshot` was asked to overwrite a live
+// baseline after the manifest had already changed. Exit 2 never means "advisories found".
 //
 // `diff` echoes the baseline's provenance — the commit it was taken at and when — so a report can
 // never present an earlier run's baseline as this run's.
@@ -111,7 +112,45 @@ function currentAdvisories() {
 
 const byId = (a, b) => a.id.localeCompare(b.id);
 
+// Has this run already changed the manifest? Outside a git repo there is nothing to ask, so the
+// answer is no and a usable baseline is still taken rather than blocked.
+function manifestIsDirty() {
+    if (!root) {
+        return false;
+    }
+    try {
+        const out = execFileSync('git', ['status', '--porcelain', '--', 'package.json', 'package-lock.json'], {
+            cwd: root,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore']
+        });
+        return out.trim().length > 0;
+    } catch {
+        return false;
+    }
+}
+
+// Is a baseline from a run still in progress sitting at this path? Same age bound `diff` enforces,
+// so the two modes agree on when a baseline belongs to this run.
+function inProgressBaselineExists() {
+    try {
+        const takenAtMs = Date.parse(JSON.parse(readFileSync(baselinePath, 'utf8'))?.takenAt ?? '');
+        return Number.isFinite(takenAtMs) && Date.now() - takenAtMs <= MAX_BASELINE_AGE_MS;
+    } catch {
+        return false;
+    }
+}
+
 if (mode === 'snapshot') {
+    // A baseline taken after an install already contains that install's advisories, so every later
+    // diff would report them as pre-existing and the update would look clean. Refuse only that
+    // case — a live baseline plus an already-changed manifest — so a first snapshot on a tree the
+    // user had edited before the run started still succeeds.
+    if (inProgressBaselineExists() && manifestIsDirty()) {
+        fail(
+            `package.json or package-lock.json has changed since the baseline at ${baselinePath} was taken, so re-snapshotting now would hide those changes' advisories — keep the existing baseline, or report the audit attribution as unavailable for this run.`
+        );
+    }
     const advisories = [...currentAdvisories().values()].sort(byId);
     const baseline = { head, takenAt: new Date().toISOString(), advisories };
     writeFileSync(baselinePath, `${JSON.stringify(baseline, null, 4)}\n`);
@@ -125,17 +164,21 @@ if (mode === 'snapshot') {
     } catch (error) {
         // Absent, unreadable, and unparseable all mean one thing to the caller: no usable baseline
         // exists, and the fix is to take one before any package changes.
-        fail(`Baseline at ${baselinePath} could not be read (${error.message}) — run \`snapshot\` first (Step 1).`);
+        fail(
+            `Baseline at ${baselinePath} could not be read (${error.message}) — run \`snapshot\` first, before any package changes.`
+        );
     }
     const takenAtMs = Date.parse(baseline?.takenAt ?? '');
     if (!Array.isArray(baseline?.advisories) || !Number.isFinite(takenAtMs)) {
-        fail(`Baseline at ${baselinePath} is not in the current format — run \`snapshot\` again (Step 1).`);
+        fail(
+            `Baseline at ${baselinePath} is not in the current format — run \`snapshot\` again, before any package changes.`
+        );
     }
     const ageMs = Date.now() - takenAtMs;
     if (ageMs > MAX_BASELINE_AGE_MS) {
         const ageHours = Math.round(ageMs / (60 * 60 * 1000));
         fail(
-            `Baseline at ${baselinePath} was taken ${ageHours}h ago (${baseline.takenAt}) and belongs to an earlier run — run \`snapshot\` again (Step 1).`
+            `Baseline at ${baselinePath} was taken ${ageHours}h ago (${baseline.takenAt}) and belongs to an earlier run — run \`snapshot\` again, before any package changes.`
         );
     }
     const baselineIds = new Set(baseline.advisories.map((advisory) => advisory.id));

@@ -1,14 +1,14 @@
 // Buckets the repo's outdated direct dependencies into patch / minor / major so the update workflow
 // presents a computed table rather than deriving semver categories by eye.
 //
-// Used by the updating-dependencies skill in Step 3:
+// Used by the updating-dependencies skill during detection, before the user selects any bump:
 //
 //   node <skill-dir>/scripts/categorize.mjs
 //
 // Prints { outdated: [...] } as JSON, one entry per outdated direct dependency, each carrying the
 // package, its current and latest versions, its category, its dependency block, and the version
-// prefix its package.json entry uses. The prefix travels with the row because Step 6 writes the new
-// version behind that same prefix, so the run never has to re-read package.json to find it.
+// prefix its package.json entry uses. The prefix travels with the row because the apply step writes
+// the new version behind that same prefix, so the run never has to re-read package.json to find it.
 //
 // Only direct dependencies appear. `npm outdated` also reports transitive packages, which no
 // package.json entry can bump directly, so listing them would offer the user a choice the workflow

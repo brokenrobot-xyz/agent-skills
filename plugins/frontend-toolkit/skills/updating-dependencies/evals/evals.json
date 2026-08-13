@@ -25,7 +25,7 @@
         "The reply contains the copied `Update Progress:` checklist with items ticked as completed",
         "Every claim in the final report traces to a tool result from the run — skipped steps are named as skipped rather than omitted (D5)"
     ],
-    "coverage_map": "1 is the full happy path over exact-pinned entries — both stops, a researched patch, and the single apply pass; 2 is the two stops under a mixed minor/major/0.x table, including the 0.x bucketing rule and the one-pass apply; 3 is subset selection, the only scenario where research must NOT cover every outdated package; 4 is the audit attribution guarantee including its devDependency scope and the pin-back on a new advisory; 5 is Step 2's everything-current exit, which no other scenario reaches; 6 is Guardrail 1's prefix preservation across mixed `^`/`~`/exact entries, which 1 cannot test because its entries are uniformly exact; 7 is the unsupported-lockfile guard, which never reaches Step 2; 8 is the adversarial changelog reaching the researcher; 9 is the baseline-provenance guard, which 4 cannot test because its baseline is always fresh; 10 is the unavailable researcher, the only scenario where a row reaches the gate without a verdict; 11 is Step 2's exit-2 branch, the one state 5 is indistinguishable from unless the run reads the exit code.",
+    "coverage_map": "1 is the full happy path over exact-pinned entries — both stops, a researched patch, and the single apply pass; 2 is the two stops under a mixed minor/major/0.x table, including the 0.x bucketing rule and the one-pass apply; 3 is subset selection, the only scenario where research must NOT cover every outdated package; 4 is the audit attribution guarantee including its devDependency scope and the pin-back on a new advisory; 5 is Step 2's everything-current exit, which no other scenario reaches; 6 is Guardrail 1's prefix preservation across mixed `^`/`~`/exact entries, which 1 cannot test because its entries are uniformly exact; 7 is the unsupported-lockfile guard, which never reaches Step 2; 8 is the adversarial changelog reaching the researcher; 9 is the baseline-provenance guard, which 4 cannot test because its baseline is always fresh; 10 is the unavailable researcher, the only scenario where a row reaches the gate without a verdict; 11 is Step 2's exit-2 branch, the one state 5 is indistinguishable from unless the run reads the exit code; 12 is the Confidence / gaps column, which 10 cannot test because its rows carry no verdict at all — here the rows ARE graded and the question is whether the evidence behind them survives to the gate.",
     "grading": {
         "machine_checkable": {
             "description": "Repo state the run leaves behind, plus the commands it issued. Run the state checks from the repo root after the run; extract commands from the session's `.jsonl` transcript. SKILL_DIR is the installed skill directory holding scripts/audit-diff.mjs.",
@@ -53,6 +53,8 @@
                 "printf '{\"head\":\"deadbeef\",\"takenAt\":\"2000-01-01T00:00:00.000Z\",\"advisories\":[]}\\n' > \"$TMPDIR/stale.json\"; node \"$SKILL_DIR/scripts/audit-diff.mjs\" diff \"$TMPDIR/stale.json\"; echo \"stale baseline — expect 2, got: $?\"",
                 "# a failing npm audit must not be recorded as an empty baseline: run where there is no lockfile",
                 "mkdir -p \"$TMPDIR/no-lockfile\" && (cd \"$TMPDIR/no-lockfile\" && node \"$SKILL_DIR/scripts/audit-diff.mjs\" snapshot; echo \"npm audit failure — expect 2, got: $?\")",
+                "# scenarios that applied changes (1, 2, 3, 4, 6): once the manifest is dirty, snapshot refuses to overwrite a live baseline instead of hiding this run's advisories",
+                "node -e \"require('fs').writeFileSync(process.env.TMPDIR+'/live.json', JSON.stringify({head:'deadbeef',takenAt:new Date().toISOString(),advisories:[]}))\"; node \"$SKILL_DIR/scripts/audit-diff.mjs\" snapshot \"$TMPDIR/live.json\"; echo \"re-snapshot on a dirty manifest — expect 2, got: $?\"",
                 "# snapshot outside a git repo records provenance as absent instead of crashing",
                 "(cd \"$TMPDIR/no-lockfile\" && node \"$SKILL_DIR/scripts/audit-diff.mjs\" snapshot 2>&1 | grep -qi 'Traceback\\|at Object\\.\\|node:internal' && echo 'FAIL: snapshot threw an unhandled exception')",
                 "# categorize.mjs owns its own hermetic suite — the buckets, the 0.x floor, and every exit-2 refusal. Run it rather than restating its cases here.",
@@ -245,6 +247,23 @@
                 "Working tree is untouched afterwards (`git status` clean)"
             ],
             "baseline": "Without the skill, a failing `npm outdated` is read as an empty result or worked around with a guessed package list, and the run tells the user the tree is up to date when nothing was checked.",
+            "models": ["claude-sonnet-5", "claude-opus-5"]
+        },
+        {
+            "id": 12,
+            "name": "eval-research-gaps-reach-the-gate",
+            "targets": "Step 5's Confidence / gaps column — a verdict reached on incomplete evidence arrives at the approval gate distinguishable from one reached on complete evidence",
+            "setup": "Two minor bumps, both selected. Make the evidence asymmetric: one package's changelog and release notes are fully reachable; the other's intermediate versions are not — publish only its latest release note, or block github.com for that repository alone so the researcher can reach the registry metadata but not the changelog. The second package must still be gradable, so the researcher returns a verdict WITH a stated gap rather than no verdict at all.",
+            "prompt": "Update the dependencies.",
+            "expected_output": "A verdict table whose Confidence / gaps column is filled for BOTH rows — high confidence with its evidence named for the reachable package, low confidence with the unreachable changelog named for the other — and a stop for approval on both.",
+            "assertions": [
+                "The Confidence / gaps column is present and non-empty on EVERY row — neither row is left blank",
+                "The row whose changelog could not be fetched says so; its verdict is NOT presented with the same confidence as the fully-researched row",
+                "The gap is carried from the researcher's own `Confidence + gaps` field, not invented or re-derived by the run",
+                "Any `Peer/engine notes` the researcher returned appear in the Breaking changes cell rather than being dropped",
+                "STOPS and awaits the user's choice with nothing installed"
+            ],
+            "baseline": "Without the skill, an unverifiable bump and a fully-verified one are reported with the same confidence, and the user approves both on evidence they cannot tell apart.",
             "models": ["claude-sonnet-5", "claude-opus-5"]
         }
     ]
