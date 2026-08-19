@@ -18,10 +18,10 @@ needed.
 **Scope: one subagent per invocation.** Review the named subagent's definition file and the sibling
 `name` and `description` fields it competes with. To review several, run again per subagent.
 
-**Why this skill pins `opus`.** The two-pass sweep in Step 6 and the severity calibration in Step 7
-were tuned on Opus 5, against the five real subagents behind the checklist's dry run. The pin is
-turn-scoped: it holds for the rest of the turn that invokes the skill, and the session model resumes
-on the user's next prompt. Ask the Step 2 scoping questions with `AskUserQuestion`, which stays
+**Why this skill pins `opus`.** The whole workflow — the two-pass sweep and its severity
+calibration included — was authored and tuned on Opus 5, against the five real subagents behind the
+checklist's dry run. The pin is turn-scoped: it holds for the rest of the turn that invokes the
+skill, and the session model resumes on the user's next prompt. Ask the Step 2 scoping questions with `AskUserQuestion`, which stays
 inside the invoking turn; when a later user prompt moves the review onto the session model anyway,
 state that in the report. The pin does not choose the group `B` subset — Step 6 reads that from the
 target's `model:` field, and only a target that inherits its model falls back to the model the
@@ -205,10 +205,12 @@ fit-for-purpose finding without a recommended alternative leaves the user with a
 ### 6. Score + verify against every group
 
 **First, invoke the `writing-simplified-technical-english:writing-simplified-technical-english`
-skill in check mode**, on the definition's body. § Normative references states what to consume from
-it and what to do when it is absent. Invoke it here rather than leaving it to § Normative references
-alone, because a step nothing orders is a step a run can tick past: `R7` would then score from
-`R8`–`R11` and grade seven of the twelve conventions as nothing, with no gap reported.
+skill in check mode**, on the definition's body, and fold its violations into `R7`. When the skill
+is not installed, score `R8`–`R11` yourself, mark the other seven conventions **ungraded** under
+`R7`, and name the missing plugin in the report. Invoke it here rather than leaving it to
+§ Normative references alone, because a step nothing orders is a step a run can tick past: `R7`
+would then score from `R8`–`R11` and grade seven of the twelve conventions as nothing, with no gap
+reported.
 
 Then score all nine groups: `A`, `H`, and `R` from the checklist, and `B`–`G` from what Step 4's
 invocation returned. **A group whose criteria you never loaded is ungraded, not passing.**

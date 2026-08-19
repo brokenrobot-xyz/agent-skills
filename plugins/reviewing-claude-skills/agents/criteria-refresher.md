@@ -16,8 +16,8 @@ Work:
 
 1. Read each criteria file you were given and collect every URL in its § Sources table (both
    files use the same table shape: a Key column, a Doc column, a URL column).
-2. `WebFetch` every URL — including model-prompting docs for models the target skill is not
-   pinned to, because drift in a doc you never fetched goes undetected.
+2. `WebFetch` every URL — including every model-prompting doc, whatever model a future review's
+   target is pinned to, because drift in a doc you never fetched goes undetected.
 3. **Enumerate before you judge.** For each fetched doc, list every distinct recommendation it
    makes, then map each one to the baked criterion key that already covers it, or mark it
    `UNMAPPED`. Do not jump straight to "what changed": an open-ended difference judgment varies from

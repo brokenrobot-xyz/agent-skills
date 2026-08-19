@@ -1,13 +1,13 @@
 ---
 name: updating-dependencies
-description: Updates, upgrades, and bumps npm dependencies in the host project — detects which packages are outdated, buckets them into patch/minor/major, researches the bumps the user selects, and applies only the bumps the user approves. Use when refreshing, updating, or upgrading dependencies, when packages are behind latest, or when npm outdated needs acting on. Edits package.json and the lockfile but never commits.
+description: Updates, upgrades, and bumps npm dependencies in the host project — detects which packages are outdated, buckets them into patch/minor/major, researches the bumps the user selects, and applies only the bumps the user approves. Use when refreshing, updating, or upgrading dependencies, when packages are behind latest, or when npm outdated needs acting on. Edits package.json, the lockfile, and the source files an approved migration requires, but never commits.
 compatibility: Requires Node and npm with dependencies installed; npm is the only supported package manager. Changelog research needs network access to the npm registry and github.com.
-allowed-tools: Bash(npm:*) Bash(node:*) Bash(git:*) Read Glob Edit Agent
+allowed-tools: Bash(npm:*) Bash(node:*) Bash(git:*) Read Glob Edit Write Agent
 ---
 
 # Update npm dependencies with the user's selection and approval
 
-Refresh the host repo's npm dependencies safely. Every bump takes the same path: detect → categorize → **the user selects** which bumps to pursue → each selected bump is researched → **the user approves** → apply. Nothing is researched without the user's selection, so the research cost tracks what the user actually intends to update, and nothing installs without the user's approval. The research runs in the [`dependency-update-researcher`](../../agents/dependency-update-researcher.md) subagent, which ships with this plugin at `agents/dependency-update-researcher.md`; its verdicts inform the user's decision — they never bypass it. This skill edits `package.json` and `package-lock.json` and reports — it **never stages, commits, or pushes**. Verifying the updated tree — the repo's build, its tests — is deliberately out of scope: the audit diff is the only check this skill runs, and the user runs their own checks on the working tree before committing.
+Refresh the host repo's npm dependencies safely. Every bump takes the same path: detect → categorize → **the user selects** which bumps to pursue → each selected bump is researched → **the user approves** → apply. Nothing is researched without the user's selection, so the research cost tracks what the user actually intends to update, and nothing installs without the user's approval. The research runs in the [`dependency-update-researcher`](../../agents/dependency-update-researcher.md) subagent, which ships with this plugin at `agents/dependency-update-researcher.md`; its verdicts inform the user's decision — they never bypass it. This skill edits `package.json`, `package-lock.json`, and — only for bumps the user approved as `needs-changes` — the source files that bump's listed migration requires, then reports; it **never stages, commits, or pushes**. Verifying the updated tree — the repo's build, its tests — is deliberately out of scope: the audit diff is the only check this skill runs, and the user runs their own checks on the working tree before committing.
 
 ## Supported package manager
 
@@ -82,7 +82,7 @@ When a researcher returns no verdict — the subagent does not resolve, or its r
 
 ## Step 5 — Approval gate
 
-Collect the verdicts into a consolidated recommendation table. Every field the researcher returns has a column here, so consolidation drops nothing: its **Confidence + gaps** goes in the last column verbatim, and its **Peer/engine notes** join **Breaking changes** when non-empty.
+Collect the verdicts into a consolidated recommendation table. Every field the researcher returns has a column here, so consolidation drops nothing: its **Confidence + gaps** goes in the last column verbatim, and its **Peer/engine notes** join **Breaking changes** unless they read `none`.
 
 | Package | Jump                    | Verdict         | Breaking changes (affects us?)                                  | Required edits                             | Confidence / gaps                  |
 | ------- | ----------------------- | --------------- | --------------------------------------------------------------- | ------------------------------------------ | ---------------------------------- |
@@ -91,7 +91,7 @@ Collect the verdicts into a consolidated recommendation table. Every field the r
 
 Never leave the last column blank, because a verdict reached on a changelog nobody could fetch and one reached on a byte-level diff otherwise arrive at this gate looking identical, and the gate exists to inform exactly that difference. A row the researcher could not grade at all carries **no verdict**, as Step 4 describes.
 
-**Stop and await the user's choice on every row.** Recommend, but let the user decide — a verdict informs the decision, it never makes it. Never narrate a pause and then continue, because a run that announces a stop and keeps working applies a bump the user never approved.
+**Stop and await the user's choice on every row.** Recommend, but let the user decide — a verdict informs the decision, it never makes it. Approving a `needs-changes` row approves its **Required edits** too: that is the only source-file change this skill makes, and it makes it for approved rows only. Never narrate a pause and then continue, because a run that announces a stop and keeps working applies a bump the user never approved.
 
 ## Step 6 — Apply the approved bumps
 
@@ -99,7 +99,7 @@ When the user approves nothing, tick this step as skipped and go to the report. 
 
 1. Edit each approved package's entry in `package.json` to its `latest`, behind the prefix Step 3's table carries for it (the **Existing prefix** guardrail).
 2. Run `npm install` so the lockfile follows.
-3. Make any code migrations the research flagged (`needs-changes`).
+3. Make the **Required edits** of each approved `needs-changes` row — the source-file migrations the user approved with the row.
 4. Run the audit diff (see **Audit diff**).
 
 The changes stay uncommitted; the report tells the user what to commit.

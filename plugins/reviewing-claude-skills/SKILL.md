@@ -199,9 +199,13 @@ to stop the review on the strength of that quote.
 
 Spawn the [detail-reviewer](agents/detail-reviewer.md), with: the bundle path, the checklist path,
 the target's `model:` pin (or its absence), and the focus notes. Its `skills` frontmatter preloads
-`prompt-quality-criteria` and `writing-simplified-technical-english`, and it self-checks they
-arrived — a group whose criteria are absent comes back **ungraded** in its COVERAGE payload, never
-scored from memory. It also settles the deterministic lookups with `Bash`.
+`prompt-quality-criteria:prompt-quality-criteria` (supply — the `B`–`G` criteria it scores
+against) and `writing-simplified-technical-english:writing-simplified-technical-english` in
+**check mode** (its violations fold into `R7`); the frontmatter lists them by bare name because
+that is the only form the `skills` field documents. It self-checks both arrived — a group whose
+criteria are absent comes back **ungraded** in its COVERAGE payload, never scored from memory, and
+the report names the plugin that was missing. It also settles the deterministic lookups with
+`Bash`.
 
 ### 6. Consolidate — spot-check, merge, rank
 
@@ -256,9 +260,10 @@ to provide. The content rules, whatever the shape:
 
 ### 8. Offer interactive apply
 
-Only if the user chose analysis + apply, and only for detail findings — a High structural finding
-is a redesign conversation with the user, not a sequence of surgical edits, so offer to dissect
-the workflow together instead. This is where this conversation finally opens the target's files:
+Only if the user chose analysis + apply. A **High** structural finding is excluded — it is a
+redesign conversation with the user, not a sequence of surgical edits, so offer to dissect the
+workflow together instead; Medium and Low structural findings and every detail finding are
+eligible. This is where this conversation finally opens the target's files:
 read each file you are about to edit. Address findings **one at a time**, highest severity first:
 
 - Where a finding has a genuine behavioral fork, **ask** before editing (do not pick silently).

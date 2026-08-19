@@ -32,7 +32,7 @@
             "script": [
                 "# nothing committed: HEAD is the scenario's setup commit",
                 "git log --pretty=%s @{u}..HEAD 2>/dev/null | grep -q . && echo 'FAIL: the run created a commit'",
-                "# scenarios that applied changes (1, 2, 3, 4, 6): the tree is dirty with them; the refusal scenarios (5, 7, 11) require a clean tree instead",
+                "# scenarios that applied changes (1, 2, 3, 4, 6): the tree is dirty with them; scenarios that end with nothing installed — the refusals (5, 7, 11) and the stops (8, 10, 12) — require a clean tree instead; 9 is dirty by its own setup, so this line proves nothing there",
                 "git status --porcelain -- package.json package-lock.json | grep -q . || echo 'FAIL: no applied changes left in the working tree (or they were committed)'",
                 "# scenarios whose entries are uniformly exact (1, 2, 3, 4): no range introduced in either dep block",
                 "node -e \"const p=require('./package.json');const all={...p.dependencies,...p.devDependencies};process.exit(Object.values(all).some(v=>/^[\\^~]/.test(v))?1:0)\" || echo 'FAIL: range introduced'",
@@ -57,7 +57,7 @@
                 "mkdir -p \"$TMPDIR/no-lockfile\" && (cd \"$TMPDIR/no-lockfile\" && node \"$SKILL_DIR/scripts/audit-diff.mjs\" snapshot; echo \"npm audit failure — expect 2, got: $?\")",
                 "# scenarios that applied changes (1, 2, 3, 4, 6): once the manifest is dirty, snapshot refuses to overwrite a live baseline instead of hiding this run's advisories",
                 "node -e \"require('fs').writeFileSync(process.env.TMPDIR+'/live.json', JSON.stringify({head:'deadbeef',takenAt:new Date().toISOString(),advisories:[]}))\"; node \"$SKILL_DIR/scripts/audit-diff.mjs\" snapshot \"$TMPDIR/live.json\"; echo \"re-snapshot on a dirty manifest — expect 2, got: $?\"",
-                "# snapshot outside a git repo records provenance as absent instead of crashing",
+                "# snapshot outside a git repo and without a lockfile fails cleanly (npm audit's exit 2, surfaced above) rather than with an unhandled exception",
                 "(cd \"$TMPDIR/no-lockfile\" && node \"$SKILL_DIR/scripts/audit-diff.mjs\" snapshot 2>&1 | grep -qi 'Traceback\\|at Object\\.\\|node:internal' && echo 'FAIL: snapshot threw an unhandled exception')",
                 "# categorize.mjs owns its own hermetic suite — the buckets, the 0.x floor, and every exit-2 refusal. Run it rather than restating its cases here.",
                 "node \"$SKILL_DIR/tests/categorize-cases.mjs\" || echo 'FAIL: the categorizer suite is red'"
@@ -67,7 +67,7 @@
     },
     "notes": [
         "Scenario 4 assumes the tree carries at least one pre-existing advisory reachable only through devDependencies — which is exactly why `audit-diff.mjs` audits the whole tree rather than production-only. If the scenario tree is clean, doctor the baseline instead: delete one current advisory object from the snapshot file's `advisories` array to simulate a `new` advisory.",
-        "The baseline file records full advisory objects under `advisories`. Two earlier shapes exist in the wild — a bare array of IDs, and `{head, takenAt, ids}` — and `diff` rejects both with exit 2 so that a report never mixes a format that carried no severity with one that does. The machine-checkable script tests both."
+        "The baseline file records full advisory objects under `advisories`. `diff` rejects two other shapes with exit 2 — a bare array of IDs, and `{head, takenAt, ids}` — so that a report never mixes a format that carried no severity with one that does. The machine-checkable script tests both."
     ],
     "evals": [
         {

@@ -11,8 +11,10 @@ starts with one:
   changelog and traces how the repo actually uses the package; then **you
   approve** per bump, and only approved bumps are applied. An audit baseline
   taken before any change attributes only _new_ security advisories to the
-  update. The skill edits `package.json` and the lockfile but **never
-  commits or pushes** — you review the working tree and commit.
+  update. The skill edits `package.json`, the lockfile, and — for a bump
+  you approved as `needs-changes` — the source files its listed migration
+  requires, but **never commits or pushes** — you review the working tree
+  and commit.
 
 The plugin also bundles two MCP servers — **playwright** and
 **chrome-devtools**, both headless and isolated. They are general frontend
