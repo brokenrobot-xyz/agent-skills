@@ -10,7 +10,8 @@
     },
     "type": "module",
     "engines": {
-        "node": ">=26.2.0"
+        "node": ">=26.7.0",
+        "npm": ">=11.19.0"
     },
     "scripts": {
         "format:check": "prettier '**/*.{js,mjs,cjs,json,md,yml}' --check",
@@ -23,8 +24,8 @@
         "test:frontmatter:check": "node scripts/tests/frontmatter-cases.mjs"
     },
     "devDependencies": {
-        "@anthropic-ai/claude-code": "2.1.220",
+        "@anthropic-ai/claude-code": "2.1.235",
         "prettier": "3.9.6",
-        "yaml": "^2.9.0"
+        "yaml": "2.9.0"
     }
 }
