@@ -249,7 +249,7 @@
             "assertions": [
                 "Presents a brief BEFORE asking scoping questions: the two passes and the structural gate, that the passes run in subagents which read the bundle in their own context, what will be checked (the A–H, R groups), the two possible report shapes, and rough effort",
                 "Then asks the four scoping questions — deliverable, focus, change appetite, and the structural gate — noting sensible defaults so the user can accept them",
-                "Does not claim the live docs were already fetched — the refresh happens only after the structural gate",
+                "Does not claim the live docs were fetched — a review fetches nothing; it reports the criteria's age",
                 "Does not dump the raw criterion keys as the brief — uses the plain-language group summaries",
                 "Accepts 'use the defaults' as a valid answer and proceeds with the stated per-question defaults"
             ],
@@ -451,7 +451,7 @@
             "prompt": "Review the syncing-translations skill — run the full detail sweep even if the structure fails.",
             "expected_output": "Both passes run: a full gap analysis led by the High R14 finding, with the R10 and R11 nits inside the implicated sections reported as subordinate to it and the collapse recommended before any wording fix.",
             "assertions": [
-                "Honors the pre-authorization: proceeds past the High structural finding into spawning the detail-reviewer and criteria-refresher rather than stopping",
+                "Honors the pre-authorization: proceeds past the High structural finding into spawning the detail-reviewer rather than stopping",
                 "The R14 finding still leads the ranked findings",
                 "Reports the R10 and R11 nits as subordinate to the structural finding, not as independent peer findings",
                 "Recommends the structural collapse first, framing the subordinate fixes as moot until the redesign lands",

@@ -1,9 +1,10 @@
 # agent-skills
 
 The [brokenrobot.xyz](https://www.brokenrobot.xyz) plugin marketplace for
-[Claude Code](https://claude.com/claude-code). Each plugin ships exactly one
-agent skill, so you install only what you want — a skill with a hook never
-rides along with an unrelated one.
+[Claude Code](https://claude.com/claude-code). Plugins are focused, so you
+install only what you want: most ship exactly one agent skill, and a skill
+with a hook never rides along with an unrelated one. `frontend-toolkit` is
+the exception — a suite that scopes its skills under the suite's name.
 
 ## Install
 
@@ -32,6 +33,7 @@ Dependencies auto-install: installing either reviewer also installs
 | [prompt-quality-criteria](plugins/prompt-quality-criteria/README.md)                           | skill-authoring | Supplies criteria groups B–G for grading any Markdown prompt that steers Claude — model-specific prompting, hallucination guards, output consistency, injection and prompt-leak defenses. Returns the criteria; the caller scores.                                          |
 | [reviewing-claude-skills](plugins/reviewing-claude-skills/README.md)                           | skill-authoring | Reviews a Claude Code skill against skill-authoring and prompting best practices, producing a severity-ranked gap analysis with optional fixes. Depends on `prompt-quality-criteria` and `writing-simplified-technical-english`.                                            |
 | [reviewing-claude-subagents](plugins/reviewing-claude-subagents/README.md)                     | skill-authoring | Reviews a Claude Code subagent definition — frontmatter, body, declared tools, and routing siblings — producing a severity-ranked gap analysis with optional fixes. Grades fit-for-purpose first: "this should be a skill" is the highest-value finding a subagent can get. |
+| [frontend-toolkit](plugins/frontend-toolkit/README.md)                                         | frontend        | A suite of frontend skills, starting with `updating-dependencies`: detects and categorizes outdated npm packages, researches the bumps the user selects with a dedicated subagent, and applies only the bumps the user approves. Never commits.                             |
 
 ## Category vocabulary
 
@@ -44,13 +46,17 @@ add new ones here first:
 | `git`             | Version-control workflow: commits, branches, history.               |
 | `writing`         | Prose quality: documentation, agent-facing text, style enforcement. |
 | `skill-authoring` | Building, reviewing, and maintaining agent skills themselves.       |
+| `frontend`        | Frontend project upkeep: npm dependencies, tooling, build hygiene.  |
 
 ## Repository layout
 
 Plugin bundles live under [`plugins/`](plugins/), one directory per plugin,
 each following the [Agent Skills](https://agentskills.io) layout (`SKILL.md`
 at the root, with `scripts/`, `references/`, `evals/` as needed) plus a
-`.claude-plugin/plugin.json` manifest. The marketplace manifest is
+`.claude-plugin/plugin.json` manifest. A suite plugin (`frontend-toolkit`)
+instead holds one such layout per skill under `skills/<name>/`, plus `agents/`
+for the subagents its skills spawn and an optional `.mcp.json`. The
+marketplace manifest is
 [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json); each
 entry's `source` is an explicit `./plugins/<name>` path. (Don't switch to
 `metadata.pluginRoot`: as of Claude Code 2.1.235 the field is still in the

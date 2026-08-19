@@ -1,9 +1,9 @@
 # Reviewing-claude-skills checklist
 
-The baked half of the reviewer's hybrid criteria. The `criteria-refresher` agent fetches the
-source docs live (the URLs below) after the structural gate passes; when the network or the agent
-is unavailable, the review proceeds on this file and notes the staleness in the report. The
-structural pass that precedes the gate scores from this file alone and never fetches.
+The criteria the reviewer scores against. A review fetches nothing: both passes score from this
+file alone and the report states how old it is. Bringing it back in line with the source docs (the
+URLs below) is maintenance, done by the `criteria-refresher` agent outside any review — see the
+README's § Maintaining the criteria.
 
 **Groups `B`–`G` are not in this file.** They are artifact-independent prompting criteria shared
 with the subagent reviewer, so they live in the `prompt-quality-criteria` skill, which the

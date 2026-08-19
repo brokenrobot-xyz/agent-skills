@@ -124,7 +124,8 @@ stays lean; I read only what I verify or edit.
 
 **Pass 1 — Structure** (cheap, offline): decision space, scope coherence, simplicity,
 length and progressive disclosure, degrees of freedom, defaults vs menus,
-over-prescription. If any of these fails **High**, I stop there and give you a
+over-prescription, verifiable intermediates ahead of destructive steps. If any of
+these fails **High**, I stop there and give you a
 structural verdict with a redesign recommendation — detail findings against a
 structure that's about to change are wasted work. (You can tell me to run the full
 sweep regardless.)
