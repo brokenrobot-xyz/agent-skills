@@ -14,6 +14,11 @@ before.
 **last-synced:** 2026-08-19 — re-fetch the URLs and reconcile any new guidance when this is stale.
 The shared criteria carry their own `last-synced` date for the docs behind groups `B`–`G`.
 
+**This date records the last _reconciliation_, not the last fetch.** Do not advance it for a
+refresh whose findings were never folded into the criteria below. A date that means "we looked"
+rather than "we reconciled" reports freshness this file does not have, which is worse than an
+obviously old date: it removes the reader's only reason to check.
+
 ## Contents
 
 - [Sources](#sources)

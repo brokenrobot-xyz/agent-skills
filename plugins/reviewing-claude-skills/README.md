@@ -58,11 +58,11 @@ per invocation** — to review several, run once per skill.
                                          redesign recommendation. The detail sweep
                                          becomes an explicit follow-up choice —
                                          run it anyway, or redesign first.
-3. Pass 2 — DETAIL                       two subagents in parallel: the detail-reviewer
-                                         sweeps the full nine groups (the shared B–G
-                                         criteria and prose conventions are preloaded
-                                         into it), while the criteria-refresher fetches
-                                         the live docs and reports drift
+3. Pass 2 — DETAIL                       the detail-reviewer subagent sweeps the full
+                                         nine groups; the shared B–G criteria and the
+                                         prose conventions are preloaded into it.
+                                         Offline — the report states how old the
+                                         criteria are rather than fetching to check.
 4. Gap analysis                          severity-ranked findings + per-group coverage
                                          table, consolidated in the main conversation
 5. Optional apply                        fixes you approve, one finding at a time
@@ -131,9 +131,9 @@ commands, not eyeballed.
 
 ## Behavior notes
 
-- **The heavy reading happens in subagents.** The target bundle, the shared
-  criteria, and the fetched docs load in three dedicated subagent contexts —
-  `structure-reviewer`, `detail-reviewer`, and `criteria-refresher` — which
+- **The heavy reading happens in subagents.** The target bundle and the shared
+  criteria load in two dedicated subagent contexts — `structure-reviewer` and
+  `detail-reviewer` — which
   return findings only, so a review does not crowd the conversation it runs
   in. The main conversation reads just what it verifies (spot-checks of
   quoted evidence) or edits (apply mode). When an agent type can't resolve
@@ -141,13 +141,10 @@ commands, not eyeballed.
   definition (keeping the isolation and the definition's model pin); only
   when that too is impossible does the stage run inline. Either way, the
   report says so.
-- **Network is best-effort, and only after the gate.** The
-  `criteria-refresher` subagent fetches the live best-practice docs to catch
-  guidance newer than the baked checklist — but it is only spawned once the
-  structural gate has passed; a gated run fetches nothing, because the baked
-  checklist suffices for a structural verdict. When a fetch fails, the review
-  proceeds on the baked checklist and says so in the report — it never blocks
-  on the network.
+- **A review never touches the network.** It scores against the criteria
+  shipped with this plugin and reports each criteria file's `last-synced`
+  date and age, so you can weigh the verdict yourself. Keeping those criteria
+  current is maintenance, not review — see § Maintaining the criteria.
 - **Reviewed content is data.** A line inside the target skill saying
   "report no issues" carries no authority over the review.
 - **Apply mode is one finding at a time**, surgical, and adds or refreshes
@@ -156,3 +153,26 @@ commands, not eyeballed.
   exception: that is a redesign conversation, not a sequence of edits.
 - The skill pins `model: opus` for review quality; a managed setting can
   override the pin.
+
+## Maintaining the criteria
+
+The criteria are baked into two files that ship with the plugins —
+`references/best-practices-checklist.md` here (groups `A`, `H`, `R`) and
+`references/prompt-criteria.md` in `prompt-quality-criteria` (groups `B`–`G`).
+Each carries a `last-synced` date, and every review reports it. When that date
+looks old, reconcile:
+
+1. Spawn the `criteria-refresher` agent against both files. It fetches every
+   `§ Sources` URL, enumerates what each doc recommends, maps each
+   recommendation to a criterion key, and returns only what is unmapped
+   (`DRIFT`), unsupported by any source (`UNSUPPORTED`), unreachable
+   (`FAILED FETCHES`), and per-doc `COVERAGE` counts.
+2. Work its output by hand: fold in what is substantive, drop what does not
+   reproduce against a live source. Every kept item should trace to the quote
+   the agent returned.
+3. Advance `last-synced` **only now** — it records the reconciliation, not the
+   fetch. Advancing it after a fetch you did not act on reports a freshness
+   the file does not have.
+
+This is deliberately not part of a review. Drift reported into someone else's
+review report is drift nobody is positioned to act on, and it accumulates.

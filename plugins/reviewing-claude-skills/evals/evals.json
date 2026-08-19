@@ -27,7 +27,7 @@
         "The report follows references/report-template.md: a Summary table of findings (Structure rows first, then Detail, severity-ranked within each) precedes the per-finding detail blocks, and the rank numbers match between the two",
         "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 2"
     ],
-    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–10 cover the model-specific and self-maintenance behaviors; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform fallback ladder — substitution when the definition files are readable, inline when they are not.",
+    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–9 cover the model-specific behaviors and 10 the review/maintenance boundary, that a criteria refresh is not a review; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform fallback ladder — substitution when the definition files are readable, inline when they are not; 24 covers the offline guarantee, that a review reports the criteria age from disk rather than fetching to check it.",
     "grading": {
         "machine_checkable": {
             "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep against BOTH criteria files — groups A, H, and R in this bundle's checklist, groups B–G in the prompt-quality-criteria bundle. Checking only the local checklist would fail every legitimate B–G citation.",
@@ -221,20 +221,21 @@
         },
         {
             "id": 10,
-            "name": "eval-refresh-detects-drift",
-            "targets": "The criteria-refresher agent — drift detection after the structural gate passes",
-            "setup": "Network available — an environmental condition the fixture cannot carry. A live source doc contains guidance (or a new model-prompting guide in the § Sources family) that the baked checklist's `last-synced` version does not yet reflect. The counting-words fixture is structurally sound, so the run passes the gate and spawns the refresher; the staleness note is the scenario's signal.",
-            "files": ["evals/files/eval-refresh-detects-drift/counting-words/SKILL.md"],
-            "prompt": "Review the counting-words skill.",
-            "expected_output": "A completed review plus a checklist-staleness note naming the live guidance the baked checklist does not yet carry.",
+            "name": "eval-refresh-is-not-a-review",
+            "targets": "The review/maintenance boundary — a criteria refresh is maintenance, and no review step spawns it",
+            "setup": "Network available — an environmental condition no fixture can carry. The user asks for the reviewer's own criteria to be brought back in line with their sources, and names no skill to review.",
+            "files": [],
+            "prompt": "The reviewing-claude-skills criteria look out of date — refresh them against their sources.",
+            "expected_output": "The criteria-refresher runs against both criteria files and returns its payload for a maintainer to reconcile by hand. No skill review happens, and neither file's last-synced date moves on the strength of the fetch alone.",
             "assertions": [
-                "The criteria-refresher agent fetches EVERY § Sources URL — including the two agentskills.io entries and the model-prompting docs for models the target skill is not pinned to — and the MAIN conversation fetches nothing; the spawn happens only after the structural gate passes",
-                "The refresher's drift note reaches the report as a checklist-staleness item",
-                "The refresher's payload carries all three lines — DRIFT, UNSUPPORTED, FAILED FETCHES — and a baked criterion no cited source of its group carries lands under UNSUPPORTED rather than being discarded into prose",
-                "Still completes the review against the best available criteria",
-                "If a fetch fails instead, the refresher lists it under FAILED FETCHES and the report carries the staleness caveat"
+                "Does NOT run a skill review — no structure-reviewer, no detail-reviewer, no gap-analysis report, no scoping interview",
+                "Spawns the criteria-refresher against BOTH criteria files: this plugin's references/best-practices-checklist.md and the installed prompt-quality-criteria plugin's references/prompt-criteria.md",
+                "The refresher fetches EVERY § Sources URL, including the two agentskills.io entries and the model-prompting docs for models no target is pinned to",
+                "The payload carries per-doc COVERAGE counts plus DRIFT, UNSUPPORTED, and FAILED FETCHES; a baked criterion that no cited source of its group carries lands under UNSUPPORTED rather than being dropped into prose",
+                "Every DRIFT item carries a verbatim source quote and the criterion key it attaches to, or 'new key needed'",
+                "Does NOT advance either file's last-synced date on the strength of the fetch — that date records a reconciliation"
             ],
-            "baseline": "Without the skill, no refresh happens and drift between the criteria and the live docs goes unreported.",
+            "baseline": "Without the skill, the request is answered by running a review of something, or by advancing last-synced after a fetch whose findings nobody folded in.",
             "models": ["opus"]
         },
         {
@@ -471,13 +472,31 @@
             "prompt": "Review the linting-frontmatter skill.",
             "expected_output": "A completed review either way: variant A runs general-purpose agents carrying the definition files (model pins carried); variant B runs the stages inline. In both, the report names the fallback tier used — findings quality otherwise as scenario 6.",
             "assertions": [
-                "Variant A: spawns general-purpose agents carrying the definition files verbatim, passes each definition's model pin as the spawn's model parameter (sonnet for the criteria-refresher), and tells the substituted detail-reviewer to Read its criteria from the installed bundles and that a successful disk read satisfies its self-check",
+                "Variant A: spawns general-purpose agents carrying the definition files verbatim, passes any model pin a definition declares as the spawn's model parameter, and tells the substituted detail-reviewer to Read its criteria from the installed bundles and that a successful disk read satisfies its self-check",
                 "Variant A: the substituted detail-reviewer's COVERAGE reports the shared groups as scored (read from disk) — not ungraded, and not plain scored as though the preload happened",
-                "Variant B: Pass 1, the refresh, and the detail sweep run inline in the main conversation, and the inline sweep invokes prompt-quality-criteria and writing-simplified-technical-english (check mode) through the Skill tool",
+                "Variant B: Pass 1 and the detail sweep run inline in the main conversation, and the inline sweep invokes prompt-quality-criteria and writing-simplified-technical-english (check mode) through the Skill tool",
                 "In both variants the report names each substituted or inline stage rather than presenting the run as a clean plugin-agent run",
                 "Does NOT invent findings or silently score fewer groups than the fallback tier can reach"
             ],
             "baseline": "Without the skill, there are no agents and no stages to fall back from, so nothing marks the run as degraded and no fallback discipline exists to test.",
+            "models": ["opus"]
+        },
+        {
+            "id": 24,
+            "name": "eval-review-fetches-nothing",
+            "targets": "Step 6 — the criteria age reaches the report without a fetch",
+            "setup": "The counting-words fixture is structurally sound, so the run passes the gate and reaches the detail sweep. Both criteria files carry a last-synced date well before the run, and the network is available — the point is that the run does not use it.",
+            "files": ["evals/files/eval-review-fetches-nothing/counting-words/SKILL.md"],
+            "prompt": "Review the counting-words skill.",
+            "expected_output": "A completed gap analysis whose criteria notes give each criteria file's last-synced date and elapsed days, produced without any network access.",
+            "assertions": [
+                "The run fetches NOTHING — no WebFetch from the main conversation, no criteria-refresher spawn, and no agent granted a fetching tool",
+                "Criteria notes carry the checklist's last-synced date with its age in days, and the shared B–G file's date with its age",
+                "Reports the age as a fact for the reader to weigh — does NOT invent a stale/fresh verdict or a day threshold the criteria files do not define",
+                "Says so plainly when the prompt-quality-criteria plugin is absent, rather than reporting an age for a file it could not read",
+                "The review still completes and ranks findings normally"
+            ],
+            "baseline": "Without the skill, a review either goes to the network on every run or says nothing about how old the criteria behind its verdict are.",
             "models": ["opus"]
         }
     ]

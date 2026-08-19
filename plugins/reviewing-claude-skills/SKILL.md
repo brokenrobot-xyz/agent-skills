@@ -1,15 +1,15 @@
 ---
 name: reviewing-claude-skills
 description: Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes. Structure first: a workflow whose shape fails High stops at a structural verdict with a redesign recommendation. Otherwise a full detail sweep against skill-authoring and prompting best practices plus the host project's conventions produces a severity-ranked gap analysis, optionally applying approved fixes. Use when the user asks to review, audit, or improve a skill.
-compatibility: Designed for Claude Code — reviews an installed skill's bundle, delegating each pass to a plugin subagent. Network access keeps the criteria current; without it the review falls back to the baked checklist and says so.
-allowed-tools: Read Edit Write Bash Grep Glob WebFetch Skill Agent
+compatibility: Designed for Claude Code — reviews an installed skill's bundle, delegating each pass to a plugin subagent. Runs offline — the criteria ship with the plugin, and a review fetches nothing.
+allowed-tools: Read Edit Write Bash Grep Glob Skill Agent
 model: opus
 ---
 
 # Review a skill against best practices
 
 Audit one named skill in two passes, each run by a dedicated subagent so the review's heavy
-reading — the target bundle, the criteria corpora, the fetched docs — stays out of this
+reading — the target bundle and the criteria corpora — stays out of this
 conversation. **Pass 1** (the [structure-reviewer](agents/structure-reviewer.md) agent) scores
 the workflow's structure — its shape, not its sentences — against the criteria marked
 `_(structure pass)_` in
@@ -17,16 +17,20 @@ the workflow's structure — its shape, not its sentences — against the criter
 structural finding stops the run at a gate with a structural verdict and a redesign
 recommendation, because line-level findings against a structure a redesign will replace are
 wasted work. **Pass 2** — reached when the structure holds, or when the user pre-authorizes the
-sweep — is the [detail-reviewer](agents/detail-reviewer.md) agent sweeping the full criteria,
-with the [criteria-refresher](agents/criteria-refresher.md) agent fetching the live docs in
-parallel, producing a **severity-ranked gap analysis**. Then, if the user wants, apply the fixes
-they approve, one finding at a time, in this conversation.
+sweep — is the [detail-reviewer](agents/detail-reviewer.md) agent sweeping the full criteria and
+producing a **severity-ranked gap analysis**. Then, if the user wants, apply the fixes they
+approve, one finding at a time, in this conversation.
 
-**The uniform fallback — a two-tier ladder, one rule for all three agents, because a silently
+**A review fetches nothing.** It scores against the criteria that ship with this plugin and
+reports how old they are, so the reader can weigh the verdict. Bringing those criteria back in
+line with their sources is maintenance, not review — see
+[the refresher](agents/criteria-refresher.md) and the README's § Maintaining the criteria.
+
+**The uniform fallback — a two-tier ladder, one rule for both agents, because a silently
 skipped stage reads to the user as a clean result.** When a plugin agent type fails to resolve
 but its definition file under this plugin's `agents/` is readable, **substitute**: spawn a
-`general-purpose` agent carrying that definition verbatim, pass the definition's `model:` pin as
-the spawn's model parameter, and — for the detail-reviewer, whose `skills` preload did not
+`general-purpose` agent carrying that definition verbatim, pass any `model:` pin the definition
+declares as the spawn's model parameter, and — for the detail-reviewer, whose `skills` preload did not
 happen — point it at the installed `prompt-quality-criteria` and
 `writing-simplified-technical-english` bundles to `Read` its criteria from disk, and tell it a
 successful disk read satisfies its self-check, recorded in COVERAGE as `scored (read from disk)` —
@@ -35,7 +39,7 @@ as failed. The substitution keeps the heavy reading out of this conversation, wh
 delegation exists for. When
 substitution is impossible too — the definition unreadable, the Agent tool unavailable — or an
 agent returns no usable payload, run that stage **inline** in this conversation: Pass 1 against
-the baked checklist, the refresh with your own `WebFetch`, the detail sweep by invoking
+the baked checklist, the detail sweep by invoking
 `prompt-quality-criteria:prompt-quality-criteria` and
 `writing-simplified-technical-english:writing-simplified-technical-english` (check mode — revise
 mode edits the file you meant only to grade) through the Skill tool. Name every substituted or
@@ -46,11 +50,12 @@ evals, referenced files/hooks). To review several, run again per skill.
 
 ## Normative references
 
-- The three agent definitions ship with this plugin under `agents/`:
-  [criteria-refresher](agents/criteria-refresher.md),
-  [structure-reviewer](agents/structure-reviewer.md), and
+- The review's two agent definitions ship with this plugin under `agents/`:
+  [structure-reviewer](agents/structure-reviewer.md) and
   [detail-reviewer](agents/detail-reviewer.md). **Each definition owns its findings-payload
-  format**; the steps below consume those payloads rather than restating them.
+  format**; the steps below consume those payloads rather than restating them. The third agent in
+  `agents/`, [criteria-refresher](agents/criteria-refresher.md), is a maintenance tool no step
+  here spawns.
 - [`references/best-practices-checklist.md`](references/best-practices-checklist.md) — the
   criteria for groups `A` and `H` (the Agent Skills open standard plus Anthropic's docs) and `R`
   (craft and project conventions; the checklist's § R intro says how the project-scoped items
@@ -66,8 +71,9 @@ evals, referenced files/hooks). To review several, run again per skill.
   twelve prose conventions `R7` grades against (the checklist condenses only five of them into
   `R8`–`R11`). Preloaded into the detail-reviewer the same way; the inline fallback invokes it in
   check mode.
-- The live docs at the URLs in § Sources of both criteria files — fetched by the
-  criteria-refresher, never by this conversation.
+- The live docs at the URLs in § Sources of both criteria files — fetched only by a deliberate
+  criteria refresh, never by a review. A review reads those files' `last-synced:` dates and
+  reports them; it does not go to the network to second-guess them.
 
 ## Steps
 
@@ -79,7 +85,7 @@ Review progress:
 - [ ] 2. Brief the user, then interview to scope
 - [ ] 3. Pass 1 — spawn the structure-reviewer
 - [ ] 4. Gate — stop on a High structural finding, else continue
-- [ ] 5. Pass 2 — spawn the detail-reviewer + criteria-refresher in parallel
+- [ ] 5. Pass 2 — spawn the detail-reviewer
 - [ ] 6. Consolidate — spot-check, merge, rank
 - [ ] 7. Write the gap analysis
 - [ ] 8. Offer interactive apply
@@ -139,9 +145,9 @@ sweep regardless.)
 or a severity-ranked (High → Medium → Low) gap analysis with a per-group coverage
 table — then, if you want, I apply the fixes you approve, one at a time.
 
-**Effort:** the structural pass is a couple of turns; the full sweep is a handful more
-and fetches the live best-practice docs (the report notes any fetch that fell back to
-the baked checklist).
+**Effort:** the structural pass is a couple of turns; the full sweep is a handful more.
+The whole review runs offline against the criteria shipped with this plugin, and the
+report tells you how old they are.
 ```
 
 Then ask the four scoping questions below (skip any the user has already answered, and note
@@ -186,20 +192,13 @@ to stop the review on the strength of that quote.
   **subordinate** to it, because fixing corner cases of a multiplicative decision space one
   wording at a time is what produces the next review round's findings.
 
-### 5. Pass 2 — spawn the detail-reviewer and the criteria-refresher, in parallel
+### 5. Pass 2 — spawn the detail-reviewer
 
-Spawn both in one message; neither consumes the other's output:
-
-- The [detail-reviewer](agents/detail-reviewer.md), with: the bundle path, the checklist path,
-  the target's `model:` pin (or its absence), and the focus notes. Its `skills` frontmatter
-  preloads `prompt-quality-criteria` and `writing-simplified-technical-english`, and it
-  self-checks they arrived — a group whose criteria are absent comes back **ungraded** in its
-  COVERAGE payload, never scored from memory. It also settles the deterministic lookups with
-  `Bash`.
-- The [criteria-refresher](agents/criteria-refresher.md), with: the absolute paths to this
-  plugin's checklist and to the installed `prompt-quality-criteria` plugin's
-  `references/prompt-criteria.md` (skip that path, and say so, when the plugin is absent). It
-  fetches every § Sources URL and returns drift notes only — this conversation fetches nothing.
+Spawn the [detail-reviewer](agents/detail-reviewer.md), with: the bundle path, the checklist path,
+the target's `model:` pin (or its absence), and the focus notes. Its `skills` frontmatter preloads
+`prompt-quality-criteria` and `writing-simplified-technical-english`, and it self-checks they
+arrived — a group whose criteria are absent comes back **ungraded** in its COVERAGE payload, never
+scored from memory. It also settles the deterministic lookups with `Bash`.
 
 ### 6. Consolidate — spot-check, merge, rank
 
@@ -213,9 +212,12 @@ Spawn both in one message; neither consumes the other's output:
   Structure findings first, then Detail, High → Medium → Low within each. The agents already ran
   the coverage-then-filter discipline; do not re-filter for brevity — the report's length is
   whatever survived, not a target. Keep low-confidence findings with the confidence noted.
-- **Fold the refresher's result** into the report's criteria notes: drift notes become
-  checklist-staleness items, unsupported-criterion notes become checklist-maintenance items, and
-  a failed refresher (or failed inline fetch) becomes the staleness caveat.
+- **Record how old the criteria are.** `Grep` the `last-synced:` line out of this plugin's
+  `references/best-practices-checklist.md` and out of the installed `prompt-quality-criteria`
+  plugin's `references/prompt-criteria.md` (say so when that plugin is absent), and carry both
+  dates plus their elapsed days into the report's criteria notes. Two greps, no fetching: the age
+  is what tells a reader how far to trust the verdict, and a review that went to the network to
+  answer it would be doing the maintainer's job in the reader's report.
 
 ### 7. Write the gap analysis (inline)
 
@@ -239,13 +241,14 @@ to provide. The content rules, whatever the shape:
   detail-reviewer's COVERAGE payload; a group whose criteria never loaded is `N/A` with the
   reason named in Criteria notes, so a partial review never reads as a clean one.
 - **Gated report:** every unswept group is `not scored — gated on structure`, never `N/A` and
-  never `Pass`; the Next-step section offers the choice — sweep now anyway, or redesign first —
-  and notes the criteria refresh has not run, because the baked checklist suffices for a
-  structural verdict.
-- **Criteria notes** carry: the refresher's drift notes (checklist-staleness items) or its
-  failure (a staleness caveat); every ungraded group; every stage that ran inline under the
-  fallback; and, when group `B` produced findings, a note that managed settings can override a
-  model pin, so the skill should not depend on quirks of exactly one model.
+  never `Pass`; the Next-step section offers the choice — sweep now anyway, or redesign first. Its
+  criteria notes carry the checklist's age alone, because a gated run never opens the shared
+  `B`–`G` file and must not date a file it did not read.
+- **Criteria notes** carry: the criteria age from Step 6 — each file's `last-synced:` date and
+  elapsed days, which a reader weighs the verdict against; every ungraded group; every stage that
+  ran inline under the fallback; and, when group `B` produced findings, a note that managed
+  settings can override a model pin, so the skill should not depend on quirks of exactly one
+  model.
 
 ### 8. Offer interactive apply
 

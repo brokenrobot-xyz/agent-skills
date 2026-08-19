@@ -55,8 +55,8 @@ and severity sorts only within a group.
 
 ### Criteria notes
 
-- <drift notes, staleness caveats, ungraded groups, stages run inline, model-pin caveat —
-  omit items with nothing to report>
+- Criteria last synced: <checklist date> (<N> days ago); shared B–G: <date> (<N> days ago)
+- <ungraded groups, stages run inline, model-pin caveat — omit items with nothing to report>
 ```
 
 Worked example of one finding block, from a target whose `evals/evals.json` says
@@ -105,8 +105,12 @@ user — and what the collapse deletes>
 | <each swept structural criterion> | <its status>                    |
 | <every unswept group>             | not scored — gated on structure |
 
+### Criteria notes
+
+- Criteria last synced: <checklist date> (<N> days ago) — the shared B–G file goes unread in a
+  gated run, so it carries no date here
+
 ### Next step
 
-<the offer: run the detail sweep now anyway, or redesign first and re-review; note the
-criteria refresh has not run>
+<the offer: run the detail sweep now anyway, or redesign first and re-review>
 ```

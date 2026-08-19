@@ -5,8 +5,10 @@ against them. This file scores nothing and assigns no severity, for the reason
 [Who scores](#who-scores) gives.
 
 **last-synced:** 2026-08-19. When this date is stale, refresh the source URLs below. Then reconcile
-any new guidance into this file. A maintainer makes both changes; a caller that refreshes the
-criteria during a review records the staleness in the caller's own report instead.
+any new guidance into this file. **The date records the last _reconciliation_, not the last
+fetch** — do not advance it for a refresh whose findings were never folded in, because a date
+meaning "we looked" reports freshness this file does not have. A maintainer makes both changes; a
+caller reads this date to report how old these criteria are, and does not refresh them mid-review.
 
 ## Contents
 
