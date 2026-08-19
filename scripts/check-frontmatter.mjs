@@ -2,9 +2,9 @@
 // Fails the build when a shipped SKILL.md or agent definition carries frontmatter the harness
 // cannot parse. That failure is otherwise silent: the harness drops every field and logs to a
 // debug channel nobody reads, so the skill loses its tools, its preloads, and its description
-// while still appearing to load. `claude plugin validate` catches the agent half and not the
-// SKILL.md half, which is why two malformed skill descriptions survived in this repo until
-// 1c8fb8e.
+// while still appearing to load. `claude plugin validate` rejects a missing frontmatter block but
+// not a malformed one, for agents and skills alike, which is why two malformed skill descriptions
+// survived in this repo until 1c8fb8e.
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';

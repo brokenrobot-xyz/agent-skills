@@ -22,7 +22,7 @@ Then install plugins from it:
 
 Dependencies auto-install: installing either reviewer also installs
 `prompt-quality-criteria`, which supplies its B–G criteria, and
-`writing-simplified-technical-english`, which it invokes for its prose check.
+`writing-simplified-technical-english`, which supplies its prose conventions.
 
 ## Catalog
 

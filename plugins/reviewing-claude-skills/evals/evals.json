@@ -27,7 +27,7 @@
         "The report follows references/report-template.md: a Summary table of findings (Structure rows first, then Detail, severity-ranked within each) precedes the per-finding detail blocks, and the rank numbers match between the two",
         "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 2"
     ],
-    "coverage_map": "1–4 are the must-haves (one per core Step-4 behavior); 5–6 cover the apply phase and the false-positive guard; 7–9 cover the model-specific behaviors and 10 the review/maintenance boundary, that a criteria refresh is not a review; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform fallback ladder — substitution when the definition files are readable, inline when they are not; 24 covers the offline guarantee, that a review reports the criteria age from disk rather than fetching to check it.",
+    "coverage_map": "1–4 are the must-haves (one per core Pass-2 behavior); 5–6 cover the apply phase and the false-positive guard; 7–9 cover the model-specific behaviors and 10 the review/maintenance boundary, that a criteria refresh is not a review; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform fallback ladder — substitution when the definition files are readable, inline when they are not; 24 covers the offline guarantee, that a review reports the criteria age from disk rather than fetching to check it.",
     "grading": {
         "machine_checkable": {
             "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep against BOTH criteria files — groups A, H, and R in this bundle's checklist, groups B–G in the prompt-quality-criteria bundle. Checking only the local checklist would fail every legitimate B–G citation.",
@@ -120,7 +120,7 @@
             "expected_output": "A report in which every finding cites a criterion key and points to a specific line or section, with the mechanical criteria settled by tool calls rather than by eye.",
             "assertions": [
                 "Reads all referenced files, not just SKILL.md, before scoring",
-                "Settles the deterministic criteria (A1, A3, A4, A7, A12, A16, A18, R6) with Bash/Grep rather than by eye",
+                "Settles the deterministic criteria (A1, A3, A7, A12, A16, A18, R6) with Bash/Grep rather than by eye",
                 "Every finding references a specific line/section in the bundle",
                 "Cites a criterion key (A–H, R) on each finding"
             ],
@@ -311,7 +311,7 @@
                 "Does NOT reword the skill's name or description frontmatter, which R7 places out of scope",
                 "When the skill is not installed (its preload silently skipped), the detail-reviewer's COVERAGE payload reports the seven uncovered conventions as ungraded rather than grading them from memory"
             ],
-            "baseline": "Without the skill, prose is graded by general taste and the eight conventions outside R8–R11 go unchecked.",
+            "baseline": "Without the skill, prose is graded by general taste and the seven conventions outside R8–R11 go unchecked.",
             "models": ["opus"]
         },
         {

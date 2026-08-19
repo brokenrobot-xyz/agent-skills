@@ -33,7 +33,7 @@ and the caller assigns each severity and writes each finding.
 **"The prompt"** in every criterion below means the prompt under review: a skill's `SKILL.md` body, a
 subagent definition's body, or any other Markdown that becomes instructions for Claude.
 
-**Four criteria overlap a criterion this file does not hold.** `C2`, `E2`, `F2`, and `F5` each name
+**Five criteria overlap a criterion this file does not hold.** `C2`, `C11`, `E2`, `F2`, and `F5` each name
 the caller's criterion by description rather than by key, because the key differs for each caller.
 Resolve each description against your own checklist.
 

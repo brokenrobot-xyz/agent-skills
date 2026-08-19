@@ -6,8 +6,8 @@ host project's conventions, and produces a **severity-ranked gap analysis**.
 Optionally, it then applies the fixes you approve, one finding at a time.
 
 This README documents what the review covers and how a run behaves. The
-review procedure lives in [SKILL.md](SKILL.md), the three review subagents in
-[agents/](agents/), and the criteria in
+review procedure lives in [SKILL.md](SKILL.md), the two review subagents and
+the maintenance agent in [agents/](agents/), and the criteria in
 [references/best-practices-checklist.md](references/best-practices-checklist.md);
 on any conflict, those are canonical.
 
