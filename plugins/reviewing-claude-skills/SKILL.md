@@ -11,7 +11,8 @@ model: opus
 Audit one named skill in two passes, each run by a dedicated subagent so the review's heavy
 reading — the target bundle, the criteria corpora, the fetched docs — stays out of this
 conversation. **Pass 1** (the [structure-reviewer](agents/structure-reviewer.md) agent) scores
-the workflow's structure — its shape, not its sentences — against eight criteria from
+the workflow's structure — its shape, not its sentences — against the criteria marked
+`_(structure pass)_` in
 [`references/best-practices-checklist.md`](references/best-practices-checklist.md). A **High**
 structural finding stops the run at a gate with a structural verdict and a redesign
 recommendation, because line-level findings against a structure a redesign will replace are
@@ -53,9 +54,9 @@ evals, referenced files/hooks). To review several, run again per skill.
 - [`references/best-practices-checklist.md`](references/best-practices-checklist.md) — the
   criteria for groups `A` and `H` (the Agent Skills open standard plus Anthropic's docs) and `R`
   (craft and project conventions; the checklist's § R intro says how the project-scoped items
-  resolve against the host project's own documents). The structure-reviewer scores eight of its
-  criteria; the detail-reviewer scores the rest. Cite criterion keys (e.g. `A2`, `H10`, `R3`) in
-  findings.
+  resolve against the host project's own documents). The structure-reviewer scores the criteria
+  that file marks `_(structure pass)_`; the detail-reviewer scores the rest. Cite criterion keys
+  (e.g. `A2`, `H10`, `R3`) in findings.
 - The **`prompt-quality-criteria:prompt-quality-criteria`** skill — groups `B`–`G`, which the
   checklist above does not carry. They are artifact-independent prompting criteria shared with
   the subagent reviewer, so they live in one place rather than drifting between two copies. The
@@ -163,8 +164,8 @@ to the detail-reviewer.
 
 Spawn the [structure-reviewer](agents/structure-reviewer.md) with: the bundle path, the absolute
 path to this plugin's `references/best-practices-checklist.md`, and any focus notes from Step 2.
-It scores the eight structural criteria (`R14`, `R12`, `R1`, `A4`, `A5`, `A8`, `A13`, `A17`)
-from the bundle's skeleton, offline, and returns evidence-backed findings in the format its
+It scores the criteria the checklist marks `_(structure pass)_` — the shape criteria, not the
+sentences — from the bundle's skeleton, offline, and returns evidence-backed findings in the format its
 definition owns. It fetches nothing and preloads nothing, so a run the gate stops has spent one
 small agent.
 

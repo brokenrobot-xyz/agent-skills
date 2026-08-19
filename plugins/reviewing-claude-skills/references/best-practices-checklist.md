@@ -11,7 +11,7 @@ with the subagent reviewer, so they live in the `prompt-quality-criteria` skill,
 through the Skill tool). Their keys are unchanged, and a finding cites `B4` or `F1` exactly as
 before.
 
-**last-synced:** 2026-07-29 — re-fetch the URLs and reconcile any new guidance when this is stale.
+**last-synced:** 2026-08-19 — re-fetch the URLs and reconcile any new guidance when this is stale.
 The shared criteria carry their own `last-synced` date for the docs behind groups `B`–`G`.
 
 ## Contents
@@ -46,6 +46,13 @@ Each item below is a pass criterion. Cite the criterion key (e.g. `A3`, `H10`) i
 items carry their evidence from a doc outside their own group; each of those names its source
 inline, so a re-sync checks the page the item actually came from.
 
+**Which pass scores what.** A criterion marked _(structure pass)_ belongs to Pass 1, which judges
+the workflow's shape and gates the review; every unmarked criterion belongs to Pass 2's detail
+sweep. **These marks are the only list.** Neither pass carries its own copy of the set and neither
+hardcodes its size — a set restated in a second place drifts from this one, which is the defect
+`R3` exists to catch. To move a criterion between passes, add or remove its mark here and nothing
+else.
+
 ## A. Agent Skills authoring
 
 - **A1 — name.** Required. 1–64 characters, lowercase letters, digits, and hyphens only; must not
@@ -58,15 +65,15 @@ inline, so a re-sync checks the page the item actually came from.
   into the system prompt; mixed POV hurts discovery.
 - **A3 — description content.** Required and non-empty. States both _what_ the skill does and
   _when_ to use it, with concrete trigger terms. 1–1024 chars. Not vague ("helps with X").
-- **A4 — length.** SKILL.md body under ~500 lines **and** under ~5000 tokens; overflow pushed to
+- **A4 — length.** _(structure pass)_ SKILL.md body under ~500 lines **and** under ~5000 tokens; overflow pushed to
   reference files. The two bounds are independent — dense prose can clear the line count and still
   blow the token budget, which is what actually competes with conversation context.
-- **A5 — progressive disclosure.** SKILL.md is an overview that references detail files; it does
+- **A5 — progressive disclosure.** _(structure pass)_ SKILL.md is an overview that references detail files; it does
   not inline everything.
 - **A6 — references one level deep.** All reference files link directly from SKILL.md, not from
   each other (nested refs get partially read).
 - **A7 — reference TOC.** Reference files >100 lines start with a table of contents.
-- **A8 — degrees of freedom.** Specificity matches task fragility: mechanical/fragile steps are
+- **A8 — degrees of freedom.** _(structure pass)_ Specificity matches task fragility: mechanical/fragile steps are
   scripted or exact (low freedom); judgment steps left open (high freedom). Deterministic lookups
   are not left as vague prose.
 - **A9 — examples.** Concrete input→output examples where output quality depends on style/shape.
@@ -76,7 +83,7 @@ inline, so a re-sync checks the page the item actually came from.
   dated `last-synced` metadata line is acceptable.)
 - **A12 — forward-slash paths.** No Windows backslashes, because backslash paths error on Unix
   systems.
-- **A13 — one default, not a menu.** Do not offer many interchangeable options; give a default with
+- **A13 — one default, not a menu.** _(structure pass)_ Do not offer many interchangeable options; give a default with
   an escape hatch, because a menu makes the model deliberate where it should act.
 - **A14 — scripts solve, don't defer.** Bundled scripts handle their own errors; no unexplained
   "voodoo constants"; dependencies listed.
@@ -87,8 +94,11 @@ inline, so a re-sync checks the page the item actually came from.
   string or a YAML list. A comma-separated or list value is a **Low** — it works here but is not
   the form the standard defines, so it may not port to another agent. Carve-out: when a value
   itself contains spaces (`Bash(git add *)`), space separation is ambiguous — prefer commas or a
-  list there and say why, rather than splitting the value.
-- **A17 — not over-prescriptive.** The skill doesn't enumerate behaviors a brief instruction
+  list there and say why, rather than splitting the value. The spec marks the whole field
+  **Experimental** and warns that support for it "may vary between agent implementations", so a skill
+  leaning on `allowed-tools` for safety rather than convenience depends on a field another agent may
+  ignore outright — say so alongside any finding about its form.
+- **A17 — not over-prescriptive.** _(structure pass)_ The skill doesn't enumerate behaviors a brief instruction
   would cover. Over-specification degrades newer models (Fable 5's docs are explicit that skills
   built for older models are "often too prescriptive" and can lower output quality) and violates
   `R1`. Prefer short steering + intent over exhaustive rule lists. Corroborated by the open
@@ -111,11 +121,33 @@ inline, so a re-sync checks the page the item actually came from.
   permitted, but it does not carry to other agents. Flag one only when it is load-bearing and its
   purpose is undocumented, so a reader can tell deliberate use from a copied line. Do not flag a
   skill merely for using an extension.
+- **A21 — feedback loops on quality-critical work.** Where output quality can be checked, the skill
+  loops: run the validator, fix what it reports, run it again, and proceed only once it passes. The
+  validator may be a script or a reference document the skill reads and compares against — the loop
+  is the criterion, not the tooling. A skill that checks once and continues regardless of the verdict
+  has a check, not a loop, and the errors it catches arrive too late to act on.
+- **A22 — verifiable intermediate outputs.** _(structure pass)_ For batch, destructive, or otherwise high-stakes
+  operations, the skill writes its plan to a structured file, validates that file, and only then
+  executes it — the documented "plan-validate-execute" pattern. The plan is machine-checkable before
+  anything is touched, and the model can iterate on it without disturbing the originals. Validation
+  messages name the specific problem and the available alternatives ("field `signature_date` not
+  found. Available fields: …"), because an error a reader cannot act on ends the loop `A21` opens.
+- **A23 — execution intent stated.** For every bundled script the skill names, it says whether the
+  script is to be **run** ("run `analyze_form.py` to extract the fields") or **read** ("see
+  `analyze_form.py` for the extraction algorithm"). The two cost different things — executing spends
+  only the script's output, reading spends the whole file — so a reference carrying neither verb
+  leaves a context-budget decision to the model.
+- **A24 — validates under the reference implementation.** The open standard ships a validator
+  (`skills-ref validate ./my-skill`) that checks frontmatter and naming mechanically. A skill that
+  fails it fails the spec, so treat a clean run as the floor for `A1`, `A18`, and `A20` rather than as
+  a substitute for scoring them.
 
 ## H. Success criteria & evaluations
 
 - **H1 — evals exist, in the standard's format.** ≥3 scenarios, stored as `evals/evals.json` in
-  the skill directory. Each entry carries `id`, `prompt` (a realistic user message, not a
+  the skill directory. The file is an object carrying a top-level `skill_name` alongside its `evals`
+  array — a bare array is a finding, because a runner keyed on `skill_name` cannot tell which skill
+  the file belongs to. Each entry carries `id`, `prompt` (a realistic user message, not a
   paraphrase of the skill's own steps), `expected_output` (a human-readable description of
   success), optional `files`, and `assertions`. This checklist extends that schema with three keys
   the standard omits but `H3`/`H6`/`H7` require: `targets` (the step or branch under test), `baseline`
@@ -128,7 +160,11 @@ inline, so a re-sync checks the page the item actually came from.
   localizes the regression.
 - **H4 — edge cases.** Covers empty/absent input, boundary/omission cases, adversarial input.
 - **H5 — grading split.** Distinguishes machine-checkable checks (scripts, hooks, greps) from
-  judgment-graded ones; automates where possible.
+  judgment-graded ones; automates where possible. The documented methods, cheapest first: exact match
+  after normalizing whitespace and case, string match, multiple choice, code-graded assertions, and
+  LLM-graded ones — the last as a binary classification, a Likert scale, or an ordinal scale, picked
+  to fit what is being judged. Reserve judgment grading for what resists a mechanical check: writing
+  style, visual design, whether the output "feels right".
 - **H6 — baseline-first.** Evals note running without the skill to establish the before/after.
 - **H7 — model coverage.** Scenarios name the model(s) the skill is expected to pass on
   (its pinned model at minimum).
@@ -163,6 +199,16 @@ inline, so a re-sync checks the page the item actually came from.
   the actual output, and gives no benefit of the doubt: a section titled "Summary" holding one
   vague sentence fails an assertion asking for a summary. An opinion without a quotation is not a
   grade.
+- **H15 — prompt variation.** The scenario prompts differ in phrasing, level of detail, and
+  formality — one casual ("hey can you clean up this csv"), one precise ("parse the CSV at
+  `data/input.csv`, drop rows where column B is null"). A set written in a single voice tests a
+  single phrasing, and phrasing is exactly what varies between real users, so a uniform set overstates
+  how reliably the skill is discovered and followed.
+- **H16 — inconsistency diagnosed, not averaged.** Where the same scenario passes on some runs and
+  fails on others, the set says which of the two causes is in play: an eval flaky under sampling, or
+  instructions ambiguous enough that the model reads them differently each run. Only the second is a
+  skill defect, and its fix belongs in `SKILL.md`, so recording the mean alone hides the one finding
+  worth acting on.
 
 ## R. Craft and project conventions
 
@@ -173,7 +219,7 @@ documents it links. Where the project defines no convention for a project-scoped
 item `N/A` — never invent a house rule the project does not have. A project's conventions may also
 narrow any other item in this group; when one does, cite the project's document alongside the key.
 
-- **R1 — simplicity first.** No speculative features/abstractions/config beyond what the skill's
+- **R1 — simplicity first.** _(structure pass)_ No speculative features/abstractions/config beyond what the skill's
   job requires.
 - **R2 — surgical.** The skill's own _apply_ edits touch only what a finding requires.
 - **R3 — single source of truth / no drift.** The skill references its authoritative sources
@@ -213,7 +259,7 @@ narrow any other item in this group; when one does, cite the project's document 
   must act on (it invites invented members) — state the membership test instead. No bare `this` /
   `it` / `they` where two antecedents are plausible, because a pronoun with two plausible
   antecedents is a coin flip.
-- **R12 — scope coherence.** The skill does one job. Apply the split test: the same subject and the
+- **R12 — scope coherence.** _(structure pass)_ The skill does one job. Apply the split test: the same subject and the
   same criteria producing a different output is **one skill with two modes**, not two skills; a
   different subject or different criteria is a second skill; and criteria a consumer must score with
   itself are extracted into their own skill regardless of the first two. Modes are not a reason to
@@ -234,7 +280,7 @@ narrow any other item in this group; when one does, cite the project's document 
   the answer leaves the model to guess and the guess varies by run; and **what the step does when the
   skill is unavailable, and what is lost**, because dependency resolution is not guaranteed on every
   host and a silent degradation reads to the user as a clean result rather than an ungraded one.
-- **R14 — bounded decision space.** The workflow's decisions chain; they do not multiply. Signals
+- **R14 — bounded decision space.** _(structure pass)_ The workflow's decisions chain; they do not multiply. Signals
   that the state space has outgrown the prose describing it: an outcome computed from three or
   more independent inputs (a config value × a verdict × a category × an override); the same
   operation specified in more than one phase with different semantics per phase; a shared rule set

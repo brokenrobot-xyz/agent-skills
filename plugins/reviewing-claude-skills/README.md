@@ -43,10 +43,12 @@ per invocation** — to review several, run once per skill.
 
 ```
 1. Brief + four scoping questions        each has a default; "use the defaults" works
-2. Pass 1 — STRUCTURE                    the structure-reviewer subagent scores eight
+2. Pass 1 — STRUCTURE                    the structure-reviewer subagent scores the
                                          shape criteria: decision space, scope,
                                          simplicity, length & disclosure, degrees of
-                                         freedom, defaults vs menus, over-prescription.
+                                         freedom, defaults vs menus, over-prescription,
+                                         and validated intermediates ahead of
+                                         destructive steps.
                                          Offline and cheap — no docs fetched yet.
         │
         ├── shape holds ──────────────▶  continue to 3

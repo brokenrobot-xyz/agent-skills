@@ -4,7 +4,7 @@ This file holds criteria groups `B`–`G`. A caller reads these criteria and sco
 against them. This file scores nothing and assigns no severity, for the reason
 [Who scores](#who-scores) gives.
 
-**last-synced:** 2026-07-29. When this date is stale, refresh the source URLs below. Then reconcile
+**last-synced:** 2026-08-19. When this date is stale, refresh the source URLs below. Then reconcile
 any new guidance into this file. A maintainer makes both changes; a caller that refreshes the
 criteria during a review records the staleness in the caller's own report instead.
 
@@ -141,14 +141,29 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
   discarding unfamiliar files, `git push --force`). Local reversible work — editing files, running
   tests — needs no gate. Without this, a prompt takes the shortcut and the user learns about it
   afterward.
+- **C11 — motivation, not just the rule.** An instruction states the reason behind it, because a model
+  that understands the purpose generalizes to the cases the rule does not name, while a bare directive
+  covers only the one it does. "NEVER use ellipses" is weaker than "your response will be read aloud
+  by a text-to-speech engine, so never use ellipses since the engine will not know how to pronounce
+  them." (Also stated by the open standard's skill-evaluation guidance, outside this file's sources:
+  reasoning-based instructions outperform rigid `ALWAYS`/`NEVER` directives. Overlaps the caller's
+  guardrail-consequence criterion, which applies the same rule to prohibitions; `C11` is the general
+  case.)
+- **C12 — say what to do, not what not to do.** Behavior and formatting steer better as a positive
+  instruction than as a prohibition — "write in smoothly flowing prose paragraphs" over "do not use
+  markdown" — because a prohibition rules one option out and leaves every other option open.
 
 ## D. Reduce hallucinations
 
 - **D1 — permit "I don't know".** The prompt tells the model to omit/abstain/ask rather than
   fabricate when evidence is missing (e.g. a commit body's _why_, an inferred value).
 - **D2 — ground in evidence.** Claims/outputs are tied to observable inputs (diffs, files,
-  provided docs), not the model's priors, for factual tasks.
-- **D3 — verification.** A verify/feedback step checks the output against a source or validator.
+  provided docs), not the model's priors, for factual tasks. For long documents (20k+ tokens) the
+  documented technique is to extract word-for-word quotes **first** and reason from the quotes, which
+  also keeps the model on the passages that matter instead of the whole document.
+- **D3 — verification.** A verify/feedback step checks the output against a source or validator. The
+  auditable form is stronger: every claim carries a supporting quote, and a claim with no quote behind
+  it is withdrawn rather than shipped hedged.
 - **D4 — source restriction.** For document tasks, restrict to provided content over general
   knowledge.
 - **D5 — progress claims audited against tool results.** A prompt that reports its own progress on a
@@ -156,6 +171,10 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
   session, and to say plainly what is unverified, skipped, or failing. Anthropic reports this
   nearly eliminates fabricated status reports on tasks designed to elicit them. (Sourced from the
   Fable 5 doc in group `B`, not from this group's doc.)
+- **D6 — repeated sampling where correctness matters.** For output whose factual accuracy carries
+  real cost, the same task is run more than once and the outputs compared: disagreement between runs
+  is itself the signal that a claim was invented rather than read. This multiplies cost, so it is not
+  warranted everywhere — score it against what the output is used for, not as a blanket requirement.
 
 ## E. Increase output consistency
 
@@ -170,6 +189,10 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
 - **E5 — no prefill.** Prefilling the assistant turn is unsupported on Claude 4.6 and later. A
   prompt that still relies on the prefill trick is stale; use structured outputs or system-prompt
   instructions instead.
+- **E6 — retrieval for contextual consistency.** Where a prompt must answer the same question the
+  same way across sessions — a support flow, a knowledge base, anything with a fixed body of fact —
+  it grounds answers in a retrieved set rather than the model's recall, because recall varies between
+  runs and a fixed corpus does not.
 
 ## F. Mitigate jailbreaks & prompt injection
 
@@ -190,9 +213,15 @@ indirect model.
   are named ("body of an inbound email from an unknown sender"). JSON-encoding it removes any
   delimiter an attacker could break out of. Corollary: the prompt's _own_ instructions must not sit
   in tool results, where the model is trained to distrust them.
-- **F5 — screen and red-team.** For a prompt that acts on tool output, the checks are whether
-  suspicious output is screened before it is acted on, and whether the prompt's evals include a
-  deliberate injection attempt (overlaps the caller's eval edge-case criterion).
+- **F5 — screen and red-team.** Screening runs on both sides: untrusted **input** before it reaches
+  the main prompt, and **tool output** before the prompt acts on it. The documented pattern for each
+  is a lightweight model returning a constrained classification, so the verdict is a value the caller
+  branches on rather than prose it has to interpret. The second check is whether the prompt's evals
+  include a deliberate injection attempt (overlaps the caller's eval edge-case criterion).
+- **F6 — repeat offenders.** Where the prompt's own user is the adversary, it says what changes when
+  the same user keeps probing — a firmer refusal, throttling, escalation — instead of meeting each
+  attempt as if it were the first. Score `N/A` where the prompt's adversary is third-party content
+  rather than its user, which is the common case.
 
 ## G. Reduce prompt leak
 
@@ -200,3 +229,9 @@ indirect model.
   prompt holds no secrets, absence of leak defenses is correct, not a gap.
 - **G2 — no needless proprietary detail.** The prompt doesn't embed secrets/proprietary specifics
   it doesn't need.
+- **G3 — monitoring before hardening.** The live guidance puts output screening and post-processing
+  **ahead** of leak-resistant prompt wording, because hardening the prompt adds complexity that can
+  degrade the task while a filter on the way out does not. Where a prompt does hold real secrets,
+  check that something screens the output — a keyword filter, a regular expression, or a prompted
+  model — before concluding that more hardening is the answer. Scored under `G1`'s proportionality:
+  no secrets, no gap.

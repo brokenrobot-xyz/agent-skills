@@ -1,7 +1,7 @@
 {
     "name": "reviewing-claude-skills",
     "description": "Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes: structure first, stopping at a structural verdict when the workflow's shape fails; otherwise a full sweep against skill-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes. Each pass runs in a plugin subagent to keep the main conversation lean.",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "author": {
         "name": "Tamas Mezei",
         "url": "https://www.brokenrobot.xyz"
