@@ -85,9 +85,9 @@ When a researcher returns no verdict — the subagent does not resolve, or its r
 
 Collect the verdicts into a consolidated recommendation table. Every field the researcher returns has a column here, so consolidation drops nothing: its **Confidence + gaps** goes in the last column verbatim, and its **Peer/engine notes** join **Breaking changes** when non-empty.
 
-| Package | Jump                    | Verdict         | Breaking changes (affects us?)                              | Required edits                             | Confidence / gaps                  |
-| ------- | ----------------------- | --------------- | ----------------------------------------------------------- | ------------------------------------------ | ---------------------------------- |
-| astro   | 7.1.3 → 7.4.0 (minor)   | `compatible`    | Adds a `session` config key; nothing removed                | none                                       | high — changelog + `npm pack` diff |
+| Package | Jump                    | Verdict         | Breaking changes (affects us?)                                  | Required edits                             | Confidence / gaps                  |
+| ------- | ----------------------- | --------------- | --------------------------------------------------------------- | ------------------------------------------ | ---------------------------------- |
+| astro   | 7.1.3 → 7.4.0 (minor)   | `compatible`    | Adds a `session` config key; nothing removed                    | none                                       | high — changelog + `npm pack` diff |
 | eslint  | 8.57.0 → 9.42.0 (major) | `needs-changes` | Flat config is now mandatory — **affects us**; needs Node ≥20.9 | Port `.eslintrc.cjs` to `eslint.config.js` | low — 9.1–9.3 changelogs missing   |
 
 Never leave the last column blank, because a verdict reached on a changelog nobody could fetch and one reached on a byte-level diff otherwise arrive at this gate looking identical, and the gate exists to inform exactly that difference. A row the researcher could not grade at all carries **no verdict**, as Step 4 describes.
