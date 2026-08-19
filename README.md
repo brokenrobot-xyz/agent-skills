@@ -64,18 +64,32 @@ consumer repo's `.brokenrobot-xyz/` folder — never inside a bundle.
 ## Development
 
 Node 26 (see `.node-version`); `npm ci` provides everything else, including
-the Claude Code CLI. Validate everything and run the checks:
+the Claude Code CLI. Each step is atomic, so a failure names the thing that
+broke:
 
 ```sh
 npm ci
-npm run format:check
-npm run marketplace:check
-npm run plugins:check
-npm test
+
+# `<subject>:check` inspects what the repository actually contains
+npm run format:check              # prettier
+npm run marketplace:check         # the marketplace manifest
+npm run plugins:check             # every plugin manifest, and its agents
+npm run frontmatter:check         # every shipped SKILL.md and agent definition parses
+
+# `test:<subject>:check` runs a hermetic suite against one script
+npm run test:commits:check        # the commit-message vocabulary and deny-hook
+npm run test:dependencies:check   # the npm dependency categorizer
+npm run test:frontmatter:check    # the frontmatter checker itself
 ```
 
-The Pipeline workflow runs the same checks on every push and pull request
-to `main`.
+The Pipeline workflow runs each of these as its own step on every push and
+pull request to `main`. There is no aggregate `npm test`: an atomic step
+names the failure, where a chained one only reports the first thing to break.
+
+Note the split. **Bundled** scripts stay zero-dependency, because they run on
+a consumer's machine; the checkers under `scripts/` are repository tooling
+that never ships, so they may take a devDependency (`yaml`, to parse
+frontmatter the way the harness does rather than by regex).
 
 ## License
 

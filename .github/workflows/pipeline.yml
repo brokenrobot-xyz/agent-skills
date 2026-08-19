@@ -37,5 +37,14 @@ jobs:
       - name: Plugin manifests check
         run: npm run plugins:check
 
-      - name: Script test check
-        run: npm test
+      - name: Commit message tests
+        run: npm run test:commits:check
+
+      - name: Dependency categorizer tests
+        run: npm run test:dependencies:check
+
+      - name: Frontmatter checker tests
+        run: npm run test:frontmatter:check
+
+      - name: Frontmatter check
+        run: npm run frontmatter:check
