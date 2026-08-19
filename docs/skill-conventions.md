@@ -53,8 +53,15 @@ usually conceptual.
 - **Noun phrase** names a skill that **is** content the caller works from — `prompt-quality-criteria`.
   Suffix a rubric with `-criteria`.
 
-`A1` permits both forms; this section narrows the choice to one form per kind. Both reviewers score
-the name form as `R6`, which reads this section.
+`A1` permits both forms; this section narrows the choice to one form per kind.
+
+**Subagents** take a different form, because a subagent is a worker rather than a procedure:
+`<object>-<agent-noun>`, where the noun says what the agent **is** and the object says what it works
+on — `structure-reviewer`, `detail-reviewer`, `criteria-refresher`, `dependency-update-researcher`.
+No gerunds, because a gerund names the step that spawns the agent, not the agent.
+
+Both reviewers score the name form as `R6`: the skills reviewer against the two skill forms, the
+subagents reviewer against the subagent form. Both read this section.
 
 **A known exception, left deliberately.** `writing-simplified-technical-english` is named for its
 revise mode, while check mode is what both reviewers depend on. Its `description` states check mode,
