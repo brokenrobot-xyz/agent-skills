@@ -25,7 +25,7 @@
         "The reply contains the copied `Update Progress:` checklist with items ticked as completed",
         "Every claim in the final report traces to a tool result from the run — skipped steps are named as skipped rather than omitted (D5)"
     ],
-    "coverage_map": "1 is the full happy path over exact-pinned entries — both stops, a researched patch, and the single apply pass; 2 is the two stops under a mixed minor/major/0.x table, including the 0.x bucketing rule and the one-pass apply; 3 is subset selection, the only scenario where research must NOT cover every outdated package; 4 is the audit attribution guarantee including its devDependency scope and the pin-back on a new advisory; 5 is Step 2's everything-current exit, which no other scenario reaches; 6 is Guardrail 1's prefix preservation across mixed `^`/`~`/exact entries, which 1 cannot test because its entries are uniformly exact; 7 is the unsupported-lockfile guard, which never reaches Step 2; 8 is the adversarial changelog reaching the researcher; 9 is the baseline-provenance guard, which 4 cannot test because its baseline is always fresh; 10 is the unavailable researcher, the only scenario where a row reaches the gate without a verdict; 11 is Step 2's exit-2 branch, the one state 5 is indistinguishable from unless the run reads the exit code; 12 is the Confidence / gaps column, which 10 cannot test because its rows carry no verdict at all — here the rows ARE graded and the question is whether the evidence behind them survives to the gate.",
+    "coverage_map": "1 is the full happy path over exact-pinned entries — both stops, a researched patch, and the single apply pass; 2 is the two stops under a mixed minor/major/0.x table, including the 0.x bucketing rule and the one-pass apply; 3 is subset selection, the only scenario where research must NOT cover every outdated package; 4 is the audit attribution guarantee including its devDependency scope and the pin-back on a new advisory; 5 is Step 2's everything-current exit, which no other scenario reaches; 6 is Guardrail 1's prefix preservation across mixed `^`/`~`/exact entries, which 1 cannot test because its entries are uniformly exact; 7 is the unsupported-lockfile guard, which never reaches Step 2; 8 is the adversarial changelog reaching the researcher; 9 is the baseline-provenance guard — `snapshot` refusing a live baseline over an already-changed manifest — which 4 cannot test because its baseline is always its own; 10 is the unavailable researcher, the only scenario where a row reaches the gate without a verdict; 11 is Step 2's exit-2 branch, the one state 5 is indistinguishable from unless the run reads the exit code; 12 is the Confidence / gaps column, which 10 cannot test because its rows carry no verdict at all — here the rows ARE graded and the question is whether the evidence behind them survives to the gate.",
     "grading": {
         "machine_checkable": {
             "description": "Repo state the run leaves behind, plus the commands it issued. Run the state checks from the repo root after the run; extract commands from the session's `.jsonl` transcript. SKILL_DIR is the installed skill directory holding scripts/audit-diff.mjs.",
@@ -91,7 +91,7 @@
         {
             "id": 2,
             "name": "eval-two-stops-and-0x",
-            "targets": "The two stops under a mixed table, and Step 3's rule that any 0.x bump is at least minor",
+            "targets": "The two stops under a mixed table, and Step 2's rule that any 0.x bump is at least minor",
             "setup": "Clean feature branch, exact-pinned repo. At least one dependency a MINOR version behind, one a MAJOR version behind, and one 0.x package a PATCH digit behind (for example 0.4.1 → 0.4.2). At the selection stop, select everything; at the approval gate, approve everything.",
             "prompt": "Update the dependencies.",
             "expected_output": "A category table with the 0.x bump bucketed as at least minor, a stop for selection, research on every selected bump, a verdict table, and a full stop awaiting approval — with nothing installed yet.",
@@ -204,16 +204,17 @@
         },
         {
             "id": 9,
-            "name": "eval-stale-baseline-refused",
-            "targets": "The Audit diff section's exit-code-2 branch — a baseline that does not belong to this run",
-            "setup": "Leave a baseline file from an earlier run in place (a `takenAt` more than 24 hours old, or one of the two superseded formats named in the notes), then start the workflow so the run reaches a `diff` before taking its own snapshot.",
+            "name": "eval-live-baseline-refused",
+            "targets": "The Audit diff section's exit-code-2 branch at Step 2 — `snapshot` refusing a live baseline over an already-changed manifest, the one exit 2 the run must not retry",
+            "setup": "An earlier run under 24 hours ago took its snapshot, edited package.json for one bump, and aborted before committing; its baseline is still in the OS temp dir and package.json is still dirty. Step 2's `snapshot` therefore exits 2 with the refusal message, and `git status --porcelain -- package.json package-lock.json` prints the earlier run's edit.",
             "prompt": "Update the dependencies.",
-            "expected_output": "The run recognizes exit 2 as a baseline problem rather than a security failure, re-snapshots before any package has changed, and never reports advisory numbers taken from the stale file.",
+            "expected_output": "The run recognizes exit 2 as 'advisories cannot be attributed' rather than a security failure, reads the dirty manifest as the reason a re-snapshot is unsafe, carries on with detection, selection, research, and approval, and reports the audit attribution as unavailable for this run — without retrying the snapshot, diffing against the foreign baseline, or repeating any advisory count from it.",
             "assertions": [
                 "Treats exit 2 as 'advisories cannot be attributed', not as a failed audit or a blocking advisory",
-                "Re-runs `audit-diff.mjs snapshot` while the tree is still unmodified — never after an install",
-                "No advisory count from the stale baseline reaches the report",
-                "The report states that the baseline was re-taken and why"
+                "Runs `git status --porcelain -- package.json package-lock.json`, sees the earlier edit, and does NOT re-run `audit-diff.mjs snapshot`",
+                "Never runs `audit-diff.mjs diff` against the foreign baseline, and no advisory count from it reaches the report",
+                "The report marks the audit attribution as unavailable and says why — a live baseline from another run over an already-changed manifest",
+                "The rest of the workflow still runs: the outdated table, the selection stop, and the approval stop all happen"
             ],
             "baseline": "Without the skill there is no baseline concept at all; the run reads whatever `npm audit` prints at the moment it looks and attributes the whole tree's advisories to the update.",
             "models": ["claude-sonnet-5"]

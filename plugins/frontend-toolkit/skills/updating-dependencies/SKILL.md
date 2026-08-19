@@ -8,6 +8,8 @@ metadata:
     version: '1.0.0'
 ---
 
+# Update npm dependencies with the user's selection and approval
+
 Refresh the host repo's npm dependencies safely. Every bump takes the same path: detect → categorize → **the user selects** which bumps to pursue → each selected bump is researched → **the user approves** → apply. Nothing is researched without the user's selection, so the research cost tracks what the user actually intends to update, and nothing installs without the user's approval. The research runs in the [`dependency-update-researcher`](../../agents/dependency-update-researcher.md) subagent, which ships with this plugin at `agents/dependency-update-researcher.md`; its verdicts inform the user's decision — they never bypass it. This skill edits `package.json` and `package-lock.json` and reports — it **never stages, commits, or pushes**. Verifying the updated tree — the repo's build, its tests — is deliberately out of scope: the audit diff is the only check this skill runs, and the user runs their own checks on the working tree before committing.
 
 ## Supported package manager
@@ -113,7 +115,7 @@ Do _not_ read the raw advisory count as pass/fail; a non-zero count is almost al
 node "${CLAUDE_PLUGIN_ROOT}/skills/updating-dependencies/scripts/audit-diff.mjs" diff
 ```
 
-It echoes the baseline's provenance and prints `new`, `resolved`, and `preExisting`, each as a list of advisories carrying an ID, a severity, a title, and the package it reaches through. It exits non-zero only when `new` is non-empty. Take every advisory detail the report needs from this output — a second, raw `npm audit` call is what this section exists to replace.
+It echoes the baseline's provenance and prints `new`, `resolved`, and `preExisting`, each as a list of advisories carrying an ID, a severity, a title, and the package it reaches through. It exits 1 when `new` is non-empty, and 2 when it cannot attribute at all (below). Take every advisory detail the report needs from this output — a second, raw `npm audit` call is what this section exists to replace.
 
 - **`new`** → **introduced by this update.** Only a `new` advisory counts as a regression. For each one:
     1. Identify which updated package pulled the advisory in.
@@ -132,7 +134,7 @@ An exit code of 2 means the run cannot attribute advisories at all: `npm audit` 
 git status --porcelain -- package.json package-lock.json
 ```
 
-Empty output means nothing has changed yet: re-run `snapshot`. Any output means a package has already changed: mark the audit attribution as unavailable in the report, rather than diffing against a baseline that is not this run's. A baseline taken after an install would hide that install's advisories, so `snapshot` refuses that case itself and exits 2 — treat that refusal as the same "attribution unavailable" outcome, never as a reason to retry.
+Empty output means nothing has changed yet: re-run `snapshot`. Any output means a package has already changed: mark the audit attribution as unavailable in the report, rather than diffing against a baseline that is not this run's. A baseline taken after an install would hide that install's advisories, so `snapshot` refuses that exact case — a live baseline plus an already-changed manifest — and exits 2; treat that refusal as the same "attribution unavailable" outcome, never as a reason to retry.
 
 ## Report
 
@@ -160,8 +162,8 @@ Not selected
 Audit
   1 new       GHSA-dddd-eeee-ffff (high, in rollup) — blocked and pinned back, above
   1 resolved  GHSA-xxxx-yyyy-zzzz (moderate, in astro)
-  1 pre-existing  GHSA-aaaa-bbbb-cccc (high, in esbuild via devDependencies) — not this
-  update's fault, unchanged throughout
+  1 pre-existing  GHSA-aaaa-bbbb-cccc (high, in esbuild) — not this update's fault,
+  unchanged throughout
 
 Nothing was committed or pushed. The changes are in the working tree for you to review.
 ```
