@@ -3,9 +3,6 @@ name: updating-dependencies
 description: Updates, upgrades, and bumps npm dependencies in the host project — detects which packages are outdated, buckets them into patch/minor/major, researches the bumps the user selects, and applies only the bumps the user approves. Use when refreshing, updating, or upgrading dependencies, when packages are behind latest, or when npm outdated needs acting on. Edits package.json and the lockfile but never commits.
 compatibility: Requires Node and npm with dependencies installed; npm is the only supported package manager. Changelog research needs network access to the npm registry and github.com.
 allowed-tools: Bash(npm:*) Bash(node:*) Bash(git:*) Read Glob Edit Agent
-metadata:
-    author: brokenrobot.xyz
-    version: '1.0.0'
 ---
 
 # Update npm dependencies with the user's selection and approval
