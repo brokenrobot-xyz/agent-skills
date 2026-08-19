@@ -1,9 +1,9 @@
 # Reviewing-claude-subagents checklist
 
-The baked half of the reviewer's hybrid criteria. `SKILL.md` Step 3 tries to refresh the source docs
-live by fetching the URLs below. When the network is unavailable, the reviewer uses this file
-and records the staleness in the report. This file calls Claude Code's subagent pages **the
-documentation** throughout.
+The criteria the reviewer scores against. A review fetches nothing: it scores from this file and
+records the file's age in the report (`SKILL.md` Step 3). Bringing this file back in line with the
+URLs below is maintenance, done outside a review. This file calls Claude Code's subagent pages
+**the documentation** throughout.
 
 **Groups `B`–`G` are not in this file.** They are prompt criteria shared with the skill reviewer, so
 they live in the `prompt-quality-criteria` skill, which `SKILL.md` Step 4 invokes and Step 6 scores

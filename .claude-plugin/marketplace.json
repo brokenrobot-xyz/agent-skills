@@ -62,7 +62,7 @@
             "name": "reviewing-claude-subagents",
             "source": "./plugins/reviewing-claude-subagents",
             "description": "Reviews a Claude Code subagent definition — its frontmatter, body, declared tools, and routing siblings — against subagent-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes.",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "category": "skill-authoring",
             "tags": ["subagents", "agents", "review", "audit", "quality"],
             "license": "MIT",

@@ -83,9 +83,9 @@ Nine groups. This plugin's checklist defines fifty-five criteria, and `prompt-qu
   finding predicts behavior rather than observing it. The report marks confidence wherever the
   reviewer cannot demonstrate a finding from the file.
 - **The criteria track a moving target.** No open standard governs subagents, so Claude Code's
-  documentation is normative, and Anthropic revises it often. The checklist carries a `last-synced` date, the
-  reviewer re-fetches its sources on every run, and a failed fetch becomes a staleness note in the
-  report rather than a silent fallback.
+  documentation is normative, and Anthropic revises it often. The checklist carries a `last-synced` date, every
+  review reports that date and its age instead of fetching anything, and bringing the checklist
+  back in line with its sources is maintenance done outside a review.
 - **The reviewer reads two fields from each sibling.** `A2` needs each sibling's `name` and `description` to
   judge overlapping remits, and its comparison set includes the built-in subagents, which compete in
   the same roster. The review writes no per-sibling finding, because it covers one subagent.

@@ -65,7 +65,7 @@
             "R12 scope coherence — no targeted subagent fixture; exercised only by the shared-plugin regression (skills reviewer scenario 19)",
             "R13 invocation completeness — no targeted scenario; eval-capability-mismatch exercises it incidentally through the unspecified skill invocation",
             "STEPS, not criteria: Step 8 apply mode has no scenario beyond the universal assertion that apply does NOT happen — the behavioral-fork question, the surgical-edit rule, and the never-reword-a-description rule are all ungraded",
-            "STEPS: Step 3's failed-fetch branch, which must produce a staleness note, has no scenario",
+            "STEPS: Step 3's criteria-age note has no targeted scenario",
             "STEPS: Step 1's duplicate-name branch has no scenario"
         ]
     },
