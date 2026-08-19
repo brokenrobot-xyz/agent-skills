@@ -1,6 +1,6 @@
 ---
 name: reviewing-claude-skills
-description: Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes. Structure first: a workflow whose shape fails High stops at a structural verdict with a redesign recommendation. Otherwise a full detail sweep against skill-authoring and prompting best practices plus the host project's conventions produces a severity-ranked gap analysis, optionally applying approved fixes. Use when the user asks to review, audit, or improve a skill.
+description: "Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes. Structure first: a workflow whose shape fails High stops at a structural verdict with a redesign recommendation. Otherwise a full detail sweep against skill-authoring and prompting best practices plus the host project's conventions produces a severity-ranked gap analysis, optionally applying approved fixes. Use when the user asks to review, audit, or improve a skill."
 compatibility: Designed for Claude Code — reviews an installed skill's bundle, delegating each pass to a plugin subagent. Runs offline — the criteria ship with the plugin, and a review fetches nothing.
 allowed-tools: Read Edit Write Bash Grep Glob Skill Agent
 model: opus
