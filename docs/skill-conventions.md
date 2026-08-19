@@ -53,7 +53,7 @@ usually conceptual.
 - **Noun phrase** names a skill that **is** content the caller works from — `prompt-quality-criteria`.
   Suffix a rubric with `-criteria`.
 
-`A1` permits both forms; this section narrows the choice to one form per kind.
+The skills checklist's `A1` permits both forms; this section narrows the choice to one form per kind.
 
 **Subagents** take a different form, because a subagent is a worker rather than a procedure:
 `<object>-<agent-noun>`, where the noun says what the agent **is** and the object says what it works
@@ -70,9 +70,12 @@ Claude. Renaming would break every `R7` reference for a cosmetic gain. Leave it.
 
 ## Invoking another skill
 
-A caller reaches another skill through the Skill tool. Four things must be true of the step that
-does the invoking, and **the step itself is where they belong**. A separate "Dependencies" section
-would restate the step and then drift from it.
+A caller reaches another skill in one of two ways: a step invokes it through the Skill tool, or a
+step spawns a subagent whose `skills:` frontmatter preloads it, so the agent holds the skill's body
+from its first turn. Four things must be true of the step that does the invoking or the spawning,
+and **the step itself is where they belong**. A separate "Dependencies" section would restate the
+step and then drift from it. `reviewing-claude-skills` uses both: its detail-reviewer preloads both
+dependencies, and its inline fallback invokes them through the Skill tool.
 
 Every step that invokes another skill states:
 
@@ -97,8 +100,9 @@ omit the mode, the consumed result, and the absent-dependency behaviour.
 
 ## Keeping the manifest and the procedure in agreement
 
-Every skill named by an invoking step is declared as a dependency in the caller's
-`.claude-plugin/plugin.json`, and every declared dependency is invoked by some step.
+Every skill named by an invoking step or preloaded by a spawned agent is declared as a dependency
+in the caller's `.claude-plugin/plugin.json`, and every declared dependency is invoked by some step
+or preloaded by some agent.
 
 The overlap between the two is deliberate. The manifest says what gets installed; the step says what
 it is for. Because they carry different information about the same edge, a disagreement between them
@@ -107,7 +111,10 @@ declares fails on a clean install. That is the opposite of the `metadata`-restat
 case recorded below, where one side carried no information the other lacked. `R3` covers this
 cross-check.
 
-There are four invocation edges, and each needs all four statements above:
+There are four invocation edges, and each needs all four statements above. The
+`reviewing-claude-skills` edges are preloads into its detail-reviewer on the primary path and Skill
+tool invocations only under the inline fallback; the `reviewing-claude-subagents` edges are Skill
+tool invocations:
 
 | Caller                       | Invoked skill                          | Mode   | Consumed as                                        |
 | :--------------------------- | :------------------------------------- | :----- | :------------------------------------------------- |
@@ -150,6 +157,7 @@ What survived is the part that decides something: the split test above.
 
 - The split test, and the priority of rule 3 over rules 1 and 2.
 - The mapping from kind of skill to grammatical name form.
+- The `<object>-<agent-noun>` form for subagents.
 - The `-criteria` suffix for a rubric.
 - `D15` itself, which rests on one sourced fact — a skill loads into the caller's context rather
   than an isolated one — and on a judgement that criteria groups B–G cannot be scored without

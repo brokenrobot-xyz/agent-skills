@@ -1,7 +1,7 @@
 # Reviewing-claude-skills checklist
 
-The criteria the reviewer scores against. A review fetches nothing: both passes score from this
-file alone and the report states how old it is. Bringing it back in line with the source docs (the
+The criteria the reviewer scores against. A review fetches nothing: both passes score from the
+criteria files shipped with the installed plugins and the report states how old they are. Bringing it back in line with the source docs (the
 URLs below) is maintenance, done by the `criteria-refresher` agent outside any review — see the
 README's § Maintaining the criteria.
 
@@ -217,7 +217,7 @@ else.
 
 ## R. Craft and project conventions
 
-Sources: this checklist itself for `R1`–`R4` and `R7`–`R11`, which are portable craft criteria;
+Sources: this checklist itself for `R1`–`R4` and `R7`–`R14`, which are portable craft criteria;
 the **host project's own convention documents** for `R5` and `R6`, which are project-scoped.
 Before scoring the project-scoped items, read the host project's `CLAUDE.md` and the convention
 documents it links. Where the project defines no convention for a project-scoped item, score the
@@ -247,9 +247,10 @@ narrow any other item in this group; when one does, cite the project's document 
   says so. `N/A` when the project defines no naming convention.
 - **R7 — prose conventions.** Skill _body_ prose (`SKILL.md` body, the prose fields of
   `evals/evals.json` or a legacy `evals.md`, `references/`) follows the twelve conventions the
-  `writing-simplified-technical-english` skill carries. Invoke that skill in check mode to grade all twelve;
-  when it is not installed, judge holistically against `R8`–`R11` below and report that the other
-  seven went ungraded. Two scope limits: the `name`/`description` frontmatter is **not** covered
+  `writing-simplified-technical-english` skill carries. Grade all twelve against that skill's check
+  mode — preloaded into the detail-reviewer, or invoked through the Skill tool under the inline
+  fallback; when it is not installed, judge holistically against `R8`–`R11` below and report that
+  the other seven went ungraded. Two scope limits: the `name`/`description` frontmatter is **not** covered
   (that is `A1`/`A2`/`A3` — never reword a `description` for prose style, it drives discovery), and
   the conventions have **no sentence-length rule** — do not invent one, because the longest sentences
   are the guardrails that bind a condition to an action and splitting one breaks that binding.

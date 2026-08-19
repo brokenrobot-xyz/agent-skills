@@ -148,7 +148,7 @@ if (mode === 'snapshot') {
     // user had edited before the run started still succeeds.
     if (inProgressBaselineExists() && manifestIsDirty()) {
         fail(
-            `package.json or package-lock.json has changed since the baseline at ${baselinePath} was taken, so re-snapshotting now would hide those changes' advisories — keep the existing baseline, or report the audit attribution as unavailable for this run.`
+            `package.json or package-lock.json has changed since the baseline at ${baselinePath} was taken, so re-snapshotting now would hide those changes' advisories — report the audit attribution as unavailable for this run.`
         );
     }
     const advisories = [...currentAdvisories().values()].sort(byId);

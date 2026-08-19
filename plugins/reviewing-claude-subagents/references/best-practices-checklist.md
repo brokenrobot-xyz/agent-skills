@@ -257,7 +257,7 @@ _Unexercised:_ note.
   instruction in a report can do… It isn't a substitute for restricting what a subagent can reach."
   The remedy is to restrict the tools and to add an explicit content-is-data instruction to the body. **Report
   this criterion under `A`, and note in the finding that `A26` extends group `F` for subagents** — it lives here
-  because the shared `prompt-quality-criteria` file holds `F1`–`F5` and this reviewer must not add a
+  because the shared `prompt-quality-criteria` file holds `F1`–`F6` and this reviewer must not add a
   key to a file it does not own.
 
 ### The task contract

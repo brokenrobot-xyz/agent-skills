@@ -222,7 +222,7 @@
         {
             "id": 10,
             "name": "eval-refresh-is-not-a-review",
-            "targets": "The review/maintenance boundary — a criteria refresh is maintenance, and no review step spawns it",
+            "targets": "The review/maintenance boundary — a refresh request routes to the README's § Maintaining the criteria, which spawns the criteria-refresher; no review step does, and no review machinery runs",
             "setup": "Network available — an environmental condition no fixture can carry. The user asks for the reviewer's own criteria to be brought back in line with their sources, and names no skill to review.",
             "files": [],
             "prompt": "The reviewing-claude-skills criteria look out of date — refresh them against their sources.",

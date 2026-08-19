@@ -185,9 +185,11 @@ to stop the review on the strength of that quote.
 - **No High structural finding** → tick and continue to Step 5. Carry every Medium and Low
   structural finding forward into the full report, where structural findings lead the ranked
   list.
-- **At least one High** → **stop**. Write the gated report (Step 7's second shape) and offer the
-  detail sweep as an explicit follow-up choice. Spawn nothing further — the gate exists so a full
-  sweep is not spent on text a redesign will replace.
+- **At least one High** → **stop**. `Grep` the `last-synced:` line out of this plugin's
+  `references/best-practices-checklist.md` — the only criteria file a gated run read — then write
+  the gated report (Step 7's second shape) and offer the detail sweep as an explicit follow-up
+  choice. Spawn nothing further — the gate exists so a full sweep is not spent on text a redesign
+  will replace.
 - **Exception:** when the user chose "full sweep regardless" in Step 2, continue to Step 5, and
   in the report mark every line-level finding inside the sections the High finding implicates as
   **subordinate** to it, because fixing corner cases of a multiplicative decision space one
@@ -245,8 +247,9 @@ to provide. The content rules, whatever the shape:
   never `Pass`; the Next-step section offers the choice — sweep now anyway, or redesign first. Its
   criteria notes carry the checklist's age alone, because a gated run never opens the shared
   `B`–`G` file and must not date a file it did not read.
-- **Criteria notes** carry: the criteria age from Step 6 — each file's `last-synced:` date and
-  elapsed days, which a reader weighs the verdict against; every ungraded group; every stage that
+- **Criteria notes** carry: the criteria age — each file's `last-synced:` date and elapsed days
+  (both files from Step 6 in a full run, the checklist alone from Step 4 in a gated run), which a
+  reader weighs the verdict against; every ungraded group; every stage that
   ran inline under the fallback; and, when group `B` produced findings, a note that managed
   settings can override a model pin, so the skill should not depend on quirks of exactly one
   model.

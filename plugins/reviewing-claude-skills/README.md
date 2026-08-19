@@ -49,7 +49,7 @@ per invocation** — to review several, run once per skill.
                                          freedom, defaults vs menus, over-prescription,
                                          and validated intermediates ahead of
                                          destructive steps.
-                                         Offline and cheap — no docs fetched yet.
+                                         Offline and cheap — nothing is fetched.
         │
         ├── shape holds ──────────────▶  continue to 3
         │

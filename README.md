@@ -52,10 +52,11 @@ add new ones here first:
 
 Plugin bundles live under [`plugins/`](plugins/), one directory per plugin,
 each following the [Agent Skills](https://agentskills.io) layout (`SKILL.md`
-at the root, with `scripts/`, `references/`, `evals/` as needed) plus a
-`.claude-plugin/plugin.json` manifest. A suite plugin (`frontend-toolkit`)
-instead holds one such layout per skill under `skills/<name>/`, plus `agents/`
-for the subagents its skills spawn and an optional `.mcp.json`. The
+at the root, with `scripts/`, `references/`, `evals/` as needed), plus a
+`.claude-plugin/plugin.json` manifest and, where the skill spawns subagents,
+an `agents/` directory. A suite plugin (`frontend-toolkit`) instead holds one
+such layout per skill under `skills/<name>/`, with `agents/` and an optional
+`.mcp.json` at the plugin root. The
 marketplace manifest is
 [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json); each
 entry's `source` is an explicit `./plugins/<name>` path. (Don't switch to

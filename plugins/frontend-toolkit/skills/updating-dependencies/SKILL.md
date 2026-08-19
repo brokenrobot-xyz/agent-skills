@@ -131,7 +131,7 @@ An exit code of 2 means the run cannot attribute advisories at all: `npm audit` 
 git status --porcelain -- package.json package-lock.json
 ```
 
-Empty output means nothing has changed yet: re-run `snapshot`. Any output means a package has already changed: mark the audit attribution as unavailable in the report, rather than diffing against a baseline that is not this run's. A baseline taken after an install would hide that install's advisories, so `snapshot` refuses that exact case — a live baseline plus an already-changed manifest — and exits 2; treat that refusal as the same "attribution unavailable" outcome, never as a reason to retry.
+Empty output means nothing has changed yet: re-run `snapshot` once, and when it exits 2 again, mark the audit attribution as unavailable in the report — `npm audit` itself is failing and a retry will not change that. Any output means a package has already changed: mark the audit attribution as unavailable in the report, rather than diffing against a baseline that is not this run's. A baseline taken after an install would hide that install's advisories, so `snapshot` refuses that exact case — a live baseline plus an already-changed manifest — and exits 2; treat that refusal as the same "attribution unavailable" outcome, never as a reason to retry.
 
 ## Report
 

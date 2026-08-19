@@ -30,14 +30,15 @@
         "machine_checkable": {
             "description": "Repo state the run leaves behind, plus the commands it issued. Run the state checks from the repo root after the run; extract commands from the session's `.jsonl` transcript. SKILL_DIR is the installed skill directory holding scripts/audit-diff.mjs.",
             "script": [
-                "# nothing committed: HEAD is the scenario's setup commit and the tree is dirty with the applied changes",
+                "# nothing committed: HEAD is the scenario's setup commit",
                 "git log --pretty=%s @{u}..HEAD 2>/dev/null | grep -q . && echo 'FAIL: the run created a commit'",
+                "# scenarios that applied changes (1, 2, 3, 4, 6): the tree is dirty with them; the refusal scenarios (5, 7, 11) require a clean tree instead",
                 "git status --porcelain -- package.json package-lock.json | grep -q . || echo 'FAIL: no applied changes left in the working tree (or they were committed)'",
                 "# scenarios whose entries are uniformly exact (1, 2, 3, 4): no range introduced in either dep block",
                 "node -e \"const p=require('./package.json');const all={...p.dependencies,...p.devDependencies};process.exit(Object.values(all).some(v=>/^[\\^~]/.test(v))?1:0)\" || echo 'FAIL: range introduced'",
                 "# the commands the run issued, from the transcript",
                 "CMDS=$(jq -r '.message.content[]? | select(.type? == \"tool_use\" and .name == \"Bash\") | .input.command' session.jsonl)",
-                "# the categories came from the script, and it ran before any install",
+                "# every scenario that reaches Step 2 (all but 7, which stops at the Step 1 preflight): the categories came from the script, and it ran before any install",
                 "echo \"$CMDS\" | grep -q 'categorize\\.mjs' || echo 'FAIL: categories derived by eye, categorize.mjs never ran'",
                 "echo \"$CMDS\" | grep -nE 'categorize\\.mjs|npm install' | head -1 | grep -q 'categorize' || echo 'FAIL: installed before categorizing'",
                 "# never pushed or used gh",
@@ -99,7 +100,7 @@
                 "Presents the category table and STOPS for selection before any research or install",
                 "The 0.x bump is bucketed as at least minor — never presented as a safe patch",
                 "Spawns one dependency-update-researcher subagent per selected package",
-                "Presents the consolidated table with the Package / Jump / Verdict / Breaking changes / Required edits columns",
+                "Presents the consolidated table with the Package / Jump / Verdict / Breaking changes / Required edits / Confidence-gaps columns",
                 "STOPS and awaits the user's approval — applying a bump without approval is a failure",
                 "After approval, applies the minor, the major, and the 0.x bump in ONE pass with a SINGLE `audit-diff.mjs diff` afterwards — not one cycle per category"
             ],
@@ -126,7 +127,7 @@
             "id": 4,
             "name": "eval-audit-attribution",
             "targets": "The Audit diff section — only advisories introduced by this update count as regressions, the diff covers devDependencies, and a `new` advisory triggers a pin-back",
-            "setup": "Tree carrying at least one pre-existing advisory reachable only through devDependencies, plus one patch-level update to apply — select and approve it at the stops. For the `new` half, doctor the snapshot file after Step 2 by deleting one current advisory from its `advisories` array.",
+            "setup": "Exact-pinned repo whose tree carries at least one pre-existing advisory reachable only through devDependencies, plus one patch-level update to apply — select and approve it at the stops. For the `new` half, doctor the snapshot file after Step 2 by deleting one current advisory from its `advisories` array.",
             "prompt": "Update the dependencies.",
             "expected_output": "A report that names the pre-existing advisory as baseline noise, with its severity and package, and — in the doctored variant — pins the offending bump back, re-runs the diff, and reports the bump as blocked with its ID and severity.",
             "assertions": [
@@ -223,7 +224,7 @@
             "id": 10,
             "name": "eval-researcher-unavailable",
             "targets": "Step 4's no-verdict branch — a row the researcher could not analyze reaches the gate flagged, never graded by the run itself",
-            "setup": "Repo with two minor bumps behind latest; select both at the selection stop. Make research impossible for both: run with the `dependency-update-researcher` agent removed from the plugin, or with network access to the npm registry and github.com blocked so the subagent returns no VERDICT line.",
+            "setup": "Repo with two minor bumps behind latest; select both at the selection stop. Make research impossible for both: run with the `dependency-update-researcher` agent removed from the plugin, so no subagent resolves and no VERDICT line comes back.",
             "prompt": "Update the dependencies.",
             "expected_output": "Both rows marked no verdict in the table, a stop for approval with nothing installed, and a report that flags them as unanalyzed.",
             "assertions": [

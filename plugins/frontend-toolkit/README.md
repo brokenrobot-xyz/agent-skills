@@ -59,9 +59,9 @@ over the entry's style.
    baseline before anything changes.
 3. Show the table, and **stop: you select which bumps to pursue**.
 4. Research each selected bump with one subagent per package. A bump the
-   researcher could not analyze — the subagent is missing, or the network
-   is blocked — reaches the next step flagged **no verdict**, never graded
-   by the skill itself.
+   researcher could not analyze — the subagent is missing, or its report
+   carries no verdict line — reaches the next step flagged **no verdict**,
+   never graded by the skill itself.
 5. Present the verdict table and **stop: you approve per bump** — a verdict
    informs your decision, it never bypasses it.
 6. Apply the approved bumps in one pass, then run the audit diff against the

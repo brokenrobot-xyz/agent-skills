@@ -45,13 +45,14 @@ restating them:
    identical entries join step 3's scoring pool like every other entry.
 3. **Score the remaining entries.** Compute a match score for every entry step 2 did not apply,
    and decide the **Action** column per entry by the three rules in **Configuration**: `auto`
-   when the entry passes all three rules (its category is in the auto-sync set, its score is
-   above 0.9, and it is not a plural form), `approval` for every other entry.
-4. **Apply the auto rows.** Apply them without asking — that is what the config chose — one
-   bucket at a time, re-running the comparison after each bucket, so a regression cleanly
+   when the entry passes rule 1 (its category is in the auto-sync set), rule 2 (its score is
+   above 0.9), and rule 3 (it is not a plural form), `approval` for every other entry.
+4. **Apply the auto rows.** Apply them without asking — that is what the config chose, and rule 2
+   already kept every doubtful entry out of this set — one bucket at a time, re-running the comparison after each bucket, so a regression cleanly
    identifies which bucket caused it.
-5. **Approval gate.** Stop and await the user's choice on every `approval` row, because an entry
-   applied without approval is a translation the user never reviewed. After the user decides,
+5. **Approval gate.** Stop and await the user's choice on every `approval` row — every plural
+   entry lands here by rule 3 — because an entry applied without approval is a translation the
+   user never reviewed. After the user decides,
    apply the approved entries one bucket at a time, as in step 4, then re-run it to confirm the
    drift has cleared.
 6. **Report.** Summarize what was applied (auto versus approved) per bucket, what was deferred,
