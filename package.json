@@ -17,10 +17,11 @@
         "format:fix": "prettier '**/*.{js,mjs,cjs,json,md,yml}' --write",
         "marketplace:check": "claude plugin validate --strict .",
         "plugins:check": "for p in plugins/*/; do claude plugin validate --strict \"$p\" || exit 1; done",
-        "test": "node plugins/committing-conventionally/tests/commit-message-cases.mjs && node plugins/frontend-toolkit/skills/updating-dependencies/tests/categorize-cases.mjs"
+        "test": "node plugins/committing-conventionally/tests/commit-message-cases.mjs && node plugins/frontend-toolkit/skills/updating-dependencies/tests/categorize-cases.mjs && node scripts/tests/frontmatter-cases.mjs && node scripts/check-frontmatter.mjs"
     },
     "devDependencies": {
         "@anthropic-ai/claude-code": "2.1.220",
-        "prettier": "3.9.6"
+        "prettier": "3.9.6",
+        "yaml": "^2.9.0"
     }
 }
