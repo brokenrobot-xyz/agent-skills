@@ -53,9 +53,9 @@ at the root, with `scripts/`, `references/`, `evals/` as needed) plus a
 `.claude-plugin/plugin.json` manifest. The marketplace manifest is
 [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json); each
 entry's `source` is an explicit `./plugins/<name>` path. (Don't switch to
-`metadata.pluginRoot`: as of Claude Code 2.1.220 the field passes validation
-but is ignored at install time, so relative sources must be repo-root
-relative.)
+`metadata.pluginRoot`: as of Claude Code 2.1.235 the field is still in the
+schema and passes `--strict`, but nothing reads it when a source is
+resolved, so relative sources must stay repo-root relative.)
 
 Bundles are self-contained: no paths escape the bundle, scripts and tests are
 zero-dependency Node (`.mjs`), and host-project customization lives in the
