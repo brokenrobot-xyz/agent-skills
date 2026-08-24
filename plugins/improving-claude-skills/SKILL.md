@@ -1,23 +1,26 @@
 ---
 name: improving-claude-skills
-description: 'Autonomously improves a Claude Code skill in a review→fix→re-review loop: each round invokes the reviewing-claude-skills review non-interactively, applies every actionable finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the findings converge, plateau, or hit the round cap. Asks one question only: confirming the intent brief at kickoff. Use when the user asks to improve a skill autonomously, in a loop, or until it converges or passes review.'
+description: "Autonomously improves a Claude Code skill in a review→fix→re-review loop: each round invokes the reviewing-claude-skills review non-interactively, applies every blocking finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the review's verdict is acceptable, the blocking findings plateau, or the round cap is hit. Advisory findings are reported, never chased. Asks one question only: confirming the intent brief at kickoff. Use when the user asks to improve a skill autonomously, in a loop, or until it passes review."
 compatibility: Designed for Claude Code — requires the reviewing-claude-skills plugin, whose review each round invokes, and works best on a git-tracked target so every round is a commit. Runs offline.
 allowed-tools: Read Edit Write Bash Grep Glob Skill Agent
 model: opus
 ---
 
-# Improve a skill until its review converges
+# Improve a skill until its review says acceptable
 
 Run one named skill through repeated review-fix rounds without stopping for per-fix approval.
-Each round: the **reviewing-claude-skills** review runs with a pre-supplied scope, its findings
-land in a **ledger**, an **exit gate** decides whether to stop, and if not, the
-[fix-applier](agents/fix-applier.md) agent applies the round's findings — as surgical edits, or
-as a restructure when the round gated on a High structural finding — and the round is committed.
-The loop's interaction budget is exactly one question: confirming the **intent brief** at
-kickoff. After that it runs to a verdict: **converged**, **plateaued**, or **round cap
-reached** — the last two are terminal findings in their own right, because the host conventions
-treat non-converging review-fix rounds as evidence about the skill (`R14`), not as a reason for
-more rounds.
+Each round: the **reviewing-claude-skills** review runs with a pre-supplied scope, its
+**blocking** findings (High and Medium — the reviewer's verdict counts nothing else) land in a
+**ledger**, an **exit gate** decides whether to stop, and if not, the
+[fix-applier](agents/fix-applier.md) agent applies the round's blocking findings — as surgical
+edits, or as a restructure when the round gated on a High structural finding — and the round is
+committed. Advisory findings are carried to the final report untouched: chasing them is the
+churn that stops loops converging. The loop's interaction budget is exactly one question:
+confirming the **intent brief** at kickoff. After that it runs to a verdict: **acceptable**,
+**not acceptable — plateaued**, **not acceptable — contested**, **not acceptable — re-gated**,
+or **round cap reached** — the non-acceptable ones are terminal findings in their own right,
+because the host conventions treat non-converging review-fix rounds as evidence about the skill
+(`R14`), not as a reason for more rounds.
 
 **Fallbacks.** When `reviewing-claude-skills` is unavailable, **abort before any edit** and say
 the loop cannot run without its reviewer — a review improvised from memory is the failure mode
@@ -100,9 +103,10 @@ four scoping answers so its run skips the brief and the interview: **analysis on
 owns apply); **all groups weighted equally**, with the intent brief passed as focus notes so the
 structure pass scores the shape against the stated job; **open to restructuring**; **stop at
 the structural gate** (reviewer unavailable → abort, per Fallbacks). Consume the report the
-review produces: a full gap analysis, or a gated structural verdict whose redesign
-recommendation and What's-already-right list Step 6 hands to the fix-applier. A gated round is
-not a failure of the loop — it is the round's finding.
+review produces, its **Verdict line first** — that line is the round's primary signal: a full
+gap analysis, or a gated structural verdict whose redesign recommendation and
+What's-already-right list Step 6 hands to the fix-applier. A gated round is not a failure of
+the loop — it is the round's finding.
 
 ### 4. Fold the findings into the ledger
 
@@ -113,23 +117,24 @@ inline after each round. The file, not the recalled conversation, is what Step 5
 set operations are exact, and a ledger remembered across four rounds of subagent reports
 silently flips a verdict. Dedupe on
 `criterion key + file + section`: line numbers shift under earlier rounds' edits, and finding
-prose varies between runs, but key-plus-section survives both. Update statuses: `new`,
-`persisting`, `resolved`, `contested`, `deferred-low`. A key that was `resolved` in an earlier
-round and reappears is **contested**: excluded from every later apply, carried to the final
-report for the human — re-fixing it is the oscillation, not the cure.
+prose varies between runs, but key-plus-section survives both. The ledger tracks **blocking
+findings only**; the report's Advisory section is carried, untouched, from the final round into
+the final report. Update statuses: `new`, `persisting`, `resolved`, `contested`. A key that was
+`resolved` in an earlier round and reappears is **contested**: excluded from every later apply,
+carried to the final report for the human — re-fixing it is the oscillation, not the cure.
 
 ### 5. Exit gate — stop, or continue to apply
 
 Check in this order, reading the ledger file rather than recalling it; the first match ends the
 loop at Step 8:
 
-1. **Converged** — the round reports zero High and zero Medium findings. Remaining Lows are
-   reported, not chased: the review's own severity scale calls Low polish that may be
-   deliberate, and chasing non-deterministic Lows is churn, not improvement.
-2. **Plateaued** — two consecutive rounds whose High+Medium ledger-key sets are identical.
+1. **Acceptable** — the round's report says `Verdict: acceptable` (zero unwaived blocking
+   findings — the target's recorded waivers make this reachable). Advisory findings are
+   reported, not chased: chasing non-deterministic polish is churn, not improvement.
+2. **Plateaued** — two consecutive rounds whose blocking ledger-key sets are identical.
    More editing is the wrong move; stop and say so (`A17`'s plateau rule).
-3. **Contested-only** — nothing above Low remains except contested keys. The loop cannot settle
-   an oscillation; the human arbitrates.
+3. **Contested-only** — no blocking finding remains except contested keys. The loop cannot
+   settle an oscillation; the human arbitrates.
 4. **Re-gated after a restructure** — a round gates on structure after a restructure round
    already ran. One redesign attempt is the budget; a second gated verdict is `R14`'s
    non-convergence evidence, and burning the remaining rounds re-restructuring would spend
@@ -142,10 +147,12 @@ No match → Step 6.
 ### 6. Apply round — spawn the fix-applier
 
 Spawn the [fix-applier](agents/fix-applier.md) with: the bundle path, the confirmed intent
-brief, the round's findings **verbatim** — every High and Medium; Lows only in round 1 and only
-those the report does not flag as likely deliberate (later rounds fix High+Medium only, which
-starves oscillation) — the contested do-not-touch list, and the host conventions document path
-when the host `CLAUDE.md` links one. When the round was **gated**, also hand it the structural
+brief, the round's **blocking findings verbatim — and only those**: advisory findings are never
+applied by this loop, in any round, because fixing polish mints the next round's findings — the
+contested do-not-touch list, and the host conventions document path
+when the host `CLAUDE.md` links one. **The loop never writes the target's `review-waivers.md`**:
+an autonomous run waiving its own findings is self-certification, so waiving stays with the
+human, in the reviewer's interactive apply mode. When the round was **gated**, also hand it the structural
 verdict, the redesign recommendation, and the What's-already-right list — that combination
 authorizes the restructure its definition describes. Consume its CHANGE LOG, RESTRUCTURE MAP, and EVALS
 TOUCHED payloads; carry every `declined` and its reason into the ledger's notes.
@@ -162,9 +169,11 @@ The verify-fix-reverify discipline (`A21`), kept cheap:
 - Confirm EVALS TOUCHED matches the change log: a behavior-changing fix with no eval touched
   gets the eval added now, in this conversation.
 - Commit the round by invoking **`committing-conventionally:committing-conventionally`** through
-  the Skill tool — it stages the bundle's changes and authors the round's Conventional-Commits
-  commit; record the hash for the final report (skill unavailable → a plain commit, per
-  Fallbacks). Skip for a non-git target.
+  the Skill tool, **pre-stating the branch decision** — "commit on the current branch" — so its
+  branch guard has its answer and asks nothing, preserving the one-question budget. It stages
+  the bundle's changes and authors the round's Conventional-Commits commit; record the hash for
+  the final report (skill unavailable → a plain commit, per Fallbacks). Skip for a non-git
+  target.
 
 Then return to Step 3 for the next review round.
 
@@ -172,9 +181,10 @@ Then return to Step 3 for the next review round.
 
 Write the report inline in the layout
 [references/loop-report-template.md](references/loop-report-template.md) defines: the verdict
-(**converged**, **plateaued**, or **round cap reached** — the latter two citing `R14` and
-`A17`, and naming the decision now owed by the human); the intent-preservation check — restate
-the confirmed brief and confirm each guarantee still holds, citing the target eval that covers
-it, flagging any drift; the per-round table; the final ledger; every contested finding, framed
-for arbitration; the round commits (or the backup path); and every fallback substitution,
-stray-edit incident, and declined fix the run recorded.
+(**acceptable**, **not acceptable — plateaued / contested / re-gated**, or **round cap
+reached** — the non-acceptable ones citing `R14` and `A17`, and naming the decision now owed by
+the human); the intent-preservation check — restate the confirmed brief and confirm each
+guarantee still holds, citing the target eval that covers it, flagging any drift; the per-round
+table; the final ledger; the last round's advisory findings, carried over untouched; every
+contested finding, framed for arbitration; the round commits (or the backup path); and every
+fallback substitution, stray-edit incident, and declined fix the run recorded.

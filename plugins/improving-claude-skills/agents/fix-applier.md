@@ -25,6 +25,13 @@ Ground rules, both briefs:
   weigh, not an order.
 - **When a fix changes the target's behavior, add or refresh a scenario in the target's
   `evals/evals.json`** so the new guarantee is tested, not just asserted.
+- **After every edit, re-check its cross-references.** Grep the bundle for text that refers to
+  the passage you changed — section names, rule numbers, file names it carries — re-read each
+  referencing file, and update it in the same round, or decline the fix naming the reference
+  you cannot reconcile. An edit that desyncs its references manufactures the next round's
+  findings.
+- **Never write `review-waivers.md`.** Waiving a finding is the skill owner's recorded
+  decision; an applier waiving what it was sent to fix is self-certification.
 - **Never commit.** The parent commits the round; your job ends at the working tree.
 
 **Surgical brief** (the default, when no structural verdict is handed to you): address findings

@@ -1,6 +1,6 @@
 {
     "name": "improving-claude-skills",
-    "description": "Autonomously improves a Claude Code skill in a review→fix→re-review loop: each round invokes the reviewing-claude-skills review non-interactively, applies every actionable finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the findings converge, plateau, or hit the round cap. Asks one question only: confirming the intent brief at kickoff.",
+    "description": "Autonomously improves a Claude Code skill in a review→fix→re-review loop: each round invokes the reviewing-claude-skills review non-interactively, applies every blocking finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the review's verdict is acceptable, the blocking findings plateau, or the round cap is hit. Advisory findings are reported, never chased. Asks one question only: confirming the intent brief at kickoff.",
     "version": "1.0.0",
     "author": {
         "name": "Tamas Mezei",

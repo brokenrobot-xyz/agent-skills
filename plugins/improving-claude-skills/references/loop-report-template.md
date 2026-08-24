@@ -20,23 +20,24 @@ and its rationale).
 ```markdown
 ### Ledger — after round <r>
 
-| Ledger key                      | Severity | First seen | Status       | Note                      |
-| ------------------------------- | -------- | ---------- | ------------ | ------------------------- |
-| R3 · SKILL.md · step 4          | Medium   | 1          | resolved     |                           |
-| A2 · SKILL.md · frontmatter     | Medium   | 1          | persisting   |                           |
-| R10 · references/rules.md · § 2 | Low      | 1          | deferred-low | flagged likely deliberate |
-| C10 · SKILL.md · step 2         | Medium   | 2          | new          |                           |
-| E1 · SKILL.md · step 5          | Medium   | 1          | contested    | oscillated rounds 1→3     |
+| Ledger key                  | Severity | First seen | Status     | Note                  |
+| --------------------------- | -------- | ---------- | ---------- | --------------------- |
+| R3 · SKILL.md · step 4      | Medium   | 1          | resolved   |                       |
+| A2 · SKILL.md · frontmatter | Medium   | 1          | persisting |                       |
+| C10 · SKILL.md · step 2     | Medium   | 2          | new        |                       |
+| E1 · SKILL.md · step 5      | Medium   | 1          | contested  | oscillated rounds 1→3 |
 ```
 
-Statuses: `new` (first appeared this round), `persisting` (reported again, unfixed or fix
-ineffective), `resolved` (no longer reported), `contested` (resolved then reappeared — excluded
-from further apply), `deferred-low` (Low left alone by policy).
+The ledger holds blocking findings (High/Medium) only — advisory findings are never tracked or
+applied; the final round's Advisory section is carried into the final report as-is. Statuses:
+`new` (first appeared this round), `persisting` (reported again, unfixed or fix ineffective),
+`resolved` (no longer reported), `contested` (resolved then reappeared — excluded from further
+apply).
 
 ## Final report
 
 ```markdown
-## Improvement loop: <skill> — <converged | plateaued | round cap reached>
+## Improvement loop: <skill> — <acceptable | not acceptable — plateaued | not acceptable — contested | not acceptable — re-gated | round cap reached>
 
 <one-paragraph verdict, written as SKILL.md Step 8 directs — a plateaued or capped run names
 the decision now owed by the human>
@@ -57,6 +58,11 @@ the decision now owed by the human>
 ### Ledger
 
 <the final ledger table, as above>
+
+### Advisory (carried over)
+
+<the last round's Advisory section, verbatim — the loop applied none of these; take or leave
+them by hand>
 
 ### Contested findings
 

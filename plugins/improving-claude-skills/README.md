@@ -2,8 +2,10 @@
 
 Autonomously improves one Claude Code skill by looping the
 [reviewing-claude-skills](../reviewing-claude-skills/README.md) review:
-review → apply every actionable finding → commit → re-review, until the
-findings converge, plateau, or hit the round cap.
+review → apply every **blocking** finding → commit → re-review, until the
+review's verdict is **acceptable**, the blocking findings plateau, or the
+round cap is hit. Advisory findings are reported at the end, never chased —
+chasing polish is the churn that stops loops converging.
 
 **Read this before running it: the loop applies High and structural fixes —
 including whole-workflow restructures — without asking.** Its entire
@@ -72,20 +74,21 @@ converges. One skill per invocation.
 
 The loop stops at the first that holds, in this order:
 
-1. **Converged** — zero High and zero Medium findings. Lows are reported,
-   not chased.
-2. **Plateaued** — two consecutive rounds with identical High+Medium
-   ledger keys. More editing is the wrong move (`A17`).
-3. **Contested-only** — only oscillating findings remain above Low; the
+1. **Acceptable** — the review's verdict: zero unwaived blocking findings.
+   The skill's `review-waivers.md` (your recorded deliberate choices) makes
+   this reachable; the loop itself never writes that file.
+2. **Plateaued** — two consecutive rounds with identical blocking ledger
+   keys. More editing is the wrong move (`A17`).
+3. **Contested-only** — only oscillating blocking findings remain; the
    human arbitrates.
 4. **Re-gated** — a structural gate fires again after the one budgeted
    restructure attempt (`R14`).
 5. **Round cap** — default 4 review rounds (≤3 apply rounds), settable at
    kickoff. A rail, not a target.
 
-A plateaued or capped run is a finding, not a failure: the host conventions
-treat non-converging review-fix rounds as evidence about the skill (`R14`),
-and the report says what decision that leaves with you.
+A not-acceptable or capped run is a finding, not a failure: the host
+conventions treat non-converging review-fix rounds as evidence about the
+skill (`R14`), and the report says what decision that leaves with you.
 
 ## Safety rails
 

@@ -1,0 +1,16 @@
+{
+    "skill_name": "summarizing-minutes",
+    "evals": [
+        {
+            "id": 1,
+            "name": "eval-brief-structure",
+            "prompt": "Summarize today's minutes.",
+            "expected_output": "A brief in the style guide's section order, each item one sentence, shown for confirmation before any file is written.",
+            "assertions": [
+                "Follows the style guide's section order",
+                "Lists each item under exactly one section",
+                "Waits for confirmation before writing a file"
+            ]
+        }
+    ]
+}
