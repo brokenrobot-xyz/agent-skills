@@ -80,6 +80,12 @@ report without naming anything a user would ever hit. A per-criterion severity n
 (`A16`'s Low, `R14`'s High) sets that criterion's tier; the scenario requirement still applies to
 any High or Medium.
 
+**Coverage findings block.** For group `H`, a stated guarantee with no eval exercising it is a
+Medium, and its `manifests:` scenario is admissible in the future tense — "a later edit breaks
+the guarantee and every eval still passes" names a concrete escape, which is the failure evals
+exist to catch. The demotion rule still governs coverage candidates that name no specific
+guarantee: "the evals could be broader" with no guarantee attached is a Low.
+
 **The verdict is computed, not judged:** **acceptable** when zero unwaived High or Medium
 findings remain, otherwise **not yet**. A run stopped at the structural gate is
 **not yet — gated**. The verdict line is the report's first line after the title, so a reader —
