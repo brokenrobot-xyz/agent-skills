@@ -1,6 +1,6 @@
 ---
 name: reviewing-claude-skills
-description: "Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes. Structure first: a workflow whose shape fails High stops at a structural verdict with a redesign recommendation. Otherwise a full detail sweep against skill-authoring and prompting best practices plus the host project's conventions produces a severity-ranked gap analysis, optionally applying approved fixes. Use when the user asks to review, audit, or improve a skill."
+description: "Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes. Structure first: a workflow whose shape fails High stops at a structural verdict with a redesign recommendation. Otherwise a full detail sweep against skill-authoring and prompting best practices plus the host project's conventions produces a severity-ranked gap analysis ending in a computed verdict — acceptable, or not yet — honoring the skill's recorded waivers, optionally applying approved fixes. Use when the user asks to review, audit, or improve a skill."
 compatibility: Designed for Claude Code — reviews an installed skill's bundle, delegating each pass to a plugin subagent. Runs offline — the criteria ship with the plugin, and a review fetches nothing.
 allowed-tools: Read Edit Write Bash Grep Glob Skill Agent
 model: opus
@@ -136,21 +136,16 @@ structural verdict with a redesign recommendation — detail findings against a
 structure that's about to change are wasted work. (You can tell me to run the full
 sweep regardless.)
 
-**Pass 2 — Detail** (the full sweep, criteria groups):
-- A. Skill authoring — Agent Skills spec conformance, name, description, structure
-- B. Model-specific prompting — matched to the skill's pinned model
-- C. General prompting — clarity, examples, task chaining
-- D. Hallucination guardrails — grounding, verification, "I don't know"
-- E. Output consistency — formats and templates
-- F. Injection & jailbreak defenses — content-as-data, least privilege
-- G. Prompt-leak defenses — proportionate to any secrets it holds
-- H. Success criteria & evals — coverage, edge cases, measurability
-- R. Craft & project conventions — simplicity, single source of truth, prose
-  conventions, plus this project's own skill rules
+**Pass 2 — Detail** (the full sweep): criteria groups A–H and R — skill authoring,
+prompting, hallucination/consistency/injection/leak defenses, evals, and the host
+project's conventions.
 
-**What you'll get:** either a short structural verdict with a redesign recommendation,
-or a severity-ranked (High → Medium → Low) gap analysis with a per-group coverage
-table — then, if you want, I apply the fixes you approve, one at a time.
+**What you'll get:** a computed verdict — **acceptable** (zero unwaived blocking
+findings) or **not yet** — then either the structural verdict with a redesign
+recommendation, or a gap analysis: blocking findings (High/Medium, each with the
+concrete scenario where it bites), advisory notes that never gate the verdict, and
+a per-group coverage table. Your recorded waivers are honored. Then, if you want,
+I fix or waive findings with you, one at a time.
 
 **Effort:** the structural pass is a couple of turns; the full sweep is a handful more.
 The whole review runs offline against the criteria shipped with this plugin, and the
@@ -225,6 +220,11 @@ the report names the plugin that was missing. It also settles the deterministic 
   Structure findings first, then Detail, High → Medium → Low within each. The agents already ran
   the coverage-then-filter discipline; do not re-filter for brevity — the report's length is
   whatever survived, not a target. Keep low-confidence findings with the confidence noted.
+- **Compute the verdict** per the checklist's § Severity, verdict, and waivers: **acceptable**
+  when the merged findings hold zero unwaived High or Medium, otherwise **not yet**. Merge both
+  agents' WAIVED payloads into one waived count plus a stale-entry list for the report. A High
+  or Medium an agent returned without a `manifests:` scenario is re-ranked Low before the
+  verdict is computed — the demotion rule binds here too.
 - **Record how old the criteria are.** `Grep` the `last-synced:` line out of this plugin's
   `references/best-practices-checklist.md` and out of the installed `prompt-quality-criteria`
   plugin's `references/prompt-criteria.md` (say so when that plugin is absent), and carry both
@@ -240,8 +240,13 @@ section order, the summary table, the per-finding block — from
 either shape, because a report improvised from memory loses the consistency the template exists
 to provide. The content rules, whatever the shape:
 
+- **The verdict line opens the report**, directly under the title, in the template's literal
+  form — the outcome reads before the evidence.
+- **Blocking and advisory separate.** High and Medium findings fill the Summary table and the
+  Findings blocks; Low findings go to the Advisory section as one line each, listed once, never
+  gating the verdict.
 - **Ranking follows the template's order** — Structure findings first, then Detail, High →
-  Medium → Low within each; the summary table and the detail blocks share the same rank numbers.
+  Medium within each; the summary table and the detail blocks share the same rank numbers.
   A finding's ID is a plain rank number (Finding 1, Finding 2, …) — never a letter prefix, which
   the grading script would read as a criterion key.
 - **What's already right** merges both agents' STRENGTHS, so followed practices are not "fixed"
@@ -259,7 +264,8 @@ to provide. The content rules, whatever the shape:
   `B`–`G` file and must not date a file it did not read.
 - **Criteria notes** carry: the criteria age — each file's `last-synced:` date and elapsed days
   (both files from Step 6 in a full run, the checklist alone from Step 4 in a gated run), which a
-  reader weighs the verdict against; every ungraded group; every stage that
+  reader weighs the verdict against; the waived count with its keys and any stale waiver entries
+  (omit when zero); every ungraded group; every stage that
   ran inline under the fallback; the supplied scope, when Step 2's answers came from the invoking
   context rather than an interview; and, when group `B` produced findings, a note that managed
   settings can override a model pin, so the skill should not depend on quirks of exactly one
@@ -271,8 +277,14 @@ Only if the user chose analysis + apply. A **High** structural finding is exclud
 redesign conversation with the user, not a sequence of surgical edits, so offer to dissect the
 workflow together instead; Medium and Low structural findings and every detail finding are
 eligible. This is where this conversation finally opens the target's files:
-read each file you are about to edit. Address findings **one at a time**, highest severity first:
+read each file you are about to edit. Address findings **one at a time**, highest severity
+first, offering three answers per finding — **fix**, **waive**, or **skip**:
 
+- **Waive** (the user's call — never propose it as the default): append an entry to the
+  target's `review-waivers.md` (create the file if absent) keyed
+  `criterion key + file + section`, with the user's justification and today's date, in the
+  format the checklist's § Severity, verdict, and waivers shows. A waived finding stops
+  appearing in every later review, which is what makes an accepted skill stay accepted.
 - Where a finding has a genuine behavioral fork, **ask** before editing (do not pick silently).
 - Keep edits **surgical** (`R2`): change only what the finding requires; match the skill's style.
 - **When a fix changes behavior, also add or refresh a scenario in the target skill's

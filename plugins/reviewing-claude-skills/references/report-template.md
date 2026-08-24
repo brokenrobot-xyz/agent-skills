@@ -8,26 +8,30 @@
 The layout of both report shapes. Text in `<angle brackets>` is a placeholder; everything else
 is literal structure. The content rules — ranking, subordination, coverage semantics — live in
 `SKILL.md` Step 7; this file owns only the layout. Ordering, both shapes: **Structure findings
-first, then Detail; High → Medium → Low within each.** The `#` column is the finding's rank
-number, and the detail blocks below reuse the same numbers.
+first, then Detail; High → Medium within each — Lows are advisory and appear only in the
+Advisory section.** The `#` column is the finding's rank number, and the detail blocks below
+reuse the same numbers.
 
 ## Full report
 
 ```markdown
 ## Review: <skill> — <one-line verdict phrase>
 
+**Verdict: acceptable** ← or → **Verdict: not yet — <N> blocking**
+
 <one-paragraph overall assessment>
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding              | Notes             |
-| --- | -------- | --------- | ------ | -------------------- | ----------------- |
-| 1   | High     | Structure | R14    | <one-line statement> |                   |
-| 2   | Low      | Structure | A17    | <one-line statement> | likely deliberate |
-| 3   | Medium   | Detail    | R3     | <one-line statement> |                   |
+| #   | Severity | Pass      | Key(s) | Finding              | Notes |
+| --- | -------- | --------- | ------ | -------------------- | ----- |
+| 1   | High     | Structure | R14    | <one-line statement> |       |
+| 2   | Medium   | Structure | A17    | <one-line statement> |       |
+| 3   | Medium   | Detail    | R3     | <one-line statement> |       |
 
-Note the order: the Structure Low outranks the Detail Medium, because the grouping comes first
-and severity sorts only within a group.
+Note the order: the Structure Medium outranks the Detail Medium, because the grouping comes
+first and severity sorts only within a group. Lows never appear in this table — they are
+advisory.
 
 ### What's already right
 
@@ -38,12 +42,20 @@ and severity sorts only within a group.
 
 #### Finding <N> — `<KEY>`: <short title>
 
-- **Severity:** <High|Medium|Low> · **Pass:** <Structure|Detail> · **Confidence:** <high|low>
+- **Severity:** <High|Medium> · **Pass:** <Structure|Detail> · **Confidence:** <high|low>
 - **Where:** `<file>:<line or section>`
 - **Evidence:** "<verbatim quote>"
 - **Defect:** <one sentence>
+- **Manifests:** <the concrete scenario where the defect bites>
 - **Fix:** <concrete recommendation>
-- **Notes:** <likely deliberate / subordinate to Finding N / contested — omit this line when empty>
+- **Notes:** <subordinate to Finding N / contested — omit this line when empty>
+
+### Advisory
+
+Listed once; advisory findings never gate the verdict.
+
+- `<KEY>` · <file>:<section> — <one line>
+- …
 
 ### Coverage
 
@@ -56,6 +68,7 @@ and severity sorts only within a group.
 ### Criteria notes
 
 - Criteria last synced: <checklist date> (<N> days ago); shared B–G: <date> (<N> days ago)
+- Waived: <N> (<keys>) — <M> stale <omit when zero>
 - <ungraded groups, stages run inline, model-pin caveat — omit items with nothing to report>
 ```
 
@@ -76,6 +89,8 @@ Worked example of one finding block, from a target whose `evals/evals.json` says
 
 ```markdown
 ## Review: <skill> — stopped at the structural gate
+
+**Verdict: not yet — gated**
 
 <one-paragraph structural verdict>
 

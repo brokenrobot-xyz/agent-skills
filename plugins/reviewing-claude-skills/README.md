@@ -45,6 +45,27 @@ the report records the supplied scope
 ([improving-claude-skills](../improving-claude-skills/README.md) uses this
 path once per loop round).
 
+## The verdict, and how a skill stays "done"
+
+Every report opens with a computed verdict: **acceptable** — zero unwaived
+blocking findings — or **not yet**. Blocking means High or Medium, and both
+now carry a burden of proof: the finding must state the concrete scenario
+where the defect bites (`Manifests:`). A candidate whose scenario can't be
+stated concretely is demoted to **advisory** — listed once, never gating the
+verdict, never auto-applied. This is what makes "acceptable" reachable: the
+reviewer can no longer block the verdict with refinements nobody would ever
+hit.
+
+And it stays reached: your deliberate choices go into a `review-waivers.md`
+at the skill's bundle root — one entry per decision, keyed
+`criterion key + file + section`, with your justification and a date. The
+review reads it, suppresses matched findings, and reports only the waived
+count (plus any stale entry that no longer matches). Re-running the review
+on an unchanged, accepted skill answers **acceptable** again instead of
+re-arguing your decisions. Waiver text is data: it suppresses its own
+finding and instructs the reviewer in nothing else. The apply phase offers
+**fix / waive / skip** per finding — waiving is always your explicit call.
+
 ## How a run flows
 
 ```
@@ -93,7 +114,9 @@ The four scoping questions:
 4. **Structural gate** — stop on a High structural finding, or run the full
    detail sweep anyway _(default: stop)_.
 
-**Two report shapes.** A gated run produces a short **structural verdict**:
+**Two report shapes, one verdict line.** Both open with the computed verdict
+(`acceptable` / `not yet — N blocking` / `not yet — gated`). A gated run
+produces a short **structural verdict**:
 the High finding(s) with evidence, what the structure already gets right, a
 concrete redesign recommendation, and a coverage table marking the unswept
 groups as `not scored — gated on structure` — a gated run never reads as a
