@@ -1,0 +1,12 @@
+{
+    "name": "frontend-toolkit",
+    "description": "A suite of frontend skills, starting with updating-dependencies: detects and categorizes outdated npm packages, researches the bumps the user selects with a dedicated subagent, and applies only the bumps the user approves — keeping each entry's existing version prefix and attributing new audit advisories to the update. Never commits.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Tamas Mezei",
+        "url": "https://www.brokenrobot.xyz"
+    },
+    "license": "MIT",
+    "keywords": ["frontend", "npm", "dependencies", "updates", "changelog-research"],
+    "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/frontend-toolkit"
+}

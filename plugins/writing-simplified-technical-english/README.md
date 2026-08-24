@@ -21,8 +21,9 @@ those are canonical.
 ```
 
 It is also installed automatically as a dependency of
-[reviewing-claude-skills](../reviewing-claude-skills/README.md), which
-invokes it in check mode to grade a skill's prose.
+[reviewing-claude-skills](../reviewing-claude-skills/README.md) and
+[reviewing-claude-subagents](../reviewing-claude-subagents/README.md), which
+invoke it in check mode to grade the prose of a skill or a subagent definition.
 
 ## Usage
 

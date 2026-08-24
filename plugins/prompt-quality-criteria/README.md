@@ -18,8 +18,9 @@ files are canonical.
 ```
 
 Claude Code also installs this plugin alongside
-[reviewing-claude-skills](../reviewing-claude-skills/README.md), which declares this plugin as a
-dependency. You may also install this plugin on its own, because the criteria are useful without a
+[reviewing-claude-skills](../reviewing-claude-skills/README.md) and
+[reviewing-claude-subagents](../reviewing-claude-subagents/README.md), which declare this plugin as
+a dependency. You may also install this plugin on its own, because the criteria are useful without a
 caller.
 
 ## Usage
@@ -36,7 +37,7 @@ Two kinds of caller reach the skill, and the skill behaves differently for each:
 
 Every finding cites the criterion key as `references/prompt-criteria.md` writes it — `B4`, `D1`,
 `F5`. The keys are stable for every caller, so two callers' reports stay comparable. The file holds
-thirty-two criteria in six groups:
+thirty-eight criteria in six groups:
 
 - **B** — model-specific prompting, matched to the prompt's pinned model (Sonnet 5, Opus 5, Opus
   4.8, and Fable 5 with Mythos 5). Apply only the subset that matches the model.
@@ -68,11 +69,11 @@ those twelve conventions never needs to ask which kind of prompt it is reading.
 
 - **The criterion keys are a contract.** Renaming a key breaks every caller's report and every eval
   that greps for that key. Add a criterion rather than renumbering the existing keys.
-- **Four criteria overlap a criterion that the caller keeps.** `C2`, `E2`, `F2`, and `F5` each name
+- **Five criteria overlap a criterion that the caller keeps.** `C2`, `C11`, `E2`, `F2`, and `F5` each name
   the caller's criterion by description rather than by key, because the key differs for each caller.
 - **The skill fetches no URL.** `references/prompt-criteria.md` carries a `last-synced` date and the
-  source URL behind each group. A caller that refreshes the criteria fetches those URLs and records
-  the staleness in the caller's own report, because this skill writes no report to record the
-  staleness in.
+  source URL behind each group. A caller reads that date and records the criteria's age in the
+  caller's own report; it does not refresh the criteria mid-review. Refreshing them — fetching those
+  URLs and reconciling the file — is maintenance a maintainer does.
 - **The skill pins no model.** The skill judges nothing, so the skill runs on whatever model the
   caller runs on.

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 When creating, naming, splitting, or wiring a skill in this repository, follow
 `docs/skill-conventions.md`. It is also the convention document the reviewers' project-scoped
-criteria (`R5`, `R6`) read.
+naming criterion (`R6`) reads.
 
 ## Behavioral guidelines
 
