@@ -1,0 +1,13 @@
+{
+    "name": "improving-claude-skills",
+    "description": "Autonomously improves a Claude Code skill in a review→fix→re-review loop: each round invokes the reviewing-claude-skills review non-interactively, applies every actionable finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the findings converge, plateau, or hit the round cap. Asks one question only: confirming the intent brief at kickoff.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Tamas Mezei",
+        "url": "https://www.brokenrobot.xyz"
+    },
+    "license": "MIT",
+    "keywords": ["skills", "improvement", "autonomous", "loop", "convergence", "skill-authoring"],
+    "dependencies": ["reviewing-claude-skills", "committing-conventionally"],
+    "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/improving-claude-skills"
+}

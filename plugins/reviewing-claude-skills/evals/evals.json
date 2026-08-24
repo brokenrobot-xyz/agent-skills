@@ -27,7 +27,7 @@
         "The report follows references/report-template.md: a Summary table of findings (Structure rows first, then Detail, severity-ranked within each) precedes the per-finding detail blocks, and the rank numbers match between the two",
         "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 2"
     ],
-    "coverage_map": "1–4 are the must-haves (one per core Pass-2 behavior); 5–6 cover the apply phase and the false-positive guard; 7 covers C7 reasoning-echo scoring, 8 the model-pin scoping of group B, 9 coverage before filtering, and 10 the review/maintenance boundary, that a criteria refresh is not a review; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform fallback ladder — substitution when the definition files are readable, inline when they are not; 24 covers the offline guarantee, that a review reports the criteria age from disk rather than fetching to check it.",
+    "coverage_map": "1–4 are the must-haves (one per core Pass-2 behavior); 5–6 cover the apply phase and the false-positive guard; 7 covers C7 reasoning-echo scoring, 8 the model-pin scoping of group B, 9 coverage before filtering, and 10 the review/maintenance boundary, that a criteria refresh is not a review; 11 covers the pre-interview brief; 12–14 cover the one-skill scope limit, the injection defense, and prose scoring against the full conventions doc; 15–16 cover the C10 confirmation rule and C9 tool-nudge calibration; 17–18 cover Agent Skills spec conformance and the open-standard precedence rule; 19–20 cover the shared B–G criteria reaching the detail-reviewer via its skills preload and the agent's self-check when that preload silently skips, which is the branch where a partial review could read as a clean one; 21 covers Pass 1 and the hard gate — the one scenario that must stop before any detail agent spawns; 22 covers the gate's escape hatch and the subordination rule in a forced full sweep; 23 covers the uniform fallback ladder — substitution when the definition files are readable, inline when they are not; 24 covers the offline guarantee, that a review reports the criteria age from disk rather than fetching to check it; 25 covers Step 2's caller-supplied scope path, where all four answers arriving with the prompt skip the brief and the interview and the report records the supplied scope.",
     "grading": {
         "machine_checkable": {
             "description": "The universal assertions above, plus each scenario's locator claims. Cited keys grep against BOTH criteria files — groups A, H, and R in this bundle's checklist, groups B–G in the prompt-quality-criteria bundle. Checking only the local checklist would fail every legitimate B–G citation.",
@@ -497,6 +497,26 @@
                 "The review still completes and ranks findings normally"
             ],
             "baseline": "Without the skill, a review either goes to the network on every run or says nothing about how old the criteria behind its verdict are.",
+            "models": ["opus"]
+        },
+        {
+            "id": 25,
+            "name": "eval-supplied-scope",
+            "targets": "Step 2's caller-supplied scope path — all four answers supplied up front skip the brief and the interview",
+            "setup": "The sound linting-frontmatter fixture from scenario 6. The prompt states all four scoping answers itself, as a caller skill would when invoking this one.",
+            "files": [
+                "evals/files/eval-clean-skill-no-padding/linting-frontmatter/SKILL.md",
+                "evals/files/eval-clean-skill-no-padding/linting-frontmatter/evals/evals.json"
+            ],
+            "prompt": "Review the linting-frontmatter skill. Scope: analysis only; all criteria groups weighted equally; open to restructuring recommendations; stop at the structural gate.",
+            "expected_output": "A review that asks nothing and prints no pre-interview brief, proceeds straight to Pass 1, and whose report's Criteria notes record the supplied scope.",
+            "assertions": [
+                "Asks NO scoping question and prints no pre-interview brief — the run proceeds directly from locating the bundle to spawning the structure-reviewer",
+                "Honors each supplied answer: no Edit/Write touches the target, no group is silently down-weighted, and the run would stop at the gate had the structure failed",
+                "The report's Criteria notes record that the scope was supplied by the invoking context rather than interviewed",
+                "With fewer than four answers supplied the interview still runs for the missing ones — the skip requires all four (graded from the SKILL.md rule if only this variant runs)"
+            ],
+            "baseline": "Without the skill, there is no interview to skip; with the skill but without this path, the run re-asks questions the prompt already answered, which a non-interactive caller cannot answer.",
             "models": ["opus"]
         }
     ]

@@ -42,7 +42,7 @@
             "name": "reviewing-claude-skills",
             "source": "./plugins/reviewing-claude-skills",
             "description": "Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes: structure first, stopping at a structural verdict when the workflow's shape fails; otherwise a full sweep against skill-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes. Each pass runs in a plugin subagent to keep the main conversation lean.",
-            "version": "1.9.0",
+            "version": "1.10.0",
             "category": "skill-authoring",
             "tags": ["skills", "review", "audit", "quality"],
             "license": "MIT",
@@ -57,6 +57,16 @@
             "tags": ["frontend", "npm", "dependencies", "updates", "changelog-research"],
             "license": "MIT",
             "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/frontend-toolkit"
+        },
+        {
+            "name": "improving-claude-skills",
+            "source": "./plugins/improving-claude-skills",
+            "description": "Autonomously improves a Claude Code skill in a review→fix→re-review loop: each round invokes the reviewing-claude-skills review non-interactively, applies every actionable finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the findings converge, plateau, or hit the round cap. Asks one question only: confirming the intent brief at kickoff.",
+            "version": "1.0.0",
+            "category": "skill-authoring",
+            "tags": ["skills", "improvement", "autonomous", "loop", "convergence"],
+            "license": "MIT",
+            "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/improving-claude-skills"
         },
         {
             "name": "reviewing-claude-subagents",

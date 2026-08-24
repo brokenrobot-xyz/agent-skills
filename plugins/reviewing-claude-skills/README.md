@@ -39,6 +39,12 @@ clean one.
 Ask Claude to review, audit, or improve a named skill. Scope is **one skill
 per invocation** — to review several, run once per skill.
 
+A caller skill can invoke the review non-interactively by stating all four
+scoping answers up front; the run then skips the brief and the interview, and
+the report records the supplied scope
+([improving-claude-skills](../improving-claude-skills/README.md) uses this
+path once per loop round).
+
 ## How a run flows
 
 ```

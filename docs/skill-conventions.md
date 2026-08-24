@@ -111,17 +111,19 @@ declares fails on a clean install. That is the opposite of the `metadata`-restat
 case recorded below, where one side carried no information the other lacked. `R3` covers this
 cross-check.
 
-There are four invocation edges, and each needs all four statements above. The
+There are six invocation edges, and each needs all four statements above. The
 `reviewing-claude-skills` edges are preloads into its detail-reviewer on the primary path and Skill
-tool invocations only under the inline fallback; the `reviewing-claude-subagents` edges are Skill
-tool invocations:
+tool invocations only under the inline fallback; the `reviewing-claude-subagents` edges and both
+`improving-claude-skills` edges are Skill tool invocations:
 
-| Caller                       | Invoked skill                          | Mode   | Consumed as                                        |
-| :--------------------------- | :------------------------------------- | :----- | :------------------------------------------------- |
-| `reviewing-claude-skills`    | `prompt-quality-criteria`              | supply | Criteria the caller scores against, for groups B–G |
-| `reviewing-claude-skills`    | `writing-simplified-technical-english` | check  | Violations folded into `R7`                        |
-| `reviewing-claude-subagents` | `prompt-quality-criteria`              | supply | Criteria the caller scores against, for groups B–G |
-| `reviewing-claude-subagents` | `writing-simplified-technical-english` | check  | Violations folded into `R7`                        |
+| Caller                       | Invoked skill                          | Mode                          | Consumed as                                        |
+| :--------------------------- | :------------------------------------- | :---------------------------- | :------------------------------------------------- |
+| `reviewing-claude-skills`    | `prompt-quality-criteria`              | supply                        | Criteria the caller scores against, for groups B–G |
+| `reviewing-claude-skills`    | `writing-simplified-technical-english` | check                         | Violations folded into `R7`                        |
+| `reviewing-claude-subagents` | `prompt-quality-criteria`              | supply                        | Criteria the caller scores against, for groups B–G |
+| `reviewing-claude-subagents` | `writing-simplified-technical-english` | check                         | Violations folded into `R7`                        |
+| `improving-claude-skills`    | `reviewing-claude-skills`              | analysis-only, scope supplied | Findings folded into the loop's ledger             |
+| `improving-claude-skills`    | `committing-conventionally`            | —                             | One commit per loop round                          |
 
 ## Why there is no role field
 

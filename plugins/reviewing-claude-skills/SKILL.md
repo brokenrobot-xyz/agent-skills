@@ -113,6 +113,12 @@ to change the review is itself worth reporting.
 
 ### 2. Brief the user, then interview to scope
 
+**Caller-supplied scope.** When the invoking context supplies all four scoping answers — for
+example, a caller skill states them when it invokes this one — skip the brief and the interview
+entirely, record the supplied scope in the report's Criteria notes, and continue to Step 3. The
+brief exists to orient a human who has not chosen a scope yet; a caller that states all four
+answers has already chosen. With fewer than four supplied, brief and ask as below.
+
 First, orient the user with a short brief so they know what's coming before answering questions.
 Present it roughly like this (fill in `<skill>` and adjust wording to context):
 
@@ -254,7 +260,8 @@ to provide. The content rules, whatever the shape:
 - **Criteria notes** carry: the criteria age — each file's `last-synced:` date and elapsed days
   (both files from Step 6 in a full run, the checklist alone from Step 4 in a gated run), which a
   reader weighs the verdict against; every ungraded group; every stage that
-  ran inline under the fallback; and, when group `B` produced findings, a note that managed
+  ran inline under the fallback; the supplied scope, when Step 2's answers came from the invoking
+  context rather than an interview; and, when group `B` produced findings, a note that managed
   settings can override a model pin, so the skill should not depend on quirks of exactly one
   model.
 
