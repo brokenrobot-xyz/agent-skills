@@ -29,16 +29,17 @@ This skill ships in the [agent-authoring-toolkit](../../README.md) plugin:
 /plugin install agent-authoring-toolkit@brokenrobot-xyz
 ```
 
-The loop's steps invoke two other skills through the Skill tool:
+Each round invokes the review of
+[reviewing-claude-skills](../reviewing-claude-skills/README.md) — shipped in
+this same plugin — non-interactively through the Skill tool, with all four
+scoping answers supplied. The criteria it needs (`prompt-quality-criteria`,
+`writing-simplified-technical-english`) arrive as the plugin's declared
+dependencies.
 
-- [reviewing-claude-skills](../reviewing-claude-skills/README.md) — shipped
-  in this same plugin. Each round invokes its review non-interactively, with
-  all four scoping answers supplied. The criteria it needs
-  (`prompt-quality-criteria`, `writing-simplified-technical-english`) arrive
-  as the plugin's declared dependencies.
-- [committing-conventionally](../../../committing-conventionally/README.md) —
-  a declared dependency: one Conventional-Commits commit per round, so every
-  round is diffable and revertible.
+Each round ends in one commit, so every round is diffable and revertible.
+The loop follows the host project's own commit conventions — a commit skill
+the host provides, the host `CLAUDE.md`'s rules, or the style visible in the
+repo's git log — and imposes no commit style of its own.
 
 If the reviewer is missing, the loop **aborts before any edit** — it never
 improvises a review from memory.
@@ -69,7 +70,7 @@ converges. One skill per invocation.
 6. │ Apply round              the fix-applier subagent; surgical edits, or a
    │                          restructure when the round gated on structure
 7. │ Verify + commit          stray paths reverted, evals rule enforced,
-   └─ loop ◀─                 one conventional commit per round
+   └─ loop ◀─                 one commit per round, in the host's style
 ```
 
 ## Exit criteria

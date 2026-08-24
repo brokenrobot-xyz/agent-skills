@@ -18,6 +18,6 @@
         "loop",
         "quality"
     ],
-    "dependencies": ["prompt-quality-criteria", "writing-simplified-technical-english", "committing-conventionally"],
+    "dependencies": ["prompt-quality-criteria", "writing-simplified-technical-english"],
     "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/agent-authoring-toolkit"
 }

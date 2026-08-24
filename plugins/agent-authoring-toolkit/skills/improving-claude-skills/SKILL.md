@@ -28,8 +28,6 @@ that skill's own fallback ladder exists to prevent, and an autonomous loop built
 edit files against invented findings. When the Agent tool cannot spawn the fix-applier but
 [its definition](../../agents/fix-applier.md) is readable, apply **inline** in this conversation
 following that definition's briefs and rules, and name the substitution in the final report.
-When `committing-conventionally` is unavailable, author a plain Conventional-Commits `git
-commit` directly and note the loss (no host vocabulary resolution, no deny-hook).
 
 **Scope: one skill per invocation**, whole bundle (SKILL.md, evals, referenced files, hooks).
 
@@ -43,7 +41,6 @@ commit` directly and note the loss (no host vocabulary resolution, no deny-hook)
   briefs and its change-log payload format**; Step 6 hands it inputs and consumes that payload.
 - [references/loop-report-template.md](references/loop-report-template.md) — the ledger layout
   and the final report layout.
-- The **`committing-conventionally:committing-conventionally`** skill — one commit per round.
 
 ## Steps
 
@@ -169,12 +166,12 @@ The verify-fix-reverify discipline (`A21`), kept cheap:
   files; the next round's independent review is the deeper verifier.
 - Confirm EVALS TOUCHED matches the change log: a behavior-changing fix with no eval touched
   gets the eval added now, in this conversation.
-- Commit the round by invoking **`committing-conventionally:committing-conventionally`** through
-  the Skill tool, **pre-stating the branch decision** — "commit on the current branch" — so its
-  branch guard has its answer and asks nothing, preserving the one-question budget. It stages
-  the bundle's changes and authors the round's Conventional-Commits commit; record the hash for
-  the final report (skill unavailable → a plain commit, per Fallbacks). Skip for a non-git
-  target.
+- Commit the round: stage the bundle's changes and author one commit, following the host
+  context's commit conventions — a commit skill the host provides, the host `CLAUDE.md`'s
+  rules, or, failing those, the style visible in the repo's own `git log`. This skill mandates
+  the commit, never the message style. When a host commit skill asks questions, pre-state the
+  answers it needs — "commit on the current branch" — so it asks nothing, preserving the
+  one-question budget. Record the hash for the final report. Skip for a non-git target.
 
 Then return to Step 3 for the next review round.
 

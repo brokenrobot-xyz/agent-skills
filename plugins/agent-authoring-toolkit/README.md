@@ -30,14 +30,16 @@ maintenance agent, and the loop's fix-applier — live in [agents/](agents/).
 /plugin install agent-authoring-toolkit@brokenrobot-xyz
 ```
 
-Installing the suite auto-installs its three declared dependencies:
+Installing the suite auto-installs its two declared dependencies:
 
 - [prompt-quality-criteria](../prompt-quality-criteria/README.md) — criteria
   groups **B–G**, shared by both reviewers.
 - [writing-simplified-technical-english](../writing-simplified-technical-english/README.md)
   — the twelve prose conventions both reviewers grade against.
-- [committing-conventionally](../committing-conventionally/README.md) — one
-  Conventional-Commits commit per improvement-loop round.
+
+The improvement loop commits each round following the host project's own
+commit conventions — the suite imposes no commit style and pulls in no
+commit tooling.
 
 Each skill's README documents its own coverage, run flow, and behavior
 notes; each skill's SKILL.md is canonical for its procedure.
