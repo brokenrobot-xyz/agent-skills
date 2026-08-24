@@ -64,5 +64,8 @@ jobs:
       - name: Dependency categorizer tests
         run: npm run test:dependencies:check
 
+      - name: Audit attribution tests
+        run: npm run test:audit:check
+
       - name: Frontmatter checker tests
         run: npm run test:frontmatter:check

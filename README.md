@@ -84,6 +84,7 @@ npm run plugins:check             # every plugin manifest, and its agents
 npm run frontmatter:check         # every shipped SKILL.md and agent definition parses
 
 # `test:<subject>:check` runs a hermetic suite against one script
+npm run test:audit:check          # the npm audit baseline and its attribution
 npm run test:commits:check        # the commit-message vocabulary and deny-hook
 npm run test:dependencies:check   # the npm dependency categorizer
 npm run test:frontmatter:check    # the frontmatter checker itself
