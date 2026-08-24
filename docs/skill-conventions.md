@@ -158,6 +158,10 @@ What survived is the part that decides something: the split test above.
 **House rules — no external source. Change them by deciding to, not by re-syncing:**
 
 - The split test, and the priority of rule 3 over rules 1 and 2.
+- `review-waivers.md` at a skill bundle's root records the owner's deliberate deviations, keyed
+  `criterion key + file + section` — the same key the improvement loop's ledger uses. The skills
+  reviewer reads it and suppresses matched findings; its § Severity, verdict, and waivers section
+  defines the semantics.
 - The mapping from kind of skill to grammatical name form.
 - The `<object>-<agent-noun>` form for subagents.
 - The `-criteria` suffix for a rubric.
