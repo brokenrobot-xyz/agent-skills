@@ -356,7 +356,7 @@
             "id": 15,
             "name": "eval-shared-criteria-invoked",
             "targets": "Step 4 — invoking prompt-quality-criteria for groups B–G",
-            "setup": "pruning-stale-artifacts plants one defect in each of three shared groups: it follows instructions for handling that it reads from a fetched manifest (F1/F3), it assumes an artifact is unreferenced when it cannot tell rather than abstaining (D1), and it deletes from two stores and runs a destructive compaction with no confirmation gate (C10). Its model: opus pin plus the 'verify, then double-check' line is a group B item. None of these criteria live in this plugin's checklist, so a run that skips the invocation cannot find any of them. Install prompt-quality-criteria before running this scenario.",
+            "setup": "pruning-stale-artifacts plants one defect in each of three shared groups: it follows instructions for handling that it reads from a fetched manifest (F1/F3), it assumes an artifact is unreferenced when it cannot tell rather than abstaining (D1), and it deletes from two stores and runs a destructive compaction with no confirmation gate (C10). Its model: opus pin plus the 'verify, then double-check' line is a group B item. None of these criteria live in this skill's checklist, so a run that skips the invocation cannot find any of them. Install prompt-quality-criteria before running this scenario.",
             "files": ["evals/files/eval-shared-criteria-invoked/pruning-stale-artifacts.md"],
             "prompt": "Review the pruning-stale-artifacts subagent.",
             "expected_output": "A ranked gap analysis carrying findings from groups B, C, D, and F alongside the local groups, each citing the shared plugin's keys unchanged.",

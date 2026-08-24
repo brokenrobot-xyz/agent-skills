@@ -10,21 +10,21 @@ model: opus
 
 Audit one named skill in two passes, each run by a dedicated subagent so the review's heavy
 reading — the target bundle and the criteria corpora — stays out of this
-conversation. **Pass 1** (the [structure-reviewer](agents/structure-reviewer.md) agent) scores
+conversation. **Pass 1** (the [structure-reviewer](../../agents/structure-reviewer.md) agent) scores
 the workflow's structure — its shape, not its sentences — against the criteria marked
 `_(structure pass)_` in
 [`references/best-practices-checklist.md`](references/best-practices-checklist.md). A **High**
 structural finding stops the run at a gate with a structural verdict and a redesign
 recommendation, because line-level findings against a structure a redesign will replace are
 wasted work. **Pass 2** — reached when the structure holds, or when the user pre-authorizes the
-sweep — is the [detail-reviewer](agents/detail-reviewer.md) agent sweeping the full criteria and
+sweep — is the [detail-reviewer](../../agents/detail-reviewer.md) agent sweeping the full criteria and
 producing a **severity-ranked gap analysis**. Then, if the user wants, apply the fixes they
 approve, one finding at a time, in this conversation.
 
 **A review fetches nothing.** It scores against the criteria that ship with this plugin and
 reports how old they are, so the reader can weigh the verdict. Bringing those criteria back in
 line with their sources is maintenance, not review — see
-[the refresher](agents/criteria-refresher.md) and the README's § Maintaining the criteria.
+[the refresher](../../agents/criteria-refresher.md) and the README's § Maintaining the criteria.
 
 **The uniform fallback — a two-tier ladder, one rule for both agents, because a silently
 skipped stage reads to the user as a clean result.** When a plugin agent type fails to resolve
@@ -51,10 +51,10 @@ evals, referenced files/hooks). To review several, run again per skill.
 ## Normative references
 
 - The review's two agent definitions ship with this plugin under `agents/`:
-  [structure-reviewer](agents/structure-reviewer.md) and
-  [detail-reviewer](agents/detail-reviewer.md). **Each definition owns its findings-payload
+  [structure-reviewer](../../agents/structure-reviewer.md) and
+  [detail-reviewer](../../agents/detail-reviewer.md). **Each definition owns its findings-payload
   format**; the steps below consume those payloads rather than restating them. The third agent in
-  `agents/`, [criteria-refresher](agents/criteria-refresher.md), is a maintenance tool no step
+  `agents/`, [criteria-refresher](../../agents/criteria-refresher.md), is a maintenance tool no step
   here spawns.
 - [`references/best-practices-checklist.md`](references/best-practices-checklist.md) — the
   criteria for groups `A` and `H` (the Agent Skills open standard plus Anthropic's docs) and `R`
@@ -170,8 +170,8 @@ to the detail-reviewer.
 
 ### 3. Pass 1 — spawn the structure-reviewer
 
-Spawn the [structure-reviewer](agents/structure-reviewer.md) with: the bundle path, the absolute
-path to this plugin's `references/best-practices-checklist.md`, and any focus notes from Step 2.
+Spawn the [structure-reviewer](../../agents/structure-reviewer.md) with: the bundle path, the absolute
+path to this skill's `references/best-practices-checklist.md`, and any focus notes from Step 2.
 It scores the criteria the checklist marks `_(structure pass)_` — the shape criteria, not the
 sentences — from the bundle's skeleton, offline, and returns evidence-backed findings in the format its
 definition owns. It fetches nothing and preloads nothing, so a run the gate stops has spent one
@@ -186,7 +186,7 @@ to stop the review on the strength of that quote.
 - **No High structural finding** → tick and continue to Step 5. Carry every Medium and Low
   structural finding forward into the full report, where structural findings lead the ranked
   list.
-- **At least one High** → **stop**. `Grep` the `last-synced:` line out of this plugin's
+- **At least one High** → **stop**. `Grep` the `last-synced:` line out of this skill's
   `references/best-practices-checklist.md` — the only criteria file a gated run read — then write
   the gated report (Step 7's second shape) and offer the detail sweep as an explicit follow-up
   choice. Spawn nothing further — the gate exists so a full sweep is not spent on text a redesign
@@ -198,7 +198,7 @@ to stop the review on the strength of that quote.
 
 ### 5. Pass 2 — spawn the detail-reviewer
 
-Spawn the [detail-reviewer](agents/detail-reviewer.md), with: the bundle path, the checklist path,
+Spawn the [detail-reviewer](../../agents/detail-reviewer.md), with: the bundle path, the checklist path,
 the target's `model:` pin (or its absence), and the focus notes. Its `skills` frontmatter preloads
 `prompt-quality-criteria:prompt-quality-criteria` (supply — the `B`–`G` criteria it scores
 against) and `writing-simplified-technical-english:writing-simplified-technical-english` in
@@ -225,7 +225,7 @@ the report names the plugin that was missing. It also settles the deterministic 
   agents' WAIVED payloads into one waived count plus a stale-entry list for the report. A High
   or Medium an agent returned without a `manifests:` scenario is re-ranked Low before the
   verdict is computed — the demotion rule binds here too.
-- **Record how old the criteria are.** `Grep` the `last-synced:` line out of this plugin's
+- **Record how old the criteria are.** `Grep` the `last-synced:` line out of this skill's
   `references/best-practices-checklist.md` and out of the installed `prompt-quality-criteria`
   plugin's `references/prompt-criteria.md` (say so when that plugin is absent), and carry both
   dates plus their elapsed days into the report's criteria notes. Two greps, no fetching: the age

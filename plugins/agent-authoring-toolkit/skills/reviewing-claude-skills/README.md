@@ -7,25 +7,27 @@ Optionally, it then applies the fixes you approve, one finding at a time.
 
 This README documents what the review covers and how a run behaves. The
 review procedure lives in [SKILL.md](SKILL.md), the two review subagents and
-the maintenance agent in [agents/](agents/), and the criteria in
+the maintenance agent in the plugin's [agents/](../../agents/), and the criteria in
 [references/best-practices-checklist.md](references/best-practices-checklist.md);
 on any conflict, those are canonical.
 
 ## Install
 
+This skill ships in the [agent-authoring-toolkit](../../README.md) plugin:
+
 ```
 /plugin marketplace add brokenrobot-xyz/agent-skills
-/plugin install reviewing-claude-skills@brokenrobot-xyz
+/plugin install agent-authoring-toolkit@brokenrobot-xyz
 ```
 
-This also auto-installs two declared dependencies, both preloaded into the
-detail-reviewer subagent at spawn:
+The install also auto-installs two declared dependencies this skill uses, both
+preloaded into the detail-reviewer subagent at spawn:
 
-- [prompt-quality-criteria](../prompt-quality-criteria/README.md) — supplies
-  criteria groups **B–G**, which this plugin's checklist does not carry. They
+- [prompt-quality-criteria](../../../prompt-quality-criteria/README.md) — supplies
+  criteria groups **B–G**, which this skill's checklist does not carry. They
   are artifact-independent prompting criteria shared with the subagent
   reviewer, so they live in one place rather than drifting between two copies.
-- [writing-simplified-technical-english](../writing-simplified-technical-english/README.md)
+- [writing-simplified-technical-english](../../../writing-simplified-technical-english/README.md)
   — the twelve prose conventions the target skill's prose is graded against
   (check fashion: violations are reported, nothing is edited).
 
@@ -130,7 +132,7 @@ Criteria come grouped; findings cite their keys (e.g. `A2`, `B4`, `R3`). The
 keys are unchanged by where a group lives, so reports stay comparable across
 versions:
 
-From this plugin's [checklist](references/best-practices-checklist.md):
+From this skill's [checklist](references/best-practices-checklist.md):
 
 - **A** — skill authoring: Agent Skills spec conformance, naming,
   description, structure, progressive disclosure
@@ -138,7 +140,7 @@ From this plugin's [checklist](references/best-practices-checklist.md):
 - **R** — craft and the host project's own conventions, including the prose
   check
 
-From [prompt-quality-criteria](../prompt-quality-criteria/README.md):
+From [prompt-quality-criteria](../../../prompt-quality-criteria/README.md):
 
 - **B** — model-specific prompting, matched to the target skill's pinned
   model

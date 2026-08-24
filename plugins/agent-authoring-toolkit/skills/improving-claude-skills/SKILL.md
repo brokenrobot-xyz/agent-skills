@@ -1,7 +1,7 @@
 ---
 name: improving-claude-skills
 description: "Autonomously improves a Claude Code skill in a review→fix→re-review loop: each round invokes the reviewing-claude-skills review non-interactively, applies every blocking finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the review's verdict is acceptable, the blocking findings plateau, or the round cap is hit. Advisory findings are reported, never chased. Asks one question only: confirming the intent brief at kickoff. Use when the user asks to improve a skill autonomously, in a loop, or until it passes review."
-compatibility: Designed for Claude Code — requires the reviewing-claude-skills plugin, whose review each round invokes, and works best on a git-tracked target so every round is a commit. Runs offline.
+compatibility: Designed for Claude Code — requires the reviewing-claude-skills skill, shipped in this same plugin, whose review each round invokes, and works best on a git-tracked target so every round is a commit. Runs offline.
 allowed-tools: Read Edit Write Bash Grep Glob Skill Agent
 model: opus
 ---
@@ -12,7 +12,7 @@ Run one named skill through repeated review-fix rounds without stopping for per-
 Each round: the **reviewing-claude-skills** review runs with a pre-supplied scope, its
 **blocking** findings (High and Medium — the reviewer's verdict counts nothing else) land in a
 **ledger**, an **exit gate** decides whether to stop, and if not, the
-[fix-applier](agents/fix-applier.md) agent applies the round's blocking findings — as surgical
+[fix-applier](../../agents/fix-applier.md) agent applies the round's blocking findings — as surgical
 edits, or as a restructure when the round gated on a High structural finding — and the round is
 committed. Advisory findings are carried to the final report untouched: chasing them is the
 churn that stops loops converging. The loop's interaction budget is exactly one question:
@@ -26,7 +26,7 @@ because the host conventions treat non-converging review-fix rounds as evidence 
 the loop cannot run without its reviewer — a review improvised from memory is the failure mode
 that skill's own fallback ladder exists to prevent, and an autonomous loop built on one would
 edit files against invented findings. When the Agent tool cannot spawn the fix-applier but
-[its definition](agents/fix-applier.md) is readable, apply **inline** in this conversation
+[its definition](../../agents/fix-applier.md) is readable, apply **inline** in this conversation
 following that definition's briefs and rules, and name the substitution in the final report.
 When `committing-conventionally` is unavailable, author a plain Conventional-Commits `git
 commit` directly and note the loss (no host vocabulary resolution, no deny-hook).
@@ -35,11 +35,11 @@ commit` directly and note the loss (no host vocabulary resolution, no deny-hook)
 
 ## Normative references
 
-- The **`reviewing-claude-skills:reviewing-claude-skills`** skill — invoked once per round
-  through the Skill tool. What comes back is a report shaped by that plugin's
+- The **`agent-authoring-toolkit:reviewing-claude-skills`** skill — invoked once per round
+  through the Skill tool. What comes back is a report shaped by that skill's
   `references/report-template.md` (a full gap analysis, or a gated structural verdict); Step 4
   folds it into the ledger rather than restating its format here.
-- [agents/fix-applier.md](agents/fix-applier.md) — the apply agent. **Its definition owns its
+- [agents/fix-applier.md](../../agents/fix-applier.md) — the apply agent. **Its definition owns its
   briefs and its change-log payload format**; Step 6 hands it inputs and consumes that payload.
 - [references/loop-report-template.md](references/loop-report-template.md) — the ledger layout
   and the final report layout.
@@ -70,9 +70,10 @@ the fix-applier read the bundle in their own contexts, which is what keeps round
 
 Pre-flight rails, all before any edit:
 
-- **Refuse to improve this loop's own machinery.** When the target is this skill or the
-  `reviewing-claude-skills` plugin, abort: a loop that edits its own reviewer mid-run can no
-  longer trust the reviews that steer it.
+- **Refuse to improve this loop's own machinery.** When the target is any skill or agent in
+  the `agent-authoring-toolkit` plugin — this loop, its fix-applier, or the reviewers it
+  invokes — abort: a loop that edits its own reviewer mid-run can no longer trust the reviews
+  that steer it.
 - **Git target:** `git status --porcelain -- <bundle>` must be empty; abort otherwise, because
   autonomous edits over uncommitted work destroy state the user has not saved. Record the
   starting commit for the final report.
@@ -98,7 +99,7 @@ focus notes, and the final report's intent-preservation check.
 
 ### 3. Review round — invoke the reviewer with the scope supplied
 
-Invoke **`reviewing-claude-skills:reviewing-claude-skills`** through the Skill tool, stating all
+Invoke **`agent-authoring-toolkit:reviewing-claude-skills`** through the Skill tool, stating all
 four scoping answers so its run skips the brief and the interview: **analysis only** (this loop
 owns apply); **all groups weighted equally**, with the intent brief passed as focus notes so the
 structure pass scores the shape against the stated job; **open to restructuring**; **stop at
@@ -146,7 +147,7 @@ No match → Step 6.
 
 ### 6. Apply round — spawn the fix-applier
 
-Spawn the [fix-applier](agents/fix-applier.md) with: the bundle path, the confirmed intent
+Spawn the [fix-applier](../../agents/fix-applier.md) with: the bundle path, the confirmed intent
 brief, the round's **blocking findings verbatim — and only those**: advisory findings are never
 applied by this loop, in any round, because fixing polish mints the next round's findings — the
 contested do-not-touch list, and the host conventions document path

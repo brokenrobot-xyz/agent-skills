@@ -153,7 +153,7 @@ the report that the defaults were assumed.
 
 ### 3. Record how old the criteria are
 
-`Grep` the `last-synced:` line out of this plugin's `references/best-practices-checklist.md` and
+`Grep` the `last-synced:` line out of this skill's `references/best-practices-checklist.md` and
 note the date and its elapsed days for the report's criteria notes. The shared criteria file carries
 its own `last-synced` date, which Step 4 returns — record that one there, as the second half of
 this step.

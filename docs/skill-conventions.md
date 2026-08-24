@@ -2,8 +2,8 @@
 
 Conventions for `brokenrobot-xyz/agent-skills`. Codes cited here resolve as follows: `A…` and
 `R…` codes are criteria in the two reviewers' checklists,
-`plugins/reviewing-claude-skills/references/best-practices-checklist.md` and
-`plugins/reviewing-claude-subagents/references/best-practices-checklist.md`; `D15` is rule 3 of the
+`plugins/agent-authoring-toolkit/skills/reviewing-claude-skills/references/best-practices-checklist.md` and
+`plugins/agent-authoring-toolkit/skills/reviewing-claude-subagents/references/best-practices-checklist.md`; `D15` is rule 3 of the
 split test below, which this document records.
 
 ## When to create a new skill
@@ -102,7 +102,10 @@ omit the mode, the consumed result, and the absent-dependency behaviour.
 
 Every skill named by an invoking step or preloaded by a spawned agent is declared as a dependency
 in the caller's `.claude-plugin/plugin.json`, and every declared dependency is invoked by some step
-or preloaded by some agent.
+or preloaded by some agent. A sibling skill in the same plugin is the one exception: the install
+already carries it, so it is invoked by its scoped name but not declared —
+`improving-claude-skills` invoking `reviewing-claude-skills` inside `agent-authoring-toolkit` is
+this case.
 
 The overlap between the two is deliberate. The manifest says what gets installed; the step says what
 it is for. Because they carry different information about the same edge, a disagreement between them

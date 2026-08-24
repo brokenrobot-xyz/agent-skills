@@ -13,7 +13,7 @@
     },
     "how_to_run": [
         "Install the fixture first. Copy the scenario's target-skill directories from evals/files/<scenario-name>/ into a scratch workspace's .claude/skills/, then `git init` the workspace and commit — the loop's pre-flight requires a clean tracked tree, so an uncommitted fixture aborts every scenario except the one that tests the abort.",
-        "The reviewing-claude-skills plugin (with its transitive dependencies) must be installed for every scenario except eval-reviewer-missing-aborts, which requires its absence.",
+        "The reviewing-claude-skills skill — shipped in the same agent-authoring-toolkit plugin, with the plugin's declared dependencies installed — must resolve for every scenario except eval-reviewer-missing-aborts, which requires it to be unavailable.",
         "Each scenario's intent-brief confirmation is answered from the scenario's setup notes — a flat 'confirmed, use the default cap' unless the scenario says otherwise. That is the run's only permitted answer; anything else the run asks is a universal-assertion failure.",
         "Baseline first. Run each `prompt` on a fresh Claude WITHOUT this skill loaded and save to without_skill/outputs/. Then with the skill, saving to with_skill/outputs/. Each run starts from a clean context so the run follows SKILL.md rather than the conversation that authored it.",
         "Record total_tokens and duration_ms per run in timing.json — a loop's value is its convergence read against its cost, so cost is part of the grade here, not bookkeeping.",
@@ -137,7 +137,7 @@
             "id": 5,
             "name": "eval-reviewer-missing-aborts",
             "targets": "The reviewer-unavailable fallback — a hard abort, never a from-memory review",
-            "setup": "The formatting-changelogs fixture from scenario 1, installed and committed; the reviewing-claude-skills plugin is NOT installed — an environmental condition no file can carry.",
+            "setup": "The formatting-changelogs fixture from scenario 1, installed and committed; the reviewing-claude-skills skill does NOT resolve — arranged by running against a copy of the agent-authoring-toolkit plugin with the reviewing-claude-skills skill removed — an environmental condition no file can carry.",
             "files": [
                 "evals/files/eval-converges-two-rounds/formatting-changelogs/SKILL.md",
                 "evals/files/eval-converges-two-rounds/formatting-changelogs/references/changelog-guide.md",
@@ -148,7 +148,7 @@
             "assertions": [
                 "Aborts when reviewing-claude-skills fails to resolve — no file in the target bundle changes",
                 "Does NOT improvise a review from memory or general knowledge and then edit against it",
-                "Tells the user the loop requires the reviewer and names the plugin to install",
+                "Tells the user the loop requires the reviewer and names the reviewing-claude-skills skill (and the agent-authoring-toolkit plugin that ships it)",
                 "Does not present the aborted run as a completed or partial improvement"
             ],
             "baseline": "Without the skill, there is no declared reviewer to be missing: the model reviews from its own knowledge and edits against that — exactly the unbounded behavior the abort exists to prevent.",

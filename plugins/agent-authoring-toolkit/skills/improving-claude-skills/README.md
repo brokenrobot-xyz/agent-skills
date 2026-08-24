@@ -15,28 +15,30 @@ fixes one at a time, use `reviewing-claude-skills` directly instead — that
 is its interactive apply mode.
 
 The loop procedure lives in [SKILL.md](SKILL.md), the apply agent in
-[agents/fix-applier.md](agents/fix-applier.md), and the ledger and report
+the plugin's [agents/fix-applier.md](../../agents/fix-applier.md), and the ledger and report
 layouts in
 [references/loop-report-template.md](references/loop-report-template.md);
 on any conflict, those are canonical.
 
 ## Install
 
+This skill ships in the [agent-authoring-toolkit](../../README.md) plugin:
+
 ```
 /plugin marketplace add brokenrobot-xyz/agent-skills
-/plugin install improving-claude-skills@brokenrobot-xyz
+/plugin install agent-authoring-toolkit@brokenrobot-xyz
 ```
 
-This auto-installs two declared dependencies, both invoked by the loop's
-steps through the Skill tool:
+The loop's steps invoke two other skills through the Skill tool:
 
-- [reviewing-claude-skills](../reviewing-claude-skills/README.md) — each
-  round invokes its review non-interactively, with all four scoping answers
-  supplied. Its own dependencies (`prompt-quality-criteria`,
-  `writing-simplified-technical-english`) arrive transitively.
-- [committing-conventionally](../committing-conventionally/README.md) — one
-  Conventional-Commits commit per round, so every round is diffable and
-  revertible.
+- [reviewing-claude-skills](../reviewing-claude-skills/README.md) — shipped
+  in this same plugin. Each round invokes its review non-interactively, with
+  all four scoping answers supplied. The criteria it needs
+  (`prompt-quality-criteria`, `writing-simplified-technical-english`) arrive
+  as the plugin's declared dependencies.
+- [committing-conventionally](../../../committing-conventionally/README.md) —
+  a declared dependency: one Conventional-Commits commit per round, so every
+  round is diffable and revertible.
 
 If the reviewer is missing, the loop **aborts before any edit** — it never
 improvises a review from memory.

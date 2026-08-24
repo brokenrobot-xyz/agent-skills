@@ -389,7 +389,7 @@
             "id": 19,
             "name": "eval-shared-criteria-invoked",
             "targets": "Pass 2 — the preloaded B–G criteria reaching the detail-reviewer's findings",
-            "setup": "The archiving-stale-branches fixture plants one defect in each of three shared groups: it follows handling instructions read from fetched pull-request descriptions (F1/F3), it assumes a branch was merged when it cannot tell rather than abstaining (D1), and it deletes branches and force-pushes with no confirmation gate (C10). Its `model: opus` pin plus the 'verify, then double-check' line is a group B item. None of these criteria live in this plugin's checklist, so a run that skips the invocation cannot find any of them. prompt-quality-criteria must be installed for this scenario.",
+            "setup": "The archiving-stale-branches fixture plants one defect in each of three shared groups: it follows handling instructions read from fetched pull-request descriptions (F1/F3), it assumes a branch was merged when it cannot tell rather than abstaining (D1), and it deletes branches and force-pushes with no confirmation gate (C10). Its `model: opus` pin plus the 'verify, then double-check' line is a group B item. None of these criteria live in this skill's checklist, so a run that skips the invocation cannot find any of them. prompt-quality-criteria must be installed for this scenario.",
             "files": ["evals/files/eval-shared-criteria-invoked/archiving-stale-branches/SKILL.md"],
             "prompt": "Review the archiving-stale-branches skill.",
             "expected_output": "A ranked gap analysis carrying findings from groups B, C, D, and F alongside the local groups, each citing the shared plugin's keys unchanged.",

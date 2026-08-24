@@ -12,18 +12,20 @@ those two files are canonical.
 
 ## Install
 
+This skill ships in the [agent-authoring-toolkit](../../README.md) plugin:
+
 ```
 /plugin marketplace add brokenrobot-xyz/agent-skills
-/plugin install reviewing-claude-subagents@brokenrobot-xyz
+/plugin install agent-authoring-toolkit@brokenrobot-xyz
 ```
 
-The install command also installs two declared dependencies:
+The install command also installs two declared dependencies this skill uses:
 
-- [prompt-quality-criteria](../prompt-quality-criteria/README.md) — supplies criteria groups **B–G**,
-  which this plugin's checklist does not carry. They are prompt criteria shared with
+- [prompt-quality-criteria](../../../prompt-quality-criteria/README.md) — supplies criteria groups **B–G**,
+  which this skill's checklist does not carry. They are prompt criteria shared with
   [reviewing-claude-skills](../reviewing-claude-skills/README.md), so they live in one place rather
   than drifting between two copies.
-- [writing-simplified-technical-english](../writing-simplified-technical-english/README.md) — invoked
+- [writing-simplified-technical-english](../../../writing-simplified-technical-english/README.md) — invoked
   in check mode to grade the subagent's body prose.
 
 On a host with no dependency resolution the reviewer still runs, and names in the report which groups
@@ -47,9 +49,9 @@ The reviewer resolves the subagent from `.claude/agents/`, `~/.claude/agents/`, 
 
 ## What the review checks
 
-Nine groups. This plugin's checklist defines fifty-five criteria, and `prompt-quality-criteria` supplies groups **B**–**G** on top of them. Findings cite the criterion key.
+Nine groups. This skill's checklist defines fifty-five criteria, and `prompt-quality-criteria` supplies groups **B**–**G** on top of them. Findings cite the criterion key.
 
-**From this plugin's checklist**
+**From this skill's checklist**
 
 - **A — subagent authoring**, twenty-eight criteria in eight parts: fit-for-purpose, routing, the return
   contract, context inheritance, tools and permissions, frontmatter validity, body craft, and the task
