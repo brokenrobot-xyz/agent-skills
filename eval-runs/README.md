@@ -10,7 +10,13 @@ the evidence was.
 eval-runs/
   <plugin>/                        # e.g. agent-authoring-toolkit
     <skill-name|agent-name>/       # e.g. reviewing-claude-skills
-      <YYYY-MM-DD>-<short-sha>/    # one immutable directory per run; sha = repo HEAD tested
+      <YYYY-MM-DD>-<version>-<short-sha>/   # one immutable directory per run; version =
+                                            # the plugin version tested, dots as hyphens
+                                            # (v1-0-0); sha = repo HEAD tested. The sha is
+                                            # authoritative — plugin versions span many
+                                            # commits, and a squash merge replaces branch
+                                            # shas, so tag the tested commit if the branch
+                                            # will be deleted after merging.
         summary.md                 # the human-readable record (fields below)
         timing.json                # tokens + duration per scenario
         machine-checks.txt         # output of the suite's machine-checkable grading scripts
