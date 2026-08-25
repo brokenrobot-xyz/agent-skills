@@ -23,10 +23,10 @@ here as an observation rather than a scored finding.
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                                                                                     | Notes |
-| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------- | ----- |
-| 1   | High     | Structure | A22    | Destructive `rm -rf` executes before any plan, validation, or dry run; the only report comes last | Gate  |
-| 2   | High     | Structure | A8     | The `rm -rf` target is a prose noun phrase the model must infer, with no path, discovery rule, or guard | Gate  |
+| #   | Severity | Pass      | Key(s) | Finding                                                                                                    | Notes |
+| --- | -------- | --------- | ------ | ---------------------------------------------------------------------------------------------------------- | ----- |
+| 1   | High     | Structure | A22    | Destructive `rm -rf` executes before any plan, validation, or dry run; the only report comes last          | Gate  |
+| 2   | High     | Structure | A8     | The `rm -rf` target is a prose noun phrase the model must infer, with no path, discovery rule, or guard    | Gate  |
 | 3   | Medium   | Structure | A8     | The reference file's selection rule and license obligation are attached by prose, not consumed by any step |       |
 
 ### What's already right
@@ -124,7 +124,7 @@ Re-cut the spine from four report-last steps into three phases with the artifact
    rather than leaving it in prose.
 2. **Plan.** Walk the chosen source set and write one structured plan file: each source SVG, its
    kebab-case target, whether that target already exists, and every existing file in the icon
-   directory the plan does *not* replace. Validate the plan mechanically (targets inside the icon
+   directory the plan does _not_ replace. Validate the plan mechanically (targets inside the icon
    directory, no two sources colliding on one target) and surface it. This is the verifiable
    intermediate Finding 1 says is missing, and it is where collisions get reported — before they
    happen, not after.
@@ -146,26 +146,26 @@ with a justification and a date.
 
 ### Coverage
 
-| Group / criterion                                    | Status                          |
-| ---------------------------------------------------- | ------------------------------- |
-| `A4` — length and progressive disclosure             | Pass                            |
-| `A5` — progressive disclosure via references         | Pass                            |
-| `A8` — degrees of freedom                            | Gap (2, 3)                      |
-| `A13` — defaults vs menus                            | Pass                            |
-| `A17` — over-prescription                            | Pass                            |
-| `A22` — verifiable intermediates before destructive steps | Gap (1)                    |
-| `R1` — simplicity                                    | Pass                            |
-| `R12` — scope coherence                              | Pass                            |
-| `R14` — decision space                               | Pass                            |
-| A (non-structural criteria)                          | not scored — gated on structure |
-| B                                                    | not scored — gated on structure |
-| C                                                    | not scored — gated on structure |
-| D                                                    | not scored — gated on structure |
-| E                                                    | not scored — gated on structure |
-| F                                                    | not scored — gated on structure |
-| G                                                    | not scored — gated on structure |
-| H                                                    | not scored — gated on structure |
-| R (non-structural criteria)                          | not scored — gated on structure |
+| Group / criterion                                         | Status                          |
+| --------------------------------------------------------- | ------------------------------- |
+| `A4` — length and progressive disclosure                  | Pass                            |
+| `A5` — progressive disclosure via references              | Pass                            |
+| `A8` — degrees of freedom                                 | Gap (2, 3)                      |
+| `A13` — defaults vs menus                                 | Pass                            |
+| `A17` — over-prescription                                 | Pass                            |
+| `A22` — verifiable intermediates before destructive steps | Gap (1)                         |
+| `R1` — simplicity                                         | Pass                            |
+| `R12` — scope coherence                                   | Pass                            |
+| `R14` — decision space                                    | Pass                            |
+| A (non-structural criteria)                               | not scored — gated on structure |
+| B                                                         | not scored — gated on structure |
+| C                                                         | not scored — gated on structure |
+| D                                                         | not scored — gated on structure |
+| E                                                         | not scored — gated on structure |
+| F                                                         | not scored — gated on structure |
+| G                                                         | not scored — gated on structure |
+| H                                                         | not scored — gated on structure |
+| R (non-structural criteria)                               | not scored — gated on structure |
 
 ### Criteria notes
 

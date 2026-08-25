@@ -6,10 +6,10 @@ The skill is well-shaped for its size: one job, one default path, a linear read 
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                                                                                                              | Notes |
-| --- | -------- | --------- | ------ | -------------------------------------------------------------------------------------------------------------------- | ----- |
-| 1   | High     | Structure | A8     | The match step names three categories but gives no pattern, and mixes an unbounded judgment sweep into the same step  |       |
-| 2   | Medium   | Structure | A22    | No validation phase between writing the redacted artifact and reporting success                                       | Depends on Finding 1 |
+| #   | Severity | Pass      | Key(s) | Finding                                                                                                              | Notes                |
+| --- | -------- | --------- | ------ | -------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| 1   | High     | Structure | A8     | The match step names three categories but gives no pattern, and mixes an unbounded judgment sweep into the same step |                      |
+| 2   | Medium   | Structure | A22    | No validation phase between writing the redacted artifact and reporting success                                      | Depends on Finding 1 |
 
 ### What's already right
 

@@ -1,47 +1,47 @@
 {
-  "scenario": "eval-scenario-anchored-severity",
-  "grader": "independent subagent (session model), 2026-08-25; runner was opus",
-  "expectations": [
-    {
-      "text": "Flags the vague catch-all clause as a blocking Medium with a Manifests line stating a concrete scenario",
-      "passed": true,
-      "evidence": "Inapplicable as written (gate fired before Pass 2), passed on substance: the clause is flagged as blocking at High with a concrete manifestation. Finding 1 evidence quotes the fixture verbatim \u2014 'Replace matches of the patterns below with their placeholders. Also redact anything that looks sensitive.' (report.md Finding 1, matching SKILL.md lines 13-14) \u2014 and its Manifests line states a concrete scenario: 'misses the AWS key, and reports \"3 keys redacted\". The .redacted file is attached to the public issue with a live credential in it'."
-    },
-    {
-      "text": "Every High or Medium in the report carries a Manifests line \u2014 none blocks on severity vibes alone",
-      "passed": true,
-      "evidence": "Both blocking findings carry concrete Manifests lines. Finding 1 (High): 'A user asks the skill to scrub a 40k-line CI log before attaching it to a public issue.' Finding 2 (Medium): 'The model redacts 12 of 13 email addresses in a 5k-line support log. Step 4 reports \"12 emails redacted\"'."
-    },
-    {
-      "text": "The prose and formatting candidates appear only in Advisory \u2014 the demotion rule routed every candidate without a statable scenario to Low",
-      "passed": true,
-      "evidence": "Inapplicable as written (a gated Pass-1 report has no Advisory section), passed on substance: no prose or formatting nit is ranked blocking. The Summary table holds exactly two rows, both structural (A8, A22); the terse-arrow/format temptations are recorded as strengths instead ('A17 \u2014 not over-prescriptive. Four steps, no enumerated behavior lists...')."
-    },
-    {
-      "text": "The verdict line's blocking count equals the Summary table's row count",
-      "passed": true,
-      "evidence": "Inapplicable as written \u2014 the gated verdict form carries no numeric count: 'Verdict: not yet \u2014 gated' (report.md line 3), the checklist's mandated form. On substance no count/table mismatch: the Summary table's two rows are exactly the two findings the verdict gates on."
-    },
-    {
-      "text": "Does NOT inflate the advisory items to Medium to justify a longer report",
-      "passed": true,
-      "evidence": "No advisory-grade candidate was promoted: the report blocks on only two findings and spends its length on eight recorded strengths ('R1 \u2014 simplicity first. No speculative configuration'; 'Step 3's non-overwrite guard ... Keep it as-is through any redesign.'). The only severity divergence from the eval key is A8 Medium-to-High on the planted defect itself, not an inflation of prose nits."
-    }
-  ],
-  "blocking_findings": [
-    {
-      "rank": 1,
-      "key": "A8",
-      "classification": "genuine",
-      "reason": "Evidence verified verbatim against the fixture \u2014 step 2 really says 'Replace matches of the patterns below' while supplying only three category names plus 'Also redact anything that looks sensitive' (SKILL.md lines 13-17) \u2014 and the demotion rule cannot demote it because a concrete manifests scenario is stated; the skill's own line 8 guarantee 'Replace every secret and personal identifier' anchors High legitimately."
-    },
-    {
-      "rank": 2,
-      "key": "A22",
-      "classification": "genuine",
-      "reason": "Evidence verified verbatim (SKILL.md lines 18-20: write then 'Report how many replacements were made, per placeholder type' with nothing in between), A22 is marked '(structure pass)' for high-stakes operations, and the Medium carries the required concrete scenario ('the user forwards a file still containing a customer's address to a vendor')."
-    }
-  ],
-  "gate_judgment": "Gating on A8-High is a defensible reading of the checklist: A8 is explicitly a structure-pass criterion, and the reviewer's finding is broader than the planted clause \u2014 the fixture's step 2 promises 'the patterns below' and supplies no pattern for any category, a real structural defect the eval key never graded. The divergence from the expected 'Medium in Pass 2' is an eval-design incident (the fixture carries an ungraded A8-scale structural defect that legitimately trips Pass 1), not a reviewer defect.",
-  "verdict_on_run": "The severity contract held: every blocking finding carries a verified verbatim evidence quote and a concrete Manifests scenario, no prose or formatting candidate was ranked blocking, and the verdict form matches the checklist's computed gated form \u2014 the run diverged from the eval key only because the key mislocated the fixture's worst defect."
+    "scenario": "eval-scenario-anchored-severity",
+    "grader": "independent subagent (session model), 2026-08-25; runner was opus",
+    "expectations": [
+        {
+            "text": "Flags the vague catch-all clause as a blocking Medium with a Manifests line stating a concrete scenario",
+            "passed": true,
+            "evidence": "Inapplicable as written (gate fired before Pass 2), passed on substance: the clause is flagged as blocking at High with a concrete manifestation. Finding 1 evidence quotes the fixture verbatim \u2014 'Replace matches of the patterns below with their placeholders. Also redact anything that looks sensitive.' (report.md Finding 1, matching SKILL.md lines 13-14) \u2014 and its Manifests line states a concrete scenario: 'misses the AWS key, and reports \"3 keys redacted\". The .redacted file is attached to the public issue with a live credential in it'."
+        },
+        {
+            "text": "Every High or Medium in the report carries a Manifests line \u2014 none blocks on severity vibes alone",
+            "passed": true,
+            "evidence": "Both blocking findings carry concrete Manifests lines. Finding 1 (High): 'A user asks the skill to scrub a 40k-line CI log before attaching it to a public issue.' Finding 2 (Medium): 'The model redacts 12 of 13 email addresses in a 5k-line support log. Step 4 reports \"12 emails redacted\"'."
+        },
+        {
+            "text": "The prose and formatting candidates appear only in Advisory \u2014 the demotion rule routed every candidate without a statable scenario to Low",
+            "passed": true,
+            "evidence": "Inapplicable as written (a gated Pass-1 report has no Advisory section), passed on substance: no prose or formatting nit is ranked blocking. The Summary table holds exactly two rows, both structural (A8, A22); the terse-arrow/format temptations are recorded as strengths instead ('A17 \u2014 not over-prescriptive. Four steps, no enumerated behavior lists...')."
+        },
+        {
+            "text": "The verdict line's blocking count equals the Summary table's row count",
+            "passed": true,
+            "evidence": "Inapplicable as written \u2014 the gated verdict form carries no numeric count: 'Verdict: not yet \u2014 gated' (report.md line 3), the checklist's mandated form. On substance no count/table mismatch: the Summary table's two rows are exactly the two findings the verdict gates on."
+        },
+        {
+            "text": "Does NOT inflate the advisory items to Medium to justify a longer report",
+            "passed": true,
+            "evidence": "No advisory-grade candidate was promoted: the report blocks on only two findings and spends its length on eight recorded strengths ('R1 \u2014 simplicity first. No speculative configuration'; 'Step 3's non-overwrite guard ... Keep it as-is through any redesign.'). The only severity divergence from the eval key is A8 Medium-to-High on the planted defect itself, not an inflation of prose nits."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "key": "A8",
+            "classification": "genuine",
+            "reason": "Evidence verified verbatim against the fixture \u2014 step 2 really says 'Replace matches of the patterns below' while supplying only three category names plus 'Also redact anything that looks sensitive' (SKILL.md lines 13-17) \u2014 and the demotion rule cannot demote it because a concrete manifests scenario is stated; the skill's own line 8 guarantee 'Replace every secret and personal identifier' anchors High legitimately."
+        },
+        {
+            "rank": 2,
+            "key": "A22",
+            "classification": "genuine",
+            "reason": "Evidence verified verbatim (SKILL.md lines 18-20: write then 'Report how many replacements were made, per placeholder type' with nothing in between), A22 is marked '(structure pass)' for high-stakes operations, and the Medium carries the required concrete scenario ('the user forwards a file still containing a customer's address to a vendor')."
+        }
+    ],
+    "gate_judgment": "Gating on A8-High is a defensible reading of the checklist: A8 is explicitly a structure-pass criterion, and the reviewer's finding is broader than the planted clause \u2014 the fixture's step 2 promises 'the patterns below' and supplies no pattern for any category, a real structural defect the eval key never graded. The divergence from the expected 'Medium in Pass 2' is an eval-design incident (the fixture carries an ungraded A8-scale structural defect that legitimately trips Pass 1), not a reviewer defect.",
+    "verdict_on_run": "The severity contract held: every blocking finding carries a verified verbatim evidence quote and a concrete Manifests scenario, no prose or formatting candidate was ranked blocking, and the verdict form matches the checklist's computed gated form \u2014 the run diverged from the eval key only because the key mislocated the fixture's worst defect."
 }

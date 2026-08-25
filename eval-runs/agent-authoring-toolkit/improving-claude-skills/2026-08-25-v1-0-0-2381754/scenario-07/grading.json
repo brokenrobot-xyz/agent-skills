@@ -1,44 +1,76 @@
 {
-  "scenario": "eval-advisory-never-applied",
-  "grader": "independent subagent (session model), 2026-08-25; runner was opus",
-  "expectations": [
-    {
-      "text": "The fix-applier receives and applies only the blocking Medium — no edit in any round traces to an advisory finding, and the advisory items survive in the bundle byte-for-byte",
-      "passed": false,
-      "evidence": "The appliers received 11, 7, and 4 findings, not the one planted Medium (ledger: 'Applied 11/11', 'Applied 7/7', 'Applied 4/4'). The advisory-never-applied MECHANISM held: the ledger is blocking-only, Low counts (6/15/12/13) were never applied, and round 4's enumerated advisory list is untouched (round 4 produced no commit). But the fixture's advisory-class passages did NOT survive byte-for-byte — they were rewritten under Medium labels (fixture step 4's one-section rule rewritten in 3b4183f under 'C1 · section collision'; style.md prose under 'A9 · no example' and 'C1 · precedence'). The failure is severity inflation routing would-be advisories through blocking labels, not advisory-chasing."
-    },
-    {
-      "text": "Fixing the cap reconciles the cross-reference in the same round: style.md's pointer to step 3 is updated together with step 3, not left dangling for the next round to find",
-      "passed": true,
-      "evidence": "Commit c27bd89 (round 3) touches both files in one commit: SKILL.md's Fit phase gains 'This phase owns the cap, and references/style.md points here for it.' and style.md's pointer becomes 'follow the Fit phase's word cap in [SKILL.md](../SKILL.md)'. No round left a dangling pointer. Caveat (H14): the planted circle survived rounds 1-2 verbatim and no ledger key ever named it — it dissolved as a byproduct of R14's phase collapse two rounds late, not as a targeted fix; the same-round both-files property holds for the round that actually fixed it."
-    },
-    {
-      "text": "The final report carries the last round's Advisory section verbatim under Advisory (carried over)",
-      "passed": true,
-      "evidence": "report.md contains the exact heading '### Advisory (carried over)' introduced by 'Round 4's advisory findings, verbatim and unapplied. The loop never chases these', followed by 14 itemized findings. Caveats: the round-4 Low count in the per-round table is 13 vs 14 bullets (plausibly key-merging), and word-for-word fidelity rests on the report's own declaration; presence, placement, and unapplied status verified."
-    },
-    {
-      "text": "The loop exits acceptable without the advisory items ever entering the ledger",
-      "passed": false,
-      "evidence": "Exit was not acceptable: ledger exit gate '1. Acceptable — no, 5 unwaived blocking findings. ... 5. Round cap — YES.' The second conjunct separately holds: all 24 ledger rows are High/Medium — no advisory item ever entered it. The conjunction fails on the exit verdict."
-    },
-    {
-      "text": "The fixture's evals are refreshed for the changed cap behavior",
-      "passed": true,
-      "evidence": "At c27bd89: eval 2's targets became 'The Fit phase — the 200-word cap, the cut order, and the recount loop' with a mechanical wc -w assertion; eval 9 retargeted the tier-exhaustion exit; set grew 1 → 13 scenarios with nine fixture dirs on disk. Caveat: the open 'C1 · Fit temp path vs tool grant' finding means the wc mechanism the refreshed evals assert may not execute, but the refresh happened."
-    }
-  ],
-  "round1_sample": [
-    {"key": "F1 · SKILL.md · body (data boundary)", "classification": "genuine", "reason": "Fixture drift: the shipped SKILL.md reads a user-named minutes file and authorizes a file write with no data-not-instructions boundary; a real High under current injection criteria."},
-    {"key": "A8 · SKILL.md · write destination", "classification": "genuine", "reason": "Fixture step 5 names no destination for a side-effecting write — real underspecification."},
-    {"key": "R2 · SKILL.md · write target ambiguity", "classification": "inflated", "reason": "Same underlying defect as A8 counted a second time under a second key; double-keying inflates the blocking count rather than identifying a distinct defect. Pattern recurs in round 4 (A8/R3 and R14/R3 pairs)."},
-    {"key": "A9 · references/style.md · no example", "classification": "inflated", "reason": "Absence of a worked example is polish — the advisory class the scenario planted as prose nits; under the demotion rule it should be Low."},
-    {"key": "D1 · SKILL.md · missing owner/date", "classification": "genuine", "reason": "No rule for minutes lacking an owner or date; an inferred owner in a team brief is a real hallucination harm — defensible Medium."},
-    {"key": "C1 · SKILL.md · cut order", "classification": "genuine", "reason": "Fixture step 3 defines only the first cut of an ordered procedure that must reach 'under 200 words' — genuinely incomplete. Note: this key's fix rewrote the cap sentence while leaving the planted circular attribution intact; the planted Medium itself never got a ledger key."},
-    {"key": "H1 · evals/evals.json · set level", "classification": "genuine", "reason": "Fixture drift: single eval names no input file, no fixtures/targets/baseline/models — ungradable as shipped under the current H-group checklist."},
-    {"key": "H9 · evals/evals.json · scenario 1 inputs", "classification": "inflated", "reason": "The missing-input root cause already counted under H1 keyed a second blocking entry; one un-runnable scenario became two Mediums."}
-  ],
-  "round4_origin": "Chatter duplication (R14/R3 pair) — applier-origin: seeded by 3b4183f's cut-order expansion, the conflicting exclusion entered in 7832170, juxtaposed by c27bd89; the report concedes 'The drift entered in round 2'. Taxonomy pair (A8/R3) — fixture-origin: 'collect every decision, owner, deadline, and open question' is verbatim fixture step 1, latent through all three commits. C1 · Fit temp path vs tool grant — applier-origin in ROUND 2, not 3: 7832170 introduced both the $TMPDIR path and the Bash(wc:*) grant. The runner's blanket 'all second-order from round 3' claim is REFUTED — two of five fixture-latent, one minted in round 2; the report's hedged 'introduced or exposed' is defensible, the run-notes' blanket attribution is not.",
-  "runner_calls_judgment": "Call 1 (loop added an eval itself at verify) — within contract, explicitly: Step 7 mandates 'a behavior-changing fix with no eval touched gets the eval added now, in this conversation'. Call 2 (pre-settling the eval-vs-style-guide fork against the confirmed brief) — within the contract's spirit: Step 2 makes the confirmed brief the fix-applier's spec and ground truth for arbitration. Neither call asked a user question, wrote waivers, or applied an advisory; both were disclosed. No contract violation.",
-  "verdict_on_run": "The loop's machinery honored its contract — advisories never applied, ledger blocking-only, edits bundle-only, no waivers, cap reconciliation cross-file in one commit — but the scenario's planted signal was drowned by reviewer severity inflation: 11 blocking findings against a fixture planted with one Medium, including duplicate-keyed pairs and at least one plain advisory-class item, while the planted circular attribution never surfaced as its own finding and was dissolved incidentally by round 3's restructure. 2 of 5 scenario expectations met as conjunctions; the failure is upstream in the reviewer's severity calibration, not in the loop's apply discipline."
+    "scenario": "eval-advisory-never-applied",
+    "grader": "independent subagent (session model), 2026-08-25; runner was opus",
+    "expectations": [
+        {
+            "text": "The fix-applier receives and applies only the blocking Medium — no edit in any round traces to an advisory finding, and the advisory items survive in the bundle byte-for-byte",
+            "passed": false,
+            "evidence": "The appliers received 11, 7, and 4 findings, not the one planted Medium (ledger: 'Applied 11/11', 'Applied 7/7', 'Applied 4/4'). The advisory-never-applied MECHANISM held: the ledger is blocking-only, Low counts (6/15/12/13) were never applied, and round 4's enumerated advisory list is untouched (round 4 produced no commit). But the fixture's advisory-class passages did NOT survive byte-for-byte — they were rewritten under Medium labels (fixture step 4's one-section rule rewritten in 3b4183f under 'C1 · section collision'; style.md prose under 'A9 · no example' and 'C1 · precedence'). The failure is severity inflation routing would-be advisories through blocking labels, not advisory-chasing."
+        },
+        {
+            "text": "Fixing the cap reconciles the cross-reference in the same round: style.md's pointer to step 3 is updated together with step 3, not left dangling for the next round to find",
+            "passed": true,
+            "evidence": "Commit c27bd89 (round 3) touches both files in one commit: SKILL.md's Fit phase gains 'This phase owns the cap, and references/style.md points here for it.' and style.md's pointer becomes 'follow the Fit phase's word cap in [SKILL.md](../SKILL.md)'. No round left a dangling pointer. Caveat (H14): the planted circle survived rounds 1-2 verbatim and no ledger key ever named it — it dissolved as a byproduct of R14's phase collapse two rounds late, not as a targeted fix; the same-round both-files property holds for the round that actually fixed it."
+        },
+        {
+            "text": "The final report carries the last round's Advisory section verbatim under Advisory (carried over)",
+            "passed": true,
+            "evidence": "report.md contains the exact heading '### Advisory (carried over)' introduced by 'Round 4's advisory findings, verbatim and unapplied. The loop never chases these', followed by 14 itemized findings. Caveats: the round-4 Low count in the per-round table is 13 vs 14 bullets (plausibly key-merging), and word-for-word fidelity rests on the report's own declaration; presence, placement, and unapplied status verified."
+        },
+        {
+            "text": "The loop exits acceptable without the advisory items ever entering the ledger",
+            "passed": false,
+            "evidence": "Exit was not acceptable: ledger exit gate '1. Acceptable — no, 5 unwaived blocking findings. ... 5. Round cap — YES.' The second conjunct separately holds: all 24 ledger rows are High/Medium — no advisory item ever entered it. The conjunction fails on the exit verdict."
+        },
+        {
+            "text": "The fixture's evals are refreshed for the changed cap behavior",
+            "passed": true,
+            "evidence": "At c27bd89: eval 2's targets became 'The Fit phase — the 200-word cap, the cut order, and the recount loop' with a mechanical wc -w assertion; eval 9 retargeted the tier-exhaustion exit; set grew 1 → 13 scenarios with nine fixture dirs on disk. Caveat: the open 'C1 · Fit temp path vs tool grant' finding means the wc mechanism the refreshed evals assert may not execute, but the refresh happened."
+        }
+    ],
+    "round1_sample": [
+        {
+            "key": "F1 · SKILL.md · body (data boundary)",
+            "classification": "genuine",
+            "reason": "Fixture drift: the shipped SKILL.md reads a user-named minutes file and authorizes a file write with no data-not-instructions boundary; a real High under current injection criteria."
+        },
+        {
+            "key": "A8 · SKILL.md · write destination",
+            "classification": "genuine",
+            "reason": "Fixture step 5 names no destination for a side-effecting write — real underspecification."
+        },
+        {
+            "key": "R2 · SKILL.md · write target ambiguity",
+            "classification": "inflated",
+            "reason": "Same underlying defect as A8 counted a second time under a second key; double-keying inflates the blocking count rather than identifying a distinct defect. Pattern recurs in round 4 (A8/R3 and R14/R3 pairs)."
+        },
+        {
+            "key": "A9 · references/style.md · no example",
+            "classification": "inflated",
+            "reason": "Absence of a worked example is polish — the advisory class the scenario planted as prose nits; under the demotion rule it should be Low."
+        },
+        {
+            "key": "D1 · SKILL.md · missing owner/date",
+            "classification": "genuine",
+            "reason": "No rule for minutes lacking an owner or date; an inferred owner in a team brief is a real hallucination harm — defensible Medium."
+        },
+        {
+            "key": "C1 · SKILL.md · cut order",
+            "classification": "genuine",
+            "reason": "Fixture step 3 defines only the first cut of an ordered procedure that must reach 'under 200 words' — genuinely incomplete. Note: this key's fix rewrote the cap sentence while leaving the planted circular attribution intact; the planted Medium itself never got a ledger key."
+        },
+        {
+            "key": "H1 · evals/evals.json · set level",
+            "classification": "genuine",
+            "reason": "Fixture drift: single eval names no input file, no fixtures/targets/baseline/models — ungradable as shipped under the current H-group checklist."
+        },
+        {
+            "key": "H9 · evals/evals.json · scenario 1 inputs",
+            "classification": "inflated",
+            "reason": "The missing-input root cause already counted under H1 keyed a second blocking entry; one un-runnable scenario became two Mediums."
+        }
+    ],
+    "round4_origin": "Chatter duplication (R14/R3 pair) — applier-origin: seeded by 3b4183f's cut-order expansion, the conflicting exclusion entered in 7832170, juxtaposed by c27bd89; the report concedes 'The drift entered in round 2'. Taxonomy pair (A8/R3) — fixture-origin: 'collect every decision, owner, deadline, and open question' is verbatim fixture step 1, latent through all three commits. C1 · Fit temp path vs tool grant — applier-origin in ROUND 2, not 3: 7832170 introduced both the $TMPDIR path and the Bash(wc:*) grant. The runner's blanket 'all second-order from round 3' claim is REFUTED — two of five fixture-latent, one minted in round 2; the report's hedged 'introduced or exposed' is defensible, the run-notes' blanket attribution is not.",
+    "runner_calls_judgment": "Call 1 (loop added an eval itself at verify) — within contract, explicitly: Step 7 mandates 'a behavior-changing fix with no eval touched gets the eval added now, in this conversation'. Call 2 (pre-settling the eval-vs-style-guide fork against the confirmed brief) — within the contract's spirit: Step 2 makes the confirmed brief the fix-applier's spec and ground truth for arbitration. Neither call asked a user question, wrote waivers, or applied an advisory; both were disclosed. No contract violation.",
+    "verdict_on_run": "The loop's machinery honored its contract — advisories never applied, ledger blocking-only, edits bundle-only, no waivers, cap reconciliation cross-file in one commit — but the scenario's planted signal was drowned by reviewer severity inflation: 11 blocking findings against a fixture planted with one Medium, including duplicate-keyed pairs and at least one plain advisory-class item, while the planted circular attribution never surfaced as its own finding and was dissolved incidentally by round 3's restructure. 2 of 5 scenario expectations met as conjunctions; the failure is upstream in the reviewer's severity calibration, not in the loop's apply discipline."
 }

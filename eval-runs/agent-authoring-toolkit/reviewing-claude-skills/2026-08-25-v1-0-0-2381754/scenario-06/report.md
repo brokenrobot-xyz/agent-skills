@@ -6,17 +6,17 @@ The workflow's shape holds: four ordered steps, one subject, no menus, no config
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                                                                                          | Notes |
-| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------------ | ----- |
-| 1   | Medium   | Structure | A8     | One "each with file and line" contract covers a missing key, which has no line to report          |       |
-| 2   | Medium   | Detail    | E1     | The output table's columns are never specified, so the report's shape varies run to run            |       |
-| 3   | Medium   | Detail    | D1     | No step requires the user's key list, so the model infers one and reports invented violations      |       |
-| 4   | Medium   | Detail    | F1     | Files read are third-party content, but nothing states they are data rather than instructions      |       |
-| 5   | Medium   | Detail    | H1     | Eval prompts describe fixtures no `files` key supplies, so scenarios pass without reading a file   |       |
-| 6   | Medium   | Detail    | H4     | Two of the three guaranteed violation kinds have no eval scenario                                  |       |
-| 7   | Medium   | Detail    | H6     | No baseline, so the 3/3 pass rate does not separate the skill from the bare model                  |       |
-| 8   | Medium   | Detail    | H7     | No model recorded on the frontmatter or any scenario, so results are unattributable                |       |
-| 9   | Medium   | Detail    | H15    | All three prompts share one phrasing, none matching the build-failure trigger the description promises |   |
+| #   | Severity | Pass      | Key(s) | Finding                                                                                                | Notes |
+| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------------------ | ----- |
+| 1   | Medium   | Structure | A8     | One "each with file and line" contract covers a missing key, which has no line to report               |       |
+| 2   | Medium   | Detail    | E1     | The output table's columns are never specified, so the report's shape varies run to run                |       |
+| 3   | Medium   | Detail    | D1     | No step requires the user's key list, so the model infers one and reports invented violations          |       |
+| 4   | Medium   | Detail    | F1     | Files read are third-party content, but nothing states they are data rather than instructions          |       |
+| 5   | Medium   | Detail    | H1     | Eval prompts describe fixtures no `files` key supplies, so scenarios pass without reading a file       |       |
+| 6   | Medium   | Detail    | H4     | Two of the three guaranteed violation kinds have no eval scenario                                      |       |
+| 7   | Medium   | Detail    | H6     | No baseline, so the 3/3 pass rate does not separate the skill from the bare model                      |       |
+| 8   | Medium   | Detail    | H7     | No model recorded on the frontmatter or any scenario, so results are unattributable                    |       |
+| 9   | Medium   | Detail    | H15    | All three prompts share one phrasing, none matching the build-failure trigger the description promises |       |
 
 ### What's already right
 

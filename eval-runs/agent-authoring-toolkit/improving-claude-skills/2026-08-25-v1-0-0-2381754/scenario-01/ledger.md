@@ -7,29 +7,29 @@ Dedupe key: criterion key + file + section.
 
 ## Blocking findings (High + Medium only)
 
-| Ledger key (criterion + file + section)             | R1         | R2         | R3         | R4 | Status   |
-| --------------------------------------------------- | ---------- | ---------- | ---------- | -- | -------- |
-| R1 · SKILL.md · Steps/step 3 (cap phase)            | High new   | gone       | gone       |    | resolved |
-| R1 · SKILL.md · trailing note after Output          | Medium new | gone       | gone       |    | resolved |
-| A8 · SKILL.md · Steps/step 4 (release heading)      | Medium new | gone       | gone (Low) |    | resolved |
-| A22 · SKILL.md · Output vs step 5 (approve-narrow)  | Medium new | gone       | gone       |    | resolved |
-| A9 · guide · groups + template block                | —          | Medium new | gone       |    | resolved |
-| C1 · guide · entry-style sentence                   | —          | Medium new | gone       |    | resolved |
-| C8 · SKILL.md · body (scope boundary)               | —          | Medium new | gone       |    | resolved |
-| F1 · SKILL.md · step 1 (content is data)            | —          | Medium new | gone       |    | resolved |
-| H2 · evals.json · missing files fixtures            | —          | Medium new | partial*   |    | see H9   |
-| H4 · evals.json · heading-form untested             | —          | Medium new | gone       |    | resolved |
-| H4 · evals.json · empty-Unreleased untested         | —          | Medium new | gone       |    | resolved |
-| R4 · guide · closed group set, no membership test   | —          | Medium new | gone       |    | resolved |
-| A22 · SKILL.md · steps 3-4 (no validation phase)    | —          | —          | Medium new | gone | resolved |
-| A21 · SKILL.md · steps 2-4 (invariant unchecked)    | —          | —          | Medium new | gone | resolved |
-| H9 · evals.json · scenarios 1 and 4 lack fixtures   | —          | —          | Medium new | gone | resolved |
-| F1 · SKILL.md · step 1 (surface the injected line)  | —          | —          | Medium new | gone | resolved |
-| H6 · evals.json · no baseline key                   | —          | —          | Medium new | gone | resolved |
-| H15 · evals.json · prompt phrasing/register         | —          | —          | Medium new | gone | resolved |
-| D2 · guide · release date from recall               | —          | —          | Medium new | gone | resolved |
-| A2 · SKILL.md · frontmatter description             | Low(adv)   | Low(adv)   | Low(adv)   | Medium new | OPEN |
-| E1 · guide · § Release headings (Unreleased form)   | —          | —          | —          | Medium new | OPEN |
+| Ledger key (criterion + file + section)            | R1         | R2         | R3         | R4         | Status   |
+| -------------------------------------------------- | ---------- | ---------- | ---------- | ---------- | -------- |
+| R1 · SKILL.md · Steps/step 3 (cap phase)           | High new   | gone       | gone       |            | resolved |
+| R1 · SKILL.md · trailing note after Output         | Medium new | gone       | gone       |            | resolved |
+| A8 · SKILL.md · Steps/step 4 (release heading)     | Medium new | gone       | gone (Low) |            | resolved |
+| A22 · SKILL.md · Output vs step 5 (approve-narrow) | Medium new | gone       | gone       |            | resolved |
+| A9 · guide · groups + template block               | —          | Medium new | gone       |            | resolved |
+| C1 · guide · entry-style sentence                  | —          | Medium new | gone       |            | resolved |
+| C8 · SKILL.md · body (scope boundary)              | —          | Medium new | gone       |            | resolved |
+| F1 · SKILL.md · step 1 (content is data)           | —          | Medium new | gone       |            | resolved |
+| H2 · evals.json · missing files fixtures           | —          | Medium new | partial*   |            | see H9   |
+| H4 · evals.json · heading-form untested            | —          | Medium new | gone       |            | resolved |
+| H4 · evals.json · empty-Unreleased untested        | —          | Medium new | gone       |            | resolved |
+| R4 · guide · closed group set, no membership test  | —          | Medium new | gone       |            | resolved |
+| A22 · SKILL.md · steps 3-4 (no validation phase)   | —          | —          | Medium new | gone       | resolved |
+| A21 · SKILL.md · steps 2-4 (invariant unchecked)   | —          | —          | Medium new | gone       | resolved |
+| H9 · evals.json · scenarios 1 and 4 lack fixtures  | —          | —          | Medium new | gone       | resolved |
+| F1 · SKILL.md · step 1 (surface the injected line) | —          | —          | Medium new | gone       | resolved |
+| H6 · evals.json · no baseline key                  | —          | —          | Medium new | gone       | resolved |
+| H15 · evals.json · prompt phrasing/register        | —          | —          | Medium new | gone       | resolved |
+| D2 · guide · release date from recall              | —          | —          | Medium new | gone       | resolved |
+| A2 · SKILL.md · frontmatter description            | Low(adv)   | Low(adv)   | Low(adv)   | Medium new | OPEN     |
+| E1 · guide · § Release headings (Unreleased form)  | —          | —          | —          | Medium new | OPEN     |
 
 *H2 (R2) asked for fixtures on evals 2, 3, 5 — delivered. H9 (R3) is a distinct gap: evals 1 and 4,
 which R2's finding never named, still lack fixtures. Not a reappearance of the same key+section.
@@ -46,7 +46,7 @@ which R2's finding never named, still lack fixtures. Not a reappearance of the s
 - `E1 · guide` (R4) is adjacent to `A9 · guide` (R2, "overlaps E1"): both concern the guide
   under-specifying output shape. R2's specific defect (no group-heading form, no worked example)
   was fixed and stays fixed; R4's is a different corner (the fresh Unreleased heading's form in
-  the match-theirs branch). Judged NEW, but the recurring *pattern* — one more unspecified corner
+  the match-theirs branch). Judged NEW, but the recurring _pattern_ — one more unspecified corner
   of output shape per round in the same file — is flagged for the human as the likeliest place a
   fifth round would land.
 - `A2 · SKILL.md · description` was Low/advisory in R2 and R3 and was never applied (advisory
@@ -58,10 +58,12 @@ which R2's finding never named, still lack fixtures. Not a reappearance of the s
 ## Round log
 
 ### Round 1 — review + apply
+
 - Verdict: not yet — gated (1 High). Blocking set: {R1·step3, R1·note, A8·step4, A22·approve-narrow}
 - Restructure applied by fix-applier (plugin agent type). No declines, no stray paths. Commit 5b1b32d.
 
 ### Round 2 — review + apply
+
 - Verdict: not yet — 8 blocking (all Medium). Structure: no High.
 - Blocking set: {A9, C1, C8, F1·data, H2, H4·heading, H4·empty, R4}
 - All 8 applied surgically; one declared behavioral fork (R4: ask-the-user branch chosen, rationale
@@ -69,11 +71,13 @@ which R2's finding never named, still lack fixtures. Not a reappearance of the s
 - Advisory (11), not chased.
 
 ### Round 3 — apply
+
 - All 7 applied; findings A22 and A21 satisfied by ONE edit (both requested the same check).
 - One declared fork (D2: date rule placed in the guide, not SKILL.md, to keep the spine lean).
 - No declines, no stray paths, no waiver file. Commit 015e85b.
 
 ### Round 3 — review
+
 - Verdict: not yet — 7 blocking (all Medium; 2 low-confidence). Structure: no High.
 - Blocking set: {A22·validation, A21, H9, F1·surface, H6, H15, D2}
 - Round 2's set is fully resolved; zero keys persisted, zero contested.
@@ -81,6 +85,7 @@ which R2's finding never named, still lack fixtures. Not a reappearance of the s
   not chased.
 
 ### Round 4 — review (final; cap reached)
+
 - Verdict: not yet — 2 blocking (both Medium, both high confidence).
 - Structure pass: no High AND no Medium — first fully clean structure round.
 - Blocking set: {A2 · SKILL.md · frontmatter description, E1 · guide · § Release headings}

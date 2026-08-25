@@ -120,7 +120,7 @@ Carried in full, because they are what the human now decides on.
    in the draft. The bundle's own evals encode both readings — eval 9's setup says the three cut
    tiers run with chatter present, eval 12's says the housekeeping lines never entered the draft.
    Recommended fix: delete the chatter tier from Fit, leaving exclusion to style.md's rule 4, and
-   adjust the tier-exhaustion exit to two tiers. Explicitly *not* recommended: rewording the tier
+   adjust the tier-exhaustion exit to two tiers. Explicitly _not_ recommended: rewording the tier
    to "chatter that survived Compose", which keeps the operation in two phases.
 2. **`A8` / `R3` · `SKILL.md` § Extract — the collection taxonomy omits Actions.** Extract
    collects "every decision, owner, deadline, and open question" — a closed list in which an

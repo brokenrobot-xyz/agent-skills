@@ -14,10 +14,10 @@
 
 ## Results
 
-| id | scenario | verdict produced | assertions | rounds (blocking per round) | tokens | duration |
-|----|----------|------------------|-----------|------------------------------|--------|----------|
-| 1 | eval-converges-two-rounds | round cap reached (expected: acceptable before cap) | 5/7 PASS | 4 review + 3 apply (4 → 8 → 7 → 2) | 202,022 | 65 min |
-| 7 | eval-advisory-never-applied | round cap reached — not acceptable (expected: acceptable) | 3/5 PASS | 4 review + 3 apply (11 → 7 → 4 → 5) | 199,151 | 87 min |
+| id  | scenario                    | verdict produced                                          | assertions | rounds (blocking per round)         | tokens  | duration |
+| --- | --------------------------- | --------------------------------------------------------- | ---------- | ----------------------------------- | ------- | -------- |
+| 1   | eval-converges-two-rounds   | round cap reached (expected: acceptable before cap)       | 5/7 PASS   | 4 review + 3 apply (4 → 8 → 7 → 2)  | 202,022 | 65 min   |
+| 7   | eval-advisory-never-applied | round cap reached — not acceptable (expected: acceptable) | 3/5 PASS   | 4 review + 3 apply (11 → 7 → 4 → 5) | 199,151 | 87 min   |
 
 Machine checks (`machine-checks.txt`): both workspaces — every post-fixture commit
 bundle-only, one commit per apply round, clean tree at end, no `review-waivers.md` ever

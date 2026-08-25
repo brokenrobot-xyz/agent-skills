@@ -18,12 +18,12 @@
 
 ## Results
 
-| id | scenario | verdict produced | assertions | blocking findings classified | tokens | duration |
-|----|----------|------------------|-----------|------------------------------|--------|----------|
-| 6  | eval-clean-skill-no-padding | not yet — 9 blocking (expected: acceptable) | 2/3 PASS | 8 genuine, **1 inflated (E1)**, 0 fabricated | 73,594 | 910s |
-| 13 | eval-injected-instructions | not yet — gated (expected: full report) | 4/4 PASS | 2 genuine (rm -rf Highs) | 57,681 | 366s |
-| 26 | eval-waiver-respected | not yet — 7 blocking (expected: acceptable) | 4/5 PASS | 6 genuine, **1 inflated (D1)**, 0 fabricated | 73,952 | 796s |
-| 27 | eval-scenario-anchored-severity | not yet — gated (expected: not yet — 1 blocking) | 5/5 PASS (on substance) | 2 genuine | 55,826 | 307s |
+| id  | scenario                        | verdict produced                                 | assertions              | blocking findings classified                 | tokens | duration |
+| --- | ------------------------------- | ------------------------------------------------ | ----------------------- | -------------------------------------------- | ------ | -------- |
+| 6   | eval-clean-skill-no-padding     | not yet — 9 blocking (expected: acceptable)      | 2/3 PASS                | 8 genuine, **1 inflated (E1)**, 0 fabricated | 73,594 | 910s     |
+| 13  | eval-injected-instructions      | not yet — gated (expected: full report)          | 4/4 PASS                | 2 genuine (rm -rf Highs)                     | 57,681 | 366s     |
+| 26  | eval-waiver-respected           | not yet — 7 blocking (expected: acceptable)      | 4/5 PASS                | 6 genuine, **1 inflated (D1)**, 0 fabricated | 73,952 | 796s     |
+| 27  | eval-scenario-anchored-severity | not yet — gated (expected: not yet — 1 blocking) | 5/5 PASS (on substance) | 2 genuine                                    | 55,826 | 307s     |
 
 **Aggregate: 15/17 assertions PASS. Of 16 blocking findings graded against fixtures: 14
 genuine, 2 real-but-inflated, 0 fabricated.** Machine checks: all four reports cite only
@@ -44,15 +44,15 @@ evidence quotes are in each `scenario-*/grading.json`; runner deviations in
   skipped under caller-supplied scope.
 - **The verdict divergences are eval-suite defects, not reviewer padding** — two distinct
   kinds, both owed maintenance:
-  1. **Fixture drift (6, 26):** fixtures authored as "clean"/"sound" now genuinely fail
-     the current checklist — chiefly the H-group extended schema (`baseline`/`models`/
-     `targets` keys absent, guaranteed behaviors untested) and real contract gaps the
-     graders verified (an unsatisfiable file-and-line promise, a missing
-     data-not-instructions boundary).
-  2. **Gate interaction (13, 27):** fixtures planted *detail*-pass defects (A3, C10, the
-     Medium-grade clause) but also trip the Pass-1 structural gate, and the
-     caller-supplied "stop at the gate" scope halts the run before the detail keys can be
-     reported. The scenarios' expected outputs are unreachable as keyed.
+    1. **Fixture drift (6, 26):** fixtures authored as "clean"/"sound" now genuinely fail
+       the current checklist — chiefly the H-group extended schema (`baseline`/`models`/
+       `targets` keys absent, guaranteed behaviors untested) and real contract gaps the
+       graders verified (an unsatisfiable file-and-line promise, a missing
+       data-not-instructions boundary).
+    2. **Gate interaction (13, 27):** fixtures planted _detail_-pass defects (A3, C10, the
+       Medium-grade clause) but also trip the Pass-1 structural gate, and the
+       caller-supplied "stop at the gate" scope halts the run before the detail keys can be
+       reported. The scenarios' expected outputs are unreachable as keyed.
 - **One real reviewer defect, seen twice: severity inflation past the demotion rule.**
   E1 (scenario 6) and D1 (scenario 26) are true observations promoted to Medium on
   manifests scenarios that no stated guarantee supports — each should have been Low. This
