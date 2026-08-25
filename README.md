@@ -102,6 +102,40 @@ a consumer's machine; the checkers under `scripts/` are repository tooling
 that never ships, so they may take a devDependency (`yaml`, to parse
 frontmatter the way the harness does rather than by regex).
 
+### Running the working copy
+
+To dogfood the plugins as you edit them, launch Claude Code from the
+repository root with one `--plugin-dir` per bundle:
+
+```sh
+claude \
+  --plugin-dir plugins/agent-authoring-toolkit \
+  --plugin-dir plugins/committing-conventionally \
+  --plugin-dir plugins/frontend-toolkit \
+  --plugin-dir plugins/prompt-quality-criteria \
+  --plugin-dir plugins/writing-simplified-technical-english
+```
+
+`--plugin-dir` reads the bundle from the working tree, so an edit is live on
+the next launch. Installing is the wrong tool here: `/plugin install` copies
+the bundle into `~/.claude/plugins/cache/` and pins the sha it copied, so the
+Skill and Agent tools keep serving that snapshot until you update the
+marketplace and reinstall — the edit you just made is not the one being
+tested.
+
+The flags hold for that session only, and nothing is written outside the
+session. Two consequences worth expecting: the session picks up edits on
+restart, not in place, and `committing-conventionally`'s `PreToolUse` hook is
+live from the moment the session starts, so it gates the commits you make to
+this repository — which is the point, but it does mean a bad edit to the hook
+blocks committing the fix.
+
+List every bundle explicitly rather than relying on the `dependencies` field
+in `plugin.json`, which resolves through a marketplace that `--plugin-dir`
+does not consult. The command above already covers the one dependency edge:
+`agent-authoring-toolkit` declares `prompt-quality-criteria` and
+`writing-simplified-technical-english`, and both are in the list.
+
 ## License
 
 [MIT](LICENSE)
