@@ -6,11 +6,7 @@
     },
     "enabledMcpjsonServers": ["github"],
     "enabledPlugins": {
-        "writing-simplified-technical-english@brokenrobot-xyz": true,
-        "prompt-quality-criteria@brokenrobot-xyz": true,
-        "committing-conventionally@brokenrobot-xyz": true,
-        "reviewing-claude-skills@brokenrobot-xyz": true,
-        "reviewing-claude-subagents@brokenrobot-xyz": true
+        "skill-creator@claude-plugins-official": true
     },
     "extraKnownMarketplaces": {},
     "sandbox": {
@@ -166,7 +162,7 @@
             "Bash(npm outdated *)",
 
             "Skill(committing-conventionally:committing-conventionally)",
-            "Skill(reviewing-claude-skills:reviewing-claude-skills)",
+            "Skill(agent-authoring-toolkit:*)",
             "Skill(writing-simplified-technical-english:writing-simplified-technical-english)",
 
             "mcp__github"

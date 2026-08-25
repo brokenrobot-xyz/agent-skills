@@ -21,9 +21,10 @@ those are canonical.
 ```
 
 It is also installed automatically as a dependency of
-[reviewing-claude-skills](../reviewing-claude-skills/README.md) and
-[reviewing-claude-subagents](../reviewing-claude-subagents/README.md), which
-invoke it in check mode to grade the prose of a skill or a subagent definition.
+[agent-authoring-toolkit](../agent-authoring-toolkit/README.md), whose
+[reviewing-claude-skills](../agent-authoring-toolkit/skills/reviewing-claude-skills/README.md) and
+[reviewing-claude-subagents](../agent-authoring-toolkit/skills/reviewing-claude-subagents/README.md)
+skills invoke it in check mode to grade the prose of a skill or a subagent definition.
 
 ## Usage
 

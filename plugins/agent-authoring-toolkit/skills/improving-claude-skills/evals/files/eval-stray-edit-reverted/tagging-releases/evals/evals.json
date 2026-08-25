@@ -1,0 +1,16 @@
+{
+    "skill_name": "tagging-releases",
+    "evals": [
+        {
+            "id": 1,
+            "name": "eval-tags-from-conventions",
+            "prompt": "Tag the 1.4.0 release.",
+            "expected_output": "An annotated tag named per the conventions document, annotated from the 1.4.0 changelog section, pushed.",
+            "assertions": [
+                "Derives the tag name from the conventions document's pattern",
+                "Writes the annotation from the changelog section for the version",
+                "Pushes the created tag"
+            ]
+        }
+    ]
+}

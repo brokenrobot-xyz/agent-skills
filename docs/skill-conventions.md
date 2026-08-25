@@ -2,8 +2,8 @@
 
 Conventions for `brokenrobot-xyz/agent-skills`. Codes cited here resolve as follows: `A…` and
 `R…` codes are criteria in the two reviewers' checklists,
-`plugins/reviewing-claude-skills/references/best-practices-checklist.md` and
-`plugins/reviewing-claude-subagents/references/best-practices-checklist.md`; `D15` is rule 3 of the
+`plugins/agent-authoring-toolkit/skills/reviewing-claude-skills/references/best-practices-checklist.md` and
+`plugins/agent-authoring-toolkit/skills/reviewing-claude-subagents/references/best-practices-checklist.md`; `D15` is rule 3 of the
 split test below, which this document records.
 
 ## When to create a new skill
@@ -102,7 +102,10 @@ omit the mode, the consumed result, and the absent-dependency behaviour.
 
 Every skill named by an invoking step or preloaded by a spawned agent is declared as a dependency
 in the caller's `.claude-plugin/plugin.json`, and every declared dependency is invoked by some step
-or preloaded by some agent.
+or preloaded by some agent. A sibling skill in the same plugin is the one exception: the install
+already carries it, so it is invoked by its scoped name but not declared —
+`improving-claude-skills` invoking `reviewing-claude-skills` inside `agent-authoring-toolkit` is
+this case.
 
 The overlap between the two is deliberate. The manifest says what gets installed; the step says what
 it is for. Because they carry different information about the same edge, a disagreement between them
@@ -111,17 +114,18 @@ declares fails on a clean install. That is the opposite of the `metadata`-restat
 case recorded below, where one side carried no information the other lacked. `R3` covers this
 cross-check.
 
-There are four invocation edges, and each needs all four statements above. The
+There are five invocation edges, and each needs all four statements above. The
 `reviewing-claude-skills` edges are preloads into its detail-reviewer on the primary path and Skill
-tool invocations only under the inline fallback; the `reviewing-claude-subagents` edges are Skill
-tool invocations:
+tool invocations only under the inline fallback; the `reviewing-claude-subagents` edges and the
+`improving-claude-skills` edge are Skill tool invocations:
 
-| Caller                       | Invoked skill                          | Mode   | Consumed as                                        |
-| :--------------------------- | :------------------------------------- | :----- | :------------------------------------------------- |
-| `reviewing-claude-skills`    | `prompt-quality-criteria`              | supply | Criteria the caller scores against, for groups B–G |
-| `reviewing-claude-skills`    | `writing-simplified-technical-english` | check  | Violations folded into `R7`                        |
-| `reviewing-claude-subagents` | `prompt-quality-criteria`              | supply | Criteria the caller scores against, for groups B–G |
-| `reviewing-claude-subagents` | `writing-simplified-technical-english` | check  | Violations folded into `R7`                        |
+| Caller                       | Invoked skill                          | Mode                          | Consumed as                                        |
+| :--------------------------- | :------------------------------------- | :---------------------------- | :------------------------------------------------- |
+| `reviewing-claude-skills`    | `prompt-quality-criteria`              | supply                        | Criteria the caller scores against, for groups B–G |
+| `reviewing-claude-skills`    | `writing-simplified-technical-english` | check                         | Violations folded into `R7`                        |
+| `reviewing-claude-subagents` | `prompt-quality-criteria`              | supply                        | Criteria the caller scores against, for groups B–G |
+| `reviewing-claude-subagents` | `writing-simplified-technical-english` | check                         | Violations folded into `R7`                        |
+| `improving-claude-skills`    | `reviewing-claude-skills`              | analysis-only, scope supplied | Findings folded into the loop's ledger             |
 
 ## Why there is no role field
 
@@ -156,6 +160,10 @@ What survived is the part that decides something: the split test above.
 **House rules — no external source. Change them by deciding to, not by re-syncing:**
 
 - The split test, and the priority of rule 3 over rules 1 and 2.
+- `review-waivers.md` at a skill bundle's root records the owner's deliberate deviations, keyed
+  `criterion key + file + section` — the same key the improvement loop's ledger uses. The skills
+  reviewer reads it and suppresses matched findings; its § Severity, verdict, and waivers section
+  defines the semantics.
 - The mapping from kind of skill to grammatical name form.
 - The `<object>-<agent-noun>` form for subagents.
 - The `-criteria` suffix for a rubric.

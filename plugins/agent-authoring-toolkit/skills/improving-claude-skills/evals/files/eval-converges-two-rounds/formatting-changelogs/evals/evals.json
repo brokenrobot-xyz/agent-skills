@@ -1,0 +1,25 @@
+{
+    "skill_name": "formatting-changelogs",
+    "evals": [
+        {
+            "id": 1,
+            "name": "eval-groups-and-orders",
+            "prompt": "Format the changelog for the 2.3.0 release.",
+            "expected_output": "The Unreleased section regrouped by change type in the guide's order, stamped as 2.3.0 with today's date, with a fresh empty Unreleased heading above it.",
+            "assertions": [
+                "Groups entries by change type in the order the guide specifies",
+                "Stamps the release heading with the version and date",
+                "Adds a fresh empty Unreleased heading",
+                "Does not modify entries under already-released headings",
+                "Shows the result and waits for confirmation before writing"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "eval-empty-groups-omitted",
+            "prompt": "Format the changelog for release — there are only bug fixes this time.",
+            "expected_output": "A release section containing only the Fixed group.",
+            "assertions": ["Omits groups with no entries rather than emitting empty headings"]
+        }
+    ]
+}

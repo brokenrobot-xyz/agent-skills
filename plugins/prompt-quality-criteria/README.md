@@ -18,9 +18,10 @@ files are canonical.
 ```
 
 Claude Code also installs this plugin alongside
-[reviewing-claude-skills](../reviewing-claude-skills/README.md) and
-[reviewing-claude-subagents](../reviewing-claude-subagents/README.md), which declare this plugin as
-a dependency. You may also install this plugin on its own, because the criteria are useful without a
+[agent-authoring-toolkit](../agent-authoring-toolkit/README.md), whose
+[reviewing-claude-skills](../agent-authoring-toolkit/skills/reviewing-claude-skills/README.md) and
+[reviewing-claude-subagents](../agent-authoring-toolkit/skills/reviewing-claude-subagents/README.md)
+skills score against these criteria; that plugin declares this one as a dependency. You may also install this plugin on its own, because the criteria are useful without a
 caller.
 
 ## Usage

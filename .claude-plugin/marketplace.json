@@ -39,14 +39,14 @@
             "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/prompt-quality-criteria"
         },
         {
-            "name": "reviewing-claude-skills",
-            "source": "./plugins/reviewing-claude-skills",
-            "description": "Reviews a Claude Code skill — its SKILL.md, evals, and referenced files — in two passes: structure first, stopping at a structural verdict when the workflow's shape fails; otherwise a full sweep against skill-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes. Each pass runs in a plugin subagent to keep the main conversation lean.",
-            "version": "1.9.0",
-            "category": "skill-authoring",
-            "tags": ["skills", "review", "audit", "quality"],
+            "name": "agent-authoring-toolkit",
+            "source": "./plugins/agent-authoring-toolkit",
+            "description": "A suite for authoring Claude Code artifacts: reviewing-claude-skills reviews a skill in two passes — structure first, stopping at a structural verdict when the workflow's shape fails, otherwise a full sweep ending in a computed verdict that honors the skill's recorded waivers; reviewing-claude-subagents reviews a subagent definition the same way, grading fit-for-purpose first; improving-claude-skills loops the skill review autonomously — review → apply every blocking finding → commit → re-review — until the verdict is acceptable, the findings plateau, or the round cap is hit, asking only one question: the intent brief at kickoff.",
+            "version": "1.0.0",
+            "category": "agent-authoring",
+            "tags": ["skills", "subagents", "review", "audit", "improvement", "quality"],
             "license": "MIT",
-            "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/reviewing-claude-skills"
+            "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/agent-authoring-toolkit"
         },
         {
             "name": "frontend-toolkit",
@@ -57,16 +57,6 @@
             "tags": ["frontend", "npm", "dependencies", "updates", "changelog-research"],
             "license": "MIT",
             "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/frontend-toolkit"
-        },
-        {
-            "name": "reviewing-claude-subagents",
-            "source": "./plugins/reviewing-claude-subagents",
-            "description": "Reviews a Claude Code subagent definition — its frontmatter, body, declared tools, and routing siblings — against subagent-authoring and prompting best practices plus the host project's conventions, producing a severity-ranked gap analysis with optional fixes.",
-            "version": "1.1.0",
-            "category": "skill-authoring",
-            "tags": ["subagents", "agents", "review", "audit", "quality"],
-            "license": "MIT",
-            "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/reviewing-claude-subagents"
         }
     ]
 }

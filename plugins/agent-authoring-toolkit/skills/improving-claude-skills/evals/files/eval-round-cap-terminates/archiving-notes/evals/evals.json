@@ -1,0 +1,16 @@
+{
+    "skill_name": "archiving-notes",
+    "evals": [
+        {
+            "id": 1,
+            "name": "eval-moves-stale-notes",
+            "prompt": "Archive my old notes.",
+            "expected_output": "Every note older than 90 days moved into notes/archive/<year>/, with a report of what moved.",
+            "assertions": [
+                "Moves only notes older than the 90-day cutoff",
+                "Creates year folders under notes/archive/ as needed",
+                "Reports what moved and what was skipped"
+            ]
+        }
+    ]
+}

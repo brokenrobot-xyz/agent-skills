@@ -1,0 +1,11 @@
+# Loop machine checks (git-shaped, from improving-claude-skills evals.json grading.script)
+
+## scenario-01 (formatting-changelogs)
+PASS: every post-fixture commit touches only bundle paths (3 commits)
+PASS: tree clean at end
+PASS: no review-waivers.md written by the loop
+
+## scenario-07 (summarizing-minutes)
+PASS: every post-fixture commit touches only bundle paths (3 commits)
+PASS: tree clean at end
+PASS: no review-waivers.md written by the loop
