@@ -1,0 +1,79 @@
+{
+  "scenario": "eval-clean-skill-no-padding",
+  "grader": "independent subagent (session model), 2026-08-25; runner was opus",
+  "expectations": [
+    {
+      "text": "Produces a short report acknowledging conformance, opening with the line 'Verdict: acceptable'",
+      "passed": false,
+      "evidence": "Report opens '**Verdict: not yet \u2014 9 blocking**' (report.md line 3) and runs 161 lines of gap analysis, not a short conformance acknowledgment."
+    },
+    {
+      "text": "Does NOT invent Low findings to pad the list",
+      "passed": true,
+      "evidence": "Each of the 7 advisory Lows is anchored in real fixture text \u2014 e.g. A16 quotes '`allowed-tools: Read Grep Glob` declares `Grep`, which no step uses' and grader verified no SKILL.md step mentions Grep; A10's dual naming ('unknown keys' vs 'a key outside the list') exists verbatim at SKILL.md lines 3 and 20; H3/H5's missing `targets` field and all-prose assertions are verifiably true of evals.json. None is fabricated."
+    },
+    {
+      "text": "Any Low it does raise appears in the Advisory section and does not change the acceptable verdict",
+      "passed": true,
+      "evidence": "All 7 Lows sit under '### Advisory' headed 'Listed once; advisory findings never gate the verdict.' (report.md line 121); the 'not yet' verdict is computed from the 9 Mediums only \u2014 no Low participates in it."
+    }
+  ],
+  "blocking_findings": [
+    {
+      "rank": 1,
+      "key": "A8",
+      "classification": "genuine",
+      "reason": "SKILL.md:19-20 verbatim: 'report a missing required key, an empty value, and a key outside the list, each with file and line' \u2014 a missing key has no line, so the stated per-violation contract is unsatisfiable and the fixture's own eval 1 assertion forces the fabrication; manifests concrete."
+    },
+    {
+      "rank": 2,
+      "key": "E1",
+      "classification": "inflated",
+      "reason": "Observation true ('Report one table covering all files' fixes no columns), but the only stated shape guarantee is honored under any column arrangement; the manifests (a user's grep -c over the 'problem' column) invents a machine-parsing use no guarantee supports \u2014 unspecified-format polish belonging at Low under the demotion rule."
+    },
+    {
+      "rank": 3,
+      "key": "D1",
+      "classification": "genuine",
+      "reason": "SKILL.md:9 premises everything on 'the key list the user supplies' yet no step asks or abstains when none is supplied \u2014 a real D1 hit with a concrete manifests ('lint the frontmatter under content/posts' names no keys \u2192 invented violations)."
+    },
+    {
+      "rank": 4,
+      "key": "F1",
+      "classification": "genuine",
+      "reason": "No data-not-instructions statement anywhere (verified) while the skill reads arbitrary third-party Markdown \u2014 the indirect-injection threat model group F names; concrete manifests (an exemption-claiming comment suppressing a real missing-date row)."
+    },
+    {
+      "rank": 5,
+      "key": "H1",
+      "classification": "genuine",
+      "reason": "The prompt 'Check this file against the keys title, date, tags: a post whose frontmatter carries title and tags but no date.' is verbatim at evals.json:7 \u2014 a harness description of an unsupplied fixture, not a realistic user message; no entry carries `files`."
+    },
+    {
+      "rank": 6,
+      "key": "H4",
+      "classification": "genuine",
+      "reason": "Verified: scenarios are missing-key / no-frontmatter-block / all-clean, so the empty-value and key-outside-the-list violation kinds guaranteed at SKILL.md:19-20 have no eval \u2014 the coverage-blocking rule's Medium."
+    },
+    {
+      "rank": 7,
+      "key": "H6",
+      "classification": "genuine",
+      "reason": "No `baseline` key on any evals.json entry (verified) \u2014 a real H6 hit under the checklist's extended schema; fixture drift."
+    },
+    {
+      "rank": 8,
+      "key": "H7",
+      "classification": "genuine",
+      "reason": "Verified: no `models` key on any entry and no model pin in frontmatter \u2014 a real H7 hit."
+    },
+    {
+      "rank": 9,
+      "key": "H15",
+      "classification": "genuine",
+      "reason": "All three prompts open with the same 'Check ... against the key(s) ...' construction and none resembles the description's promised trigger ('frontmatter errors break a site build') \u2014 a stated discovery guarantee with no eval exercising it."
+    }
+  ],
+  "advisory_judgment": "Grounded, not padded: every one of the 7 Lows quotes real fixture text the grader verified, and each is correctly quarantined at Low per the demotion rule.",
+  "verdict_on_run": "The no-padding guarantee held \u2014 no fabricated evidence anywhere and all Lows are grounded \u2014 but the expected 'Verdict: acceptable' failed because the fixture has drifted out of 'clean' relative to the current checklist: 8 of 9 blocking findings are genuine. The single reviewer defect is severity inflation on Finding 2 (E1 table columns), a Low-grade polish nit promoted to Medium via a contrived grep-the-report scenario."
+}

@@ -1,0 +1,17 @@
+# Machine-checkable grading - criterion-key check
+
+## scenario-06
+PASS: every cited criterion key resolves
+PASS: finding IDs are plain rank numbers
+
+## scenario-13
+PASS: every cited criterion key resolves
+PASS: finding IDs are plain rank numbers
+
+## scenario-26
+PASS: every cited criterion key resolves
+PASS: finding IDs are plain rank numbers
+
+## scenario-27
+PASS: every cited criterion key resolves
+PASS: finding IDs are plain rank numbers
