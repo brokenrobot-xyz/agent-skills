@@ -6,10 +6,7 @@
     },
     "enabledMcpjsonServers": ["github"],
     "enabledPlugins": {
-        "writing-simplified-technical-english@brokenrobot-xyz": true,
-        "prompt-quality-criteria@brokenrobot-xyz": true,
-        "committing-conventionally@brokenrobot-xyz": true,
-        "agent-authoring-toolkit@brokenrobot-xyz": true
+        "skill-creator@claude-plugins-official": true
     },
     "extraKnownMarketplaces": {},
     "sandbox": {
