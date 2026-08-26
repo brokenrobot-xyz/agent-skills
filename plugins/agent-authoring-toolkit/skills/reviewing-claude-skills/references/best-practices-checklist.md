@@ -7,7 +7,7 @@ README's § Maintaining the criteria.
 
 **Groups `B`–`G` are not in this file.** They are artifact-independent prompting criteria shared
 with the subagent reviewer, so they live in the `prompt-quality-criteria` skill, which the
-`detail-reviewer` agent preloads via its `skills` frontmatter (the inline fallback invokes it
+`skill-detail-reviewer` agent preloads via its `skills` frontmatter (the inline fallback invokes it
 through the Skill tool). Their keys are unchanged, and a finding cites `B4` or `F1` exactly as
 before.
 
@@ -299,7 +299,7 @@ narrow any other item in this group; when one does, cite the project's document 
 - **R7 — prose conventions.** Skill _body_ prose (`SKILL.md` body, the prose fields of
   `evals/evals.json` or a legacy `evals.md`, `references/`) follows the twelve conventions the
   `writing-simplified-technical-english` skill carries. Grade all twelve against that skill's check
-  mode — preloaded into the detail-reviewer, or invoked through the Skill tool under the inline
+  mode — preloaded into the skill-detail-reviewer, or invoked through the Skill tool under the inline
   fallback; when it is not installed, judge holistically against `R8`–`R11` below and report that
   the other seven went ungraded. Two scope limits: the `name`/`description` frontmatter is **not** covered
   (that is `A1`/`A2`/`A3` — never reword a `description` for prose style, it drives discovery), and

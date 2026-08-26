@@ -78,8 +78,9 @@ subagent.
 - [`references/best-practices-checklist.md`](references/best-practices-checklist.md) — the
   criteria for groups `A` (subagent authoring), `H` (evals methodology), and `R` (craft and
   project conventions; the checklist's § R intro says how the project-scoped items resolve
-  against the host project's own documents). The structure-reviewer scores the criteria that
-  file marks `_(structure pass)_`; the detail-reviewer scores the rest. Its § Why there is no
+  against the host project's own documents). The subagent-structure-reviewer scores the criteria
+  that file marks `_(structure pass)_`; the subagent-detail-reviewer scores the rest. Its § Why
+  there is no
   precedence rule governs group `A`: no open standard covers subagents, so Claude Code's
   documentation is normative, and a version-gated rule is reported with its version. Cite
   criterion keys (e.g. `A11`, `H10`, `R3`) in findings.

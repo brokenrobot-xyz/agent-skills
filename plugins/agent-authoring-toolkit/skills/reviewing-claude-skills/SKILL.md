@@ -10,14 +10,14 @@ model: opus
 
 Audit one named skill in two passes, each run by a dedicated subagent so the review's heavy
 reading — the target bundle and the criteria corpora — stays out of this
-conversation. **Pass 1** (the [structure-reviewer](../../agents/structure-reviewer.md) agent) scores
+conversation. **Pass 1** (the [skill-structure-reviewer](../../agents/skill-structure-reviewer.md) agent) scores
 the workflow's structure — its shape, not its sentences — against the criteria marked
 `_(structure pass)_` in
 [`references/best-practices-checklist.md`](references/best-practices-checklist.md). A **High**
 structural finding stops the run at a gate with a structural verdict and a redesign
 recommendation, because line-level findings against a structure a redesign will replace are
 wasted work. **Pass 2** — reached when the structure holds, or when the user pre-authorizes the
-sweep — is the [detail-reviewer](../../agents/detail-reviewer.md) agent sweeping the full criteria and
+sweep — is the [skill-detail-reviewer](../../agents/skill-detail-reviewer.md) agent sweeping the full criteria and
 producing a **severity-ranked gap analysis**. Then, if the user wants, apply the fixes they
 approve, one finding at a time, in this conversation.
 
@@ -30,7 +30,7 @@ line with their sources is maintenance, not review — see
 skipped stage reads to the user as a clean result.** When a plugin agent type fails to resolve
 but its definition file under this plugin's `agents/` is readable, **substitute**: spawn a
 `general-purpose` agent carrying that definition verbatim, pass any `model:` pin the definition
-declares as the spawn's model parameter, and — for the detail-reviewer, whose `skills` preload did not
+declares as the spawn's model parameter, and — for the skill-detail-reviewer, whose `skills` preload did not
 happen — point it at the installed `prompt-quality-criteria` and
 `writing-simplified-technical-english` bundles to `Read` its criteria from disk, and tell it a
 successful disk read satisfies its self-check, recorded in COVERAGE as `scored (read from disk)` —
@@ -51,25 +51,25 @@ evals, referenced files/hooks). To review several, run again per skill.
 ## Normative references
 
 - The review's two agent definitions ship with this plugin under `agents/`:
-  [structure-reviewer](../../agents/structure-reviewer.md) and
-  [detail-reviewer](../../agents/detail-reviewer.md). **Each definition owns its findings-payload
+  [skill-structure-reviewer](../../agents/skill-structure-reviewer.md) and
+  [skill-detail-reviewer](../../agents/skill-detail-reviewer.md). **Each definition owns its findings-payload
   format**; the steps below consume those payloads rather than restating them. The other agents in
   `agents/` belong to sibling skills, except [criteria-refresher](../../agents/criteria-refresher.md),
   a maintenance tool no step here spawns.
 - [`references/best-practices-checklist.md`](references/best-practices-checklist.md) — the
   criteria for groups `A` and `H` (the Agent Skills open standard plus Anthropic's docs) and `R`
   (craft and project conventions; the checklist's § R intro says how the project-scoped items
-  resolve against the host project's own documents). The structure-reviewer scores the criteria
-  that file marks `_(structure pass)_`; the detail-reviewer scores the rest. Cite criterion keys
+  resolve against the host project's own documents). The skill-structure-reviewer scores the criteria
+  that file marks `_(structure pass)_`; the skill-detail-reviewer scores the rest. Cite criterion keys
   (e.g. `A2`, `H10`, `R3`) in findings.
 - The **`prompt-quality-criteria:prompt-quality-criteria`** skill — groups `B`–`G`, which the
   checklist above does not carry. They are artifact-independent prompting criteria shared with
   the subagent reviewer, so they live in one place rather than drifting between two copies. The
-  detail-reviewer preloads it via its `skills` frontmatter and self-checks it arrived; the inline
+  skill-detail-reviewer preloads it via its `skills` frontmatter and self-checks it arrived; the inline
   fallback invokes it through the Skill tool. Keys are cited as written (`B4`, `F1`) either way.
 - The **`writing-simplified-technical-english:writing-simplified-technical-english`** skill — the
   twelve prose conventions `R7` grades against (the checklist condenses only five of them into
-  `R8`–`R11`). Preloaded into the detail-reviewer the same way; the inline fallback invokes it in
+  `R8`–`R11`). Preloaded into the skill-detail-reviewer the same way; the inline fallback invokes it in
   check mode.
 - The live docs at the URLs in § Sources of both criteria files — fetched only by a deliberate
   criteria refresh, never by a review. A review reads those files' `last-synced:` dates and
@@ -83,9 +83,9 @@ Copy this checklist into your reply and tick each item as you go:
 Review progress:
 - [ ] 1. Locate the target bundle
 - [ ] 2. Brief the user, then interview to scope
-- [ ] 3. Pass 1 — spawn the structure-reviewer
+- [ ] 3. Pass 1 — spawn the skill-structure-reviewer
 - [ ] 4. Gate — stop on a High structural finding, else continue
-- [ ] 5. Pass 2 — spawn the detail-reviewer
+- [ ] 5. Pass 2 — spawn the skill-detail-reviewer
 - [ ] 6. Consolidate — spot-check, merge, rank
 - [ ] 7. Write the gap analysis
 - [ ] 8. Offer interactive apply
@@ -166,11 +166,11 @@ sensible defaults so they can just say "use the defaults"):
 
 Do not assume — a wrong scope wastes the review. Note the target's `model:` frontmatter now
 (read just the frontmatter, not the body): group `B` is conditional on it, and Step 5 passes it
-to the detail-reviewer.
+to the skill-detail-reviewer.
 
-### 3. Pass 1 — spawn the structure-reviewer
+### 3. Pass 1 — spawn the skill-structure-reviewer
 
-Spawn the [structure-reviewer](../../agents/structure-reviewer.md) with: the bundle path, the absolute
+Spawn the [skill-structure-reviewer](../../agents/skill-structure-reviewer.md) with: the bundle path, the absolute
 path to this skill's `references/best-practices-checklist.md`, and any focus notes from Step 2.
 It scores the criteria the checklist marks `_(structure pass)_` — the shape criteria, not the
 sentences — from the bundle's skeleton, offline, and returns evidence-backed findings in the format its
@@ -196,9 +196,9 @@ to stop the review on the strength of that quote.
   **subordinate** to it, because fixing corner cases of a multiplicative decision space one
   wording at a time is what produces the next review round's findings.
 
-### 5. Pass 2 — spawn the detail-reviewer
+### 5. Pass 2 — spawn the skill-detail-reviewer
 
-Spawn the [detail-reviewer](../../agents/detail-reviewer.md), with: the bundle path, the checklist path,
+Spawn the [skill-detail-reviewer](../../agents/skill-detail-reviewer.md), with: the bundle path, the checklist path,
 the target's `model:` pin (or its absence), and the focus notes. Its `skills` frontmatter preloads
 `prompt-quality-criteria:prompt-quality-criteria` (supply — the `B`–`G` criteria it scores
 against) and `writing-simplified-technical-english:writing-simplified-technical-english` in
@@ -256,7 +256,7 @@ to provide. The content rules, whatever the shape:
   Notes column and in the finding's block. Flag Lows that are likely deliberate as such, the same
   way.
 - **Full report:** the coverage table takes each group's scored/ungraded status from the
-  detail-reviewer's COVERAGE payload; a group whose criteria never loaded is `N/A` with the
+  skill-detail-reviewer's COVERAGE payload; a group whose criteria never loaded is `N/A` with the
   reason named in Criteria notes, so a partial review never reads as a clean one.
 - **Gated report:** every unswept group is `not scored — gated on structure`, never `N/A` and
   never `Pass`; the Next-step section offers the choice — sweep now anyway, or redesign first. Its

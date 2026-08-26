@@ -57,7 +57,7 @@ The skills checklist's `A1` permits both forms; this section narrows the choice 
 
 **Subagents** take a different form, because a subagent is a worker rather than a procedure:
 `<object>-<agent-noun>`, where the noun says what the agent **is** and the object says what it works
-on — `structure-reviewer`, `detail-reviewer`, `criteria-refresher`, `dependency-update-researcher`.
+on — `skill-structure-reviewer`, `skill-detail-reviewer`, `criteria-refresher`, `dependency-update-researcher`.
 No gerunds, because a gerund names the step that spawns the agent, not the agent.
 
 Both reviewers score the name form as `R6`: the skills reviewer against the two skill forms, the
@@ -74,7 +74,7 @@ A caller reaches another skill in one of two ways: a step invokes it through the
 step spawns a subagent whose `skills:` frontmatter preloads it, so the agent holds the skill's body
 from its first turn. Four things must be true of the step that does the invoking or the spawning,
 and **the step itself is where they belong**. A separate "Dependencies" section would restate the
-step and then drift from it. `reviewing-claude-skills` uses both: its detail-reviewer preloads both
+step and then drift from it. `reviewing-claude-skills` uses both: its skill-detail-reviewer preloads both
 dependencies, and its inline fallback invokes them through the Skill tool.
 
 Every step that invokes another skill states:
@@ -115,7 +115,7 @@ case recorded below, where one side carried no information the other lacked. `R3
 cross-check.
 
 There are six invocation edges, and each needs all four statements above. Each reviewer's two
-criteria edges are preloads into its detail-reviewer agent on the primary path and Skill tool
+criteria edges are preloads into its skill-detail-reviewer agent on the primary path and Skill tool
 invocations only under the inline fallback; the two loop edges are Skill tool invocations:
 
 | Caller                       | Invoked skill                          | Mode                          | Consumed as                                        |
