@@ -53,9 +53,9 @@ evals, referenced files/hooks). To review several, run again per skill.
 - The review's two agent definitions ship with this plugin under `agents/`:
   [structure-reviewer](../../agents/structure-reviewer.md) and
   [detail-reviewer](../../agents/detail-reviewer.md). **Each definition owns its findings-payload
-  format**; the steps below consume those payloads rather than restating them. The third agent in
-  `agents/`, [criteria-refresher](../../agents/criteria-refresher.md), is a maintenance tool no step
-  here spawns.
+  format**; the steps below consume those payloads rather than restating them. The other agents in
+  `agents/` belong to sibling skills, except [criteria-refresher](../../agents/criteria-refresher.md),
+  a maintenance tool no step here spawns.
 - [`references/best-practices-checklist.md`](references/best-practices-checklist.md) — the
   criteria for groups `A` and `H` (the Agent Skills open standard plus Anthropic's docs) and `R`
   (craft and project conventions; the checklist's § R intro says how the project-scoped items

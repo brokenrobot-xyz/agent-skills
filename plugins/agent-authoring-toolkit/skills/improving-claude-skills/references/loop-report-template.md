@@ -6,7 +6,10 @@
 - [Final report](#final-report)
 
 Text in `<angle brackets>` is a placeholder; everything else is literal structure. The dedupe
-and exit rules live in `SKILL.md`; this file owns the layout and the status glossary.
+and exit rules live in each consuming loop's `SKILL.md`; this file owns the layout and the
+status glossary. Two loops share it — `improving-claude-skills` and
+`improving-claude-subagents` — so a layout change here changes both; for a subagent target,
+read "skill" as "subagent" and "bundle" as "definition file".
 
 ## The ledger
 

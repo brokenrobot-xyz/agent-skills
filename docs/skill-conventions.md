@@ -114,10 +114,9 @@ declares fails on a clean install. That is the opposite of the `metadata`-restat
 case recorded below, where one side carried no information the other lacked. `R3` covers this
 cross-check.
 
-There are five invocation edges, and each needs all four statements above. The
-`reviewing-claude-skills` edges are preloads into its detail-reviewer on the primary path and Skill
-tool invocations only under the inline fallback; the `reviewing-claude-subagents` edges and the
-`improving-claude-skills` edge are Skill tool invocations:
+There are six invocation edges, and each needs all four statements above. Each reviewer's two
+criteria edges are preloads into its detail-reviewer agent on the primary path and Skill tool
+invocations only under the inline fallback; the two loop edges are Skill tool invocations:
 
 | Caller                       | Invoked skill                          | Mode                          | Consumed as                                        |
 | :--------------------------- | :------------------------------------- | :---------------------------- | :------------------------------------------------- |
@@ -126,6 +125,7 @@ tool invocations only under the inline fallback; the `reviewing-claude-subagents
 | `reviewing-claude-subagents` | `prompt-quality-criteria`              | supply                        | Criteria the caller scores against, for groups B–G |
 | `reviewing-claude-subagents` | `writing-simplified-technical-english` | check                         | Violations folded into `R7`                        |
 | `improving-claude-skills`    | `reviewing-claude-skills`              | analysis-only, scope supplied | Findings folded into the loop's ledger             |
+| `improving-claude-subagents` | `reviewing-claude-subagents`           | analysis-only, scope supplied | Findings folded into the loop's ledger             |
 
 ## Why there is no role field
 
@@ -160,10 +160,12 @@ What survived is the part that decides something: the split test above.
 **House rules — no external source. Change them by deciding to, not by re-syncing:**
 
 - The split test, and the priority of rule 3 over rules 1 and 2.
-- `review-waivers.md` at a skill bundle's root records the owner's deliberate deviations, keyed
-  `criterion key + file + section` — the same key the improvement loop's ledger uses. The skills
-  reviewer reads it and suppresses matched findings; its § Severity, verdict, and waivers section
-  defines the semantics.
+- `review-waivers.md` records the owner's deliberate deviations, keyed
+  `criterion key + file + section` — the same key the improvement loops' ledgers use. For a skill
+  it sits at the bundle's root; for a subagent it sits in the definition's directory, where the
+  file half of the key names the definition, so one waivers file serves every definition there.
+  Each reviewer reads it and suppresses matched findings; each checklist's § Severity, verdict,
+  and waivers section defines the semantics.
 - The mapping from kind of skill to grammatical name form.
 - The `<object>-<agent-noun>` form for subagents.
 - The `-criteria` suffix for a rubric.

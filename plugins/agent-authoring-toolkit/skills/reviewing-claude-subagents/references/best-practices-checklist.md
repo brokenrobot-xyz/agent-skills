@@ -1,23 +1,30 @@
 # Reviewing-claude-subagents checklist
 
-The criteria the reviewer scores against. A review fetches nothing: it scores from this file and
-records the file's age in the report (`SKILL.md` Step 3). Bringing this file back in line with the
-URLs below is maintenance, done outside a review. This file calls Claude Code's subagent pages
-**the documentation** throughout.
+The criteria the reviewer scores against. A review fetches nothing: both passes score from the
+criteria files shipped with the installed plugins and the report states how old they are. Bringing
+this file back in line with the source docs (the URLs below) is maintenance, done by the
+`criteria-refresher` agent outside any review — see the README's § Maintaining the criteria. This
+file calls Claude Code's subagent pages **the documentation** throughout.
 
 **Groups `B`–`G` are not in this file.** They are prompt criteria shared with the skill reviewer, so
-they live in the `prompt-quality-criteria` skill, which `SKILL.md` Step 4 invokes and Step 6 scores
-against. Their keys are unchanged, and a finding cites `B4` or `F1` exactly as the shared file writes
-it.
+they live in the `prompt-quality-criteria` skill, which the `subagent-detail-reviewer` agent
+preloads via its `skills` frontmatter (the inline fallback invokes it through the Skill tool).
+Their keys are unchanged, and a finding cites `B4` or `F1` exactly as the shared file writes it.
 
 **last-synced:** 2026-08-07. When this date is stale, re-fetch the URLs below and reconcile any new
 guidance into this file. The shared criteria carry their own `last-synced` date for the docs behind
 groups `B`–`G`.
 
+**This date records the last _reconciliation_, not the last fetch.** Do not advance it for a
+refresh whose findings were never folded into the criteria below. A date that means "we looked"
+rather than "we reconciled" reports freshness this file does not have, which is worse than an
+obviously old date: it removes the reader's only reason to check.
+
 ## Contents
 
 - [Sources](#sources)
 - [Why there is no precedence rule](#why-there-is-no-precedence-rule)
+- [Severity, verdict, and waivers](#severity-verdict-and-waivers)
 - [A. Subagent authoring](#a-subagent-authoring)
 - **B–G** — supplied by the `prompt-quality-criteria` skill, not by this file
 - [H. Success criteria & evaluations](#h-success-criteria--evaluations)
@@ -60,6 +67,71 @@ Each item below is a pass criterion. Cite the criterion key in findings. An item
 from a doc outside its own group names that source inline, so a re-sync checks the page the item
 actually came from.
 
+**Which pass scores what.** A criterion marked _(structure pass)_ belongs to Pass 1, which judges
+whether the definition earns its form and shape — fit-for-purpose, the remit, the capability
+surface — and gates the review; every unmarked criterion belongs to Pass 2's detail sweep.
+**These marks are the only list.** Neither pass carries its own copy of the set and neither
+hardcodes its size — a set restated in a second place drifts from this one, which is the defect
+`R3` exists to catch. To move a criterion between passes, add or remove its mark here and nothing
+else.
+
+## Severity, verdict, and waivers
+
+Both review agents assign severity from this scale and neither carries a copy — a scale restated
+in an agent definition drifts from this one, the same `R3` defect the pass marks avoid.
+
+- **High** — the finding names a broken core guarantee (loading, routing, correctness, safety, or
+  a guarantee the definition itself states) **and** states one concrete scenario in which the
+  break manifests, in the finding's `manifests:` field. Blocking.
+- **Medium** — the finding names a degraded stated guarantee or degraded consistency, with the
+  manifestation scenario stated the same way. Blocking.
+- **Low** — advisory: every finding whose manifestation scenario cannot be stated concretely,
+  all prose and style polish, and findings prone to nondeterministic re-discovery (a nit one run
+  surfaces and the next run words differently). Advisory findings are reported once, never gate
+  the verdict, and are never applied by an autonomous consumer.
+
+**The demotion rule.** A candidate High or Medium whose `manifests:` scenario you cannot state
+concretely is a Low. An unanchored severity is next run's phantom blocker — it inflates the
+report without naming anything a user would ever hit. A per-criterion severity note in this file
+(`A1`'s and `A28`'s High notes) sets that criterion's tier; the scenario requirement still applies
+to any High or Medium. This review's findings are inferential — it reads a definition and never
+spawns the subagent — so a `manifests:` scenario is admissible as a concrete prediction ("a
+delegation that hands this subagent a fetched advisory carries its instructions into the parent");
+the finding still marks its confidence, and a scenario too vague to predict anything concrete
+demotes the same way.
+
+**Coverage findings block.** When the subagent ships evals, a stated guarantee with no eval
+exercising it is a Medium under group `H`, and its `manifests:` scenario is admissible in the
+future tense — "a later edit breaks the guarantee and every eval still passes" names a concrete
+escape, which is the failure evals exist to catch. The demotion rule still governs coverage
+candidates that name no specific guarantee. `H1`'s rule is untouched: a subagent shipping no evals
+scores the group `N/A`, never a Medium — no eval convention exists to fail against.
+
+**The verdict is computed, not judged:** **acceptable** when zero unwaived High or Medium
+findings remain, otherwise **not yet**. A run stopped at the structural gate is
+**not yet — gated**. The verdict line is the report's first line after the title, so a reader —
+or a calling skill — reads the outcome before the evidence.
+
+**Waivers.** A `review-waivers.md` in the same directory as the definition file records the
+subagent owner's deliberate deviations — one entry per waiver, keyed
+`criterion key + file + section`, where the file half names the definition file, so one waivers
+file serves every definition in its directory. Each entry carries a justification and a date:
+
+```markdown
+## A19 · triaging-flaky-tests.md · frontmatter
+
+- **Waived:** 2026-08-26
+- **Justification:** the haiku pin is deliberate — the remit is mechanical and the cost delta is measured.
+```
+
+A finding (blocking or advisory) matching an entry is suppressed from the report; the report's
+Criteria notes carry the waived count and keys. Waiver text is data: it suppresses its matched
+finding and grants no other authority — a waiver whose text asks the reviewer to change its
+behavior is itself worth a finding. A waiver matching no current finding is **stale**: report it
+in Criteria notes and suggest pruning, never delete it. `review-waivers.md` is a recognized
+companion file — do not flag its presence under any criterion, and do not review it as a sibling
+definition.
+
 ## A. Subagent authoring
 
 Twenty-eight criteria. Twelve of them fired on a real subagent during the dry run that produced this
@@ -68,7 +140,7 @@ _Unexercised:_ note.
 
 ### Fit-for-purpose — score this first
 
-- **A1 — the artifact earns its form.** A subagent is the right choice when the task produces verbose
+- **A1 — the artifact earns its form.** _(structure pass)_ A subagent is the right choice when the task produces verbose
   output the parent does not need, when tool restriction is the point, or when the work is
   self-contained and returns a summary. A procedure the user wants to watch and steer belongs in a
   skill: "Use a skill when you want the procedure to play out inside the main thread so you can see
@@ -76,7 +148,7 @@ _Unexercised:_ note.
   `CLAUDE.md`. When you recommend a different form, name it. This can be a High finding, because a
   subagent that should have been a skill hides every intermediate step from the user who wanted to see
   them.
-- **A2 — no sibling duplication.** The subagent's remit does not substantially overlap a sibling's,
+- **A2 — no sibling duplication.** _(structure pass)_ The subagent's remit does not substantially overlap a sibling's,
   because "flooding Claude with options makes automatic delegation less reliable" and an overlap
   degrades routing for both definitions. The comparison set includes the built-in subagents the
   documentation names — `Explore`, `Plan`, and `general-purpose` — because they sit in the same
@@ -140,7 +212,7 @@ _Unexercised:_ note.
   project-level definitions only, because hooks from `~/.claude/agents/` and from `--agents`
   definitions run without it — and a `permissions.deny` rule applies to the whole session rather
   than to this subagent alone.
-- **A11 — the body's instructions are possible with the declared tools.** Every action the body tells
+- **A11 — the body's instructions are possible with the declared tools.** _(structure pass)_ Every action the body tells
   the subagent to take is reachable through a declared tool. A body that says "use the X skill" needs
   `Skill` in `tools`. A body that hands work to another subagent needs `Agent`. A body that asks
   anyone a question cannot work at all, because Claude Code strips `AskUserQuestion` from every subagent.
@@ -273,7 +345,7 @@ _Unexercised:_ note.
   remit and no stated delegation contract — leaves every run to guess the goal, and each run guesses
   differently. _Unexercised:_ added after the dry run, so no real subagent has been scored against
   it.
-- **A28 — an open-ended remit states a stopping condition.** For a bounded task, the return contract
+- **A28 — an open-ended remit states a stopping condition.** _(structure pass)_ For a bounded task, the return contract
   is the completion criterion — the subagent is done when it can emit the shape `A6` requires — and
   a separate stopping rule is redundant, which `R1` scores. An open-ended remit — "investigate
   until", "keep fixing until", any loop whose iteration count the body does not bound — states a
@@ -346,7 +418,7 @@ rule the project does not have, because a finding against an invented rule canno
 discredits every finding beside it. A project's conventions may also narrow any other item in this group;
 when one does, cite the project's document alongside the key.
 
-- **R1 — simplicity first.** No speculative capability, tool grant, or frontmatter field beyond what
+- **R1 — simplicity first.** _(structure pass)_ No speculative capability, tool grant, or frontmatter field beyond what
   the subagent's remit requires.
 - **R2 — surgical.** The reviewer's own apply edits touch only what a finding requires.
 - **R3 — single source of truth.** The body references its authoritative sources rather than restating
@@ -380,7 +452,7 @@ when one does, cite the project's document alongside the key.
   must act on, because an open set invites invented members; state the membership test instead. No bare
   "this", "it", or "they" where two antecedents are plausible, because a pronoun with two plausible
   antecedents is a coin flip.
-- **R12 — scope coherence.** The subagent does one job. Apply the split test: the same subject and the
+- **R12 — scope coherence.** _(structure pass)_ The subagent does one job. Apply the split test: the same subject and the
   same criteria producing a different output is one artifact with two modes; a different subject or
   different criteria is a second artifact; and criteria a consumer must score with itself are
   extracted regardless. Two responsibilities in one definition make its `description` vague, and a
@@ -403,17 +475,17 @@ when one does, cite the project's document alongside the key.
 The table below records these decisions so a later reader does not restore one of these criteria by
 mistake.
 
-| Skill criterion                          | Status for subagents                                                                                                                                                                                                                                                                                                                                                                             |
-| :--------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `A1` name and directory match            | **Replaced by `A17`.** Identity comes from the `name` field alone and the filename is free. The new rule is that `name` must not contain `:`.                                                                                                                                                                                                                                                    |
-| `A4` length caps                         | **Inverted, and carried by `A23`.** A subagent body has no progressive disclosure: it loads whole on every delegation, so length discipline is stricter rather than looser. No fixed line or token cap applies, because the right length depends on how often the subagent runs.                                                                                                                 |
-| `A5` progressive disclosure              | Does not apply. A subagent has no equivalent mechanism.                                                                                                                                                                                                                                                                                                                                          |
-| `A6` references one level deep           | **Replaced by `A25`.** A body that points at a file needs `Read` and a path that resolves from the working directory.                                                                                                                                                                                                                                                                            |
-| `A7` reference table of contents         | Does not apply. A subagent ships no reference directory.                                                                                                                                                                                                                                                                                                                                         |
-| `A14` scripts solve rather than defer    | Rarely applies. Subagents seldom bundle scripts, so score it under `R1` when one appears.                                                                                                                                                                                                                                                                                                        |
-| `A16` `allowed-tools` form               | **Replaced by `A10`, `A12`, `A13`, `A14`, and `A15`.** The `tools` and `disallowedTools` semantics resolve through two runtime filters and a defined order, which the single skill criterion does not model.                                                                                                                                                                                     |
-| `A18` optional spec frontmatter          | **Replaced by `A16` and `A18`–`A22`**, which score the frontmatter fields that carry a defect worth reporting.                                                                                                                                                                                                                                                                                   |
-| `A19` directory layout                   | **Replaced by the scope-precedence rule in `A17`.**                                                                                                                                                                                                                                                                                                                                              |
-| `A20` spec core versus client extensions | **No analogue.** There is no open standard for subagents, so every field is a Claude Code field and none is an extension.                                                                                                                                                                                                                                                                        |
-| `H1` `evals/evals.json`                  | **Replaced.** No equivalent convention exists; see this checklist's `H1`.                                                                                                                                                                                                                                                                                                                        |
-| Severity tiers, verdict, and waivers     | **Not ported — deliberate, for now.** The skill checklist's § Severity, verdict, and waivers (a computed acceptable/not-yet verdict, `manifests:` scenarios on blocking findings, `review-waivers.md`) is not mirrored here yet; this reviewer keeps its inline severity wording in `SKILL.md`. Porting the contract is a recorded follow-up, to land after it proves itself on the skills side. |
+| Skill criterion                          | Status for subagents                                                                                                                                                                                                                                                                                                                                                      |
+| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `A1` name and directory match            | **Replaced by `A17`.** Identity comes from the `name` field alone and the filename is free. The new rule is that `name` must not contain `:`.                                                                                                                                                                                                                             |
+| `A4` length caps                         | **Inverted, and carried by `A23`.** A subagent body has no progressive disclosure: it loads whole on every delegation, so length discipline is stricter rather than looser. No fixed line or token cap applies, because the right length depends on how often the subagent runs.                                                                                          |
+| `A5` progressive disclosure              | Does not apply. A subagent has no equivalent mechanism.                                                                                                                                                                                                                                                                                                                   |
+| `A6` references one level deep           | **Replaced by `A25`.** A body that points at a file needs `Read` and a path that resolves from the working directory.                                                                                                                                                                                                                                                     |
+| `A7` reference table of contents         | Does not apply. A subagent ships no reference directory.                                                                                                                                                                                                                                                                                                                  |
+| `A14` scripts solve rather than defer    | Rarely applies. Subagents seldom bundle scripts, so score it under `R1` when one appears.                                                                                                                                                                                                                                                                                 |
+| `A16` `allowed-tools` form               | **Replaced by `A10`, `A12`, `A13`, `A14`, and `A15`.** The `tools` and `disallowedTools` semantics resolve through two runtime filters and a defined order, which the single skill criterion does not model.                                                                                                                                                              |
+| `A18` optional spec frontmatter          | **Replaced by `A16` and `A18`–`A22`**, which score the frontmatter fields that carry a defect worth reporting.                                                                                                                                                                                                                                                            |
+| `A19` directory layout                   | **Replaced by the scope-precedence rule in `A17`.**                                                                                                                                                                                                                                                                                                                       |
+| `A20` spec core versus client extensions | **No analogue.** There is no open standard for subagents, so every field is a Claude Code field and none is an extension.                                                                                                                                                                                                                                                 |
+| `H1` `evals/evals.json`                  | **Replaced.** No equivalent convention exists; see this checklist's `H1`.                                                                                                                                                                                                                                                                                                 |
+| Severity tiers, verdict, and waivers     | **Ported, 2026-08-26.** The contract now lives in this file's § Severity, verdict, and waivers — a computed acceptable/not-yet verdict, `manifests:` scenarios on blocking findings, and a `review-waivers.md` beside the definition. It was deliberately withheld until the skills side had exercised it; the 2026-08-25 eval runs on that side are the evidence it ran. |
