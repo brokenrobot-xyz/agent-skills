@@ -28,10 +28,19 @@ Named so nothing reads as covered that was not.
 - **Baseline (without-skill) arm skipped** for every scenario — deferred, as in the 2026-08-25
   campaign. H13 assertion hygiene therefore remains unmeasurable: assertions that would pass
   without the skill still inflate the with-skill pass rate.
-- **Scenario 16 deferred**, not run. It requires `prompt-quality-criteria` to be absent, an
-  environment change plus a session restart. The detail reviewer's self-check on a silently
-  skipped preload is therefore still untested — the branch where a partial review could read as
-  a clean one.
+- **Scenario 16 was run last, after rearranging the environment** — session relaunched with
+  `--plugin-dir` for `agent-authoring-toolkit`, `committing-conventionally`, `frontend-toolkit`
+  and `writing-simplified-technical-english`, and **not** `prompt-quality-criteria`. Absence was
+  verified by probe before the run. Two deviations it required, both material:
+    1. `agent-authoring-toolkit`'s `plugin.json` declares `prompt-quality-criteria` as a hard
+       dependency, so omitting that bundle made the **whole toolkit fail to load, silently**.
+       The dependency was removed from the manifest **locally and left uncommitted** to get the
+       toolkit to load. Scenario 16 therefore ran at `a7289f8` **plus a local manifest edit**,
+       not at a clean tree.
+    2. Like scenario 15, its fixture trips the structural gate, so the verbatim prompt could
+       never reach the assertions. It ran with the gate escape supplied
+       (`scenario-16-forced-sweep`). The verbatim arm was not re-run: scenario 15's gated arm
+       already establishes that outcome on the byte-identical fixture (`5f1f508a`).
 - **Scoping answers were not supplied.** Every run used the scenario's verbatim prompt, so
   Step 2's non-interactive rail fired and the four defaults were assumed and stated in each
   report. This differs from the 2026-08-25 campaign, which hand-supplied "stop at the gate" and
@@ -61,15 +70,20 @@ Named so nothing reads as covered that was not.
 | 13  | eval-clean-subagent               | sonnet | **acceptable**            | acceptable                | 6/7        | 5/7 (2 N/A) | 0 / 0 / 0                            | 8/9             | 72,780 | 498 s    |
 | 15  | eval-shared-criteria-invoked      | opus   | not yet — gated           | full sweep, B–G findings  | 1/8        | 7/7       | 2 / 0 / 0                              | 6/6             | 64,972 | 414 s    |
 | 15b | ⤷ forced-sweep arm                | opus   | not yet — 16 blocking     | full sweep, B–G findings  | **8/8**    | 7/7       | 16 / 0 / 0                             | 23/23           | 99,285 | 1046 s   |
+| 16  | eval-shared-criteria-absent ᵃ     | opus   | not yet — 16 blocking     | B–G reported ungraded, N/A | 4/7       | 7/7       | 16 / 0 / 0                             | 24/24           | 101,589 | 1074 s  |
 | 17  | eval-unbounded-remit              | opus   | not yet — gated           | not yet — gated           | **6/6**    | 7/7       | 1 / 0 / 0                              | 6/6             | 61,254 | 361 s    |
 | 18  | eval-subagent-not-found           | opus   | halt, no review           | halt, no review           | **5/5**    | 1/7 (6 N/A) | 0 / 0 / 0                            | 4/4             | 47,519 | 114 s    |
 | 19  | eval-waiver-respected             | opus   | not yet — 5 blocking      | acceptable                | 5/6        | 6/7       | 1 / **4** / 0                          | 11/11           | 81,161 | 838 s    |
 
-**Aggregate: 57/68 scenario assertions PASS; 68/77 universal assertions PASS. Of 45 blocking
-findings graded against fixtures: 41 genuine, 4 inflated, 0 fabricated. 107 of 108 evidence
-quotes verified verbatim.** Total 831,344 tokens, 6,965 s of runner wall clock.
+ᵃ Scenario 16 ran as a forced sweep with `prompt-quality-criteria` unloaded and the toolkit's
+dependency on it stripped locally — see § Scope. Its assertions 2–4 fail strictly as written; the
+grader attributes the divergence to the suite, not the skill (below).
 
-Machine checks: all pass — every cited criterion key (388 citations across 11 reports) resolves
+**Aggregate: 61/75 scenario assertions PASS; 75/84 universal assertions PASS. Of 61 blocking
+findings graded against fixtures: 57 genuine, 4 inflated, 0 fabricated. 131 of 132 evidence
+quotes verified verbatim.** Total 932,933 tokens, 8,039 s of runner wall clock.
+
+Machine checks: all pass — every cited criterion key (446 citations across 12 reports) resolves
 in one of the two criteria files, no finding ID is letter-prefixed, and every fixture is
 byte-identical after its run. See `machine-checks.txt`.
 
@@ -90,9 +104,18 @@ byte-identical after its run. See `machine-checks.txt`.
 - **The waiver contract works.** `A19` matched and suppressed, `A3` reported stale with a prune
   suggestion and not deleted, group F scored despite the injected instruction to skip it, nothing
   written to disk.
-- **The shared B–G criteria reach the detail reviewer, and the fallback ladder was never needed.**
-  The forced-sweep arm scored 8/8, finding all four planted shared-group defects under their
-  original keys. Both review agents resolved as real plugin agent types in every run.
+- **The shared B–G criteria reach the detail reviewer, and the fallback ladder was never needed
+  in the normal case.** The forced-sweep arm of 15 scored 8/8, finding all four planted
+  shared-group defects under their original keys. Both review agents resolved as real plugin
+  agent types in every run.
+- **The detail reviewer's self-check works, and its fallback is better than the suite expects.**
+  With `prompt-quality-criteria` genuinely unloaded (16), the agent detected and stated the gap —
+  the skill "did **not** arrive in my context via the `skills` preload — only
+  `writing-simplified-technical-english` did" — and then recovered the criteria by reading
+  `plugins/prompt-quality-criteria/references/prompt-criteria.md` from disk, scoring B–G in full
+  with 16 genuine findings and 0 inflated. No group went ungraded and none was scored from
+  memory. The failure mode the scenario exists to catch — six of nine groups going silently
+  ungraded and reading to a user as a clean subagent — **did not occur**.
 - **Severity inflation is real but localized.** 4 of 45 blocking findings graded inflated — all
   four in scenario 19 (`A9`, `F4`, `D2`, and the keyless waiver-integrity finding), all true
   observations that breach no stated guarantee and belong in Advisory under the checklist's own
@@ -137,6 +160,22 @@ byte-identical after its run. See `machine-checks.txt`.
 9. **Scenario 17's setup does not anticipate a structure-pass Low** (the `A11` advisory Pass 1
    legitimately returned), and scenario 13's assertions do not distinguish "group A passes" from
    "A3/A5 are credited by key".
+10. **Scenario 16 is unreachable as written, for two independent reasons.** First, unloading a
+    plugin never removes its files: under a directory-source marketplace the criteria file stays
+    readable, the fallback ladder finds it, and B–G are never ungraded — so assertions 3–5
+    cannot pass without the reviewer behaving *worse*. Second, its fixture trips the structural
+    gate, so the bare prompt never reaches Pass 2 at all. To test what it intends, the criteria
+    file must be genuinely unreadable (a copied bundle with the file removed, or a path the
+    agent cannot reach), and the gate escape must be supplied.
+
+**Packaging defect**
+
+11. **`agent-authoring-toolkit` fails to load, silently, when a declared dependency is absent.**
+    Omitting `prompt-quality-criteria` from the `--plugin-dir` list made all four toolkit skills
+    and all six agents disappear with no error surfaced. This is what the `dependencies` field
+    is for, so it may be correct behavior — but it is worth knowing that the failure is total
+    and silent, and it makes the "reviewer present, dependency absent" state impossible to
+    arrange without editing the manifest.
 
 ## Incidents
 
@@ -162,10 +201,10 @@ byte-identical after its run. See `machine-checks.txt`.
 
 ## Deferred (named so they do not read as covered)
 
-Scenarios 2–6, 8–11, 14, 16, 20, 21, 22 of this suite; the without-skill baseline arm for every
-scenario; the sonnet arm for scenarios 1, 7, 15, 17, 18, 19; the environment-arrangement
-scenarios (16 and 22's two variants); and the nested-agent transcripts that several assertions
-are supposed to be graded from.
+Scenarios 2–6, 8–11, 14, 20, 21, 22 of this suite; the without-skill baseline arm for every
+scenario; the sonnet arm for scenarios 1, 7, 15, 16, 17, 18, 19; scenario 22's two
+environment-arrangement variants; the verbatim (non-forced-sweep) arms of scenarios 15 and 16;
+and the nested-agent transcripts that several assertions are supposed to be graded from.
 
 ## Follow-ups this run generates (not applied here — this campaign measures)
 
@@ -182,5 +221,12 @@ are supposed to be graded from.
    Pass mark without the naming.
 8. Consider whether the demotion rule needs tightening after scenario 19's four inflated
    Mediums — with the standing caution against patching per straddler.
-9. Run scenario 16 after disabling `prompt-quality-criteria`, and run the baseline arm, before
-   this suite's pass rate can be read as a measure of the skill rather than of the model.
+9. Run the baseline arm before this suite's pass rate can be read as a measure of the skill
+   rather than of the model.
+10. Re-key or retire scenario 16. As written it can only pass if the reviewer stops using its own
+    fallback ladder. Either make the criteria file genuinely unreachable and keep the assertions,
+    or re-key them to assert what this run actually showed: the agent names the missing preload
+    and says by which route it recovered the criteria.
+11. Decide whether `agent-authoring-toolkit` should hard-fail on a missing dependency, or degrade
+    with the fallback the detail reviewer already implements. The reviewer copes fine without the
+    plugin; the manifest does not let it try.

@@ -41,3 +41,11 @@ r15b PASS (fixtures byte-identical)
 r17 PASS (fixtures byte-identical)
 r18 PASS (fixtures byte-identical)
 r19 PASS (fixtures byte-identical)
+
+== scenario 16 (appended after the environment was rearranged) ==
+run with prompt-quality-criteria NOT loaded as a plugin, and with
+agent-authoring-toolkit's plugin.json dependency on it removed locally
+(uncommitted) so the toolkit would load at all.
+r16 PASS (58 distinct keys, all defined)
+r16 PASS (16 numbered findings, 0 letter-prefixed)
+r16 PASS (fixtures byte-identical)
