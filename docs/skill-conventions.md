@@ -115,8 +115,9 @@ case recorded below, where one side carried no information the other lacked. `R3
 cross-check.
 
 There are six invocation edges, and each needs all four statements above. Each reviewer's two
-criteria edges are preloads into its skill-detail-reviewer agent on the primary path and Skill tool
-invocations only under the inline fallback; the two loop edges are Skill tool invocations:
+criteria edges are preloads into its detail-reviewer agent (`skill-detail-reviewer`,
+`subagent-detail-reviewer`) on the primary path and Skill tool invocations only under the inline
+fallback; the two loop edges are Skill tool invocations:
 
 | Caller                       | Invoked skill                          | Mode                          | Consumed as                                        |
 | :--------------------------- | :------------------------------------- | :---------------------------- | :------------------------------------------------- |

@@ -3,7 +3,7 @@
     "format": {
         "standard": "https://agentskills.io/skill-creation/evaluating-skills",
         "extension_keys": {
-            "name": "Slug for this scenario's workspace directory; the committed fixture lives under evals/files/<name>/.",
+            "name": "Slug for this scenario's workspace directory. A fixture the scenario ships itself lives under evals/files/<name>/; the files key is authoritative, and a scenario may reuse another scenario's fixture.",
             "targets": "The step or branch of SKILL.md under test (H3) — one scenario per decision point, so a failure localizes the regression.",
             "setup": "What the fixture arranges and why, plus any environmental condition a file cannot carry (a missing dependency, a plugin scope). The files key carries the committed fixture; setup never replaces the files key.",
             "baseline": "What a run without this skill misses (H6). Write this field as a hypothesis; the without_skill run confirms or refutes it.",
@@ -70,7 +70,7 @@
             "A27 the task contract — since the A28 scenario now gates, A27 is exercised only when a forced sweep runs over an unbounded-remit fixture, which no scenario does",
             "H2–H14 — no fixture ships evals, so the methodology criteria are exercised only through H1's N/A path",
             "R1–R6, R8–R11 — exercised incidentally rather than by a targeted scenario",
-            "R12 scope coherence — no targeted subagent fixture; exercised only by the shared-plugin regression (skills reviewer scenario 19)",
+            "R12 scope coherence — no targeted scenario",
             "R13 invocation completeness — no targeted scenario; eval-capability-mismatch exercises it incidentally through the unspecified skill invocation",
             "STEPS, not criteria: Step 8 apply mode has no scenario beyond the universal assertion that apply does NOT happen — the behavioral-fork question, the surgical-edit rule, the never-reword-a-description rule, and the fix/waive/skip offer are all ungraded",
             "STEPS: Step 6's criteria-age greps have no targeted scenario (the skills reviewer's eval-review-fetches-nothing covers the shared mechanism)",
@@ -84,8 +84,8 @@
                 "# every criterion key cited in the report must be defined in one of the two criteria files",
                 "# run from the reviewing-claude-subagents bundle root",
                 "CL=references/best-practices-checklist.md",
-                "# groups B–G live in the prompt-quality-criteria plugin; try the marketplace-repo layout, then the installed sibling layout",
-                "PC=$(ls ../prompt-quality-criteria/references/prompt-criteria.md ../../prompt-quality-criteria/references/prompt-criteria.md 2>/dev/null | head -1)",
+                "# groups B–G live in the prompt-quality-criteria plugin; try the marketplace-repo layout (plugins/<name>), then the installed cache layout (<marketplace>/<name>/<version>) — tail picks the newest cached version",
+                "PC=$(ls ../../../prompt-quality-criteria/references/prompt-criteria.md ../../../../prompt-quality-criteria/*/references/prompt-criteria.md 2>/dev/null | tail -1)",
                 "# fail loudly rather than silently skipping B–G — a missing file would otherwise read as a clean pass",
                 "[ -n \"$PC\" ] || { echo 'FAIL: prompt-quality-criteria criteria file not found; B–G keys cannot be checked'; exit 1; }",
                 "grep -oE '\\b[A-HR][0-9]{1,2}\\b' report.md | sort -u | while read -r k; do",

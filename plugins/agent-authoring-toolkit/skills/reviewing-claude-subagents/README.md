@@ -28,7 +28,7 @@ subagent-detail-reviewer subagent at spawn:
   [reviewing-claude-skills](../reviewing-claude-skills/README.md), so they live in one place rather
   than drifting between two copies.
 - [writing-simplified-technical-english](../../../writing-simplified-technical-english/README.md) —
-  the twelve prose conventions the definition's body is graded against (check fashion: violations
+  the twelve prose conventions the definition's body is graded against (check mode: violations
   are reported, nothing is edited).
 
 If a dependency is missing, the preload skips silently at the harness level — so the

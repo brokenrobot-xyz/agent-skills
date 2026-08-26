@@ -40,10 +40,12 @@ apply).
 ## Final report
 
 ```markdown
-## Improvement loop: <skill> — <acceptable | not acceptable — plateaued | not acceptable — contested | not acceptable — re-gated | round cap reached>
+## Improvement loop: <skill> — <acceptable | not acceptable — refit needed | not acceptable — plateaued | not acceptable — contested | not acceptable — re-gated | round cap reached>
 
 <one-paragraph verdict, written as SKILL.md Step 8 directs — a plateaued or capped run names
-the decision now owed by the human>
+the decision now owed by the human; a refit-needed run (the subagent loop's verdict — a review
+recommended a different artifact form) carries the reviewer's recommended form and the deciding
+signal verbatim, framed as the human's conversion decision>
 
 ### Intent preservation
 
