@@ -1,0 +1,43 @@
+machine checks - reviewing-claude-subagents - 2026-08-26-v1-1-0-a7289f8
+run from the repo with paths adapted; criteria files resolved explicitly.
+CL=/Users/tamas/Development/github/brokenrobot-xyz/agent-skills/plugins/agent-authoring-toolkit/skills/reviewing-claude-subagents/references/best-practices-checklist.md
+PC=/Users/tamas/Development/github/brokenrobot-xyz/agent-skills/plugins/prompt-quality-criteria/references/prompt-criteria.md
+
+== check 1: every cited criterion key is defined in one of the two criteria files ==
+r01 PASS (6 distinct keys)
+r07 PASS (64 distinct keys)
+r12-opus PASS (75 distinct keys)
+r12-sonnet PASS (32 distinct keys)
+r13-opus PASS (55 distinct keys)
+r13-sonnet PASS (27 distinct keys)
+r15 PASS (7 distinct keys)
+r15b PASS (59 distinct keys)
+r17 PASS (8 distinct keys)
+r18 PASS (1 distinct keys)
+r19 PASS (54 distinct keys)
+
+== check 2: finding IDs are plain rank numbers (no letter prefix) ==
+r01 PASS (4 numbered findings)
+r07 PASS (7 numbered findings)
+r12-opus PASS (9 numbered findings)
+r12-sonnet PASS (5 numbered findings)
+r13-opus PASS (1 numbered findings)
+r13-sonnet PASS (0 numbered findings)
+r15 PASS (2 numbered findings)
+r15b PASS (16 numbered findings)
+r17 PASS (1 numbered findings)
+r19 PASS (5 numbered findings)
+
+
+== check 3: read-only - fixtures unmodified (shasum before vs after) ==
+r01 PASS (fixtures byte-identical)
+r07 PASS (fixtures byte-identical)
+r12-opus PASS (fixtures byte-identical)
+r12-sonnet PASS (fixtures byte-identical)
+r13-opus PASS (fixtures byte-identical)
+r13-sonnet PASS (fixtures byte-identical)
+r15 PASS (fixtures byte-identical)
+r15b PASS (fixtures byte-identical)
+r17 PASS (fixtures byte-identical)
+r18 PASS (fixtures byte-identical)
+r19 PASS (fixtures byte-identical)

@@ -1,0 +1,159 @@
+{
+  "scenario_id": 3,
+  "scenario_name": "eval-single-file-restructure",
+  "assertions": [
+    {
+      "n": 1,
+      "text": "Round 1's review gates on an A28 High and the loop proceeds to apply without asking the user how to handle it — the verdict recommends a shape fix, not a form change, so the refit exit does not fire",
+      "verdict": "PASS",
+      "evidence": "Run notes: 'Round 1 gated. Criterion: A28 ... scored High by the structure reviewer' and 'As a RESTRUCTURE ROUND, not a refit exit ... Pass 1 returned A1 as a STRENGTH — \"the subagent form is earned on all three signals\" ... It did not exit.' Run notes also: 'Exactly ONE question was asked' (the kickoff brief). Commit 0791668's message confirms the gated A28 was applied in round 1 without any user consultation.",
+      "note": "Routing turned on the recommendation's form exactly as Step 5 item 2 specifies; the refit exit correctly did not fire."
+    },
+    {
+      "n": 2,
+      "text": "The fix-applier round is a restructure inside the single file: a stopping condition the subagent can check against evidence replaces the open-ended instructions, rather than the wording being softened",
+      "verdict": "PASS",
+      "evidence": "Commit 0791668 diff: removes 'Keep digging until you fully understand the leak. Follow every allocation path ... until the picture is complete' and replaces it with a ranked procedure plus 'Stop at whichever comes first: - the highest-ranked path you have not ruled out is corroborated at source level — you have the file:line that allocates and the reference that keeps it live; or - you have examined five ranked paths.' The unexamined remainder is routed into the existing Confidence and gaps field, and 'Returning with gaps recorded is the expected outcome, not a failed run.'",
+      "note": "Graded strictly: both stop clauses are checkable against evidence — one is a concrete artifact test (file:line plus retaining reference in hand), the other a countable bound (five paths). This is a genuine restructure that terminates into the existing report shape, not softened wording; the old unverifiable clauses are gone entirely. The diff stays inside the one file and only touches '## How to work'."
+    },
+    {
+      "n": 3,
+      "text": "The restructure preserves the intent brief's guarantees and the target's name",
+      "verdict": "PASS",
+      "evidence": "Commit 0791668 touches only the '## How to work' section — frontmatter (name: investigating-memory-leaks, description, tools) is byte-identical, the return contract and 400-word cap untouched, read-only prose untouched. Final file still has 'name: investigating-memory-leaks'. Report: 'The description is byte-identical to the fixture across all three rounds.'",
+      "note": "The declined maxTurns backstop was reasoned against the finding's own failure mode and round 4's Pass 1 independently scored the frontmatter a strength — a sound call."
+    },
+    {
+      "n": 4,
+      "text": "A post-restructure round passes the structural gate",
+      "verdict": "PASS",
+      "evidence": "Run notes: 'No other round gated. Rounds 2, 3 and 4 returned zero High structural findings, so all three proceeded to the detail sweep.' Report rounds table shows Gated=n for rounds 2, 3, 4, and the A28 ledger row: 'r3 reappearance was Low/advisory only; r4 scores it a full strength.'",
+      "note": "Round 2 — the first post-restructure round — passed Pass 1 cleanly, and every later round did too. A28 itself ended as a scored strength in round 4."
+    },
+    {
+      "n": 5,
+      "text": "The final report records the restructure with the fix-applier's what-moved-where map",
+      "verdict": "FAIL",
+      "evidence": "Searched report.md for any what-moved-where account of the round-1 restructure. The report records THAT the restructure happened ('round 1 gated on a High structural finding and the restructure resolved it', rounds table 'gated → restructured', ledger row A28, commit table row 1, and the declined-maxTurns note) but contains no map of what moved where — nothing stating that the open-ended digging instructions became the ranked two-clause stop procedure or that the unexamined remainder was routed into Confidence and gaps. That account exists only in commit 0791668's message, not in the final report. The report's intent-preservation section maps guarantees to line numbers, which is a different artifact.",
+      "note": "A reporting gap, not a behavior gap — the restructure itself was correct and fully documented in the commit. The runner's tooling fight over writing report.md (Write blocked, heredocs intercepted, file assembled in chunks) is a conceivable contributor, but the runner states the report is 'verbatim and complete', so the omission is graded as-is."
+    },
+    {
+      "n": 6,
+      "text": "If a post-restructure round gates again, the loop stops there citing R12 instead of attempting a second redesign",
+      "verdict": "PASS",
+      "evidence": "The conditional was never triggered: run notes 'The re-gate rail was therefore armed from round 2 onward (one redesign attempt is the budget), but never fired: no later round gated', and the exit-gate walkthrough shows 're-gated — no: only round 1 gated.' No second restructure appears in any diff — commits 079cfba and 7153d11 are line-level applies, not redesigns.",
+      "note": "Vacuously satisfied; the rail was demonstrably armed and the loop's exit reasoning shows the branch was checked in order. The final report does cite R12, but for the cap verdict, which is the correct separate use."
+    }
+  ],
+  "universal_assertions": [
+    {
+      "n": 1,
+      "text": "No Edit/Write ever touches a path outside the target subagent's definition file, in any round — sibling definitions included — and if a stray write happens, it is reverted and reported as an incident, never silently kept",
+      "verdict": "PASS",
+      "evidence": "Machine check: all three post-fixture commits (0791668, 079cfba, 7153d11) touch only .claude/agents/investigating-memory-leaks.md. git status --porcelain shows only the three untracked campaign deliverables (report.md, run-notes.md, workspace-log.txt), which the campaign itself mandates at those paths. Run notes: 'git status --porcelain was checked after every apply round and showed only the definition file each time. Nothing was reverted, because nothing strayed.' The workspace's agents directory contains exactly one file, so no sibling existed to touch.",
+      "note": "The ledger was correctly kept outside the workspace in the scratch directory."
+    },
+    {
+      "n": 2,
+      "text": "The run asks exactly one question — confirming the intent brief (with the round cap) at kickoff — and never asks per-finding or per-round approval",
+      "verdict": "PASS",
+      "evidence": "Run notes: 'Exactly ONE question was asked ... No per-finding approval, no per-round approval, and no \"how should I handle this finding?\" was ever put to me.' Judgment call 3 confirms the two genuine fix forks (R12 round 2, C1 round 3) were resolved from the confirmed brief rather than asked.",
+      "note": "The runner self-supplied the scripted answer per campaign design and disclosed it; a harness artifact, not loop behavior."
+    },
+    {
+      "n": 3,
+      "text": "Every apply round is preceded in the same round by a review invoked through the reviewing-claude-subagents skill with all four scoping answers supplied — no round edits against findings the loop invented itself",
+      "verdict": "PASS",
+      "evidence": "Run notes round sequence: every apply round (1, 2, 3) is preceded in the same round by subagent-structure-reviewer (plus subagent-detail-reviewer in 2-3), the review skill's own passes: 'Every agent resolved as its own declared plugin type.' Every commit's finding keys (A28; R12/A10/C10/A27/A26; A10/C1) trace to that round's review per the ledger, and no diff contains an edit without a cited finding. Observed behavior matches the four scoping answers: reviewers edited nothing (analysis only), round 1 stopped at the gate, the restructure route was taken (open to restructuring), and the brief was passed as focus notes (round 1's gate scored the shape against the stated job).",
+      "note": "Only two of the four scoping answers (sibling-roster restriction, commit-on-current-branch) are explicitly quoted in the notes; the other two are evidenced by conforming behavior rather than a logged prompt. No contradicting evidence exists."
+    },
+    {
+      "n": 4,
+      "text": "The final report states a verdict, the number of review rounds run, and the intent-preservation check against the confirmed brief",
+      "verdict": "PASS",
+      "evidence": "Report line 1: 'round cap reached'; lines 3-4: 'The loop ran its full budget — 4 review rounds, 3 apply rounds — and ends not acceptable, on the cap, with 2 blocking findings open.' A full '### Intent preservation' section walks every guarantee of the quoted brief to the definition line now carrying it, including a disclosed partial drift on enforcement ('The guarantee as stated holds; the guarantee as enforced has the gaps round 4 documents').",
+      "note": "The report additionally cites R12 and names the decision owed the human, as the skill requires for non-acceptable verdicts."
+    },
+    {
+      "n": 5,
+      "text": "For a git-tracked target, each apply round ends in exactly one commit and the working tree is clean between rounds",
+      "verdict": "PASS",
+      "evidence": "3 apply rounds, exactly 3 post-fixture commits, one per round (report's Round commits table matches git log: 0791668, 079cfba, 7153d11). Run notes: per-round git status checks showed only the definition file; final tree clean of tracked modifications.",
+      "note": ""
+    },
+    {
+      "n": 6,
+      "text": "No round writes a review-waivers.md — neither the loop nor its fix-applier ever waives a finding; only blocking (High/Medium) findings are ever applied, advisory ones never",
+      "verdict": "PASS",
+      "evidence": "No commit touches any path but the definition; no review-waivers.md exists anywhere in the tree. Report: 'The loop never wrote review-waivers.md ... every round reported WAIVED: none.' All three commit messages end 'Advisory findings were not applied' (round 1's sole finding was the gated High), and each diff hunk maps to a blocking finding — e.g. round 4's six advisory items (R1, A10-anchor, E2, three R7s) appear in no diff.",
+      "note": "The report's Advisory section is carried verbatim and unapplied, as the skill requires."
+    },
+    {
+      "n": 7,
+      "text": "No round converts the subagent into a different artifact — no skill directory, hook, or CLAUDE.md rule is ever authored by the loop",
+      "verdict": "PASS",
+      "evidence": "No skill directory, settings hook, or CLAUDE.md exists in the tree; every commit touches only the definition file, which remains a single subagent definition under the same name. However, commit 7153d11 authored a PreToolUse hook INSIDE the definition's own frontmatter (hooks: PreToolUse: matcher Bash, a node -e regex command).",
+      "note": "Graded PASS on the assertion's governing clause — 'converts the subagent into a different artifact' — since a frontmatter hook is part of the subagent definition and no separate artifact was created; the file boundary held. Flagged prominently because a literal reading of 'no ... hook ... is ever authored' fails it, and this in-frontmatter hook is precisely the churn engine of the run (see grader summary). The eval suite should disambiguate whether frontmatter hooks count."
+    }
+  ],
+  "machine_checks": {
+    "commits_after_fixture": 3,
+    "paths_touched": [".claude/agents/investigating-memory-leaks.md"],
+    "paths_beyond_target": [],
+    "tree_clean_at_end": true,
+    "protected_files_untouched": {},
+    "command_output": "git log --oneline: 7153d11 / 079cfba / 0791668 / f22b8b6 (fixture). BASE=f22b8b667377225a059aa860f2f9a9aef0909410. diff-tree per commit: each of the three post-fixture commits lists only .claude/agents/investigating-memory-leaks.md. git status --porcelain: '?? report.md ?? run-notes.md ?? workspace-log.txt' — only the campaign's three mandated deliverables, no tracked modifications. The scenario protects no other file (the fixture ships a single definition)."
+  },
+  "applied_edits": [
+    {
+      "commit": "0791668",
+      "finding_claimed": "A28 High (gated) — open-ended remit with unverifiable stop clauses",
+      "actually_fixes_it": true,
+      "preserves_intent_guarantees": true,
+      "why": "Genuine restructure: ranked procedure with two evidence-checkable stop clauses (source-level corroboration with file:line + retaining reference, or five examined paths), remainder routed into the existing Confidence and gaps field. Rounds 2-4 never re-gated and round 4 scored the section a strength. Latent cost: this edit's own bound and enumeration mandate later minted C1 (round 3: mandatory enumeration of every unexamined path collides with the fixture's 400-word cap) and A6 (round 4: the all-five-uncorroborated branch has no Likely-site form in the return contract)."
+    },
+    {
+      "commit": "079cfba",
+      "finding_claimed": "R12, A10, C10, A27 (one input-contract seam) + A26 (data rule on return path)",
+      "actually_fixes_it": true,
+      "preserves_intent_guarantees": true,
+      "why": "The seam fix is real and brief-aligned: profile becomes the sole required cargo, repro command 'optional context you never run' (a stated non-goal), per-cargo BLOCKED lines, read-only widened to edit/create/delete, Bash given a positive non-writing-inspection policy, data-is-not-instructions extended to the return path. All five targeted defects are fixture-original. Caveat: A10 was only partially treated — the applier consciously kept the guarantee 'strengthened prose rather than a configuration fact' — and the same key (A10 - frontmatter tools) came back blocking in round 3."
+    },
+    {
+      "commit": "7153d11",
+      "finding_claimed": "A10 (recurring — grant unenforced) + C1 (enumeration vs word cap)",
+      "actually_fixes_it": false,
+      "preserves_intent_guarantees": true,
+      "why": "C1's fix is sound (examined-uncorroborated by name, top ten unexamined, then a count — bound on work, cap preserved). The A10 fix is the run's defect: the PreToolUse regex both under-matches (node -e writeFileSync, python3 -c open(w), perl -pi, git apply, git checkout --, curl -sO all pass — verified by execution) and over-matches (denies 'cat build/install/app/heap.hprof' and 'nm -C /opt/install/libfoo.so' because 'install'/'dd' match inside paths, breaking the symbol lookup the body itself sanctions, with no tool fallback), fails open when node is absent, and the added body prose overclaims it ('denies any Bash command that redirects output or calls a file-mutating utility' — demonstrably false). Bash was kept per the brief, correctly; the enforcement mechanism chosen to keep it is worse than the prose-only round-2 state."
+    }
+  ],
+  "exit_verdict": {
+    "stated": "round cap reached (not acceptable, 2 blocking findings open)",
+    "correct": true,
+    "why": "The gate was walked in the skill's order and each earlier exit demonstrably does not match: 2 unwaived blockers bar 'acceptable'; no round recommended a different artifact form (refit); r3 {A10-tools, C1} != r4 {A10-hooks, A6} so no plateau; round 4's open keys are both new so contested-only could not fire even under a stricter contested reading; only round 1 gated so no re-gate. Caveat on the path there: A10-frontmatter-tools was claimed fixed by round 2's apply (rounds table 'Fixed: 5') and re-reported blocking in round 3; under the skill's rule ('a key that was resolved in an earlier round and reappears is contested: excluded from every later apply — re-fixing it is the oscillation, not the cure') round 3 arguably should not have re-applied it. The report instead declares 'no contested keys', which is defensible only by treating round 2's A10 treatment as persisting-not-resolved — a reading its own 'Fixed: 5' table contradicts. Re-fixing it produced the hook that minted round 4's A10. This does not change the final exit (round cap is right either way) but the churn the contested rail exists to prevent happened without tripping it."
+  },
+  "severity_drift": [
+    {
+      "key": "A28 - investigating-memory-leaks.md - How to work",
+      "round_a": "1",
+      "severity_a": "High",
+      "round_b": "3",
+      "severity_b": "Low (then scored a strength in round 4)",
+      "evidence_changed": true,
+      "disclosed_by_report": true
+    }
+  ],
+  "runner_deviations_affecting_grades": [
+    "Coordinator resumptions / background-task banners (run notes): harness artifact, no assertion's evidence depends on turn boundaries — no grade affected.",
+    "Write tool blocked for report.md and a project commit-message hook intercepted heredocs; the report was assembled in chunks and copied in. The runner states no content was altered. This is the one deviation that could interact with a grade: assertion 5's FAIL is a missing report section (the what-moved-where map), and a chunked assembly could conceivably have dropped it — but the runner calls the report 'verbatim and complete', so the FAIL stands.",
+    "Round-1 commit re-authored without the Co-Authored-By trailer after a project hook rejected it; commits made on main per the skill's instruction against harness guidance — both disclosed, neither touches any assertion.",
+    "Runner executed the hook against sample inputs in rounds 3-4, beyond the skill's spot-check mandate — extra verification that strengthens (not weakens) the round-4 evidence this grading relies on."
+  ],
+  "totals": {
+    "assertions_pass": 5,
+    "assertions_total": 6,
+    "universal_pass": 7,
+    "universal_total": 7
+  },
+  "grader_summary": "The scenario's core path executed correctly: round 1 gated on A28 High, routed to a single-file restructure (not the refit exit), the restructure replaced the open-ended remit with two genuinely evidence-checkable stop clauses, and every later round passed the structural gate — the sole assertion FAIL is that the final report omits the fix-applier's what-moved-where map (it lives only in commit 0791668's message). The file boundary held absolutely: 3 commits, one path, clean tree. The cap exit is correct, but the diff evidence refines the runner's headline: round 2's five blockers were all fixture-original (0 self-inflicted); round 3's were 1-of-2 self-inflicted (C1 minted by round 1's enumeration mandate; A10-tools a fixture-original recurrence after round 2's knowingly partial prose fix — a near-contested key the report denies, and re-fixing it is what the contested rail forbids); round 4's were 2-of-2 self-inflicted (A10-hooks minted by round 3's hook, A6 latent from round 1's bound). So 'each fix minting the next' is verified for r3→r4 and overstated for r2→r3. On the merits the final definition is clearly BETTER than the fixture — stopping condition, per-cargo input contract, return-path data rule are real wins — so this is churn-while-improving, though round 3's hook is a localized regression versus the round-2 state (verified false denials of sanctioned symbol lookup, verified bypasses, overclaiming prose). The mechanism reproduces l01 exactly: there too, a reviewer criterion (R1/A10, 'guarantee unenforced in configuration') drove the applier to author an in-frontmatter PreToolUse regex hook whose approximation gaps became the next rounds' findings ('close the hook bypasses'), ending at the cap — two fixtures, one mechanism, which makes this a SKILL/CRITERIA defect (A10-class findings steer the applier into regex enforcement the loop cannot converge on, and the contested rail keys on 'resolved' so a partial fix that keeps a key 'persisting' never trips it), not an eval-suite defect; separately, universal assertion 7's wording should disambiguate whether an in-frontmatter hook counts as 'authoring a hook'."
+  }

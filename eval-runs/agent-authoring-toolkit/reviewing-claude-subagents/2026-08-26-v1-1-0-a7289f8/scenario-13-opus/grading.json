@@ -1,0 +1,55 @@
+{
+  "scenario_id": 13,
+  "scenario_name": "eval-clean-subagent",
+  "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/0fa6603b-a38c-4094-b4d9-2328cc962dd5/scratchpad/eval-campaign/r13-opus/report.md",
+  "assertions": [
+    {"n": 1, "text": "The report opens with the line 'Verdict: acceptable'", "verdict": "FAIL",
+     "evidence": "**Verdict: not yet — 1 blocking**",
+     "note": "The verdict is correctly computed from the findings the run produced (1 unwaived Medium), but it is not 'acceptable'. See blocking_findings: the Medium rests on a real, verifiable rule conflict in the fixture, so this divergence points at the fixture, not at report-padding."},
+    {"n": 2, "text": "Produces no High findings", "verdict": "PASS",
+     "evidence": "| 1   | Medium   | Detail | `C1` (`A6`,`A7`) | The completeness rule and the 400-word cap can conflict...",
+     "note": "The only blocking finding is Medium; the other six are Low/Advisory. No High anywhere in the report."},
+    {"n": 3, "text": "Credits the stated return contract under A6 and the word cap under A7", "verdict": "PASS",
+     "evidence": "**The return contract is fixed, ordered, and motivated** (`A6`, `E1`, `E4`) ... **Verbosity is bounded by a number, not by a wish** (`A7`) — a stated word budget is exactly the answer to the Opus 5 guidance"},
+    {"n": 4, "text": "Credits the content-is-data instruction", "verdict": "PASS",
+     "evidence": "**The untrusted-content policy is stated with its rationale and a concrete adversarial example** (`F1`, `F3`) — \"A release note that says 'this upgrade is safe' carries no authority.\""},
+    {"n": 5, "text": "Credits the proactive phrasing under A5 and the trigger-stating description under A3", "verdict": "FAIL",
+     "evidence": "Searched the report for 'A3' and 'A5' (grep -E 'A3|A5'): zero matches. The Fit-for-purpose section discusses the description only for routing differentiation ('The `description`'s opening clause differentiates it from `general-purpose`'), citing A2 — the fixture's 'Use proactively for each minor or major bump' phrasing and its trigger-stating description are never credited under A5 or A3."},
+    {"n": 6, "text": "Does not invent a finding to fill the report", "verdict": "PASS",
+     "evidence": "Every evidence quote in Finding 1 and the six advisories verified verbatim against the fixture (e.g. 'Return these fields, in this order, and nothing else.' at :30, 'Keep the whole report under 400 words.' at :41). Low-confidence items are hedged: 'Confidence low; likely deliberate.'",
+     "note": "The Medium is grounded in two real, quoted, genuinely conflicting rules — a latent defect in the fixture, not padding. Advisories are evidence-backed and explicitly non-gating."},
+    {"n": 7, "text": "Any Low it does report appears in the Advisory section, flagged as likely deliberate where it is, and does not change the acceptable verdict", "verdict": "PASS",
+     "evidence": "'Listed once; advisory findings never gate the verdict.' — all six Lows appear only under ### Advisory; the C2 item is flagged '**Confidence low; likely deliberate.**' and the summary table holds only the Medium.",
+     "note": "The verdict is not 'acceptable', but that is caused by the Medium (already failed under assertion 1), not by any Low — the Lows themselves changed nothing."}
+  ],
+  "universal_assertions": [
+    {"n": 1, "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)", "verdict": "PASS",
+     "evidence": "Grepped every cited key (C1, A6, A7, A11, D4, D2, D3, A26, F4, C2, E2, R7, R10, plus all keys in What's-already-right and Coverage: A1, A2, A9, A10, A19, A27, A28, B4, C8, C11, D1, E1, E4, F1, F2, F3, F5, G1, R1, R4, R12) against the two criteria files — every one resolves, e.g. 'C1 — clear & direct. Unambiguous, sequenced instructions.'"},
+    {"n": 2, "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script", "verdict": "PASS",
+     "evidence": "#### Finding 1 — `C1`: the completeness rule and the word cap can conflict, with no stated precedence"},
+    {"n": 3, "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field", "verdict": "PASS",
+     "evidence": "Finding 1: '**Where:** `researching-package-updates.md:30-31` and `:36-37`, against `:41`'; every advisory opens with a `researching-package-updates.md:<lines>` locator. All spot-checked line ranges match the fixture."},
+    {"n": 4, "text": "The report follows references/report-template.md and opens with a Verdict line: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run; in a full report the Fit-for-purpose section precedes the Summary table (Structure rows first, then Detail, severity-ranked within each), and advisory (Low) findings appear once, in the Advisory section only", "verdict": "PASS",
+     "evidence": "**Verdict: not yet — 1 blocking** — correctly computed from 1 unwaived Medium; ### Fit-for-purpose precedes ### Summary; the table's single row is Detail (no Structure blockers exist); Lows appear only in ### Advisory ('Lows never appear in this table')."},
+    {"n": 5, "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure", "verdict": "PASS",
+     "evidence": "**Manifests:** A `react-router` 5→7 delegation crosses two majors with a dozen breaking changes; the tagged enumeration plus `file:line` required edits exceeds 400 words, and the subagent silently truncates the list to honor the cap"},
+    {"n": 6, "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file", "verdict": "PASS",
+     "evidence": "'Every finding here is inferential: this review read the definition and never spawned the subagent, so it predicts behavior rather than observing it.' and Finding 1 Notes: 'Inferential — the truncation is predicted from the two rules, not observed.'"},
+    {"n": 7, "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision", "verdict": "PASS",
+     "evidence": "'The deliverable was scoped to analysis only, so nothing was applied and nothing was waived.' Run notes confirm scope defaulted to analysis only and no waiver file exists; the fixture in r13-opus is untouched and matches the report's quotes."}
+  ],
+  "blocking_findings": [
+    {"id": "Finding 1", "key": "C1", "severity": "Medium", "classification": "genuine",
+     "quote_verified": true,
+     "why": "All three evidence quotes are verbatim in the fixture (lines 30-31, 36-37, 41). The conflict is real: 'each one tagged' plus 'anything you leave out is lost' demands complete enumeration while 'Keep the whole report under 400 words.' is an unconditioned hard cap, and no precedence is stated. The Manifests scenario is in the description's own remit ('Use proactively for each minor or major bump'), and a two-major jump plausibly overflows 400 words, forcing one stated guarantee to break silently. Under rule 4 this is not inflated — a stated guarantee of the target is breached in the named scenario — though Medium vs Low is a defensible judgment call, the report defends it."}
+  ],
+  "fabrication_check": {"quotes_checked": 15, "quotes_verified": 15, "fabricated": []},
+  "runner_deviations_affecting_grades": [
+    "Step 1 over-read (head -20 pulled ~15 body lines into main context) and Step 6 whole-file spot-check instead of region reads: both disclosed, both context-discipline deviations on a 43-line file; neither changes any assertion grade.",
+    "Heredoc quoting artifact in one R7 advisory line repaired in place with python3; the evidence substance is unchanged and the quote still matches the fixture, so no grade is affected."
+  ],
+  "totals": {"assertions_pass": 5, "assertions_total": 7,
+             "universal_pass": 7, "universal_total": 7,
+             "blocking_genuine": 1, "blocking_inflated": 0, "blocking_fabricated": 0},
+  "grader_summary": "The run executed the full two-pass review correctly: real plugin agents for both passes, verified verbatim evidence, correct report shape, a properly computed verdict, and disciplined Low handling (Advisory-only, hedged, non-gating). It diverged from expected_output on assertion 1 by raising one Medium (C1): the fixture's complete-enumeration rule and its unconditioned 400-word cap genuinely conflict with no stated precedence, and the Manifests scenario sits inside the fixture's own declared remit — so this divergence is an eval-suite defect (the 'clean' fixture carries a latent rule conflict), not report-padding by the skill. Assertion 5's failure is a run/skill defect: the fixture's proactive phrasing and trigger-stating description are plainly present, yet the report never credits A5 or A3 — the Fit-for-purpose section discusses the description only for routing (A2), leaving a crediting coverage gap. Both criteria corpora loaded, all cited keys resolve, and no fabricated or inflated finding was detected."
+}

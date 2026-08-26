@@ -1,0 +1,43 @@
+machine checks - improving-claude-subagents - 2026-08-26-v1-1-0-a7289f8
+run from each scratch workspace after the run, per the suite's grading.script.
+
+== scenario-01 (l01) - TARGET=.claude/agents/formatting-release-notes.md ==
+-- commits after the fixture commit --
+   5ff798f fix(formatting-release-notes): specify the branches the previous round opened
+   ea537ea fix(formatting-release-notes): close the hook bypasses and bound the return
+   68cc02e fix(formatting-release-notes): enforce the read-only guarantee in configuration
+   3542500 chore: install fixture subagent definitions
+   PASS: every apply commit touches only .claude/agents/formatting-release-notes.md
+   PASS: tracked tree clean at end
+   note: untracked harness artifacts (report.md, run-notes.md, workspace-log.txt, grading.json)
+         are written by the eval harness, not the loop, and are excluded from the clean-tree check.
+
+== scenario-02 (l02) - TARGET=.claude/agents/applying-refactor-tasks.md ==
+-- commits after the fixture commit --
+   134e010 chore: install fixture subagent definitions
+   PASS: every apply commit touches only .claude/agents/applying-refactor-tasks.md
+   PASS: tracked tree clean at end
+   note: untracked harness artifacts (report.md, run-notes.md, workspace-log.txt, grading.json)
+         are written by the eval harness, not the loop, and are excluded from the clean-tree check.
+
+== scenario-03 (l03) - TARGET=.claude/agents/investigating-memory-leaks.md ==
+-- commits after the fixture commit --
+   7153d11 fix: enforce investigating-memory-leaks' read-only guarantee in configuration
+   079cfba fix: make investigating-memory-leaks' input contract match its read-only guarantee
+   0791668 fix: give investigating-memory-leaks a checkable stopping condition
+   f22b8b6 chore: install fixture subagent definitions
+   PASS: every apply commit touches only .claude/agents/investigating-memory-leaks.md
+   PASS: tracked tree clean at end
+   note: untracked harness artifacts (report.md, run-notes.md, workspace-log.txt, grading.json)
+         are written by the eval harness, not the loop, and are excluded from the clean-tree check.
+
+== scenario-07 (l07) - TARGET=.claude/agents/reviewing-frontend-diffs.md ==
+-- commits after the fixture commit --
+   2407faf fix: scope the frontend-diff reviewer's Bash use and close its return-contract gaps
+   1cb3fbd chore: install fixture subagent definitions
+   PASS: every apply commit touches only .claude/agents/reviewing-frontend-diffs.md
+   PASS: tracked tree clean at end
+   note: untracked harness artifacts (report.md, run-notes.md, workspace-log.txt, grading.json)
+         are written by the eval harness, not the loop, and are excluded from the clean-tree check.
+   PASS: protected sibling checking-ui-changes.md byte-identical to fixture commit (empty diff)
+
