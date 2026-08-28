@@ -3,7 +3,7 @@
 ## Timing
 
 - start: 1787740814
-- end:   1787741762
+- end: 1787741762
 - elapsed: 948 seconds
 
 ## Agents spawned, in order

@@ -48,7 +48,7 @@ The target ships no evals, so each guarantee is cited to the definition line tha
   reads "never edit, create, or delete a file" (round 2 widened it from "never edit a file"), and
   round 3 added the frontmatter `PreToolUse` hook so the guarantee no longer rests on prose alone.
   **Partial drift, flagged:** the enforcement is incomplete — see `A10` above. The guarantee as
-  *stated* holds; the guarantee as *enforced* has the gaps round 4 documents.
+  _stated_ holds; the guarantee as _enforced_ has the gaps round 4 documents.
 - **`Bash` is for read-only inspection** — preserved and made explicit. Line 16–17: "Bash is for
   non-writing inspection only — reading profile files, symbol lookup — never for building, running
   the process under suspicion, or writing output." This was implicit in the fixture and is now
@@ -84,15 +84,15 @@ definition about to be restructured. Rounds 2–4 ran both passes.
 
 ### Ledger
 
-| Ledger key                                                  | Severity | First seen | Status   | Note                                                                        |
+| Ledger key                                                  | Severity | First seen | Status   | Note                                                                          |
 | ----------------------------------------------------------- | -------- | ---------- | -------- | ----------------------------------------------------------------------------- |
 | A28 · investigating-memory-leaks.md · How to work           | High     | 1          | resolved | r3 reappearance was Low/advisory only; r4 scores it a full strength           |
-| R12 · investigating-memory-leaks.md · delegation contract   | Medium   | 2          | resolved | r2 apply                                                                     |
-| C10 · investigating-memory-leaks.md · delegation contract   | Medium   | 2          | resolved | r2 apply                                                                     |
-| A27 · investigating-memory-leaks.md · delegation contract   | Medium   | 2          | resolved | r2 apply; r4 scores it a strength                                            |
-| A26 · investigating-memory-leaks.md · What to return        | Medium   | 2          | resolved | r2 apply; r4 scores it a strength                                            |
-| A10 · investigating-memory-leaks.md · frontmatter tools     | Medium   | 2          | resolved | r3 apply added the hook; the grant is no longer unenforced                   |
-| C1 · investigating-memory-leaks.md · What to return         | Medium   | 3          | resolved | r3 apply bounded the enumeration                                             |
+| R12 · investigating-memory-leaks.md · delegation contract   | Medium   | 2          | resolved | r2 apply                                                                      |
+| C10 · investigating-memory-leaks.md · delegation contract   | Medium   | 2          | resolved | r2 apply                                                                      |
+| A27 · investigating-memory-leaks.md · delegation contract   | Medium   | 2          | resolved | r2 apply; r4 scores it a strength                                             |
+| A26 · investigating-memory-leaks.md · What to return        | Medium   | 2          | resolved | r2 apply; r4 scores it a strength                                             |
+| A10 · investigating-memory-leaks.md · frontmatter tools     | Medium   | 2          | resolved | r3 apply added the hook; the grant is no longer unenforced                    |
+| C1 · investigating-memory-leaks.md · What to return         | Medium   | 3          | resolved | r3 apply bounded the enumeration                                              |
 | **A10 · investigating-memory-leaks.md · frontmatter hooks** | Medium   | 4          | **new**  | minted by round 3's fix; `A10` reported r2, r3, r4 — each fix minted the next |
 | **A6 · investigating-memory-leaks.md · What to return**     | Medium   | 4          | **new**  | minted by round 1's five-path bound; `H1` raises its weight                   |
 
@@ -105,9 +105,9 @@ not on a stall signal.
 Round 4's advisory findings, verbatim and unapplied. The loop chased none of these in any round —
 that restraint is what kept rounds 2 and 3 converging.
 
-- `R1` · frontmatter (Pass 1) — `Glob` is granted but no body instruction reaches for it. *Low, low
+- `R1` · frontmatter (Pass 1) — `Glob` is granted but no body instruction reaches for it. _Low, low
   confidence: `Glob` is read-only and background-safe, so removing or keeping it changes no
-  guarantee.*
+  guarantee._
 - `A10` · frontmatter `hooks`, line 11 — the pattern matches utility names anywhere in the command
   string, including inside file paths. **Verified by execution:** `cat build/install/app/heap.hprof`,
   `grep -n alloc /var/profiles/dd/heap.json`, and `nm -C /opt/install/libfoo.so` are all denied.
@@ -115,8 +115,8 @@ that restraint is what kept rounds 2 and 3 converging.
   has no tool fallback. Anchor the alternation to command position with a leading `(^|[;&|]\s*)`
   guard.
 - `E2` · lines 48–51 — the most intricate field in the return contract is specified abstractly in one
-  sentence carrying three composition instructions, with no worked example. *(Overlaps `C2`; the same
-  sentence breaks prose convention 2.)*
+  sentence carrying three composition instructions, with no worked example. _(Overlaps `C2`; the same
+  sentence breaks prose convention 2.)_
 - `R7` · line 23 — convention 6: bare "It" with two plausible antecedents; only the second reading
   parses, so the sentence resolves by semantics rather than grammar.
 - `R7` · lines 16–17 and 30 — convention 5: the prohibition on building and on running the process
@@ -137,10 +137,10 @@ defects at three different depths of the same guarantee, each correctly identifi
 
 | Round | Commit                                                                                       |
 | ----- | -------------------------------------------------------------------------------------------- |
-| 1     | `0791668` fix: give investigating-memory-leaks a checkable stopping condition                 |
-| 2     | `079cfba` fix: make investigating-memory-leaks' input contract match its read-only guarantee  |
-| 3     | `7153d11` fix: enforce investigating-memory-leaks' read-only guarantee in configuration       |
-| 4     | — no apply round; the cap ended the loop at the review                                        |
+| 1     | `0791668` fix: give investigating-memory-leaks a checkable stopping condition                |
+| 2     | `079cfba` fix: make investigating-memory-leaks' input contract match its read-only guarantee |
+| 3     | `7153d11` fix: enforce investigating-memory-leaks' read-only guarantee in configuration      |
+| 4     | — no apply round; the cap ended the loop at the review                                       |
 
 Starting commit: `f22b8b6`. Working tree clean at exit; no path outside the definition file was ever
 modified, in any round.

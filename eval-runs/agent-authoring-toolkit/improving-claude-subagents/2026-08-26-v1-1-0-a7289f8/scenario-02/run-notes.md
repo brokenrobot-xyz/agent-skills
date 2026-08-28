@@ -3,7 +3,7 @@
 ### Timing
 
 - Start: 1787741864
-- End:   1787742194
+- End: 1787742194
 - Elapsed: 330 seconds (5m30s)
 
 End time was captured at the moment the loop's final report was produced. The artifact-writing
@@ -112,15 +112,15 @@ resolved normally.
 
 1. **I read the target definition file twice in my own context**, which the skills discourage as
    a cost measure:
-   - Once as EVAL RUNNER before invoking the skill, to inspect the fixture.
-   - Once during the reviewer's Step 3 spot-check, which the reviewer skill explicitly REQUIRES
-     ("Before acting on any High it returns, spot-check the evidence: Read just the quoted
-     region"). I read the whole file rather than only the quoted regions — it is 25 lines, and
-     the two findings between them anchor at lines 3, 4, and 12–18. Both quotes verified
-     verbatim.
+    - Once as EVAL RUNNER before invoking the skill, to inspect the fixture.
+    - Once during the reviewer's Step 3 spot-check, which the reviewer skill explicitly REQUIRES
+      ("Before acting on any High it returns, spot-check the evidence: Read just the quoted
+      region"). I read the whole file rather than only the quoted regions — it is 25 lines, and
+      the two findings between them anchor at lines 3, 4, and 12–18. Both quotes verified
+      verbatim.
 
-   The first read is an eval-harness artifact, not skill behavior. Neither read changed any
-   outcome.
+    The first read is an eval-harness artifact, not skill behavior. Neither read changed any
+    outcome.
 
 2. **The intent brief I drafted used the full file content**, since I had already read the file
    as eval runner, rather than only the frontmatter the skill's Step 2 scopes. The brief's

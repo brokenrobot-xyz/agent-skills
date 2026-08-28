@@ -34,15 +34,15 @@
 
 ## Results
 
-| id  | scenario                     | exit verdict                   | expected                       | rounds | commits | assertions | universal | tokens  | duration |
-| --- | ---------------------------- | ------------------------------ | ------------------------------ | ------ | ------- | ---------- | --------- | ------- | -------- |
-| 1   | eval-converges-two-rounds    | **round cap reached**          | acceptable, well before the cap | 4      | 3       | 3/6        | 7/7       | 183,122 | 3457 s   |
-| 2   | eval-refit-exit              | **not acceptable — refit needed** | not acceptable — refit needed | 1      | 0       | **5/5**    | 6/7 (1 N/A) | 73,803 | 383 s    |
-| 3   | eval-single-file-restructure | **round cap reached**          | converges after a restructure   | 4      | 3       | 5/6        | 7/7       | 186,723 | 3470 s   |
-| 7   | eval-sibling-untouched       | **not acceptable — plateaued** | acceptable, sibling untouched   | 3      | 1       | 4/5        | 7/7       | 175,982 | 914 s    |
+| id  | scenario                     | exit verdict                      | expected                        | rounds | commits | assertions | universal   | tokens  | duration |
+| --- | ---------------------------- | --------------------------------- | ------------------------------- | ------ | ------- | ---------- | ----------- | ------- | -------- |
+| 1   | eval-converges-two-rounds    | **round cap reached**             | acceptable, well before the cap | 4      | 3       | 3/6        | 7/7         | 183,122 | 3457 s   |
+| 2   | eval-refit-exit              | **not acceptable — refit needed** | not acceptable — refit needed   | 1      | 0       | **5/5**    | 6/7 (1 N/A) | 73,803  | 383 s    |
+| 3   | eval-single-file-restructure | **round cap reached**             | converges after a restructure   | 4      | 3       | 5/6        | 7/7         | 186,723 | 3470 s   |
+| 7   | eval-sibling-untouched       | **not acceptable — plateaued**    | acceptable, sibling untouched   | 3      | 1       | 4/5        | 7/7         | 175,982 | 914 s    |
 
 **Aggregate: 17/22 scenario assertions PASS; 27/29 universal assertions PASS.** Every stated
-exit verdict was graded *correctly computed* for what the rounds actually found — including both
+exit verdict was graded _correctly computed_ for what the rounds actually found — including both
 cap exits. Total 619,630 tokens, 8,224 s of runner wall clock.
 
 Machine checks: all pass. 7 apply commits across 4 runs, **every one touching only its target
@@ -61,7 +61,7 @@ to the fixture commit by empty diff. See `machine-checks.txt`.
   report handed the conversion to the human with the recommended form and deciding signal
   verbatim.
 - **The gated-round routing distinguishes shape fixes from form changes correctly.** Scenario 3
-  gated on `A28`, correctly did *not* fire the refit exit (Pass 1 returned `A1` as a strength),
+  gated on `A28`, correctly did _not_ fire the refit exit (Pass 1 returned `A1` as a strength),
   routed to a single-file restructure, and replaced the open-ended remit with two genuinely
   evidence-checkable stop clauses. Every later round passed the structural gate.
 - **The file boundary holds even under temptation.** Scenario 7's `A2` overlap invites a
@@ -81,7 +81,7 @@ Neither scenario 1 nor scenario 3 converged; both burned the full 4-round cap. T
 the same in both, and it is a **skill/criteria defect**, not an eval-suite artifact:
 
 **Scenario 1.** Round 1 gated on a High `R1` that the suite authored as non-gating — a defensible
-*Medium*-grade observation (unused `Read`/`Grep`/`Glob` grants) inflated to a gate. That skipped
+_Medium_-grade observation (unused `Read`/`Grep`/`Glob` grants) inflated to a gate. That skipped
 the round-1 detail sweep and minted a frontmatter `PreToolUse` hook. Thereafter **9 of the 14
 blocking findings in rounds 2–4 sat on text the loop's own appliers had written** — 3 of 7, then
 4 of 4, then 2 of 3.
@@ -105,11 +105,11 @@ round 3, and re-fixed into the hook.** The grader's view is that it should have 
 
 Recorded because it recurs and is severity-independent of the exits it influenced:
 
-| run | criterion | drift | evidence changed | disclosed by the report |
-| --- | --------- | ----- | ---------------- | ----------------------- |
-| l07 | `A2` · description | Medium → High | **no** | yes |
-| l01 | `C1` · § What to return | Low (advisory) → Medium (blocking) | **no** | yes |
-| l03 | `A28` · How to work | High → Low → strength | yes (the restructure landed) | yes |
+| run | criterion               | drift                              | evidence changed             | disclosed by the report |
+| --- | ----------------------- | ---------------------------------- | ---------------------------- | ----------------------- |
+| l07 | `A2` · description      | Medium → High                      | **no**                       | yes                     |
+| l01 | `C1` · § What to return | Low (advisory) → Medium (blocking) | **no**                       | yes                     |
+| l03 | `A28` · How to work     | High → Low → strength              | yes (the restructure landed) | yes                     |
 
 Two of the three moved on byte-identical evidence. In l01 the `C1` escalation helped defeat the
 acceptable exit. In l07 the `A2` escalation gated rounds 2–3 but did **not** cause the plateau,

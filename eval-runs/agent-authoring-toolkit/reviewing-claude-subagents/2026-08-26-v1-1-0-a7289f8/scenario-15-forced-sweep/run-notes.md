@@ -3,14 +3,14 @@
 ## Timing
 
 - Start: 1787741301
-- End:   1787742293
+- End: 1787742293
 - Elapsed: 992 seconds (~16m32s)
 
 ## Agents spawned, in order
 
 1. `agent-authoring-toolkit:subagent-structure-reviewer` (Pass 1), model override `opus`.
    Duration ~109 s, 4 tool uses, ~29.6k subagent tokens. Returned 2 High (`A1`, `A28`)
-   + 2 Low (`A11`, `R1`), plus STRENGTHS and `WAIVED: none`.
+    - 2 Low (`A11`, `R1`), plus STRENGTHS and `WAIVED: none`.
 2. `agent-authoring-toolkit:subagent-detail-reviewer` (Pass 2), model override `opus`.
    Duration ~300 s, 6 tool uses, ~54.5k subagent tokens. Returned 5 High, 9 Medium,
    7 Low, plus STRENGTHS, a full COVERAGE payload, and `WAIVED: none`.
@@ -105,7 +105,7 @@ For the prose conventions, quoting the same payload:
 > `skills` frontmatter, and I **read the twelve conventions from disk** at
 > `/Users/tamas/Development/github/brokenrobot-xyz/agent-skills/plugins/writing-simplified-technical-english/references/conventions.md`.
 
-So the honest answer is BOTH, in sequence: the skill *bodies* preloaded via the
+So the honest answer is BOTH, in sequence: the skill _bodies_ preloaded via the
 `skills:` frontmatter (so the preload mechanism worked), but each skill body only points
 at its criteria reference file, and the agent then had to `Read` that file from disk to
 obtain the actual criteria. No group came back `ungraded`, and no group was scored from

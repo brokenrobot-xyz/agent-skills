@@ -12,21 +12,21 @@ The structure holds: this is a real subagent, not a skill wearing a subagent's f
 
 ### Summary
 
-| #   | Severity | Pass   | Key(s)            | Finding                                                                                       | Notes             |
-| --- | -------- | ------ | ----------------- | --------------------------------------------------------------------------------------------- | ----------------- |
-| 1   | High     | Detail | A17               | `name` contains `:`, so Claude Code v2.1.218+ does not load the definition at all               |                   |
-| 2   | Medium   | Detail | A7                | The return is unbounded — no cap on violations, per-violation length, or the passing roster     |                   |
-| 3   | Medium   | Detail | D2                | "the fix" is a report field axe does not supply, over source the body never lets it read        |                   |
-| 4   | Medium   | Detail | A26 (`F1`, `F3`)  | No content-is-data rule, while rendering third-party pages with unrestricted `Bash` behind it   |                   |
-| 5   | Medium   | Detail | C8                | No read-only boundary stated, while granting `Bash` and asking for fixes                        |                   |
-| 6   | Medium   | Detail | D1                | A coverage guarantee with no category for a route that could not be checked                     |                   |
-| 7   | Medium   | Detail | C1                | Build, serve, and axe are named but unspecified, so two runs are not comparable                 | inferential (low) |
+| #   | Severity | Pass   | Key(s)           | Finding                                                                                       | Notes             |
+| --- | -------- | ------ | ---------------- | --------------------------------------------------------------------------------------------- | ----------------- |
+| 1   | High     | Detail | A17              | `name` contains `:`, so Claude Code v2.1.218+ does not load the definition at all             |                   |
+| 2   | Medium   | Detail | A7               | The return is unbounded — no cap on violations, per-violation length, or the passing roster   |                   |
+| 3   | Medium   | Detail | D2               | "the fix" is a report field axe does not supply, over source the body never lets it read      |                   |
+| 4   | Medium   | Detail | A26 (`F1`, `F3`) | No content-is-data rule, while rendering third-party pages with unrestricted `Bash` behind it |                   |
+| 5   | Medium   | Detail | C8               | No read-only boundary stated, while granting `Bash` and asking for fixes                      |                   |
+| 6   | Medium   | Detail | D1               | A coverage guarantee with no category for a route that could not be checked                   |                   |
+| 7   | Medium   | Detail | C1               | Build, serve, and axe are named but unspecified, so two runs are not comparable               | inferential (low) |
 
 Ranking note: Structure findings would lead this table, but Pass 1's only finding is a Low, so it appears in Advisory. Lows never gate the verdict.
 
 ### What's already right
 
-- **The description states a trigger, not a capability** — "Use at the verification step of a UI change" tells Claude *when* to delegate rather than what the subagent is good at, which is the form routing depends on (`A3`), and it is third person throughout (`A4`).
+- **The description states a trigger, not a capability** — "Use at the verification step of a UI change" tells Claude _when_ to delegate rather than what the subagent is good at, which is the form routing depends on (`A3`), and it is third person throughout (`A4`).
 - **The tool grant is clean, verified rather than eyeballed** — no always-stripped tool, every entry background-safe (which matters since v2.1.198 defaults subagents to the background), every entry resolves to a real tool, and no `disallowedTools` field creating a both-fields collision (`A12`, `A13`, `A14`).
 - **Every instruction is reachable through the declared tools** (`A11`) — build/serve/axe are `Bash`, `routes.json` is `Read`, the report is the return message. The body invokes no skill, delegates to no subagent, and asks no one a question, avoiding the `AskUserQuestion` trap the checklist records as this group's highest-yield defect.
 - **No `model`, `effort`, or `maxTurns` pin** (`A19`) — the definition inherits and so avoids depending on one model's quirks. Better than all five subagents in the checklist's dry run, each of which pinned a model with no stated reason.
@@ -126,17 +126,17 @@ Listed once; advisory findings never gate the verdict.
 
 ### Coverage
 
-| Group | Status                     | Findings         |
-| ----- | -------------------------- | ---------------- |
-| A     | Gap                        | 1, 2, 4, adv. `A6`, `A25`, `A5`, `A23`, `A27` |
-| B     | Pass                       | — (informs 2, 5) |
-| C     | Gap                        | 5, 7             |
-| D     | Gap                        | 3, 6, adv. `D5`  |
-| E     | Gap                        | — (folded into 7 and adv. `A6`) |
-| F     | Gap                        | 4, adv. `F4`     |
-| G     | Pass                       | —                |
-| H     | N/A — ships no evals       | —                |
-| R     | Gap                        | adv. `R1`, `R7`  |
+| Group | Status               | Findings                                      |
+| ----- | -------------------- | --------------------------------------------- |
+| A     | Gap                  | 1, 2, 4, adv. `A6`, `A25`, `A5`, `A23`, `A27` |
+| B     | Pass                 | — (informs 2, 5)                              |
+| C     | Gap                  | 5, 7                                          |
+| D     | Gap                  | 3, 6, adv. `D5`                               |
+| E     | Gap                  | — (folded into 7 and adv. `A6`)               |
+| F     | Gap                  | 4, adv. `F4`                                  |
+| G     | Pass                 | —                                             |
+| H     | N/A — ships no evals | —                                             |
+| R     | Gap                  | adv. `R1`, `R7`                               |
 
 `N/A` criteria within scored groups: `A15`, `A16`, `A18` (project-level, not plugin-shipped), `A20`, `A21`, `A22`, `A24`; `B3` (thinking not disabled); `E5`, `E6`; `F6` (the adversary here is third-party content, not the user); `R2` (check-only review), `R5`, `R6`. `A8` passes vacuously — a `find` over the host root confirmed no `CLAUDE.md` at any level, so nothing can be restated. `R6` is `N/A` on the same evidence: the host project ships no convention document, and no naming convention was imported from outside it. `F5`'s eval half is ungraded because the subagent ships no evals.
 

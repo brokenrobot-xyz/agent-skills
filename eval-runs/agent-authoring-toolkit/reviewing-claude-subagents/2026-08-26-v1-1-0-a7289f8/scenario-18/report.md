@@ -1,4 +1,5 @@
 Review progress:
+
 - [x] 1. Locate the definition + its context — **stopped here: no subagent named `researching-package-update` exists**
 - [ ] 2. Brief the user, then interview to scope
 - [ ] 3. Pass 1 — spawn the subagent-structure-reviewer
@@ -18,11 +19,11 @@ before Step 2 and spawned nothing.
 
 ## Where I looked
 
-| Location | Result |
-| --- | --- |
-| `<workspace>/.claude/agents/` (recursive) | 1 definition found |
-| `~/.claude/agents/` | out of scope for this run |
-| enabled plugins' `agents/` directories | out of scope for this run |
+| Location                                  | Result                    |
+| ----------------------------------------- | ------------------------- |
+| `<workspace>/.claude/agents/` (recursive) | 1 definition found        |
+| `~/.claude/agents/`                       | out of scope for this run |
+| enabled plugins' `agents/` directories    | out of scope for this run |
 
 Exactly one definition exists in the project scope:
 
@@ -30,8 +31,8 @@ Exactly one definition exists in the project scope:
 
 ## The closest name I found
 
-| `name` field | vs. what you asked for |
-| --- | --- |
+| `name` field                  | vs. what you asked for                  |
+| ----------------------------- | --------------------------------------- |
 | `researching-package-updates` | identical except for a trailing **`s`** |
 
 Its `description` is:

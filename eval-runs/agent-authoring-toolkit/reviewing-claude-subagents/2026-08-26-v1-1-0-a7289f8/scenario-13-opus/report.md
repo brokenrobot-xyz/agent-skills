@@ -14,8 +14,8 @@ On routing, the roster in scope holds exactly one definition, this one, so the o
 
 ### Summary
 
-| #   | Severity | Pass   | Key(s)          | Finding                                                                                              | Notes |
-| --- | -------- | ------ | --------------- | ---------------------------------------------------------------------------------------------------- | ----- |
+| #   | Severity | Pass   | Key(s)           | Finding                                                                                                 | Notes |
+| --- | -------- | ------ | ---------------- | ------------------------------------------------------------------------------------------------------- | ----- |
 | 1   | Medium   | Detail | `C1` (`A6`,`A7`) | The completeness rule and the 400-word cap can conflict, and the body states no precedence between them |       |
 
 Lows never appear in this table — they are advisory, and all six are listed below.
@@ -60,17 +60,17 @@ Listed once; advisory findings never gate the verdict.
 
 ### Coverage
 
-| Group | Status                          | Findings          |
-| ----- | ------------------------------- | ----------------- |
-| A     | Gap (non-structural criteria)   | advisory: `A11`, `A26` |
-| B     | Pass                            | —                 |
-| C     | Gap                             | 1; advisory: `C2` |
-| D     | Gap                             | advisory: `D4`    |
-| E     | Pass                            | —                 |
-| F     | Gap                             | folded into advisory `A26` |
-| G     | Pass                            | —                 |
-| H     | N/A — ships no evals            | —                 |
-| R     | Gap                             | advisory: `R7` ×2 |
+| Group | Status                        | Findings                   |
+| ----- | ----------------------------- | -------------------------- |
+| A     | Gap (non-structural criteria) | advisory: `A11`, `A26`     |
+| B     | Pass                          | —                          |
+| C     | Gap                           | 1; advisory: `C2`          |
+| D     | Gap                           | advisory: `D4`             |
+| E     | Pass                          | —                          |
+| F     | Gap                           | folded into advisory `A26` |
+| G     | Pass                          | —                          |
+| H     | N/A — ships no evals          | —                          |
+| R     | Gap                           | advisory: `R7` ×2          |
 
 `N/A` criteria within the scored groups, with the reason each does not apply: `A15` (no MCP entry), `A16` (no `permissionMode`), `A18` (not plugin-shipped), `A20` (no `memory`), `A21` (no `isolation`), `A24` (no `Agent` tool), `A8` (no `CLAUDE.md` anywhere under the workspace root, so there is nothing the body could restate), `A22`/`A25` (no `skills` field, no skill named in the body, no path reference in the body), `A28` (scored in Pass 1 — the return contract bounds the task, so no stopping condition is needed and none is padded in), `C10` (the tool grant makes every action reversible, and `A9` bars the confirmation turn anyway), `D5`/`D6` (no self-reported progress on a long run; re-running is the parent's call), `E5` (no prefill), `F6` (the adversary here is fetched third-party content, not the subagent's own user), `R2` (this run applies no edits), `R5` (the subagent authors no commits), `R6` (the workspace root defines no naming convention for subagents), `R13` (the body invokes no skill and hands work to no agent). `F5` was scored and not reported: no eval set exists to carry an injection scenario, and a screening classifier on `WebFetch` output is disproportionate for a 400-word read-only research pass. `G` is proportionate under `G1`: the definition holds no secrets, so the absence of leak defenses is correct rather than a gap.
 

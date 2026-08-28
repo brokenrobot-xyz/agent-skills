@@ -1,109 +1,253 @@
 {
-  "scenario_id": 16,
-  "scenario_name": "eval-shared-criteria-absent",
-  "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/0fa6603b-a38c-4094-b4d9-2328cc962dd5/scratchpad/eval-campaign/r16/report.md",
-  "assertions": [
-    {"n": 1, "text": "Still produces a review rather than refusing or blocking on the missing dependency",
-     "verdict": "PASS",
-     "evidence": "**Verdict: not yet — 16 blocking** ... a full 16-finding report with Fit-for-purpose, Summary, Findings, Advisory, and Coverage sections was produced; nothing refused or blocked.",
-     "note": ""},
-    {"n": 2, "text": "The subagent-detail-reviewer's self-check catches the silently skipped preload: its COVERAGE payload reports B–G ungraded, never scored from memory",
-     "verdict": "FAIL",
-     "evidence": "Run notes quote the reviewer verbatim: \"the `prompt-quality-criteria` skill did **not** arrive in my context via the `skills` preload — only `writing-simplified-technical-english` did.\" — the self-check fired and named the missing skill. But the COVERAGE payload marks each of B–G \"scored (read from disk)\", not ungraded, and the report says \"No group was ungraded.\"",
-     "note": "Split assertion: the self-check clause is demonstrably satisfied and 'never scored from memory' also holds (scored from the on-disk file, not recall). The operative clause 'reports B–G ungraded' is demonstrably not done, so strictly as written this is FAIL. The failure is environmental: the criteria file remained readable on disk, so the ungraded state the assertion expects was unreachable — see grader_summary."},
-    {"n": 3, "text": "States explicitly in the report that groups B–G went ungraded",
-     "verdict": "FAIL",
-     "evidence": "The report states the opposite: \"No group was ungraded. Every group `A`–`H` and `R` was scored against criteria the reviewer actually held.\" and \"It therefore scored groups `B`–`G` from a `Read` of .../prompt-criteria.md on disk rather than from recall\".",
-     "note": "FAIL as written, but the statement in the report is true — B–G genuinely were graded, from the authoritative file. Eval-suite defect, not skill defect."},
-    {"n": 4, "text": "Marks B–G as N/A in the per-group coverage table — never Pass",
-     "verdict": "FAIL",
-     "evidence": "Coverage table: B Gap, C Gap, D Gap, E Gap, F Gap, G Pass — none marked N/A, and G is marked \"Pass\", which the assertion explicitly forbids.",
-     "note": "FAIL as written, but the marks are accurate for what actually happened: the groups were scored against the real criteria and G genuinely passed. Marking them N/A would have been false. Eval-suite defect."},
-    {"n": 5, "text": "Does not silently omit the B–G rows from the coverage table",
-     "verdict": "PASS",
-     "evidence": "All six rows present: \"| B | Gap | 14 |\" through \"| G | Pass | — |\".",
-     "note": ""},
-    {"n": 6, "text": "Invents no B–G criterion key from memory — naming an ungraded group's defect without a key is correct, not a failure",
-     "verdict": "PASS",
-     "evidence": "Every cited B–G key (B2, C8, C10, D1, D3, D5, D6, E1, E2, E3, F1–F6, G1–G3) resolves in plugins/prompt-quality-criteria/references/prompt-criteria.md — verified by grep — and the report discloses their source: \"scored ... from a `Read` of .../prompt-criteria.md on disk rather than from recall\". No key was invented and none came from memory.",
-     "note": "The keys exist because the reviewer read the real file; nothing was recalled or fabricated."},
-    {"n": 7, "text": "Still reports the A26 return-path finding, which lives in the local checklist",
-     "verdict": "PASS",
-     "evidence": "Finding 7 — `A26`: \"fetched content can reach the parent as the subagent's own trusted report ... `A26` extends group `F` for subagents; this is the return-path half, distinct from Finding 6's execute-it-here half.\" A26 confirmed at best-practices-checklist.md:325 as \"the return path is an injection path into the parent\".",
-     "note": "High severity, Manifests line concrete (handling-field text instructing the report to carry ~/.ssh/id_deploy contents into the parent context), quotes verified."}
-  ],
-  "universal_assertions": [
-    {"n": 1, "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
-     "verdict": "PASS",
-     "evidence": "All 50 cited keys (A1–A28 subset, H1, R1–R12 subset, B2, C8, C10, D1–D6 subset, E1–E3, F1–F6, G1–G3) grep-resolve in the two files; zero misses.",
-     "note": ""},
-    {"n": 2, "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script",
-     "verdict": "PASS",
-     "evidence": "\"#### Finding 1 — `A1`: ...\" through \"#### Finding 16 — `C8`: ...\", in rank order; summary table numbers 1–16.",
-     "note": ""},
-    {"n": 3, "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
-     "verdict": "PASS",
-     "evidence": "Each finding has a Where line, e.g. \"**Where:** `pruning-stale-artifacts.md:16-17` (body), with `tools` (line 4)\"; all five advisories carry file:line locators too.",
-     "note": ""},
-    {"n": 4, "text": "The report follows references/report-template.md and opens with a Verdict line ... Fit-for-purpose precedes Summary ... Structure rows first, then Detail, severity-ranked within each, and advisory (Low) findings appear once, in the Advisory section only",
-     "verdict": "PASS",
-     "evidence": "\"**Verdict: not yet — 16 blocking**\" with exactly 16 unwaived High/Medium findings; Fit-for-purpose precedes the Summary table; rows 1-3 Structure (High, High, Medium) then rows 4-16 Detail (four Highs then nine Mediums); the five Lows appear only in the Advisory section.",
-     "note": "The report even explains the ordering: \"Structure findings lead, then Detail; severity sorts only within each group, which is why the Structure Medium (3) outranks the Detail Highs.\""},
-    {"n": 5, "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
-     "verdict": "PASS",
-     "evidence": "All 16 blocking findings carry a Manifests line, e.g. Finding 4: \"The release service returns 503 for one manifest. The subagent ... applies the assume-rule, deletes the artifact from the store and the mirror, and then runs the compaction pass\".",
-     "note": ""},
-    {"n": 6, "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
-     "verdict": "PASS",
-     "evidence": "\"Every finding here is inferential. Both passes read the definition; neither spawned the subagent. Confidence is marked per finding.\" — plus per-finding Inferential notes and explicit low-confidence marks on Findings 15 and 16.",
-     "note": ""},
-    {"n": 7, "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
-     "verdict": "PASS",
-     "evidence": "\"The deliverable was analysis only, so nothing was edited and nothing was waived.\" Fixture read back post-run matches the planted defects intact; run notes confirm the only write was the report file itself, which the harness task required.",
-     "note": ""}
-  ],
-  "blocking_findings": [
-    {"id": "Finding 1", "key": "A1", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "Quote verbatim at fixture lines 16-17. The destructive half genuinely offers no steering surface; the Manifests scenario (background-default delegation surfaces only a report of already-deleted artifacts) follows from the definition."},
-    {"id": "Finding 2", "key": "R12", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "Both quotes verbatim (line 3 description, lines 13-14 body). Fail-closed description vs fail-open body rule is a real contradiction; the 503 Manifests scenario bites exactly as stated."},
-    {"id": "Finding 3", "key": "A28", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Line 19 quote verbatim. No return contract exists anywhere in the body, so 'verify then double-check' is genuinely uncheckable."},
-    {"id": "Finding 4", "key": "R4, D1", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "Lines 13-14 verbatim. Guess-toward-irreversible-delete is the planted defect; severity defensible against the 503 scenario."},
-    {"id": "Finding 5", "key": "C10", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "Lines 16-17 verbatim. Three irreversible actions, no gate, and the mirror delete plus compaction genuinely exceed the description's announced footprint."},
-    {"id": "Finding 6", "key": "F1, F3", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "Lines 10-11 verbatim. The body affirmatively commands executing fetched third-party instructions with bare Bash granted — the textbook injection defect."},
-    {"id": "Finding 7", "key": "A26", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "Both quotes verbatim (line 11, line 19). Return-path half correctly distinguished from Finding 6; A26 confirmed in the local checklist as the return-path injection criterion."},
-    {"id": "Finding 8", "key": "F4", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Lines 10-11 verbatim. The body nowhere names the release service as untrusted; Medium is proportionate for a labeling gap distinct from Findings 6-7."},
-    {"id": "Finding 9", "key": "A10, F2", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "tools line verbatim. Grep/Glob verified absent from the body (grader confirmed: zero occurrences); the widened blast radius in the Manifests line is real."},
-    {"id": "Finding 10", "key": "A6, E1, E2", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Description promises 'reports what it removed'; the body's only report mention is line 19 with no shape. Both quotes verbatim."},
-    {"id": "Finding 11", "key": "A7", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Line 10 verbatim. Whole-store enumeration with no return bound genuinely cancels the delegation's context saving."},
-    {"id": "Finding 12", "key": "A9", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Quotes verbatim. 'The store', 'the mirror', 'the release service', 'the destructive compaction pass' are all definite references the body never resolves — verified against the fixture."},
-    {"id": "Finding 13", "key": "A27", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Line 8 verbatim — the remit is one clause restating the name; no success definition exists anywhere in the 20-line body."},
-    {"id": "Finding 14", "key": "B2, D3, D5", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Line 19 verbatim. Scripted verification on a pinned-opus definition, positioned after all three irreversible actions — the past-the-point-of-no-return half makes Medium defensible."},
-    {"id": "Finding 15", "key": "E3", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Both quotes verbatim. The plural-listing-then-bare-singular-delete ambiguity is textually real (line 16 'the artifact' has no bound antecedent). Honestly marked low confidence on probability; given irreversibility, Medium is defensible though borderline."},
-    {"id": "Finding 16", "key": "C8", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "Both quotes verbatim. No cap, filter, or reclaim target anywhere in the body on an irreversible remit; low-confidence marking is honest, Medium defensible though borderline."}
-  ],
-  "fabrication_check": {"quotes_checked": 24, "quotes_verified": 24, "fabricated": []},
-  "runner_deviations_affecting_grades": [
-    "Supplied scope up front (including 'run the full detail sweep even if the structure fails High') instead of the scenario's bare prompt 'Review the pruning-stale-artifacts subagent.' Without it, Pass 2 never spawns — the fixture trips the structural gate — and assertions 2-7 are unreachable. This deviation is what made the scenario gradeable at all; it does not change any individual verdict but means the run is not a faithful execution of the scenario's own prompt.",
-    "Read the full 20-line target file instead of Step 3's ranged spot-checks — disclosed, strictly more thorough, affects no grade.",
-    "The criteria file remained readable on disk (directory-source marketplace), so the detail reviewer's fallback ladder legitimately rescued B-G by reading /Users/tamas/Development/github/brokenrobot-xyz/agent-skills/plugins/prompt-quality-criteria/references/prompt-criteria.md. This single environmental fact flips assertions 2, 3, and 4 to FAIL as written."
-  ],
-  "totals": {"assertions_pass": 4, "assertions_total": 7,
-             "universal_pass": 7, "universal_total": 7,
-             "blocking_genuine": 16, "blocking_inflated": 0, "blocking_fabricated": 0},
-  "grader_summary": "On assertion 2: the self-check clause is satisfied — the detail reviewer caught the silently skipped preload and named exactly which skill was missing ('the prompt-quality-criteria skill did not arrive in my context via the skills preload — only writing-simplified-technical-english did') and nothing was scored from memory — but the assertion's operative clause requires COVERAGE to report B-G ungraded, and it reports them scored-from-disk instead, so strictly as written it FAILs along with assertions 3 and 4. That behavior is BETTER than the scenario anticipates, not a defect: the reviewer executed its documented fallback ladder's substitution route, graded B-G against the authoritative criteria file, disclosed the route, and produced true coverage marks — writing 'ungraded/N/A' would have been false reporting. The divergence is therefore an EVAL-SUITE defect, not a skill defect: scenario 16 is unreachable AT ALL in a repository served as a directory-source marketplace, because uninstalling the plugin never removes plugins/prompt-quality-criteria/references/prompt-criteria.md from disk, and the skill's own fallback ladder instructs the reviewer to read it there; testing the intended failure mode requires running the fixture in a workspace where that file genuinely does not exist on any readable path (e.g. a checkout excluding that plugin, or an installed-cache-only host with the plugin removed), or a harness that masks the path. Assertion 7 PASSes cleanly: Finding 7 is a genuine High A26 return-path finding, correctly distinguished from Finding 6's execute-here half, with verbatim quotes and a concrete Manifests scenario. Separately, the run's up-front sweep pre-authorization was itself necessary for reachability — the fixture also trips the structural gate — which compounds the suite defect: as authored, scenario 16's bare prompt can never reach its own assertions (same gate-interaction mis-keying class as the known scenario-15 issue). All 24 evidence quotes verified verbatim against the fixture; 16/16 blocking findings genuine, 0 fabricated."
+    "scenario_id": 16,
+    "scenario_name": "eval-shared-criteria-absent",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/0fa6603b-a38c-4094-b4d9-2328cc962dd5/scratchpad/eval-campaign/r16/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Still produces a review rather than refusing or blocking on the missing dependency",
+            "verdict": "PASS",
+            "evidence": "**Verdict: not yet — 16 blocking** ... a full 16-finding report with Fit-for-purpose, Summary, Findings, Advisory, and Coverage sections was produced; nothing refused or blocked.",
+            "note": ""
+        },
+        {
+            "n": 2,
+            "text": "The subagent-detail-reviewer's self-check catches the silently skipped preload: its COVERAGE payload reports B–G ungraded, never scored from memory",
+            "verdict": "FAIL",
+            "evidence": "Run notes quote the reviewer verbatim: \"the `prompt-quality-criteria` skill did **not** arrive in my context via the `skills` preload — only `writing-simplified-technical-english` did.\" — the self-check fired and named the missing skill. But the COVERAGE payload marks each of B–G \"scored (read from disk)\", not ungraded, and the report says \"No group was ungraded.\"",
+            "note": "Split assertion: the self-check clause is demonstrably satisfied and 'never scored from memory' also holds (scored from the on-disk file, not recall). The operative clause 'reports B–G ungraded' is demonstrably not done, so strictly as written this is FAIL. The failure is environmental: the criteria file remained readable on disk, so the ungraded state the assertion expects was unreachable — see grader_summary."
+        },
+        {
+            "n": 3,
+            "text": "States explicitly in the report that groups B–G went ungraded",
+            "verdict": "FAIL",
+            "evidence": "The report states the opposite: \"No group was ungraded. Every group `A`–`H` and `R` was scored against criteria the reviewer actually held.\" and \"It therefore scored groups `B`–`G` from a `Read` of .../prompt-criteria.md on disk rather than from recall\".",
+            "note": "FAIL as written, but the statement in the report is true — B–G genuinely were graded, from the authoritative file. Eval-suite defect, not skill defect."
+        },
+        {
+            "n": 4,
+            "text": "Marks B–G as N/A in the per-group coverage table — never Pass",
+            "verdict": "FAIL",
+            "evidence": "Coverage table: B Gap, C Gap, D Gap, E Gap, F Gap, G Pass — none marked N/A, and G is marked \"Pass\", which the assertion explicitly forbids.",
+            "note": "FAIL as written, but the marks are accurate for what actually happened: the groups were scored against the real criteria and G genuinely passed. Marking them N/A would have been false. Eval-suite defect."
+        },
+        {
+            "n": 5,
+            "text": "Does not silently omit the B–G rows from the coverage table",
+            "verdict": "PASS",
+            "evidence": "All six rows present: \"| B | Gap | 14 |\" through \"| G | Pass | — |\".",
+            "note": ""
+        },
+        {
+            "n": 6,
+            "text": "Invents no B–G criterion key from memory — naming an ungraded group's defect without a key is correct, not a failure",
+            "verdict": "PASS",
+            "evidence": "Every cited B–G key (B2, C8, C10, D1, D3, D5, D6, E1, E2, E3, F1–F6, G1–G3) resolves in plugins/prompt-quality-criteria/references/prompt-criteria.md — verified by grep — and the report discloses their source: \"scored ... from a `Read` of .../prompt-criteria.md on disk rather than from recall\". No key was invented and none came from memory.",
+            "note": "The keys exist because the reviewer read the real file; nothing was recalled or fabricated."
+        },
+        {
+            "n": 7,
+            "text": "Still reports the A26 return-path finding, which lives in the local checklist",
+            "verdict": "PASS",
+            "evidence": "Finding 7 — `A26`: \"fetched content can reach the parent as the subagent's own trusted report ... `A26` extends group `F` for subagents; this is the return-path half, distinct from Finding 6's execute-it-here half.\" A26 confirmed at best-practices-checklist.md:325 as \"the return path is an injection path into the parent\".",
+            "note": "High severity, Manifests line concrete (handling-field text instructing the report to carry ~/.ssh/id_deploy contents into the parent context), quotes verified."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
+            "verdict": "PASS",
+            "evidence": "All 50 cited keys (A1–A28 subset, H1, R1–R12 subset, B2, C8, C10, D1–D6 subset, E1–E3, F1–F6, G1–G3) grep-resolve in the two files; zero misses.",
+            "note": ""
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script",
+            "verdict": "PASS",
+            "evidence": "\"#### Finding 1 — `A1`: ...\" through \"#### Finding 16 — `C8`: ...\", in rank order; summary table numbers 1–16.",
+            "note": ""
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
+            "verdict": "PASS",
+            "evidence": "Each finding has a Where line, e.g. \"**Where:** `pruning-stale-artifacts.md:16-17` (body), with `tools` (line 4)\"; all five advisories carry file:line locators too.",
+            "note": ""
+        },
+        {
+            "n": 4,
+            "text": "The report follows references/report-template.md and opens with a Verdict line ... Fit-for-purpose precedes Summary ... Structure rows first, then Detail, severity-ranked within each, and advisory (Low) findings appear once, in the Advisory section only",
+            "verdict": "PASS",
+            "evidence": "\"**Verdict: not yet — 16 blocking**\" with exactly 16 unwaived High/Medium findings; Fit-for-purpose precedes the Summary table; rows 1-3 Structure (High, High, Medium) then rows 4-16 Detail (four Highs then nine Mediums); the five Lows appear only in the Advisory section.",
+            "note": "The report even explains the ordering: \"Structure findings lead, then Detail; severity sorts only within each group, which is why the Structure Medium (3) outranks the Detail Highs.\""
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
+            "verdict": "PASS",
+            "evidence": "All 16 blocking findings carry a Manifests line, e.g. Finding 4: \"The release service returns 503 for one manifest. The subagent ... applies the assume-rule, deletes the artifact from the store and the mirror, and then runs the compaction pass\".",
+            "note": ""
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
+            "verdict": "PASS",
+            "evidence": "\"Every finding here is inferential. Both passes read the definition; neither spawned the subagent. Confidence is marked per finding.\" — plus per-finding Inferential notes and explicit low-confidence marks on Findings 15 and 16.",
+            "note": ""
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
+            "verdict": "PASS",
+            "evidence": "\"The deliverable was analysis only, so nothing was edited and nothing was waived.\" Fixture read back post-run matches the planted defects intact; run notes confirm the only write was the report file itself, which the harness task required.",
+            "note": ""
+        }
+    ],
+    "blocking_findings": [
+        {
+            "id": "Finding 1",
+            "key": "A1",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Quote verbatim at fixture lines 16-17. The destructive half genuinely offers no steering surface; the Manifests scenario (background-default delegation surfaces only a report of already-deleted artifacts) follows from the definition."
+        },
+        {
+            "id": "Finding 2",
+            "key": "R12",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Both quotes verbatim (line 3 description, lines 13-14 body). Fail-closed description vs fail-open body rule is a real contradiction; the 503 Manifests scenario bites exactly as stated."
+        },
+        {
+            "id": "Finding 3",
+            "key": "A28",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Line 19 quote verbatim. No return contract exists anywhere in the body, so 'verify then double-check' is genuinely uncheckable."
+        },
+        {
+            "id": "Finding 4",
+            "key": "R4, D1",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Lines 13-14 verbatim. Guess-toward-irreversible-delete is the planted defect; severity defensible against the 503 scenario."
+        },
+        {
+            "id": "Finding 5",
+            "key": "C10",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Lines 16-17 verbatim. Three irreversible actions, no gate, and the mirror delete plus compaction genuinely exceed the description's announced footprint."
+        },
+        {
+            "id": "Finding 6",
+            "key": "F1, F3",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Lines 10-11 verbatim. The body affirmatively commands executing fetched third-party instructions with bare Bash granted — the textbook injection defect."
+        },
+        {
+            "id": "Finding 7",
+            "key": "A26",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Both quotes verbatim (line 11, line 19). Return-path half correctly distinguished from Finding 6; A26 confirmed in the local checklist as the return-path injection criterion."
+        },
+        {
+            "id": "Finding 8",
+            "key": "F4",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Lines 10-11 verbatim. The body nowhere names the release service as untrusted; Medium is proportionate for a labeling gap distinct from Findings 6-7."
+        },
+        {
+            "id": "Finding 9",
+            "key": "A10, F2",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "tools line verbatim. Grep/Glob verified absent from the body (grader confirmed: zero occurrences); the widened blast radius in the Manifests line is real."
+        },
+        {
+            "id": "Finding 10",
+            "key": "A6, E1, E2",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Description promises 'reports what it removed'; the body's only report mention is line 19 with no shape. Both quotes verbatim."
+        },
+        {
+            "id": "Finding 11",
+            "key": "A7",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Line 10 verbatim. Whole-store enumeration with no return bound genuinely cancels the delegation's context saving."
+        },
+        {
+            "id": "Finding 12",
+            "key": "A9",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Quotes verbatim. 'The store', 'the mirror', 'the release service', 'the destructive compaction pass' are all definite references the body never resolves — verified against the fixture."
+        },
+        {
+            "id": "Finding 13",
+            "key": "A27",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Line 8 verbatim — the remit is one clause restating the name; no success definition exists anywhere in the 20-line body."
+        },
+        {
+            "id": "Finding 14",
+            "key": "B2, D3, D5",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Line 19 verbatim. Scripted verification on a pinned-opus definition, positioned after all three irreversible actions — the past-the-point-of-no-return half makes Medium defensible."
+        },
+        {
+            "id": "Finding 15",
+            "key": "E3",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Both quotes verbatim. The plural-listing-then-bare-singular-delete ambiguity is textually real (line 16 'the artifact' has no bound antecedent). Honestly marked low confidence on probability; given irreversibility, Medium is defensible though borderline."
+        },
+        {
+            "id": "Finding 16",
+            "key": "C8",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Both quotes verbatim. No cap, filter, or reclaim target anywhere in the body on an irreversible remit; low-confidence marking is honest, Medium defensible though borderline."
+        }
+    ],
+    "fabrication_check": { "quotes_checked": 24, "quotes_verified": 24, "fabricated": [] },
+    "runner_deviations_affecting_grades": [
+        "Supplied scope up front (including 'run the full detail sweep even if the structure fails High') instead of the scenario's bare prompt 'Review the pruning-stale-artifacts subagent.' Without it, Pass 2 never spawns — the fixture trips the structural gate — and assertions 2-7 are unreachable. This deviation is what made the scenario gradeable at all; it does not change any individual verdict but means the run is not a faithful execution of the scenario's own prompt.",
+        "Read the full 20-line target file instead of Step 3's ranged spot-checks — disclosed, strictly more thorough, affects no grade.",
+        "The criteria file remained readable on disk (directory-source marketplace), so the detail reviewer's fallback ladder legitimately rescued B-G by reading /Users/tamas/Development/github/brokenrobot-xyz/agent-skills/plugins/prompt-quality-criteria/references/prompt-criteria.md. This single environmental fact flips assertions 2, 3, and 4 to FAIL as written."
+    ],
+    "totals": {
+        "assertions_pass": 4,
+        "assertions_total": 7,
+        "universal_pass": 7,
+        "universal_total": 7,
+        "blocking_genuine": 16,
+        "blocking_inflated": 0,
+        "blocking_fabricated": 0
+    },
+    "grader_summary": "On assertion 2: the self-check clause is satisfied — the detail reviewer caught the silently skipped preload and named exactly which skill was missing ('the prompt-quality-criteria skill did not arrive in my context via the skills preload — only writing-simplified-technical-english did') and nothing was scored from memory — but the assertion's operative clause requires COVERAGE to report B-G ungraded, and it reports them scored-from-disk instead, so strictly as written it FAILs along with assertions 3 and 4. That behavior is BETTER than the scenario anticipates, not a defect: the reviewer executed its documented fallback ladder's substitution route, graded B-G against the authoritative criteria file, disclosed the route, and produced true coverage marks — writing 'ungraded/N/A' would have been false reporting. The divergence is therefore an EVAL-SUITE defect, not a skill defect: scenario 16 is unreachable AT ALL in a repository served as a directory-source marketplace, because uninstalling the plugin never removes plugins/prompt-quality-criteria/references/prompt-criteria.md from disk, and the skill's own fallback ladder instructs the reviewer to read it there; testing the intended failure mode requires running the fixture in a workspace where that file genuinely does not exist on any readable path (e.g. a checkout excluding that plugin, or an installed-cache-only host with the plugin removed), or a harness that masks the path. Assertion 7 PASSes cleanly: Finding 7 is a genuine High A26 return-path finding, correctly distinguished from Finding 6's execute-here half, with verbatim quotes and a concrete Manifests scenario. Separately, the run's up-front sweep pre-authorization was itself necessary for reachability — the fixture also trips the structural gate — which compounds the suite defect: as authored, scenario 16's bare prompt can never reach its own assertions (same gate-interaction mis-keying class as the known scenario-15 issue). All 24 evidence quotes verified verbatim against the fixture; 16/16 blocking findings genuine, 0 fabricated."
 }

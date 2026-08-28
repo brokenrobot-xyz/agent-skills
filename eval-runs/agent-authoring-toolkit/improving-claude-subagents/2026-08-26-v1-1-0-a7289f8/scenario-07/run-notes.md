@@ -3,7 +3,7 @@
 ## Timing
 
 - Start: 1787741886
-- End:   1787743850
+- End: 1787743850
 - Elapsed: 1964 s (~32.7 min)
 
 Wall-clock elapsed overstates the run: my turn ended prematurely twice (see Deviations), and the
@@ -13,10 +13,10 @@ gaps between the ended turn and the coordinator's resume message are inside this
 
 **3 review rounds ran** (cap was the default 4; the loop exited on plateau at round 3).
 
-| Round | Agents spawned                                                                  |
-| ----- | ------------------------------------------------------------------------------- |
-| 1     | `subagent-structure-reviewer` (Pass 1), `subagent-detail-reviewer` (Pass 2), `fix-applier` |
-| 2     | `subagent-structure-reviewer` (Pass 1) — gated, Pass 2 not spawned; `fix-applier` |
+| Round | Agents spawned                                                                                               |
+| ----- | ------------------------------------------------------------------------------------------------------------ |
+| 1     | `subagent-structure-reviewer` (Pass 1), `subagent-detail-reviewer` (Pass 2), `fix-applier`                   |
+| 2     | `subagent-structure-reviewer` (Pass 1) — gated, Pass 2 not spawned; `fix-applier`                            |
 | 3     | `subagent-structure-reviewer` (Pass 1) — gated, Pass 2 not spawned; no `fix-applier` (exit gate fired first) |
 
 Five agent spawns total. All resolved as their declared plugin agent types; no fallback
@@ -109,15 +109,15 @@ ledger-key sets, `{A2 · reviewing-frontend-diffs.md · frontmatter/description}
 
 The earlier conditions were tested in the skill's order and did not match:
 
-1. *Acceptable* — no; one unwaived High remained.
-2. *Refit needed* — no. Rounds 2 and 3 were gated, which is what arms this test, but the redesign
+1. _Acceptable_ — no; one unwaived High remained.
+2. _Refit needed_ — no. Rounds 2 and 3 were gated, which is what arms this test, but the redesign
    recommendation was a roster re-scoping and both reviews stated that `A1` passes on all three
    signals and the artifact should stay a subagent. **This run is explicitly not the refit exit.**
-3. *Plateaued* — **matched.**
-4. *Contested-only* — no contested keys existed at any point.
-5. *Re-gated after a restructure* — this would also have matched at round 3 (round 2's apply was
+3. _Plateaued_ — **matched.**
+4. _Contested-only_ — no contested keys existed at any point.
+5. _Re-gated after a restructure_ — this would also have matched at round 3 (round 2's apply was
    authorized as a restructure round, and round 3 gated), but condition 3 is checked first.
-6. *Round cap* — not reached; the cap was the default 4 and the loop stopped at 3.
+6. _Round cap_ — not reached; the cap was the default 4 and the loop stopped at 3.
 
 ## Tools blocked or errored
 
@@ -148,16 +148,17 @@ No other tool failed.
 ## Deviations
 
 1. **My turn ended prematurely twice, and was resumed by a coordinator message both times.**
-   - First: after Step 2 presented the intent brief. The confirmation `confirmed, use the default
-     cap` arrived as the resume message rather than as an in-turn answer.
-   - Second: after round 1's review report, before the apply step. The resume message told me to
-     continue the loop to its exit and not to ask anything.
-   - Third resume: after round 2's gated review report, again mid-loop.
+    - First: after Step 2 presented the intent brief. The confirmation `confirmed, use the default
+cap` arrived as the resume message rather than as an in-turn answer.
+    - Second: after round 1's review report, before the apply step. The resume message told me to
+      continue the loop to its exit and not to ask anything.
+    - Third resume: after round 2's gated review report, again mid-loop.
 
-   In each case the loop resumed at the exact step it had reached, with the ledger file (kept in
-   the session scratch directory, outside the workspace) as the carried state. No step was
-   skipped or repeated. The resume messages supplied no scoping answer beyond the one
-   confirmation, and gave no steer about which files to write.
+    In each case the loop resumed at the exact step it had reached, with the ledger file (kept in
+    the session scratch directory, outside the workspace) as the carried state. No step was
+    skipped or repeated. The resume messages supplied no scoping answer beyond the one
+    confirmation, and gave no steer about which files to write.
+
 2. **The round-1 commit landed on `main`**, the workspace's only branch and the branch the fixture
    was committed on. My general guidance is to branch before committing on a default branch; I did
    not, because the eval fixture is a single-branch workspace whose history the campaign captures,

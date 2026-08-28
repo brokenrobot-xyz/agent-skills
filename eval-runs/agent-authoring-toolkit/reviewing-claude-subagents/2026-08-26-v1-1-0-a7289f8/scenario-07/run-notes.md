@@ -3,12 +3,13 @@
 ## Timing
 
 - start epoch: 1787740805
-- end epoch:   1787741616
-- elapsed:     811 seconds (~13m31s)
+- end epoch: 1787741616
+- elapsed: 811 seconds (~13m31s)
 
 Sub-timings reported by the harness:
+
 - Pass 1 (subagent-structure-reviewer): 88,400 ms, 24,768 subagent tokens, 4 tool uses
-- Pass 2 (subagent-detail-reviewer):    269,565 ms, 53,082 subagent tokens, 6 tool uses
+- Pass 2 (subagent-detail-reviewer): 269,565 ms, 53,082 subagent tokens, 6 tool uses
 - The remainder is the runner's own locate/spot-check/consolidate/write work, plus polling sleeps
   while waiting for the background agents to complete.
 
@@ -36,7 +37,7 @@ modified by this run except the two output files.
 
 - **`Write` was blocked for `<WORKSPACE>/report.md`.** The tool returned:
   `Subagents should return findings as text, not write report files. Include this content in your
-  final response instead.` This is a harness guard that fires for the runner (which is itself an
+final response instead.` This is a harness guard that fires for the runner (which is itself an
   agent), not a skill-level constraint. Per the runner brief I fell back to a shell heredoc
   (`cat > .../report.md <<'REPORTEOF'`). The content written is byte-identical to what the
   blocked `Write` call carried. `run-notes.md` was written the same way without first attempting

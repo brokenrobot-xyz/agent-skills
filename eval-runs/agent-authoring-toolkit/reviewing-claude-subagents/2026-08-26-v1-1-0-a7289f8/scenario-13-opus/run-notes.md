@@ -6,7 +6,7 @@ Scenario: invoke `agent-authoring-toolkit:reviewing-claude-subagents` with the v
 ## Timing
 
 - start: 1787740826
-- end:   1787741463
+- end: 1787741463
 - elapsed: 637 seconds
 
 ## Agents spawned, in order

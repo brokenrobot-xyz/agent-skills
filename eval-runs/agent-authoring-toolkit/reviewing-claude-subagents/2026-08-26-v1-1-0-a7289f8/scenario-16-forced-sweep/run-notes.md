@@ -134,17 +134,17 @@ Note for the campaign: the shared-criteria path it read is the **working reposit
 
 ### 4. The report's per-group coverage table, verbatim
 
-| Group | Status | Findings                       |
-| ----- | ------ | ------------------------------ |
+| Group | Status | Findings                                          |
+| ----- | ------ | ------------------------------------------------- |
 | A     | Gap    | 1, 3, 7, 9, 10, 11, 12, 13; advisory `A19`, `A23` |
-| B     | Gap    | 14                             |
-| C     | Gap    | 5, 16                          |
-| D     | Gap    | folded into 4 (`D1`) and 14 (`D3`, `D5`) |
-| E     | Gap    | 15; `E1`/`E2` folded into 10   |
-| F     | Gap    | 6, 8; `F2` folded into 9; advisory `F5` |
-| G     | Pass   | —                              |
-| H     | N/A    | ships no evals                 |
-| R     | Gap    | 2, 4; advisory `R3`, `R7`      |
+| B     | Gap    | 14                                                |
+| C     | Gap    | 5, 16                                             |
+| D     | Gap    | folded into 4 (`D1`) and 14 (`D3`, `D5`)          |
+| E     | Gap    | 15; `E1`/`E2` folded into 10                      |
+| F     | Gap    | 6, 8; `F2` folded into 9; advisory `F5`           |
+| G     | Pass   | —                                                 |
+| H     | N/A    | ships no evals                                    |
+| R     | Gap    | 2, 4; advisory `R3`, `R7`                         |
 
 No row reads `not scored`, `ungraded`, or `unavailable`. Eight of the nine groups are `Gap`
 or `Pass`; the single `N/A` is `H`, for a target that ships no evals.

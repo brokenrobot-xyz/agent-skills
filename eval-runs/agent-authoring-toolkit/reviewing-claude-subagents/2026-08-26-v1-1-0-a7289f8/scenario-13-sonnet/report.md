@@ -60,24 +60,24 @@ this table.)
   condition; convention 3 asks for the inverse order ("When the sources conflict, lean
   toward..."). Likely an unintentional prose slip, not a substantive defect.
 - `R4` · `researching-package-updates.md`, "What the delegation message must carry" section — the
-  `BLOCKED:` guard covers a *missing* field but not an *ambiguous* one (e.g., a delegation
+  `BLOCKED:` guard covers a _missing_ field but not an _ambiguous_ one (e.g., a delegation
   message giving `current: ^2.0.0` as a range rather than an exact pin); low confidence, and may
   well be deliberate minimalism given the existing "Confidence and gaps" field already offers a
   place to surface such a case.
 
 ### Coverage
 
-| Group | Status                                                                          | Findings |
-| ----- | -------------------------------------------------------------------------------- | -------- |
-| A     | Pass (structure criteria A1, A2, A11, A28 scored in Pass 1; A18 N/A — not plugin-shipped) | — |
-| B     | Pass — Sonnet 5 subset applied (target declares no `model:`, inherits session model) | — |
-| C     | Pass | — |
-| D     | Pass | — |
-| E     | Pass | — |
-| F     | Pass | — |
-| G     | N/A — subagent holds no secrets (`G1`–`G3` all N/A) | — |
-| H     | N/A — ships no evals | — |
-| R     | Pass (R1, R12 scored in Pass 1 as structure criteria; R5 N/A — authors no commits; R6 N/A — no host naming-convention document exists in this workspace; R13 N/A — no skill/agent invocation in the body); R7 findings below | 1 (Low) |
+| Group | Status                                                                                                                                                                                                                       | Findings |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| A     | Pass (structure criteria A1, A2, A11, A28 scored in Pass 1; A18 N/A — not plugin-shipped)                                                                                                                                    | —        |
+| B     | Pass — Sonnet 5 subset applied (target declares no `model:`, inherits session model)                                                                                                                                         | —        |
+| C     | Pass                                                                                                                                                                                                                         | —        |
+| D     | Pass                                                                                                                                                                                                                         | —        |
+| E     | Pass                                                                                                                                                                                                                         | —        |
+| F     | Pass                                                                                                                                                                                                                         | —        |
+| G     | N/A — subagent holds no secrets (`G1`–`G3` all N/A)                                                                                                                                                                          | —        |
+| H     | N/A — ships no evals                                                                                                                                                                                                         | —        |
+| R     | Pass (R1, R12 scored in Pass 1 as structure criteria; R5 N/A — authors no commits; R6 N/A — no host naming-convention document exists in this workspace; R13 N/A — no skill/agent invocation in the body); R7 findings below | 1 (Low)  |
 
 ### Criteria notes
 

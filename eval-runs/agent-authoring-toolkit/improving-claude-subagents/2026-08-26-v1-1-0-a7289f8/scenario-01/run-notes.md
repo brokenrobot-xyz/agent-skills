@@ -3,7 +3,7 @@
 ## Timing
 
 - Start: 1787741855
-- End:   1787745114
+- End: 1787745114
 - Elapsed: 3259 seconds (54.3 minutes)
 
 ## Rounds
@@ -122,7 +122,7 @@ structure pass reported the scope directory as holding exactly one definition (t
 
 ## Commits produced
 
-- 3542500 chore: install fixture subagent definitions   (the fixture; pre-existing)
+- 3542500 chore: install fixture subagent definitions (the fixture; pre-existing)
 - 68cc02e round 1 — narrowed `tools` to Bash, added the PreToolUse read-only hook, deleted the
   reviewer-addressed pre-approval comment
 - ea537ea round 2 — closed both hook bypasses (`--output`/`-o`, newline/CR), added tag-to-range

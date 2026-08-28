@@ -1,58 +1,144 @@
 {
-  "scenario_id": 1,
-  "scenario_name": "eval-fit-for-purpose",
-  "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/0fa6603b-a38c-4094-b4d9-2328cc962dd5/scratchpad/eval-campaign/r01/report.md",
-  "assertions": [
-    {"n": 1, "text": "The subagent-structure-reviewer flags A1 as High and the run STOPS at the gate — no subagent-detail-reviewer spawns", "verdict": "PASS",
-     "evidence": "Report Criteria notes: \"Pass 1 ran as the spawned plugin agent `subagent-structure-reviewer`; no stage ran inline or under substitution. Pass 2 was never spawned, by design of the gate.\" Finding 1 is \"Severity: High ... Key A1\". Run notes: \"No second agent was spawned.\""},
-    {"n": 2, "text": "The gated report opens with the line 'Verdict: not yet — gated'", "verdict": "PASS",
-     "evidence": "First line after the title heading: \"**Verdict: not yet — gated**\""},
-    {"n": 3, "text": "The redesign recommendation names the alternative form (a skill) and which signal decided it — the user wants to watch and steer, the output is not verbose-and-discardable", "verdict": "PASS",
-     "evidence": "\"**Make this a skill, not a subagent.** The deciding signal is the third one — the user wants to steer\" and \"the output is deliberately un-condensed — per-task diffs are the deliverable, not a distilled summary, so there is no parent-context saving to buy.\""},
-    {"n": 4, "text": "The parent spot-checks the High's quoted evidence against the fixture before writing the gated report", "verdict": "PASS",
-     "evidence": "Run notes: \"The target file (20 lines, 755 bytes) was read once. All quoted evidence verified verbatim: line 3 (description), line 4 (`tools:`), line 15 ... line 17 ... line 19\"; report notes the target's body was read \"at the Step 3 spot-check, to confirm the two High findings' quotes\" (run notes).",
-     "note": "The spot-check is evidenced in RUN_NOTES rather than the report itself; the report's Criteria notes are consistent with it. I independently re-verified every quote against the fixture — all verbatim."},
-    {"n": 5, "text": "The coverage table marks every unswept group 'not scored — gated on structure', never N/A and never Pass", "verdict": "PASS",
-     "evidence": "Coverage rows for A (non-structural criteria), B, C, D, E, F, G, H, R (non-structural criteria) all read \"not scored — gated on structure\"; no unswept row says N/A or Pass. Swept structural criteria carry their own Gap/Pass statuses, as the template directs."},
-    {"n": 6, "text": "Offers the detail sweep as an explicit follow-up choice rather than running it", "verdict": "PASS",
-     "evidence": "Next step: \"2. **Sweep now anyway** — run the full detail sweep (groups A–H and R) against the definition as it stands\" — offered alongside \"Redesign first\", and the run notes confirm Pass 2 was never launched."}
-  ],
-  "universal_assertions": [
-    {"n": 1, "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)", "verdict": "PASS",
-     "evidence": "A1 (checklist line 143), A2 (151), A11 (215), A28 (348), R1 (421), R12 (455) all resolve in best-practices-checklist.md, each marked '(structure pass)'."},
-    {"n": 2, "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script", "verdict": "PASS",
-     "evidence": "Headings are \"Finding 1 — `A1`\", \"Finding 2 — `A11`\", \"Finding 3 — `A28`\", \"Finding 4 — `R1`\" in rank order (High, High, Medium, Medium)."},
-    {"n": 3, "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field", "verdict": "PASS",
-     "evidence": "Where lines: \"applying-migration-tasks.md:15 and :17 (with the description, line 3)\", \":15 and :17\", \":17 and :19\", \":4 (`tools` frontmatter field)\"."},
-    {"n": 4, "text": "The report follows references/report-template.md and opens with a Verdict line: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run; in a full report the Fit-for-purpose section precedes the Summary table (Structure rows first, then Detail, severity-ranked within each), and advisory (Low) findings appear once, in the Advisory section only", "verdict": "PASS",
-     "evidence": "Title \"## Review: applying-migration-tasks — stopped at the structural gate\" then \"**Verdict: not yet — gated**\"; sections match the gated-report template (Summary, What's already right, Findings, Redesign recommendation, Coverage, Criteria notes, Next step). Advisory: \"None — Pass 1 returned no Low findings\".",
-     "note": "The Fit-for-purpose-before-Summary clause applies to full reports only; this is a gated report. An Advisory section is an addition to the gated template but violates nothing."},
-    {"n": 5, "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure", "verdict": "PASS",
-     "evidence": "All four findings have a Manifests line, e.g. Finding 1: \"A parent delegates a 12-task plan in which task 3 is marked **decision required**. The subagent has no channel to present options mid-run...\""},
-    {"n": 6, "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file", "verdict": "PASS",
-     "evidence": "Summary Notes column reads \"inferential\" on all four rows; each finding's Notes says \"Inferential\"; Criteria notes: \"Every finding above is inferential: this review read the definition and never spawned the subagent, so it predicts behavior rather than observing it.\""},
-    {"n": 7, "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision", "verdict": "PASS",
-     "evidence": "Report Criteria notes: \"the four defaults were assumed — analysis only (no apply)\". Run notes list only the report and run-notes heredocs as writes; no edit to the fixture, no review-waivers.md."}
-  ],
-  "blocking_findings": [
-    {"id": "Finding 1", "key": "A1", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "Fixture lines 15 and 17 verbatim instruct 'pause' and 'present the options' — interactions a subagent's single-return contract cannot deliver. The Manifests scenario (decision-required task mid-plan, parent cannot tell 'paused' from 'decided for you') genuinely bites; A1 is a structure-pass criterion and High is what the scenario expects."},
-    {"id": "Finding 2", "key": "A11", "severity": "High", "classification": "genuine", "quote_verified": true,
-     "why": "The pause/present/show-diff instructions are unreachable through 'Read, Edit, Write, Grep, Glob, Bash' — no interactive channel exists and AskUserQuestion is stripped from subagents. Distinct criterion from A1 (instructions vs. declared tools), and the report itself marks it subordinate to Finding 1, so it is not silent double-counting."},
-    {"id": "Finding 3", "key": "A28", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "'Stop at any task marked **decision required**' (line 17) reads as halt-the-traversal while the report contract's 'which you skipped' (line 19) implies skip-and-continue; the Manifests scenario (two runs producing opposite disk states, both consistent with the body) is a real, checkable divergence. Medium is defensible."},
-    {"id": "Finding 4", "key": "R1", "severity": "Medium", "classification": "genuine", "quote_verified": true,
-     "why": "No body instruction executes a command, yet line 4 grants unrestricted Bash to an unattended repo editor, and Grep/Glob are unused ('Read the task and the files it names'). The Manifests scenario — a plan task saying 'run the migration against the dev database' becoming reachable — is concrete and plausible. R1 is a structure-pass criterion; Medium fits."}
-  ],
-  "fabrication_check": {"quotes_checked": 7, "quotes_verified": 7, "fabricated": [],
-    "note": "Verified verbatim against the fixture: line 15, line 17, line 19, line 4 tools list, line 3 description reference, line 10 'Work through `migrations/plan.md` in order', and the composite 'Read the task and the files it names. Make the edit.' (fixture list items 1–2, verbatim modulo list numbering)."},
-  "runner_deviations_affecting_grades": [
-    "Sibling scope narrowed to the workspace .claude/agents/ per the runner's constraint — touches only the A2 strength ('Clean roster position'), not any scenario or universal assertion; A2 is not a graded assertion here, so no grade changes.",
-    "Report written via heredoc after the harness rejected Write — pre-authorized by the runner task; no grade impact.",
-    "Finding 4's Fix clause reworded ('a session-wide settings rule' for a settings deny-rule mechanism) to satisfy a harness content filter — severity, key, evidence, and conclusion unchanged; does not affect the R1 classification or any assertion."
-  ],
-  "totals": {"assertions_pass": 6, "assertions_total": 6,
-             "universal_pass": 7, "universal_total": 7,
-             "blocking_genuine": 4, "blocking_inflated": 0, "blocking_fabricated": 0},
-  "grader_summary": "The run matches expected_output exactly: Pass 1 flagged A1 High, the gate stopped the run before any detail sweep, and the report opens 'Verdict: not yet — gated' with a redesign recommendation that names the skill form and the deciding steer-and-watch signal plus the non-discardable-output signal. All seven fixture quotes verify verbatim, every criterion key resolves in the checklist as a structure-pass item, and all four blocking findings are genuine with concrete Manifests scenarios. The three disclosed runner deviations are environmental or cosmetic and change no grade. No divergence from expected_output exists, so there is no skill defect or eval-suite defect to attribute; the one soft spot is that the spot-check assertion is evidenced by run notes rather than by the report text itself."
+    "scenario_id": 1,
+    "scenario_name": "eval-fit-for-purpose",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/0fa6603b-a38c-4094-b4d9-2328cc962dd5/scratchpad/eval-campaign/r01/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "The subagent-structure-reviewer flags A1 as High and the run STOPS at the gate — no subagent-detail-reviewer spawns",
+            "verdict": "PASS",
+            "evidence": "Report Criteria notes: \"Pass 1 ran as the spawned plugin agent `subagent-structure-reviewer`; no stage ran inline or under substitution. Pass 2 was never spawned, by design of the gate.\" Finding 1 is \"Severity: High ... Key A1\". Run notes: \"No second agent was spawned.\""
+        },
+        {
+            "n": 2,
+            "text": "The gated report opens with the line 'Verdict: not yet — gated'",
+            "verdict": "PASS",
+            "evidence": "First line after the title heading: \"**Verdict: not yet — gated**\""
+        },
+        {
+            "n": 3,
+            "text": "The redesign recommendation names the alternative form (a skill) and which signal decided it — the user wants to watch and steer, the output is not verbose-and-discardable",
+            "verdict": "PASS",
+            "evidence": "\"**Make this a skill, not a subagent.** The deciding signal is the third one — the user wants to steer\" and \"the output is deliberately un-condensed — per-task diffs are the deliverable, not a distilled summary, so there is no parent-context saving to buy.\""
+        },
+        {
+            "n": 4,
+            "text": "The parent spot-checks the High's quoted evidence against the fixture before writing the gated report",
+            "verdict": "PASS",
+            "evidence": "Run notes: \"The target file (20 lines, 755 bytes) was read once. All quoted evidence verified verbatim: line 3 (description), line 4 (`tools:`), line 15 ... line 17 ... line 19\"; report notes the target's body was read \"at the Step 3 spot-check, to confirm the two High findings' quotes\" (run notes).",
+            "note": "The spot-check is evidenced in RUN_NOTES rather than the report itself; the report's Criteria notes are consistent with it. I independently re-verified every quote against the fixture — all verbatim."
+        },
+        {
+            "n": 5,
+            "text": "The coverage table marks every unswept group 'not scored — gated on structure', never N/A and never Pass",
+            "verdict": "PASS",
+            "evidence": "Coverage rows for A (non-structural criteria), B, C, D, E, F, G, H, R (non-structural criteria) all read \"not scored — gated on structure\"; no unswept row says N/A or Pass. Swept structural criteria carry their own Gap/Pass statuses, as the template directs."
+        },
+        {
+            "n": 6,
+            "text": "Offers the detail sweep as an explicit follow-up choice rather than running it",
+            "verdict": "PASS",
+            "evidence": "Next step: \"2. **Sweep now anyway** — run the full detail sweep (groups A–H and R) against the definition as it stands\" — offered alongside \"Redesign first\", and the run notes confirm Pass 2 was never launched."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
+            "verdict": "PASS",
+            "evidence": "A1 (checklist line 143), A2 (151), A11 (215), A28 (348), R1 (421), R12 (455) all resolve in best-practices-checklist.md, each marked '(structure pass)'."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script",
+            "verdict": "PASS",
+            "evidence": "Headings are \"Finding 1 — `A1`\", \"Finding 2 — `A11`\", \"Finding 3 — `A28`\", \"Finding 4 — `R1`\" in rank order (High, High, Medium, Medium)."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
+            "verdict": "PASS",
+            "evidence": "Where lines: \"applying-migration-tasks.md:15 and :17 (with the description, line 3)\", \":15 and :17\", \":17 and :19\", \":4 (`tools` frontmatter field)\"."
+        },
+        {
+            "n": 4,
+            "text": "The report follows references/report-template.md and opens with a Verdict line: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run; in a full report the Fit-for-purpose section precedes the Summary table (Structure rows first, then Detail, severity-ranked within each), and advisory (Low) findings appear once, in the Advisory section only",
+            "verdict": "PASS",
+            "evidence": "Title \"## Review: applying-migration-tasks — stopped at the structural gate\" then \"**Verdict: not yet — gated**\"; sections match the gated-report template (Summary, What's already right, Findings, Redesign recommendation, Coverage, Criteria notes, Next step). Advisory: \"None — Pass 1 returned no Low findings\".",
+            "note": "The Fit-for-purpose-before-Summary clause applies to full reports only; this is a gated report. An Advisory section is an addition to the gated template but violates nothing."
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
+            "verdict": "PASS",
+            "evidence": "All four findings have a Manifests line, e.g. Finding 1: \"A parent delegates a 12-task plan in which task 3 is marked **decision required**. The subagent has no channel to present options mid-run...\""
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
+            "verdict": "PASS",
+            "evidence": "Summary Notes column reads \"inferential\" on all four rows; each finding's Notes says \"Inferential\"; Criteria notes: \"Every finding above is inferential: this review read the definition and never spawned the subagent, so it predicts behavior rather than observing it.\""
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
+            "verdict": "PASS",
+            "evidence": "Report Criteria notes: \"the four defaults were assumed — analysis only (no apply)\". Run notes list only the report and run-notes heredocs as writes; no edit to the fixture, no review-waivers.md."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "id": "Finding 1",
+            "key": "A1",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Fixture lines 15 and 17 verbatim instruct 'pause' and 'present the options' — interactions a subagent's single-return contract cannot deliver. The Manifests scenario (decision-required task mid-plan, parent cannot tell 'paused' from 'decided for you') genuinely bites; A1 is a structure-pass criterion and High is what the scenario expects."
+        },
+        {
+            "id": "Finding 2",
+            "key": "A11",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "The pause/present/show-diff instructions are unreachable through 'Read, Edit, Write, Grep, Glob, Bash' — no interactive channel exists and AskUserQuestion is stripped from subagents. Distinct criterion from A1 (instructions vs. declared tools), and the report itself marks it subordinate to Finding 1, so it is not silent double-counting."
+        },
+        {
+            "id": "Finding 3",
+            "key": "A28",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "'Stop at any task marked **decision required**' (line 17) reads as halt-the-traversal while the report contract's 'which you skipped' (line 19) implies skip-and-continue; the Manifests scenario (two runs producing opposite disk states, both consistent with the body) is a real, checkable divergence. Medium is defensible."
+        },
+        {
+            "id": "Finding 4",
+            "key": "R1",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "No body instruction executes a command, yet line 4 grants unrestricted Bash to an unattended repo editor, and Grep/Glob are unused ('Read the task and the files it names'). The Manifests scenario — a plan task saying 'run the migration against the dev database' becoming reachable — is concrete and plausible. R1 is a structure-pass criterion; Medium fits."
+        }
+    ],
+    "fabrication_check": {
+        "quotes_checked": 7,
+        "quotes_verified": 7,
+        "fabricated": [],
+        "note": "Verified verbatim against the fixture: line 15, line 17, line 19, line 4 tools list, line 3 description reference, line 10 'Work through `migrations/plan.md` in order', and the composite 'Read the task and the files it names. Make the edit.' (fixture list items 1–2, verbatim modulo list numbering)."
+    },
+    "runner_deviations_affecting_grades": [
+        "Sibling scope narrowed to the workspace .claude/agents/ per the runner's constraint — touches only the A2 strength ('Clean roster position'), not any scenario or universal assertion; A2 is not a graded assertion here, so no grade changes.",
+        "Report written via heredoc after the harness rejected Write — pre-authorized by the runner task; no grade impact.",
+        "Finding 4's Fix clause reworded ('a session-wide settings rule' for a settings deny-rule mechanism) to satisfy a harness content filter — severity, key, evidence, and conclusion unchanged; does not affect the R1 classification or any assertion."
+    ],
+    "totals": {
+        "assertions_pass": 6,
+        "assertions_total": 6,
+        "universal_pass": 7,
+        "universal_total": 7,
+        "blocking_genuine": 4,
+        "blocking_inflated": 0,
+        "blocking_fabricated": 0
+    },
+    "grader_summary": "The run matches expected_output exactly: Pass 1 flagged A1 High, the gate stopped the run before any detail sweep, and the report opens 'Verdict: not yet — gated' with a redesign recommendation that names the skill form and the deciding steer-and-watch signal plus the non-discardable-output signal. All seven fixture quotes verify verbatim, every criterion key resolves in the checklist as a structure-pass item, and all four blocking findings are genuine with concrete Manifests scenarios. The three disclosed runner deviations are environmental or cosmetic and change no grade. No divergence from expected_output exists, so there is no skill defect or eval-suite defect to attribute; the one soft spot is that the spot-check assertion is evidenced by run notes rather than by the report text itself."
 }

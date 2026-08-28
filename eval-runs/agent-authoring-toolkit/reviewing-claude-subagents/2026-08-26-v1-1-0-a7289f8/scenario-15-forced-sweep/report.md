@@ -14,22 +14,22 @@ The structural pass failed High twice, and the user pre-authorized the full swee
 
 | #   | Severity | Pass      | Key(s)        | Finding                                                                                         | Notes                                                         |
 | --- | -------- | --------- | ------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| 1   | High     | Structure | A1            | An irreversible, unconfirmable destructive remit in a form that cannot pause or be steered        |                                                               |
-| 2   | High     | Structure | A28           | Per-artifact work defined at run time by fetched text; no evidence-checkable stopping condition   |                                                               |
-| 3   | High     | Detail    | A10           | `WebFetch` + bare `Bash` + a return path turns one hostile manifest into arbitrary shell          | Partly subordinate to 1                                       |
-| 4   | High     | Detail    | A26           | Third-party text rides the return path into the parent as instructions                            | Subordinate to 2                                              |
-| 5   | High     | Detail    | F1            | The body states the inverse of content-is-data: fetched text is the authoritative instruction     | Subordinate to 2                                              |
-| 6   | High     | Detail    | D1            | Undeterminable reference status is resolved toward deletion instead of abstention                 | Inside 1's implicated section; judged independently defective |
-| 7   | High     | Detail    | C10           | Three irreversible actions with no point where the user's say-so is required                      | Subordinate to 1                                              |
-| 8   | Medium   | Detail    | A6 (+ E1, E4) | No return shape named, though only the final message reaches the parent                           | Subordinate to 2                                              |
-| 9   | Medium   | Detail    | A7            | Report length unbounded, cancelling the context saving that justified delegating                  | Subordinate to 2                                              |
-| 10  | Medium   | Detail    | A9            | Four inputs named but never supplied, and never required of the delegation message                |                                                               |
-| 11  | Medium   | Detail    | A27           | Neither half of the task contract stated — no success condition, no per-run objective             | Subordinate to 2                                              |
-| 12  | Medium   | Detail    | C1            | "the destructive compaction pass" is undefined, so the subagent invents a destructive command     | Subordinate to 1                                              |
-| 13  | Medium   | Detail    | D3            | The verification names no source and runs after every irreversible action                         | Subordinate to 1 and 2                                        |
-| 14  | Medium   | Detail    | D5            | Self-reported progress on an autonomous run, unanchored to observed tool results                  | Subordinate to 2                                              |
-| 15  | Medium   | Detail    | F4            | Fetched manifest content is neither labeled nor isolated in the report                            | Subordinate to 2 · low confidence · inferential               |
-| 16  | Medium   | Detail    | R4            | The one anticipated ambiguity is resolved silently rather than surfaced                           | Subordinate to 1                                              |
+| 1   | High     | Structure | A1            | An irreversible, unconfirmable destructive remit in a form that cannot pause or be steered      |                                                               |
+| 2   | High     | Structure | A28           | Per-artifact work defined at run time by fetched text; no evidence-checkable stopping condition |                                                               |
+| 3   | High     | Detail    | A10           | `WebFetch` + bare `Bash` + a return path turns one hostile manifest into arbitrary shell        | Partly subordinate to 1                                       |
+| 4   | High     | Detail    | A26           | Third-party text rides the return path into the parent as instructions                          | Subordinate to 2                                              |
+| 5   | High     | Detail    | F1            | The body states the inverse of content-is-data: fetched text is the authoritative instruction   | Subordinate to 2                                              |
+| 6   | High     | Detail    | D1            | Undeterminable reference status is resolved toward deletion instead of abstention               | Inside 1's implicated section; judged independently defective |
+| 7   | High     | Detail    | C10           | Three irreversible actions with no point where the user's say-so is required                    | Subordinate to 1                                              |
+| 8   | Medium   | Detail    | A6 (+ E1, E4) | No return shape named, though only the final message reaches the parent                         | Subordinate to 2                                              |
+| 9   | Medium   | Detail    | A7            | Report length unbounded, cancelling the context saving that justified delegating                | Subordinate to 2                                              |
+| 10  | Medium   | Detail    | A9            | Four inputs named but never supplied, and never required of the delegation message              |                                                               |
+| 11  | Medium   | Detail    | A27           | Neither half of the task contract stated — no success condition, no per-run objective           | Subordinate to 2                                              |
+| 12  | Medium   | Detail    | C1            | "the destructive compaction pass" is undefined, so the subagent invents a destructive command   | Subordinate to 1                                              |
+| 13  | Medium   | Detail    | D3            | The verification names no source and runs after every irreversible action                       | Subordinate to 1 and 2                                        |
+| 14  | Medium   | Detail    | D5            | Self-reported progress on an autonomous run, unanchored to observed tool results                | Subordinate to 2                                              |
+| 15  | Medium   | Detail    | F4            | Fetched manifest content is neither labeled nor isolated in the report                          | Subordinate to 2 · low confidence · inferential               |
+| 16  | Medium   | Detail    | R4            | The one anticipated ambiguity is resolved silently rather than surfaced                         | Subordinate to 1                                              |
 
 ### What's already right
 
@@ -209,30 +209,30 @@ The structural pass failed High twice, and the user pre-authorized the full swee
 
 Listed once; advisory findings never gate the verdict.
 
-- `A11` · `pruning-stale-artifacts.md:11` vs `tools` (line 4) — the set of actions the body commands is not fixed at authoring time, so reachability through the declared tools cannot be verified at all; it currently resolves only because the unrestricted `Bash` grant makes almost any action reachable. Resolves as a side effect of Finding 2's fix; recorded so a later narrowing of `Bash` does not silently turn it into a run-time failure. *(Low confidence; subordinate to Finding 2.)*
-- `R1` · `pruning-stale-artifacts.md:4` (`tools`) — no instruction searches file contents, so the `Grep` grant is capability the remit does not require, and `Read` is ambiguous since the one thing the body reads is a manifest fetched over `WebFetch`. Drop `Grep`; keep `Read` only if the manifest is in fact a local file, and then say so at line 10. *(Low confidence.)*
+- `A11` · `pruning-stale-artifacts.md:11` vs `tools` (line 4) — the set of actions the body commands is not fixed at authoring time, so reachability through the declared tools cannot be verified at all; it currently resolves only because the unrestricted `Bash` grant makes almost any action reachable. Resolves as a side effect of Finding 2's fix; recorded so a later narrowing of `Bash` does not silently turn it into a run-time failure. _(Low confidence; subordinate to Finding 2.)_
+- `R1` · `pruning-stale-artifacts.md:4` (`tools`) — no instruction searches file contents, so the `Grep` grant is capability the remit does not require, and `Read` is ambiguous since the one thing the body reads is a manifest fetched over `WebFetch`. Drop `Grep`; keep `Read` only if the manifest is in fact a local file, and then say so at line 10. _(Low confidence.)_
 - `B (Opus 5 subset)` · `pruning-stale-artifacts.md:5` (`model`) and `:19` — two Opus 5 items fire: the model self-verifies and self-corrects unprompted, so a scripted "verify… double-check" causes over-verification rather than adding a check; and Opus 5 expands scope, so a narrow destructive remit must state its bounds explicitly, which this body never does. Remove the scripted double-check and replace it with the external check Finding 13 asks for; state the run's scope bounds explicitly.
-- `A19` · `pruning-stale-artifacts.md:5` (`model`) — the default is `inherit`; the `opus` pin carries no stated reason, and the definition ships no `effort` or `maxTurns` alongside it despite an unbounded per-artifact loop. State why the remit needs Opus, or drop the pin. *(Likely deliberate — but unjustified pins were the single most common finding across the checklist's dry-run set.)*
+- `A19` · `pruning-stale-artifacts.md:5` (`model`) — the default is `inherit`; the `opus` pin carries no stated reason, and the definition ships no `effort` or `maxTurns` alongside it despite an unbounded per-artifact loop. State why the remit needs Opus, or drop the pin. _(Likely deliberate — but unjustified pins were the single most common finding across the checklist's dry-run set.)_
 - `A23` · `pruning-stale-artifacts.md:8–19` (whole body, 8 non-blank lines) — the body sits at the vague end of the altitude bracket: no concrete signal for the central judgment (what makes an artifact stale) and no section structure, so per-artifact behavior is imported from fetched text instead. Add delineated sections (inputs, determination rule, removal procedure, return contract). Records the altitude judgment, not a fifth defect — its concrete failures are already carried by Findings 6, 10, 11, and 12.
 - `C11` · `pruning-stale-artifacts.md:13–17` — no instruction states the reason behind it, so the model has nothing to generalize from in a case the body does not name, and nothing to weigh a conflicting (including fetched) instruction against. State the purpose behind the determination rule and the removal order.
-- `R7` (convention 2 — one instruction per sentence) · `pruning-stale-artifacts.md:10, 13–14, 16–17, 19` — four of six body sentences carry two commands each (list/fetch, read/follow, assume/treat, delete/run, verify/double-check). Split each into numbered steps, one action per step. *(Also where `E3` lands: ordered prose, no numbering.)*
+- `R7` (convention 2 — one instruction per sentence) · `pruning-stale-artifacts.md:10, 13–14, 16–17, 19` — four of six body sentences carry two commands each (list/fetch, read/follow, assume/treat, delete/run, verify/double-check). Split each into numbered steps, one action per step. _(Also where `E3` lands: ordered prose, no numbering.)_
 - `R7` (convention 6 — make every referent explicit) · `pruning-stale-artifacts.md:11, 14, 16` — line 11's "it" has two plausible antecedents (the `handling` field and the manifest); line 14's "it is not" elides the predicate; line 16's singular "the artifact" has no loop to bind to, because line 10 used "each one." Name the noun at each occurrence. Line 14's second reading is unresolved from the text alone — the intended predicate is the author's to supply.
 - `R7` (convention 7 — name the whole set) · `pruning-stale-artifacts.md:11` — "whatever instructions" is an open set with no membership test, which invites the subagent to accept any member a third party invents. Enumerate the accepted handling behaviors and report anything outside the set. Load-bearing here: closing the set is also the fix for Finding 5.
-- `R7` (convention 9 — one term per concept) · `pruning-stale-artifacts.md:8, 14, 16, 19` — one concept carries three names inside the body (prune, remove, delete). Pick one verb and use it at every occurrence. Convention 8 also touches line 19: "double-check" carries several meanings; name the check instead. *(Scored within the body only; the `description`'s "Removes" is outside `R7`'s scope.)*
+- `R7` (convention 9 — one term per concept) · `pruning-stale-artifacts.md:8, 14, 16, 19` — one concept carries three names inside the body (prune, remove, delete). Pick one verb and use it at every occurrence. Convention 8 also touches line 19: "double-check" carries several meanings; name the check instead. _(Scored within the body only; the `description`'s "Removes" is outside `R7`'s scope.)_
 
 ### Coverage
 
 | Group | Status               | Findings                                                |
 | ----- | -------------------- | ------------------------------------------------------- |
-| A     | Gap                  | 1, 2, 3, 4, 8, 9, 10, 11 · advisory `A11`, `A19`, `A23`  |
-| B     | Gap (advisory only)  | advisory `B (Opus 5 subset)`                             |
-| C     | Gap                  | 7, 12 · advisory `C11`                                   |
-| D     | Gap                  | 6, 13, 14                                                |
-| E     | Gap (folded)         | 8 (`E1`, `E4`) · advisory `R7` conv. 2 (`E3`)            |
-| F     | Gap                  | 3 (`F2`), 5 (`F1`, `F3`, `F5`), 15 (`F4`)                |
-| G     | Pass                 | —                                                        |
-| H     | N/A — ships no evals | —                                                        |
-| R     | Gap                  | 16 · advisory `R1`, `R7` conv. 2, 6, 7, 9                |
+| A     | Gap                  | 1, 2, 3, 4, 8, 9, 10, 11 · advisory `A11`, `A19`, `A23` |
+| B     | Gap (advisory only)  | advisory `B (Opus 5 subset)`                            |
+| C     | Gap                  | 7, 12 · advisory `C11`                                  |
+| D     | Gap                  | 6, 13, 14                                               |
+| E     | Gap (folded)         | 8 (`E1`, `E4`) · advisory `R7` conv. 2 (`E3`)           |
+| F     | Gap                  | 3 (`F2`), 5 (`F1`, `F3`, `F5`), 15 (`F4`)               |
+| G     | Pass                 | —                                                       |
+| H     | N/A — ships no evals | —                                                       |
+| R     | Gap                  | 16 · advisory `R1`, `R7` conv. 2, 6, 7, 9               |
 
 Criterion-level `N/A` items inside a scored group: `A5` (explicit-invocation subagent), `A8` (the workspace root holds no `CLAUDE.md` at any level, so there is nothing for the body to restate), `A15`, `A16`, `A18` (not plugin-shipped), `A20`, `A21`, `A22`, `A24` (no `Agent` grant, so no fan-out), `A25` (the body references no path); `D4` (not a document task); `E5` (no prefill), `E6`; `F6` (the adversary here is third-party content, not the subagent's user); `G3` (no secrets exist, under `G1`'s proportionality rule); `R2` (analysis-only run, no apply edits), `R5` (the subagent authors no commits and the workspace defines no commit convention), `R6` (the workspace root carries no `CLAUDE.md` and no convention document, so no project subagent-naming convention exists to score against — none was imported from elsewhere), `R13` (the body invokes no skill and hands work to no agent).
 

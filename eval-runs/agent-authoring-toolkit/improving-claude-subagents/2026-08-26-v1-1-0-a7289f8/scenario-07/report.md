@@ -87,19 +87,19 @@ No guarantee drifted in a direction the loop caused.
 
 ### Rounds
 
-| Round | High | Medium | Low | Gated | Fixed | New next round | Outcome                                             |
-| ----- | ---- | ------ | --- | ----- | ----- | -------------- | --------------------------------------------------- |
-| 1     | 1    | 7      | 8   | n     | 7     | 0              | applied, committed                                  |
+| Round | High | Medium | Low | Gated | Fixed | New next round | Outcome                                              |
+| ----- | ---- | ------ | --- | ----- | ----- | -------------- | ---------------------------------------------------- |
+| 1     | 1    | 7      | 8   | n     | 7     | 0              | applied, committed                                   |
 | 2     | 1    | 0      | —   | y     | 0     | 0              | gated -> restructure hand-off -> declined, no commit |
-| 3     | 1    | 0      | —   | y     | —     | —              | gated -> plateau, loop stopped                      |
+| 3     | 1    | 0      | —   | y     | —     | —              | gated -> plateau, loop stopped                       |
 
 Rounds 2 and 3 gated before the detail sweep, so their Low counts are not measured and their
 non-structural groups were never re-scored.
 
 ### Ledger
 
-| Ledger key                                                 | Severity         | First seen | Status     | Note                                                                                                 |
-| ---------------------------------------------------------- | ---------------- | ---------- | ---------- | ---------------------------------------------------------------------------------------------------- |
+| Ledger key                                                 | Severity         | First seen | Status     | Note                                                                                                  |
+| ---------------------------------------------------------- | ---------------- | ---------- | ---------- | ----------------------------------------------------------------------------------------------------- |
 | A2 · reviewing-frontend-diffs.md · frontmatter/description | High (Medium r1) | 1          | persisting | declined r1 and r2 — fix is an operation on the sibling definition, outside the loop's boundary       |
 | A10 · reviewing-frontend-diffs.md · frontmatter/tools      | High             | 1          | resolved   | body half applied r1; configuration half declined as out of boundary. Not re-swept — rounds 2-3 gated |
 | B4 · reviewing-frontend-diffs.md · what-to-return          | Medium           | 1          | resolved   | applied r1 (sweep-then-filter plus `Omitted:`). Not re-swept — rounds 2-3 gated                       |
@@ -151,29 +151,27 @@ was never applied, so no oscillation occurred.
 
 | ----- | ------ |
 
-| 1     | `2407faf` fix: scope the frontend-diff reviewer's Bash use and close its return-contract gaps |
+| 1 | `2407faf` fix: scope the frontend-diff reviewer's Bash use and close its return-contract gaps |
 
-| 2     | none — the apply round declined its only finding and made no edit, so there was nothing to commit |
+| 2 | none — the apply round declined its only finding and made no edit, so there was nothing to commit |
 
-| 3     | none — the exit gate stopped the loop before an apply round |
-
-
+| 3 | none — the exit gate stopped the loop before an apply round |
 
 Starting commit: `1cb3fbd`. Final tree state: clean, two commits total, one file ever modified.
 
 ### Run notes
 
 - **Declined fixes, both for the same reason — the loop's file boundary:**
-  - `A2` (round 1, as a Medium; round 2, as the gated High with a restructure authorization). The
-    fix-applier verified that "absorb the sibling's remit" is a genuine no-op inside the target —
-    the sibling's two categories are already covered at `:30-31`, the target already holds `Bash`,
-    and its return contract is a superset — so the entire delta is deleting
-    `checking-ui-changes.md`. It also rejected the fallback fork: re-scoping the sibling is
-    likewise outside the boundary, and narrowing the target's description subject far enough to
-    separate the two would contradict the confirmed brief's routing guarantee.
-  - `A10`, configuration half (round 1). The body half was applied; the `PreToolUse` hook or
-    settings deny rule that would make the read-only guarantee enforced rather than asserted was
-    declined as outside the definition file.
+    - `A2` (round 1, as a Medium; round 2, as the gated High with a restructure authorization). The
+      fix-applier verified that "absorb the sibling's remit" is a genuine no-op inside the target —
+      the sibling's two categories are already covered at `:30-31`, the target already holds `Bash`,
+      and its return contract is a superset — so the entire delta is deleting
+      `checking-ui-changes.md`. It also rejected the fallback fork: re-scoping the sibling is
+      likewise outside the boundary, and narrowing the target's description subject far enough to
+      separate the two would contradict the confirmed brief's routing guarantee.
+    - `A10`, configuration half (round 1). The body half was applied; the `PreToolUse` hook or
+      settings deny rule that would make the read-only guarantee enforced rather than asserted was
+      declined as outside the definition file.
 - **Round 2 was a restructure round that produced no restructure.** The gate authorized a
   single-file restructure, and the applier correctly found there was no single-file restructure to
   perform: the recommendation's whole content lay outside the boundary. Its RESTRUCTURE MAP was

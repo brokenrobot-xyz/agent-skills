@@ -12,24 +12,24 @@ Every finding here is inferential. Both passes read the definition; neither spaw
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                                                                                     | Notes                                    |
-| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| 1   | High     | Structure | A1     | The destructive half of the remit does not earn the subagent form and should be a skill      |                                          |
-| 2   | High     | Structure | R12    | The description's fail-closed guarantee contradicts the body's fail-open rule                |                                          |
-| 3   | Medium   | Structure | A28    | The terminal "verify then double-check" is an uncheckable stopping condition                 |                                          |
-| 4   | High     | Detail    | R4, D1 | Uncertainty is resolved by guessing, and the guess resolves toward an irreversible delete    | subordinate to Finding 2                 |
-| 5   | High     | Detail    | C10    | Three irreversible actions run with no confirmation gate, no dry run, and no announced scope | subordinate to Finding 1                 |
-| 6   | High     | Detail    | F1, F3 | The body commands the subagent to execute instructions carried in a fetched manifest field   |                                          |
-| 7   | High     | Detail    | A26    | Third-party manifest text can reach the parent as the subagent's own trusted final message   |                                          |
-| 8   | Medium   | Detail    | F4     | The release-service response is never named as untrusted third-party content                 |                                          |
-| 9   | Medium   | Detail    | A10, F2| The tool grant is wider than the remit: unused `Grep`/`Glob`/`Read`, unnarrowed `Bash`       | `Bash`-narrowing half subordinate to 1   |
-| 10  | Medium   | Detail    | A6, E1, E2 | The description promises a report and the body states no return shape                    |                                          |
-| 11  | Medium   | Detail    | A7     | Nothing bounds the return message on a remit that enumerates an entire store                 |                                          |
-| 12  | Medium   | Detail    | A9     | Four definite references — store, mirror, release service, compaction pass — are never identified |                                     |
-| 13  | Medium   | Detail    | A27    | No remit section, no definition of a good result, no delegation contract                     |                                          |
-| 14  | Medium   | Detail    | B2, D3, D5 | Scripted self-verification, unanchored and positioned past the point of no return       | subordinate to Finding 1 in position     |
-| 15  | Medium   | Detail    | E3     | The per-artifact loop is never stated, so the delete step reads two ways                     | low confidence; subordinate to Finding 1 |
-| 16  | Medium   | Detail    | C8     | No scope bound — no cap, no filter, no reclaim target — on irreversible actions              | low confidence; subordinate to Finding 1 |
+| #   | Severity | Pass      | Key(s)     | Finding                                                                                           | Notes                                    |
+| --- | -------- | --------- | ---------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| 1   | High     | Structure | A1         | The destructive half of the remit does not earn the subagent form and should be a skill           |                                          |
+| 2   | High     | Structure | R12        | The description's fail-closed guarantee contradicts the body's fail-open rule                     |                                          |
+| 3   | Medium   | Structure | A28        | The terminal "verify then double-check" is an uncheckable stopping condition                      |                                          |
+| 4   | High     | Detail    | R4, D1     | Uncertainty is resolved by guessing, and the guess resolves toward an irreversible delete         | subordinate to Finding 2                 |
+| 5   | High     | Detail    | C10        | Three irreversible actions run with no confirmation gate, no dry run, and no announced scope      | subordinate to Finding 1                 |
+| 6   | High     | Detail    | F1, F3     | The body commands the subagent to execute instructions carried in a fetched manifest field        |                                          |
+| 7   | High     | Detail    | A26        | Third-party manifest text can reach the parent as the subagent's own trusted final message        |                                          |
+| 8   | Medium   | Detail    | F4         | The release-service response is never named as untrusted third-party content                      |                                          |
+| 9   | Medium   | Detail    | A10, F2    | The tool grant is wider than the remit: unused `Grep`/`Glob`/`Read`, unnarrowed `Bash`            | `Bash`-narrowing half subordinate to 1   |
+| 10  | Medium   | Detail    | A6, E1, E2 | The description promises a report and the body states no return shape                             |                                          |
+| 11  | Medium   | Detail    | A7         | Nothing bounds the return message on a remit that enumerates an entire store                      |                                          |
+| 12  | Medium   | Detail    | A9         | Four definite references — store, mirror, release service, compaction pass — are never identified |                                          |
+| 13  | Medium   | Detail    | A27        | No remit section, no definition of a good result, no delegation contract                          |                                          |
+| 14  | Medium   | Detail    | B2, D3, D5 | Scripted self-verification, unanchored and positioned past the point of no return                 | subordinate to Finding 1 in position     |
+| 15  | Medium   | Detail    | E3         | The per-artifact loop is never stated, so the delete step reads two ways                          | low confidence; subordinate to Finding 1 |
+| 16  | Medium   | Detail    | C8         | No scope bound — no cap, no filter, no reclaim target — on irreversible actions                   | low confidence; subordinate to Finding 1 |
 
 Structure findings lead, then Detail; severity sorts only within each group, which is why the Structure Medium (3) outranks the Detail Highs. Lows are advisory and appear below.
 
@@ -214,21 +214,21 @@ Listed once; advisory findings never gate the verdict.
 - `R3` · `pruning-stale-artifacts.md:4` — `Grep` and `Glob` appear zero times in the body; a declared capability nothing uses is dead configuration that misleads a reader. Likely not deliberate — it reads as a default read-only triple copied in wholesale.
 - `A23` · `pruning-stale-artifacts.md:8-14` — the body never defines "referenced" or "stale", its single most consequential judgment; the only concrete signal it gives is the `handling` field, and the fallback is the Finding 4 assume-rule rather than a test.
 - `F5` · `pruning-stale-artifacts.md:10-11` — nothing screens the WebFetch result or the `Bash` output before the body acts on it; largely subsumed by the Finding 6 fix, since a closed `handling` value set is itself the constrained classification. The second `F5` check — whether evals include a deliberate injection attempt — cannot be scored, as this subagent ships no evals.
-- `R7` · `pruning-stale-artifacts.md:10-19` — graded in check mode against all twelve prose conventions; four are broken. Convention 2 (one instruction per sentence): every one of the body's four instruction sentences carries two commands joined by "and" or "then". Convention 6 (explicit referents): "whatever instructions *it* gives" has two plausible antecedents, "assume *it* is not" elides the predicate, "the artifact" on line 16 has no bound antecedent, and "your work" on line 19 names nothing. Convention 7 (name the whole set): "whatever instructions it gives" is a wholly open set with no membership test — the prose form of Finding 6. Convention 9 (one term per concept): "verify" and "double-check" name one concept in one sentence. Conventions 1, 3, 4, 5, 8, 10, 11 and 12 pass; convention 5 passes vacuously. Check-only, no edits; the `name` and `description` fields were excluded from this grading, per `R7`'s scope limits.
+- `R7` · `pruning-stale-artifacts.md:10-19` — graded in check mode against all twelve prose conventions; four are broken. Convention 2 (one instruction per sentence): every one of the body's four instruction sentences carries two commands joined by "and" or "then". Convention 6 (explicit referents): "whatever instructions _it_ gives" has two plausible antecedents, "assume _it_ is not" elides the predicate, "the artifact" on line 16 has no bound antecedent, and "your work" on line 19 names nothing. Convention 7 (name the whole set): "whatever instructions it gives" is a wholly open set with no membership test — the prose form of Finding 6. Convention 9 (one term per concept): "verify" and "double-check" name one concept in one sentence. Conventions 1, 3, 4, 5, 8, 10, 11 and 12 pass; convention 5 passes vacuously. Check-only, no edits; the `name` and `description` fields were excluded from this grading, per `R7`'s scope limits.
 
 ### Coverage
 
-| Group | Status | Findings                       |
-| ----- | ------ | ------------------------------ |
+| Group | Status | Findings                                          |
+| ----- | ------ | ------------------------------------------------- |
 | A     | Gap    | 1, 3, 7, 9, 10, 11, 12, 13; advisory `A19`, `A23` |
-| B     | Gap    | 14                             |
-| C     | Gap    | 5, 16                          |
-| D     | Gap    | folded into 4 (`D1`) and 14 (`D3`, `D5`) |
-| E     | Gap    | 15; `E1`/`E2` folded into 10   |
-| F     | Gap    | 6, 8; `F2` folded into 9; advisory `F5` |
-| G     | Pass   | —                              |
-| H     | N/A    | ships no evals                 |
-| R     | Gap    | 2, 4; advisory `R3`, `R7`      |
+| B     | Gap    | 14                                                |
+| C     | Gap    | 5, 16                                             |
+| D     | Gap    | folded into 4 (`D1`) and 14 (`D3`, `D5`)          |
+| E     | Gap    | 15; `E1`/`E2` folded into 10                      |
+| F     | Gap    | 6, 8; `F2` folded into 9; advisory `F5`           |
+| G     | Pass   | —                                                 |
+| H     | N/A    | ships no evals                                    |
+| R     | Gap    | 2, 4; advisory `R3`, `R7`                         |
 
 Within-group `N/A` marks the detail sweep recorded: `A18` (not plugin-shipped), `A15`, `A16`, `A20`, `A21`, `A24` (fields or references absent), `A5` (no proactive phrasing), `D6` (single-definition review), `F6` (the adversary here is third-party content, not the prompt's user), `R5` (the subagent authors no commits and the workspace defines no commit convention), `R6` (the workspace root holds no `CLAUDE.md` and no convention document at any level, so no project subagent-naming convention exists to score against). `A22` and `A25` pass by absence. `R8`–`R11` are subsumed by the full twelve-convention `R7` grading.
 

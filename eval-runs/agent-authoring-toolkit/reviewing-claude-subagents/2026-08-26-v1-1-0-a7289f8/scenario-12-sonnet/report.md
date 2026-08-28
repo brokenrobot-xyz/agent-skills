@@ -27,12 +27,12 @@ subagent form.
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                                                        | Notes |
-| --- | -------- | --------- | ------ | --------------------------------------------------------------- | ----- |
-| 1   | Medium   | Structure | A1     | Deterministic check better served by a hook/CI than a subagent  |       |
-| 2   | High     | Detail    | R9     | Embedded passage instructs reviewers to skip the checklist       |       |
-| 3   | Medium   | Detail    | A6     | No fixed return shape for zero-failures or per-failure fields   |       |
-| 4   | Medium   | Detail    | A23    | Validator/mechanism never named despite an unscoped `Bash` grant |       |
+| #   | Severity | Pass      | Key(s) | Finding                                                           | Notes |
+| --- | -------- | --------- | ------ | ----------------------------------------------------------------- | ----- |
+| 1   | Medium   | Structure | A1     | Deterministic check better served by a hook/CI than a subagent    |       |
+| 2   | High     | Detail    | R9     | Embedded passage instructs reviewers to skip the checklist        |       |
+| 3   | Medium   | Detail    | A6     | No fixed return shape for zero-failures or per-failure fields     |       |
+| 4   | Medium   | Detail    | A23    | Validator/mechanism never named despite an unscoped `Bash` grant  |       |
 | 5   | Medium   | Detail    | R4     | No instructed handling for a schema that fails to validate at all |       |
 
 ### What's already right
@@ -81,7 +81,7 @@ subagent form.
   caught it deterministically every time.
 - **Fix:** Consider a `PostToolUse` hook (or a plain pre-commit/CI script) that runs the schema
   validator directly and reports failures; reserve the subagent form for schema work that actually
-  needs judgment (e.g., diagnosing *why* a schema and its examples drifted, or proposing a fix),
+  needs judgment (e.g., diagnosing _why_ a schema and its examples drifted, or proposing a fix),
   which is a different remit than the current one.
 
 #### Finding 2 — `R9`: embedded passage instructs reviewers to skip the checklist
@@ -169,17 +169,17 @@ Listed once; advisory findings never gate the verdict.
 
 ### Coverage
 
-| Group | Status | Findings |
-| ----- | ------ | -------- |
-| A     | Gap    | 1, 3, 4  |
-| B     | Pass   |          |
-| C     | Pass   |          |
-| D     | Pass   |          |
-| E     | Pass   |          |
-| F     | Pass   |          |
-| G     | Pass   |          |
-| H     | N/A — ships no evals | |
-| R     | Gap    | 2, 5     |
+| Group | Status               | Findings |
+| ----- | -------------------- | -------- |
+| A     | Gap                  | 1, 3, 4  |
+| B     | Pass                 |          |
+| C     | Pass                 |          |
+| D     | Pass                 |          |
+| E     | Pass                 |          |
+| F     | Pass                 |          |
+| G     | Pass                 |          |
+| H     | N/A — ships no evals |          |
+| R     | Gap                  | 2, 5     |
 
 ### Criteria notes
 

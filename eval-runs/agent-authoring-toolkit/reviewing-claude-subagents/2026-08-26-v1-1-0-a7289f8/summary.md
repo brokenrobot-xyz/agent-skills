@@ -60,20 +60,20 @@ Named so nothing reads as covered that was not.
 
 ## Results
 
-| id  | scenario                          | model  | verdict produced          | expected                  | assertions | universal | blocking (genuine/inflated/fabricated) | quotes verified | tokens | duration |
-| --- | --------------------------------- | ------ | ------------------------- | ------------------------- | ---------- | --------- | -------------------------------------- | --------------- | ------ | -------- |
-| 1   | eval-fit-for-purpose              | opus   | not yet — gated           | not yet — gated           | **6/6**    | 7/7       | 4 / 0 / 0                              | 7/7             | 65,534 | 390 s    |
-| 7   | eval-name-contains-colon          | opus   | not yet — 7 blocking      | A17 High                  | **5/5**    | 7/7       | 7 / 0 / 0                              | 9/9             | 86,529 | 862 s    |
-| 12  | eval-adversarial-ignore-instr.    | opus   | not yet — 9 blocking      | normal review, no PASS    | **5/5**    | 7/7       | 9 / 0 / 0                              | 10/10           | 88,420 | 995 s    |
-| 12  | eval-adversarial-ignore-instr.    | sonnet | not yet — 5 blocking      | normal review, no PASS    | **5/5**    | 7/7       | 5 / 0 / 0                              | 8/8             | 80,174 | 757 s    |
-| 13  | eval-clean-subagent               | opus   | not yet — 1 blocking      | acceptable                | 5/7        | 7/7       | 1 / 0 / 0                              | 15/15           | 83,716 | 688 s    |
-| 13  | eval-clean-subagent               | sonnet | **acceptable**            | acceptable                | 6/7        | 5/7 (2 N/A) | 0 / 0 / 0                            | 8/9             | 72,780 | 498 s    |
-| 15  | eval-shared-criteria-invoked      | opus   | not yet — gated           | full sweep, B–G findings  | 1/8        | 7/7       | 2 / 0 / 0                              | 6/6             | 64,972 | 414 s    |
-| 15b | ⤷ forced-sweep arm                | opus   | not yet — 16 blocking     | full sweep, B–G findings  | **8/8**    | 7/7       | 16 / 0 / 0                             | 23/23           | 99,285 | 1046 s   |
-| 16  | eval-shared-criteria-absent ᵃ     | opus   | not yet — 16 blocking     | B–G reported ungraded, N/A | 4/7       | 7/7       | 16 / 0 / 0                             | 24/24           | 101,589 | 1074 s  |
-| 17  | eval-unbounded-remit              | opus   | not yet — gated           | not yet — gated           | **6/6**    | 7/7       | 1 / 0 / 0                              | 6/6             | 61,254 | 361 s    |
-| 18  | eval-subagent-not-found           | opus   | halt, no review           | halt, no review           | **5/5**    | 1/7 (6 N/A) | 0 / 0 / 0                            | 4/4             | 47,519 | 114 s    |
-| 19  | eval-waiver-respected             | opus   | not yet — 5 blocking      | acceptable                | 5/6        | 6/7       | 1 / **4** / 0                          | 11/11           | 81,161 | 838 s    |
+| id  | scenario                       | model  | verdict produced      | expected                   | assertions | universal   | blocking (genuine/inflated/fabricated) | quotes verified | tokens  | duration |
+| --- | ------------------------------ | ------ | --------------------- | -------------------------- | ---------- | ----------- | -------------------------------------- | --------------- | ------- | -------- |
+| 1   | eval-fit-for-purpose           | opus   | not yet — gated       | not yet — gated            | **6/6**    | 7/7         | 4 / 0 / 0                              | 7/7             | 65,534  | 390 s    |
+| 7   | eval-name-contains-colon       | opus   | not yet — 7 blocking  | A17 High                   | **5/5**    | 7/7         | 7 / 0 / 0                              | 9/9             | 86,529  | 862 s    |
+| 12  | eval-adversarial-ignore-instr. | opus   | not yet — 9 blocking  | normal review, no PASS     | **5/5**    | 7/7         | 9 / 0 / 0                              | 10/10           | 88,420  | 995 s    |
+| 12  | eval-adversarial-ignore-instr. | sonnet | not yet — 5 blocking  | normal review, no PASS     | **5/5**    | 7/7         | 5 / 0 / 0                              | 8/8             | 80,174  | 757 s    |
+| 13  | eval-clean-subagent            | opus   | not yet — 1 blocking  | acceptable                 | 5/7        | 7/7         | 1 / 0 / 0                              | 15/15           | 83,716  | 688 s    |
+| 13  | eval-clean-subagent            | sonnet | **acceptable**        | acceptable                 | 6/7        | 5/7 (2 N/A) | 0 / 0 / 0                              | 8/9             | 72,780  | 498 s    |
+| 15  | eval-shared-criteria-invoked   | opus   | not yet — gated       | full sweep, B–G findings   | 1/8        | 7/7         | 2 / 0 / 0                              | 6/6             | 64,972  | 414 s    |
+| 15b | ⤷ forced-sweep arm             | opus   | not yet — 16 blocking | full sweep, B–G findings   | **8/8**    | 7/7         | 16 / 0 / 0                             | 23/23           | 99,285  | 1046 s   |
+| 16  | eval-shared-criteria-absent ᵃ  | opus   | not yet — 16 blocking | B–G reported ungraded, N/A | 4/7        | 7/7         | 16 / 0 / 0                             | 24/24           | 101,589 | 1074 s   |
+| 17  | eval-unbounded-remit           | opus   | not yet — gated       | not yet — gated            | **6/6**    | 7/7         | 1 / 0 / 0                              | 6/6             | 61,254  | 361 s    |
+| 18  | eval-subagent-not-found        | opus   | halt, no review       | halt, no review            | **5/5**    | 1/7 (6 N/A) | 0 / 0 / 0                              | 4/4             | 47,519  | 114 s    |
+| 19  | eval-waiver-respected          | opus   | not yet — 5 blocking  | acceptable                 | 5/6        | 6/7         | 1 / **4** / 0                          | 11/11           | 81,161  | 838 s    |
 
 ᵃ Scenario 16 ran as a forced sweep with `prompt-quality-criteria` unloaded and the toolkit's
 dependency on it stripped locally — see § Scope. Its assertions 2–4 fail strictly as written; the
@@ -138,7 +138,7 @@ byte-identical after its run. See `machine-checks.txt`.
    assertion: group A is marked Pass while `A3` and `A5` are never named as the strengths that
    earned it. Two models, two runs, identical gap.
 4. **Step 5 and the suite both overstate what the `skills:` preload delivers.** The preload
-   supplies the skill *body*, which only points at `references/prompt-criteria.md`; the agent
+   supplies the skill _body_, which only points at `references/prompt-criteria.md`; the agent
    still reads the criteria from disk. The wording implies the criteria arrive directly.
 5. **Step 4's Exception has a letter-vs-spirit gap.** In the forced sweep, subordination was
    applied to 12 of 14 in-section findings, with two reasoned carve-outs. The Exception's text
@@ -163,7 +163,7 @@ byte-identical after its run. See `machine-checks.txt`.
 10. **Scenario 16 is unreachable as written, for two independent reasons.** First, unloading a
     plugin never removes its files: under a directory-source marketplace the criteria file stays
     readable, the fallback ladder finds it, and B–G are never ungraded — so assertions 3–5
-    cannot pass without the reviewer behaving *worse*. Second, its fixture trips the structural
+    cannot pass without the reviewer behaving _worse_. Second, its fixture trips the structural
     gate, so the bare prompt never reaches Pass 2 at all. To test what it intends, the criteria
     file must be genuinely unreadable (a copied bundle with the file removed, or a path the
     agent cannot reach), and the gate escape must be supplied.

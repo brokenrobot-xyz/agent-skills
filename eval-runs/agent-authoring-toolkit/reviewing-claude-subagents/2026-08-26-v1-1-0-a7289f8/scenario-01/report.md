@@ -6,8 +6,8 @@ The definition is built around a conversation it cannot have. Its control flow p
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                                                                                                | Notes       |
-| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------------------ | ----------- |
+| #   | Severity | Pass      | Key(s) | Finding                                                                                                 | Notes       |
+| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------------------- | ----------- |
 | 1   | High     | Structure | A1     | The definition's shape is an interactive, steerable procedure — the one shape a subagent cannot deliver | inferential |
 | 2   | High     | Structure | A11    | `pause`, `present the options`, and the per-task diff need a human channel the declared tools lack      | inferential |
 | 3   | Medium   | Structure | A28    | "Stop at" is ambiguous between halting the traversal and skipping the task; the report contradicts it   | inferential |
@@ -70,29 +70,29 @@ None — Pass 1 returned no Low findings, and the detail sweep that would surfac
 
 **Make this a skill, not a subagent.** The deciding signal is the third one — the user wants to steer: the body's own control flow is built around pausing, showing a diff, and presenting options, all of which only work inside the main thread where the user sees and answers each step. The other two signals argue the same way: tool restriction is not the point (the grant is `Read, Edit, Write, Grep, Glob, Bash`, a full write surface), and the output is deliberately un-condensed — per-task diffs are the deliverable, not a distilled summary, so there is no parent-context saving to buy.
 
-If a subagent form must be kept for some part of this, keep only the non-interactive half: apply the tasks that carry no decision and no ambiguity, and return the decision-required and ambiguous tasks as *data* in the final message for the parent to resolve — then move the interactive traversal into a skill.
+If a subagent form must be kept for some part of this, keep only the non-interactive half: apply the tasks that carry no decision and no ambiguity, and return the decision-required and ambiguous tasks as _data_ in the final message for the parent to resolve — then move the interactive traversal into a skill.
 
 The move deletes Finding 2 outright (a skill may legitimately pause and ask), and it dissolves Finding 3's ambiguity, because a skill running in the main thread has no "halt versus skip" fork to resolve silently — it asks. Finding 4 survives the move in a different form: a skill inherits the session's tool surface, so the `Bash` exposure becomes a permissions question rather than a frontmatter one.
 
 ### Coverage
 
-| Group / criterion               | Status                          |
-| ------------------------------- | ------------------------------- |
-| `A1` — artifact earns its form  | Gap — Finding 1 (High)          |
-| `A2` — no sibling duplication   | Pass                            |
-| `A11` — instructions vs. tools  | Gap — Finding 2 (High)          |
-| `A28` — stopping condition      | Gap — Finding 3 (Medium)        |
-| `R1` — simplicity first         | Gap — Finding 4 (Medium)        |
-| `R12` — scope coherence         | Pass                            |
-| A (non-structural criteria)     | not scored — gated on structure |
-| B                               | not scored — gated on structure |
-| C                               | not scored — gated on structure |
-| D                               | not scored — gated on structure |
-| E                               | not scored — gated on structure |
-| F                               | not scored — gated on structure |
-| G                               | not scored — gated on structure |
-| H                               | not scored — gated on structure |
-| R (non-structural criteria)     | not scored — gated on structure |
+| Group / criterion              | Status                          |
+| ------------------------------ | ------------------------------- |
+| `A1` — artifact earns its form | Gap — Finding 1 (High)          |
+| `A2` — no sibling duplication  | Pass                            |
+| `A11` — instructions vs. tools | Gap — Finding 2 (High)          |
+| `A28` — stopping condition     | Gap — Finding 3 (Medium)        |
+| `R1` — simplicity first        | Gap — Finding 4 (Medium)        |
+| `R12` — scope coherence        | Pass                            |
+| A (non-structural criteria)    | not scored — gated on structure |
+| B                              | not scored — gated on structure |
+| C                              | not scored — gated on structure |
+| D                              | not scored — gated on structure |
+| E                              | not scored — gated on structure |
+| F                              | not scored — gated on structure |
+| G                              | not scored — gated on structure |
+| H                              | not scored — gated on structure |
+| R (non-structural criteria)    | not scored — gated on structure |
 
 ### Criteria notes
 

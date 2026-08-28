@@ -4,7 +4,7 @@
 
 `pruning-stale-artifacts` fails the fit-for-purpose criterion. The definition puts an irreversible
 three-stage destruction — delete from the store, delete from the mirror, then run a destructive
-compaction pass — behind a subagent boundary, driven by an explicit *when in doubt, delete* default,
+compaction pass — behind a subagent boundary, driven by an explicit _when in doubt, delete_ default,
 and it shows the user nothing until the deletions are already final. None of the signals that justify
 the subagent form carries that procedure; the signal that decides it — steering, wanting the
 procedure to play out in the main thread where each step can be seen and stopped — points the other
@@ -16,10 +16,10 @@ definition and never spawned the subagent.
 
 ### Summary
 
-| #   | Severity | Pass      | Key(s) | Finding                                                                                                            | Notes |
-| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------------------------------ | ----- |
-| 1   | High     | Structure | A1     | An irreversible delete-mirror-compact sequence sits behind a subagent boundary that hides every step from the user.  |       |
-| 2   | Medium   | Structure | A11    | The body hands its action set to a run-time-fetched manifest while granting unrestricted `Bash`.                     |       |
+| #   | Severity | Pass      | Key(s) | Finding                                                                                                             | Notes |
+| --- | -------- | --------- | ------ | ------------------------------------------------------------------------------------------------------------------- | ----- |
+| 1   | High     | Structure | A1     | An irreversible delete-mirror-compact sequence sits behind a subagent boundary that hides every step from the user. |       |
+| 2   | Medium   | Structure | A11    | The body hands its action set to a run-time-fetched manifest while granting unrestricted `Bash`.                    |       |
 
 ### What's already right
 
@@ -31,7 +31,7 @@ definition and never spawned the subagent.
   in, keep the trigger this specific.
 - **`R12` — scope coherence.** One subject (artifacts in the store), one set of criteria (referenced
   by a release or not), one output (what was removed). The split test finds no second artifact hiding
-  inside this one. The `A1` recommendation is *not* a scope split — the remit stays whole and moves
+  inside this one. The `A1` recommendation is _not_ a scope split — the remit stays whole and moves
   across a form boundary.
 - The `description` states a delegation trigger rather than an expertise claim, and it names what the
   subagent returns ("reports what it removed"), which gives the return contract a place to anchor.
@@ -44,7 +44,8 @@ definition and never spawned the subagent.
 - **Where:** `pruning-stale-artifacts.md:13-17` (body), with frontmatter `tools` (line 4)
 - **Evidence:** "When you cannot determine whether an artifact is still referenced by a release, assume it is not and treat it as safe to remove.
 
-  Delete the artifact from the store and from the mirror, then run the destructive compaction pass to reclaim the space."
+    Delete the artifact from the store and from the mirror, then run the destructive compaction pass to reclaim the space."
+
 - **Defect:** The definition puts an irreversible destructive procedure — delete from store, delete from mirror, then compact — behind a subagent boundary that hides every intermediate step from the user, and none of the three signals that justify the subagent form carries it.
 - **Manifests:** The artifact store hits its quota, Claude delegates to this subagent, and a manifest fetch fails or returns an ambiguous `handling` value for a release that is still live. Line 13's default classifies that artifact as unreferenced, the subagent deletes it from the store and the mirror and runs compaction, and the first thing the user sees is a final report naming a deletion they would have vetoed had the candidate list crossed the main thread. Nothing in the definition offers a step at which the user could have intervened.
 - **Fix:** See the redesign recommendation below.
@@ -72,7 +73,7 @@ Listed once; advisory findings never gate the verdict.
   reporting." is a doubled verification step with no stated criterion and no available remedy: it runs
   after the store, the mirror, and the compaction pass have already made the deletions irreversible,
   so it creates the impression of a safety gate the sequence cannot deliver. Delete it and let the
-  return contract be the completion criterion; a check that is genuinely wanted has to move *before*
+  return contract be the completion criterion; a check that is genuinely wanted has to move _before_
   the destructive step. (`A28` assigns redundant completion instructions on a bounded remit to this
   criterion; the remit itself is bounded by the store's contents, so `A28` scores `N/A`.)
 
@@ -90,10 +91,10 @@ anything.
 Move deletion, mirror deletion, and compaction into a **skill** that runs in the main thread over the
 returned list. **The deciding signal is steering** — use a skill when you want the procedure to play
 out inside the main thread so you can see and steer each step — and an irreversible three-stage
-destruction driven by a *when in doubt, delete* default is the canonical case of a procedure the user
+destruction driven by a _when in doubt, delete_ default is the canonical case of a procedure the user
 wants to watch.
 
-What the move deletes: line 13's default stops being a silent decision and becomes an *undetermined*
+What the move deletes: line 13's default stops being a silent decision and becomes an _undetermined_
 bucket a human sees before anything is acted on; line 19's after-the-fact double-check disappears in
 favor of a real confirmation gate before the destructive step; and the `Bash` grant leaves the
 subagent entirely, which resolves Finding 2 and the first advisory item in the same edit.

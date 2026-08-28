@@ -10,7 +10,7 @@ The target ships no evals, so each guarantee is cited to the definition line tha
 
 - **Read-only, enforced rather than asserted** — preserved and **strengthened**. At the start this lived only in prose (old lines 8–10) over a bare `Read, Grep, Glob, Bash` grant. It now rests on `tools: Bash` (line 4) narrowed by a fail-closed `PreToolUse` hook (lines 6–11), with body lines 19–24 as a prose backstop that holds "whether or not the hook is in force".
 - **Exactly one release per invocation** — preserved, line 14, bolded, unchanged since the fixture.
-- **`BLOCKED: release range` and nothing else on a missing range** — preserved, lines 33–34, unchanged. Round 4's `A6` notes that *other* failure modes have no return shape; the stated guarantee itself is intact.
+- **`BLOCKED: release range` and nothing else on a missing range** — preserved, lines 33–34, unchanged. Round 4's `A6` notes that _other_ failure modes have no return shape; the stated guarantee itself is intact.
 - **Grouped features / fixes / breaking, internal dropped** — preserved, steps 3–4 (lines 46–47) plus the fixed template at lines 58–71. **Flagged, not drifted:** round 4's `A23` finds the grouping carries no classification signal, so the guarantee is stated but under-specified.
 - **`model: sonnet`** — preserved, line 5, byte-identical to the fixture.
 - **Non-goals** — preserved and **strengthened**: they were implicit at the start and are now stated as rules at lines 21–24.
@@ -20,32 +20,32 @@ No guarantee drifted.
 
 ### Rounds
 
-| Round | High | Medium | Low | Gated | Fixed | New next round | Outcome |
-| ----- | ---- | ------ | --- | ----- | ----- | -------------- | ------- |
+| Round | High | Medium | Low | Gated | Fixed | New next round | Outcome                                      |
+| ----- | ---- | ------ | --- | ----- | ----- | -------------- | -------------------------------------------- |
 | 1     | 1    | 1      | 0   | y     | 2     | 7              | gated → restructured (fix stayed a subagent) |
-| 2     | 2    | 5      | 6   | n     | 7     | 4              | applied |
-| 3     | 0    | 4      | 8   | n     | 4     | 3              | applied |
-| 4     | 0    | 3      | 9   | n     | 0     | —              | stopped — round cap |
+| 2     | 2    | 5      | 6   | n     | 7     | 4              | applied                                      |
+| 3     | 0    | 4      | 8   | n     | 4     | 3              | applied                                      |
+| 4     | 0    | 3      | 9   | n     | 0     | —              | stopped — round cap                          |
 
 ### Ledger
 
-| Ledger key | Severity | First seen | Status | Note |
-| ---------- | -------- | ---------- | ------ | ---- |
-| `R1` · frontmatter `tools` | High | 1 | resolved | |
-| `R1` · body, reviewer comment | Medium | 1 | resolved | |
-| `A11` · hook vs input contract | Medium | 2 | resolved | |
-| `A10` · frontmatter hook | High | 2 | resolved | |
-| `A7` · § What to return | High | 2 | resolved | |
-| `A6` · § What to return | Medium | 2 | **contested** | resolved in r3, reappeared in r4 |
-| `C10` · read-only paragraph | Medium | 2 | resolved | |
-| `D1` · § How to work | Medium | 2 | resolved | |
-| `A26` · content-is-data line | Medium | 2 | resolved | |
-| `A11` · § How to work step 5 | Medium | 3 | resolved | |
-| `A6` · § How to work step 1 | Medium | 3 | resolved | |
-| `E1` · § What to return (`Unclear:`) | Medium | 3 | resolved | |
-| `C8` · § How to work step 5 | Medium | 3 | resolved | |
-| `A23` · § How to work steps 3–4 | Medium | 4 | **new — open** | no classification signal; `internal` members vanish silently |
-| `C1` · § What to return | Medium | 4 | **new — open** | one bullet per change vs the token bound; was advisory in r2 |
+| Ledger key                           | Severity | First seen | Status         | Note                                                         |
+| ------------------------------------ | -------- | ---------- | -------------- | ------------------------------------------------------------ |
+| `R1` · frontmatter `tools`           | High     | 1          | resolved       |                                                              |
+| `R1` · body, reviewer comment        | Medium   | 1          | resolved       |                                                              |
+| `A11` · hook vs input contract       | Medium   | 2          | resolved       |                                                              |
+| `A10` · frontmatter hook             | High     | 2          | resolved       |                                                              |
+| `A7` · § What to return              | High     | 2          | resolved       |                                                              |
+| `A6` · § What to return              | Medium   | 2          | **contested**  | resolved in r3, reappeared in r4                             |
+| `C10` · read-only paragraph          | Medium   | 2          | resolved       |                                                              |
+| `D1` · § How to work                 | Medium   | 2          | resolved       |                                                              |
+| `A26` · content-is-data line         | Medium   | 2          | resolved       |                                                              |
+| `A11` · § How to work step 5         | Medium   | 3          | resolved       |                                                              |
+| `A6` · § How to work step 1          | Medium   | 3          | resolved       |                                                              |
+| `E1` · § What to return (`Unclear:`) | Medium   | 3          | resolved       |                                                              |
+| `C8` · § How to work step 5          | Medium   | 3          | resolved       |                                                              |
+| `A23` · § How to work steps 3–4      | Medium   | 4          | **new — open** | no classification signal; `internal` members vanish silently |
+| `C1` · § What to return              | Medium   | 4          | **new — open** | one bullet per change vs the token bound; was advisory in r2 |
 
 ### Advisory (carried over)
 
@@ -70,11 +70,11 @@ The loop applied none of these; take or leave them by hand.
 
 ### Round commits
 
-| Round | Commit |
-| ----- | ------ |
-| 1 | `68cc02e` fix(formatting-release-notes): enforce the read-only guarantee in configuration |
-| 2 | `ea537ea` fix(formatting-release-notes): close the hook bypasses and bound the return |
-| 3 | `5ff798f` fix(formatting-release-notes): specify the branches the previous round opened |
+| Round | Commit                                                                                    |
+| ----- | ----------------------------------------------------------------------------------------- |
+| 1     | `68cc02e` fix(formatting-release-notes): enforce the read-only guarantee in configuration |
+| 2     | `ea537ea` fix(formatting-release-notes): close the hook bypasses and bound the return     |
+| 3     | `5ff798f` fix(formatting-release-notes): specify the branches the previous round opened   |
 
 Starting commit: `3542500`. Round 4 produced no commit — the cap fired at the exit gate before the apply step.
 

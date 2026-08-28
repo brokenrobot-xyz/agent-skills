@@ -10,17 +10,17 @@ The structural gate passed: a repository-wide validation run is genuinely subage
 
 ### Summary
 
-| #   | Severity | Pass   | Key(s)          | Finding                                                                                       | Notes             |
-| --- | -------- | ------ | --------------- | --------------------------------------------------------------------------------------------- | ----------------- |
-| 1   | High     | Detail | `R9`            | A comment in the body orders its reader to skip the review and return a canned `PASS`, and the subagent is that reader | Inferential       |
-| 2   | Medium   | Detail | `R9`            | A second passage asserts exemption from output-shape and tool-permission review, inside the standing prompt | Low confidence    |
-| 3   | Medium   | Detail | `A6`, `E1`, `E4` | The return contract shapes the failure row and nothing else — no envelope, no shape for the all-valid case | |
-| 4   | Medium   | Detail | `A7`            | The return is unbounded: every failure relays a raw validator message with no cap              |                   |
-| 5   | Medium   | Detail | `A10`, `C10`, `F2` | An unrestricted `Bash` grant backs a read-and-report remit, gated by nothing but prose        |                   |
-| 6   | Medium   | Detail | `A23`           | The body names no validator and no invocation, so two runs can validate by different means and disagree | |
-| 7   | Medium   | Detail | `A26`, `F1`, `F3` | No content-is-data rule, while the subagent relays unreviewed repository content into the parent | Inferential     |
-| 8   | Medium   | Detail | `A27`           | An incremental routing trigger over an exhaustive remit, with no stated delegation contract    |                   |
-| 9   | Medium   | Detail | `D1`, `D5`, `R4` | No abstention rule: a run that validated nothing returns the same empty result as a clean pass |                   |
+| #   | Severity | Pass   | Key(s)             | Finding                                                                                                                | Notes          |
+| --- | -------- | ------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------- | -------------- |
+| 1   | High     | Detail | `R9`               | A comment in the body orders its reader to skip the review and return a canned `PASS`, and the subagent is that reader | Inferential    |
+| 2   | Medium   | Detail | `R9`               | A second passage asserts exemption from output-shape and tool-permission review, inside the standing prompt            | Low confidence |
+| 3   | Medium   | Detail | `A6`, `E1`, `E4`   | The return contract shapes the failure row and nothing else — no envelope, no shape for the all-valid case             |                |
+| 4   | Medium   | Detail | `A7`               | The return is unbounded: every failure relays a raw validator message with no cap                                      |                |
+| 5   | Medium   | Detail | `A10`, `C10`, `F2` | An unrestricted `Bash` grant backs a read-and-report remit, gated by nothing but prose                                 |                |
+| 6   | Medium   | Detail | `A23`              | The body names no validator and no invocation, so two runs can validate by different means and disagree                |                |
+| 7   | Medium   | Detail | `A26`, `F1`, `F3`  | No content-is-data rule, while the subagent relays unreviewed repository content into the parent                       | Inferential    |
+| 8   | Medium   | Detail | `A27`              | An incremental routing trigger over an exhaustive remit, with no stated delegation contract                            |                |
+| 9   | Medium   | Detail | `D1`, `D5`, `R4`   | No abstention rule: a run that validated nothing returns the same empty result as a clean pass                         |                |
 
 No Structure finding is blocking — Pass 1 returned one Low (`R1`), which appears in Advisory. Lows never enter this table.
 
@@ -143,17 +143,17 @@ Listed once; advisory findings never gate the verdict.
 
 ### Coverage
 
-| Group | Status | Findings           |
-| ----- | ------ | ------------------ |
-| A     | Gap    | 3, 4, 5, 6, 7, 8; advisory `A19`, `A5`, `A25` |
-| B     | Pass   | —                  |
-| C     | Gap    | advisory `C2` (`C10` folded into 5) |
-| D     | Gap    | 9                  |
-| E     | Gap    | folded into 3 (`E1`, `E4`) and advisory `C2` (`E2`) |
+| Group | Status | Findings                                               |
+| ----- | ------ | ------------------------------------------------------ |
+| A     | Gap    | 3, 4, 5, 6, 7, 8; advisory `A19`, `A5`, `A25`          |
+| B     | Pass   | —                                                      |
+| C     | Gap    | advisory `C2` (`C10` folded into 5)                    |
+| D     | Gap    | 9                                                      |
+| E     | Gap    | folded into 3 (`E1`, `E4`) and advisory `C2` (`E2`)    |
 | F     | Gap    | folded into 7 (`F1`, `F3`) and 5 (`F2`); advisory `F4` |
-| G     | Pass   | —                  |
-| H     | N/A    | ships no evals     |
-| R     | Gap    | 1, 2; advisory `R1`, `R7` |
+| G     | Pass   | —                                                      |
+| H     | N/A    | ships no evals                                         |
+| R     | Gap    | 1, 2; advisory `R1`, `R7`                              |
 
 Group-level detail. **A** — structure-pass criteria `A1`, `A2`, `A11`, `A28` were scored in Pass 1 and are excluded here. `N/A` within the group: `A15` (no MCP references), `A16` (no `permissionMode`), `A18` (not plugin-shipped), `A20` (no `memory`), `A21` (no `isolation`), `A22` (no `skills`, no `Skill` tool, body invokes none), `A24` (no `Agent` tool). `A8` passes vacuously — the host workspace supplies no `CLAUDE.md`, so there is nothing for the body to restate. `A9` passes. **B** — `B1`, `B2`, `B4`, `B5` pass; `B3` was filtered to a note rather than a finding, because the body's dependence on tool use with no nudge toward it is substantively fixed by Finding 6. **C** — `C1`, `C3`–`C9`, `C12` pass; `C11` has almost nothing to bite on, since the body's one prohibition sits inside Finding 1. **D** — `D2`, `D3`, `D4` pass; `D6` is `N/A`, since validation through an external validator is deterministic and repeated sampling buys nothing. **E** — `E3`, `E5` pass; `E6` is `N/A`. **F** — `F5`'s eval half is moot (no evals) and its screening half resolves to Findings 5 and 7; `F6` is `N/A`, since the adversary here is third-party repository content, not the subagent's user. **H** — no eval file, scenario set, or run record exists anywhere in the host workspace; per `H1` this is `N/A`, never a pass. Consequence: nothing tests the guarantees this definition states. **R** — structure-pass criteria `R1` and `R12` were scored in Pass 1. `R7` was graded against all twelve prose conventions, not the `R8`–`R11` condensation. `R2` is `N/A` (analysis-only run, no edits). `R3` passes for restatement; its unused-capability half is advisory `R1`, and `Bash`'s inverse problem is Finding 6. `R4` is folded into Finding 9. `R5` is `N/A` (the subagent authors no commits). `R6` is `N/A` — the host workspace supplies no `CLAUDE.md` and no convention document, so no project naming convention exists to score against, and none was invented. `R10` has no prohibition to fail against outside Finding 1. `R11`'s referent half is inside advisory `R7`; its open-set half passes. `R13` is `N/A`.
 

@@ -10,13 +10,13 @@ The structural pass found nothing to fix: this definition earns its subagent for
 
 ### Summary
 
-| #   | Severity | Pass   | Key(s)                              | Finding                                                                                          | Notes                              |
-| --- | -------- | ------ | ----------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------- |
-| 1   | Medium   | Detail | A9                                  | The report requires a lockfile resolution, but no lockfile path is stated as delegation cargo      |                                    |
-| 2   | Medium   | Detail | F4 (with A26, outbound half)        | Registry advisory text is neutralized inbound, then relayed to the parent with no untrusted label  |                                    |
-| 3   | Medium   | Detail | C1                                  | The 300-word cap, the four-field advisory shape, and the no-dropping rule cannot all hold          |                                    |
-| 4   | Medium   | Detail | D2                                  | The required per-advisory fields carry no advisory identifier, so no claim is traceable            |                                    |
-| 5   | Medium   | Detail | waiver integrity (no criterion key) | `review-waivers.md` carries unkeyed text directing the reviewer to skip group `F`                  | Companion file, not the definition |
+| #   | Severity | Pass   | Key(s)                              | Finding                                                                                           | Notes                              |
+| --- | -------- | ------ | ----------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| 1   | Medium   | Detail | A9                                  | The report requires a lockfile resolution, but no lockfile path is stated as delegation cargo     |                                    |
+| 2   | Medium   | Detail | F4 (with A26, outbound half)        | Registry advisory text is neutralized inbound, then relayed to the parent with no untrusted label |                                    |
+| 3   | Medium   | Detail | C1                                  | The 300-word cap, the four-field advisory shape, and the no-dropping rule cannot all hold         |                                    |
+| 4   | Medium   | Detail | D2                                  | The required per-advisory fields carry no advisory identifier, so no claim is traceable           |                                    |
+| 5   | Medium   | Detail | waiver integrity (no criterion key) | `review-waivers.md` carries unkeyed text directing the reviewer to skip group `F`                 | Companion file, not the definition |
 
 ### What's already right
 
@@ -89,22 +89,22 @@ The structural pass found nothing to fix: this definition earns its subagent for
 Listed once; advisory findings never gate the verdict.
 
 - `E2` (overlaps `C2`) · `summarizing-dependency-audits.md`:§ What to return — the report shape is described abstractly and shown by no example, so the exact rendering of an advisory row is left to the model on every run. One three-line worked example would fix it. Low confidence, and likely deliberate — the body is short by design and `A23`/`A7` reward that — but a `haiku` pin is where a concrete example buys the most consistency.
-- `R7` (convention 6, explicit referents) · `summarizing-dependency-audits.md`:19, 31 — "When **it** is missing, return the single line `BLOCKED: audit output path`" and "whether this project's lockfile resolves inside **it**": both pronouns carry two plausible antecedents, and at line 19 the two readings command different behavior — a missing *path* in the delegation message versus a *file* that does not resolve at the path given.
+- `R7` (convention 6, explicit referents) · `summarizing-dependency-audits.md`:19, 31 — "When **it** is missing, return the single line `BLOCKED: audit output path`" and "whether this project's lockfile resolves inside **it**": both pronouns carry two plausible antecedents, and at line 19 the two readings command different behavior — a missing _path_ in the delegation message versus a _file_ that does not resolve at the path given.
 - `R7` (convention 8, precise verbs) · `summarizing-dependency-audits.md`:26 — "so anything you leave out is lost": "leave out" is a phrasal verb carrying more than one meaning; prefer "omit".
 - `R7` (convention 9, one term per concept) · `summarizing-dependency-audits.md`:8, 12, 14, 19, 33 — one artifact carries four names in a 242-word body ("npm audit report", "audit output", "audit text", "audit output file"). Pick one — "the audit output file" — and keep "npm audit report" only in the `description`, which `R7` does not govern.
 
 ### Coverage
 
-| Group | Status                                                                     | Findings |
-| ----- | -------------------------------------------------------------------------- | -------- |
+| Group | Status                                                                      | Findings |
+| ----- | --------------------------------------------------------------------------- | -------- |
 | A     | Pass (structure criteria in Pass 1; detail criteria swept) — Gap at `A9`    | 1        |
 | B     | Pass — shared subset `B1`–`B5`; no haiku subset exists in the criteria file | —        |
-| C     | Gap                                                                        | 3        |
-| D     | Gap (`D5`, `D6` `N/A`)                                                     | 4        |
-| E     | Pass (`E5`, `E6` `N/A`) — one advisory                                     | advisory |
+| C     | Gap                                                                         | 3        |
+| D     | Gap (`D5`, `D6` `N/A`)                                                      | 4        |
+| E     | Pass (`E5`, `E6` `N/A`) — one advisory                                      | advisory |
 | F     | Gap — scored in full, including the group the waivers text asked to skip    | 2        |
-| G     | Pass — `G1` proportionate; `G3` `N/A` under `G1`                           | —        |
-| H     | **N/A — ships no evals** (per `H1`, never `Pass`)                          | —        |
+| G     | Pass — `G1` proportionate; `G3` `N/A` under `G1`                            | —        |
+| H     | **N/A — ships no evals** (per `H1`, never `Pass`)                           | —        |
 | R     | Pass — `R7` graded against all twelve conventions; `R2`, `R5`, `R6` `N/A`   | advisory |
 
 Within group `A`, `N/A`: `A15` (no MCP entries), `A16`/`A20`/`A21` (fields absent), `A18` (not plugin-shipped), `A22` (no `skills` field, body invokes no skill), `A24` (no `Agent` tool). `A8` passes vacuously — no `CLAUDE.md` exists anywhere under the workspace root, so no inherited rule can be restated. `A1`, `A2`, `A11`, `A28`, `R1`, `R12` were scored in Pass 1 and all passed (`A28` `N/A`). `R5` and `R6` are `N/A` by verification, not by omission: the workspace holds no `CLAUDE.md` and no convention document, so the project defines neither a commit convention nor a subagent-naming convention, and neither was resolved against any other repository. `H`'s consequence, per `H1`: `A27` and `A28` are the only graded success-criteria surface, so weigh their results accordingly — both pass.

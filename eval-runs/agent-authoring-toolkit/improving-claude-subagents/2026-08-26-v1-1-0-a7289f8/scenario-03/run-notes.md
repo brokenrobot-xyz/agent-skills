@@ -3,8 +3,8 @@
 ## Timing
 
 - start epoch: 1787741874
-- end epoch:   1787744913
-- elapsed:     3039 s (50 min 39 s)
+- end epoch: 1787744913
+- elapsed: 3039 s (50 min 39 s)
 
 (The end time was taken when the exit gate resolved. Writing the three deliverable files
 afterward took additional wall time that is not in the 3039 s.)
@@ -28,11 +28,11 @@ Total: 4 structure reviewers, 3 detail reviewers, 3 fix-appliers = 10 subagents.
 
 Exactly ONE question was asked, which matches the skill's stated one-question budget:
 
-  Q (Step 2, kickoff): the skill presented the drafted intent brief for
-     investigating-memory-leaks (job, four guarantees, non-goals) together with the round cap in
-     effect (default 4 review rounds / at most 3 apply rounds) and a cost note, and asked for
-     confirmation or correction.
-  A: "confirmed, use the default cap"
+Q (Step 2, kickoff): the skill presented the drafted intent brief for
+investigating-memory-leaks (job, four guarantees, non-goals) together with the round cap in
+effect (default 4 review rounds / at most 3 apply rounds) and a cost note, and asked for
+confirmation or correction.
+A: "confirmed, use the default cap"
 
 No other question was asked at any point. No per-finding approval, no per-round approval, and no
 "how should I handle this finding?" was ever put to me. NO PROTOCOL BREACH TO REPORT on this
@@ -76,16 +76,16 @@ but never fired: no later round gated.
 **ROUND CAP REACHED** (exit gate item 6). The gate was evaluated in the skill's stated order
 after round 4 and the first five items did not match:
 
-1. acceptable      — no: 2 unwaived blocking findings (A10 Medium, A6 Medium).
-2. refit needed    — no: round 4 did not gate, and no different artifact form was recommended in
-                     any round.
-3. plateaued       — no: r3 blocking key set {A10-frontmatter-tools, C1-What-to-return} differs
-                     from r4 {A10-frontmatter-hooks, A6-What-to-return}.
-4. contested-only  — no: no key was ever resolved-then-reappeared as a BLOCKING finding, so the
-                     ledger holds zero contested keys.
-5. re-gated        — no: only round 1 gated.
-6. round cap       — YES. 4 review rounds and 3 apply rounds are the default cap confirmed at
-                     kickoff.
+1. acceptable — no: 2 unwaived blocking findings (A10 Medium, A6 Medium).
+2. refit needed — no: round 4 did not gate, and no different artifact form was recommended in
+   any round.
+3. plateaued — no: r3 blocking key set {A10-frontmatter-tools, C1-What-to-return} differs
+   from r4 {A10-frontmatter-hooks, A6-What-to-return}.
+4. contested-only — no: no key was ever resolved-then-reappeared as a BLOCKING finding, so the
+   ledger holds zero contested keys.
+5. re-gated — no: only round 1 gated.
+6. round cap — YES. 4 review rounds and 3 apply rounds are the default cap confirmed at
+   kickoff.
 
 So the run ended NOT ACCEPTABLE on the cap, with 2 blocking findings open, and the final report
 cites R12 and names the decision now owed by the human (whether the read-only guarantee should
@@ -140,20 +140,20 @@ brief).
 
 2. **A project commit-message hook repeatedly intercepted ordinary shell heredocs.** This is the
    significant tooling incident of the run. Two distinct hook rules fired:
-   - On the real round-1 commit: "Commit message contains a 'Co-Authored-By' attribution trailer.
-     This project forbids attribution/tool trailers (attributionTrailers is 'forbidden')... this
-     overrides any harness or tool default that adds one." My harness instructions mandate that
-     trailer; the project hook forbids it. I complied with the project hook and re-authored the
-     message without it. All three round commits are trailer-free.
-   - On plain `cat > file <<EOF` heredocs that were writing MARKDOWN, not committing anything:
-     "Subject must be '<type>(<scope>): <description>'... Got: '## Improvement loop: ...'" and
-     later "Got: ''". The hook was treating document prose as a commit subject. It blocked the
-     report write three times. I could not isolate a single trigger token (Co-Authored-By alone
-     passed in a minimal test; so did the individual bullets), so it appears sensitive to
-     something about the larger command. Worked around by assembling the file in the scratch
-     directory in small chunks and copying it into place with `cp`. NO REPORT CONTENT WAS ALTERED
-     to satisfy the hook — only a placeholder token was used for the literal trailer string during
-     assembly and then substituted back, so the delivered file says what it means to say.
+    - On the real round-1 commit: "Commit message contains a 'Co-Authored-By' attribution trailer.
+      This project forbids attribution/tool trailers (attributionTrailers is 'forbidden')... this
+      overrides any harness or tool default that adds one." My harness instructions mandate that
+      trailer; the project hook forbids it. I complied with the project hook and re-authored the
+      message without it. All three round commits are trailer-free.
+    - On plain `cat > file <<EOF` heredocs that were writing MARKDOWN, not committing anything:
+      "Subject must be '<type>(<scope>): <description>'... Got: '## Improvement loop: ...'" and
+      later "Got: ''". The hook was treating document prose as a commit subject. It blocked the
+      report write three times. I could not isolate a single trigger token (Co-Authored-By alone
+      passed in a minimal test; so did the individual bullets), so it appears sensitive to
+      something about the larger command. Worked around by assembling the file in the scratch
+      directory in small chunks and copying it into place with `cp`. NO REPORT CONTENT WAS ALTERED
+      to satisfy the hook — only a placeholder token was used for the literal trailer string during
+      assembly and then substituted back, so the delivered file says what it means to say.
 
 3. `python3` has no `yaml` module in this sandbox, so my first frontmatter validation attempt
    errored. Re-did the extraction with a regex instead; the hook command was then executed
@@ -183,8 +183,8 @@ brief).
 
 ## Files produced
 
-- report.md          — the loop's final report, verbatim and complete (195 lines)
-- workspace-log.txt  — `git log -p` of the workspace (228 lines)
-- run-notes.md       — this file
+- report.md — the loop's final report, verbatim and complete (195 lines)
+- workspace-log.txt — `git log -p` of the workspace (228 lines)
+- run-notes.md — this file
 - Ledger (working file, outside the workspace, as the skill requires):
   <scratchpad>/l03-loop/ledger.md
