@@ -107,6 +107,26 @@ A not-acceptable or capped run is a finding, not a failure: the host
 conventions treat non-converging review-fix rounds as evidence about the
 subagent (`R12`), and the report says what decision that leaves with you.
 
+## Behavior notes
+
+- **The cap is reached more often than it should be.** Two of the four
+  scenarios graded in the 2026-08-26 eval campaign hit the round cap rather
+  than converging — including a fixture authored to converge in two rounds.
+  Treat convergence as the loop's aspiration, not its guarantee.
+- **A fix can mint the next round's findings.** The recommended remedy for a
+  guarantee stated only in prose is a `PreToolUse` hook in the definition's
+  frontmatter, and that hook is itself reviewable surface: a later round
+  reports its bypasses, and the applier patches those. Where a round's
+  findings sit on text an earlier round wrote, the ledger shows it — read the
+  round commits before accepting that the target needed all of them.
+- **Capped runs still improved their targets.** In every graded run the file
+  boundary held, no waiver was written, no advisory finding was applied, and
+  the final definition was better than the fixture. The churn costs tokens and
+  rounds, not correctness.
+
+Full evidence: the campaign's
+[run summary](../../../../eval-runs/agent-authoring-toolkit/improving-claude-subagents/2026-08-26-v1-1-0-a7289f8/summary.md).
+
 ## Safety rails
 
 - **Clean tree or no run.** Uncommitted changes to the target definition

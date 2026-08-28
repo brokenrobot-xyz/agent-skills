@@ -93,6 +93,25 @@ A not-acceptable or capped run is a finding, not a failure: the host
 conventions treat non-converging review-fix rounds as evidence about the
 skill (`R14`), and the report says what decision that leaves with you.
 
+## Behavior notes
+
+- **The cap is reached more often than it should be.** Both scenarios graded
+  in the 2026-08-25 eval campaign hit the round cap rather than converging.
+  Treat convergence as the loop's aspiration, not its guarantee.
+- **A fix can mint the next round's findings.** The recommended remedy for a
+  guarantee stated only in prose is a `PreToolUse` hook, and that hook is
+  itself reviewable surface: a later round reports its bypasses, and the
+  applier patches those. Where a round's findings sit on text an earlier round
+  wrote, the ledger shows it — read the round commits before accepting that
+  the skill needed all of them.
+- **Capped runs still improved their targets.** In every graded run the file
+  boundary held, no waiver was written, no advisory finding was applied, and
+  the final bundle was better than the fixture. The churn costs tokens and
+  rounds, not correctness.
+
+Full evidence: the campaign's
+[run summary](../../../../eval-runs/agent-authoring-toolkit/improving-claude-skills/2026-08-25-v1-0-0-2381754/summary.md).
+
 ## Safety rails
 
 - **Clean tree or no run.** Uncommitted changes under the target abort the
