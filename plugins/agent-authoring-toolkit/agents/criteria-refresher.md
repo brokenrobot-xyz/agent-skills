@@ -1,6 +1,6 @@
 ---
 name: criteria-refresher
-description: Read-only drift checker for the skill reviewer's own criteria files. Fetches every URL in their § Sources tables and returns what the live guidance adds, changes, or no longer supports. Use when a maintainer sets out to reconcile the criteria, typically because a review reported them as old. Not part of a review — no review step spawns this, and it never reads a skill under review.
+description: Read-only drift checker for the reviewers' own criteria files — the skill reviewer's and the subagent reviewer's checklists, and the shared prompt criteria. Fetches every URL in their § Sources tables and returns what the live guidance adds, changes, or no longer supports. Use when a maintainer sets out to reconcile the criteria, typically because a review reported them as old. Not part of a review — no review step spawns this, and it never reads an artifact under review.
 tools: WebFetch, Read, Grep
 model: sonnet
 maxTurns: 45

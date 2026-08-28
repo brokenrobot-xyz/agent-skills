@@ -6,7 +6,10 @@
 - [Final report](#final-report)
 
 Text in `<angle brackets>` is a placeholder; everything else is literal structure. The dedupe
-and exit rules live in `SKILL.md`; this file owns the layout and the status glossary.
+and exit rules live in each consuming loop's `SKILL.md`; this file owns the layout and the
+status glossary. Two loops share it — `improving-claude-skills` and
+`improving-claude-subagents` — so a layout change here changes both; for a subagent target,
+read "skill" as "subagent" and "bundle" as "definition file".
 
 ## The ledger
 
@@ -37,10 +40,12 @@ apply).
 ## Final report
 
 ```markdown
-## Improvement loop: <skill> — <acceptable | not acceptable — plateaued | not acceptable — contested | not acceptable — re-gated | round cap reached>
+## Improvement loop: <skill> — <acceptable | not acceptable — refit needed | not acceptable — plateaued | not acceptable — contested | not acceptable — re-gated | round cap reached>
 
 <one-paragraph verdict, written as SKILL.md Step 8 directs — a plateaued or capped run names
-the decision now owed by the human>
+the decision now owed by the human; a refit-needed run (the subagent loop's verdict — a review
+recommended a different artifact form) carries the reviewer's recommended form and the deciding
+signal verbatim, framed as the human's conversion decision>
 
 ### Intent preservation
 

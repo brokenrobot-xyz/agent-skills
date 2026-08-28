@@ -1,0 +1,121 @@
+{
+    "scenario_id": 2,
+    "scenario_name": "eval-refit-exit",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Round 1's review gates on an A1 High recommending a different artifact form",
+            "verdict": "PASS",
+            "evidence": "run-notes.md: \"Round 1 review: GATED at the structural gate (2 High structural findings: `A1`, `A11`)\" and \"`A1` (High, high confidence) ... Recommendation: convert to a skill and delete the subagent definition.\" report.md quotes the recommendation verbatim: \"Convert this to a skill invoked in the main thread, and delete the subagent definition\".",
+            "note": "A second High (A11) was also found and correctly marked subordinate to A1; it does not weaken the assertion."
+        },
+        {
+            "n": 2,
+            "text": "The loop exits at the refit gate — no fix-applier spawns, no apply round runs, and the definition file is byte-identical to the fixture commit",
+            "verdict": "PASS",
+            "evidence": "Machine check: `git log --oneline` shows only `134e010 chore: install fixture subagent definitions`; `git diff 134e010 HEAD -- .claude/agents/applying-refactor-tasks.md` is empty. run-notes.md: fix-applier listed under \"NOT spawned\" — \"the loop's refit exit is terminal and precedes the apply step.\"",
+            "note": "Zero commits after the fixture; target byte-identical."
+        },
+        {
+            "n": 3,
+            "text": "Does NOT author a skill, hook, or CLAUDE.md rule in the target's stead",
+            "verdict": "PASS",
+            "evidence": "find over the workspace (excluding .git) returns only the fixture definition plus the three runner-authored artifacts (report.md, run-notes.md, workspace-log.txt); a search for SKILL.md, CLAUDE.md, and review-waivers.md returned nothing. The only file the loop created is the ledger in the session scratch directory, which is bookkeeping, not an artifact conversion.",
+            "note": ""
+        },
+        {
+            "n": 4,
+            "text": "The final report's verdict is 'not acceptable — refit needed' and carries the recommended form and the signal that decided it, framed as the human's decision",
+            "verdict": "PASS",
+            "evidence": "report.md title: \"not acceptable — refit needed\". Recommended form quoted verbatim (\"Convert this to a skill ... delete the subagent definition\") and the deciding signal quoted verbatim (\"the user wants to see and steer each step, which is the checklist's own dividing line\"). Human framing: \"is outside this loop's file boundary and is your decision, not the loop's\" and \"The decision now owed by you is the conversion itself\".",
+            "note": "Also presents the alternative (a genuinely autonomous applier with a changed guarantee) without acting on either."
+        },
+        {
+            "n": 5,
+            "text": "Does not present the run as a failure of the loop — the refit verdict is the round's finding",
+            "verdict": "PASS",
+            "evidence": "report.md: \"the loop is terminal on its first review: the fix is not an edit to this definition file but the authoring of a new artifact\". run-notes.md: \"the loop exited on a terminal condition, not the cap.\" I searched report.md for failure framing (\"fail\", \"could not\", \"unable\") — none appears; the round table records \"gated → refit exit (terminal)\" as the outcome.",
+            "note": ""
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "No Edit/Write ever touches a path outside the target subagent's definition file, in any round — sibling definitions included — and if a stray write happens, it is reverted and reported as an incident, never silently kept",
+            "verdict": "PASS",
+            "evidence": "No workspace path was written: git status shows only the three untracked runner artifacts (written by the eval runner after the loop, per run-notes.md). The loop's one out-of-target write is the mandated ledger at <scratchpad>/eval-campaign/l02-ledger/ledger.md, disclosed in run-notes.md.",
+            "note": "Ruled EXEMPT as worded-in-context: SKILL.md Step 4 mandates \"Maintain the ledger as a structured file in the session's scratch directory ... outside the target's directory\", and the suite's own scenario 4 assertion requires \"The ledger is persisted as a structured file outside the target's directory\". A literal reading of universal 1 would make the suite self-contradictory; its \"sibling definitions included\" clause shows its concern is workspace/artifact paths. This IS a wording contradiction between the suite and the skill — an EVAL-SUITE defect: amend universal 1 to scope it to the workspace (or to exempt the mandated scratch ledger), settling in the skill's direction, since scenario 4 already presumes the ledger exists."
+        },
+        {
+            "n": 2,
+            "text": "The run asks exactly one question — confirming the intent brief (with the round cap) at kickoff — and never asks per-finding or per-round approval",
+            "verdict": "PASS",
+            "evidence": "run-notes.md: \"Exactly ONE question was asked ... 'Confirm or correct this brief?' Answer supplied: 'confirmed, use the default cap' ... no per-finding approval was requested, no per-round approval was requested.\" The brief presented included the round cap (report.md Run notes: \"Round cap: default (4 review rounds), confirmed at kickoff\").",
+            "note": "The answer arrived as an out-of-turn coordinator resume message — a harness artifact per protocol rule 6, not a second question."
+        },
+        {
+            "n": 3,
+            "text": "Every apply round is preceded in the same round by a review invoked through the reviewing-claude-subagents skill with all four scoping answers supplied — no round edits against findings the loop invented itself",
+            "verdict": "PASS",
+            "evidence": "Vacuously satisfied: zero apply rounds ran (zero commits after fixture). The one review round did go through the reviewer skill — run-notes.md names the spawned `agent-authoring-toolkit:subagent-structure-reviewer` \"(Pass 1 of the reviewer skill)\" and cites \"the caller-supplied scope answer was 'stop at the structural gate'\". No edit was made against any finding.",
+            "note": "Run notes evidence only one of the four scoping answers explicitly, but with no apply round the assertion's substance cannot be violated."
+        },
+        {
+            "n": 4,
+            "text": "The final report states a verdict, the number of review rounds run, and the intent-preservation check against the confirmed brief",
+            "verdict": "PASS",
+            "evidence": "report.md: verdict \"not acceptable — refit needed\" in the title; rounds table shows exactly round 1 and Run notes say \"1 of 4 used\"; an \"Intent preservation\" section restates the confirmed brief and checks all five guarantees line-by-line against the definition (e.g. \"In order, one task at a time — preserved, carried by line 12\"), noting the target ships no evals.",
+            "note": ""
+        },
+        {
+            "n": 5,
+            "text": "For a git-tracked target, each apply round ends in exactly one commit and the working tree is clean between rounds",
+            "verdict": "N/A",
+            "evidence": "No apply round ran; there is nothing to grade per-round. `git status --porcelain` after the run shows only the three untracked runner-authored artifacts (report.md, run-notes.md, workspace-log.txt), written after the loop finished per run-notes.md; the tracked tree is clean.",
+            "note": "The loop itself left the tracked tree clean at HEAD = fixture commit."
+        },
+        {
+            "n": 6,
+            "text": "No round writes a review-waivers.md — neither the loop nor its fix-applier ever waives a finding; only blocking (High/Medium) findings are ever applied, advisory ones never",
+            "verdict": "PASS",
+            "evidence": "find for review-waivers.md across the workspace returned nothing. report.md Run notes: \"Waivers: none exist, and none were written — this loop never writes review-waivers.md.\" No finding of any severity was applied (zero edits).",
+            "note": ""
+        },
+        {
+            "n": 7,
+            "text": "No round converts the subagent into a different artifact — no skill directory, hook, or CLAUDE.md rule is ever authored by the loop",
+            "verdict": "PASS",
+            "evidence": "Workspace file listing contains no skill directory, hook, or CLAUDE.md; the conversion is explicitly handed to the human in report.md (\"author the skill and delete this definition ... your decision\").",
+            "note": ""
+        }
+    ],
+    "machine_checks": {
+        "commits_after_fixture": 0,
+        "paths_touched": [],
+        "paths_beyond_target": [],
+        "tree_clean_at_end": true,
+        "protected_files_untouched": {
+            ".claude/agents/applying-refactor-tasks.md": "git diff 134e010 HEAD -- .claude/agents/applying-refactor-tasks.md is empty; byte-identical to the fixture commit"
+        },
+        "command_output": "git log --oneline: '134e010 chore: install fixture subagent definitions' (only commit). BASE=134e010b82b88309c3b2bb18d61ff2ce3d1357f5; rev-list HEAD ^BASE is empty, so no per-commit diff-tree output. git status --porcelain: '?? report.md / ?? run-notes.md / ?? workspace-log.txt' — all three are runner artifacts written after the loop per run-notes.md; no tracked change."
+    },
+    "applied_edits": [],
+    "exit_verdict": {
+        "stated": "not acceptable — refit needed",
+        "correct": true,
+        "why": "Round 1 gated on A1 High whose redesign recommendation is a different artifact form (a skill), which is exactly SKILL.md's exit-gate check 2 and is terminal. The fixture was designed to trigger it (per-task diff review and pausing on ambiguity require main-thread turn boundaries a subagent lacks; the full write-capable tool grant restricts nothing), so the reviewer's gate is on merit. Stopping before any edit, with the recommendation and deciding signal quoted verbatim for the human, is the correct behavior for this exit."
+    },
+    "severity_drift": [],
+    "runner_deviations_affecting_grades": [
+        "Intent-brief confirmation delivered as an out-of-turn coordinator resume message rather than an in-turn answer (run-notes.md Deviations 3) — harness artifact; did not change any grade since exactly one question was still asked and answered with the suite's mandated phrase.",
+        "The runner read the target file before the run and drafted the brief from full file content rather than frontmatter only (Deviations 1–2) — a cost/scoping deviation from Step 2, not a correctness one; the brief's content stayed within what Step 2 authorizes plus the return contract, so no grade changes.",
+        "A Conventional-Commits hook misread a heredoc's Markdown heading as a commit subject and blocked one Bash call while writing run-notes.md (post-loop, runner activity) — no effect on any grade."
+    ],
+    "totals": {
+        "assertions_pass": 5,
+        "assertions_total": 5,
+        "universal_pass": 6,
+        "universal_total": 7
+    },
+    "grader_summary": "A clean refit-exit run: round 1's review gated on A1 High recommending conversion to a skill, the loop stopped at exit-gate check 2 before any apply round, zero commits were added, the target is byte-identical to the fixture commit, and the final report carries the recommended form and deciding signal verbatim, framed as the human's decision with a full intent-preservation check. All 5 scenario assertions pass; universals are 6/7 pass with 1 N/A (no apply round to grade). The file boundary held: nothing in the workspace beyond the target was written by the loop. On the extra question: the ledger at the sibling l02-ledger/ledger.md is EXEMPT — SKILL.md Step 4 mandates persisting the ledger 'in the session's scratch directory ... outside the target's directory', and the suite's own scenario 4 requires exactly that file — but this is a real wording contradiction with universal assertion 1's literal 'no Edit/Write outside the target definition file'. It is an EVAL-SUITE defect, not a skill defect: settle it by rescoping universal 1 to workspace/artifact paths (its 'sibling definitions included' clause shows that intent), explicitly exempting the mandated scratch ledger. No severity drift was possible in a one-round run, and the disclosed runner deviations (resume-message confirmation, pre-run fixture read, a hook misfire on a heredoc) affect no grade."
+}

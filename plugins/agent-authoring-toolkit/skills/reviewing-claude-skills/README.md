@@ -21,7 +21,7 @@ This skill ships in the [agent-authoring-toolkit](../../README.md) plugin:
 ```
 
 The install also auto-installs two declared dependencies this skill uses, both
-preloaded into the detail-reviewer subagent at spawn:
+preloaded into the skill-detail-reviewer subagent at spawn:
 
 - [prompt-quality-criteria](../../../prompt-quality-criteria/README.md) — supplies
   criteria groups **B–G**, which this skill's checklist does not carry. They
@@ -32,7 +32,7 @@ preloaded into the detail-reviewer subagent at spawn:
   (check fashion: violations are reported, nothing is edited).
 
 If a dependency is missing, the preload skips silently at the harness level —
-so the detail-reviewer self-checks that its criteria actually arrived, and the
+so the skill-detail-reviewer self-checks that its criteria actually arrived, and the
 report names any group that went ungraded. A partial review never reads as a
 clean one.
 
@@ -72,7 +72,7 @@ finding and instructs the reviewer in nothing else. The apply phase offers
 
 ```
 1. Brief + four scoping questions        each has a default; "use the defaults" works
-2. Pass 1 — STRUCTURE                    the structure-reviewer subagent scores the
+2. Pass 1 — STRUCTURE                    the skill-structure-reviewer subagent scores the
                                          shape criteria: decision space, scope,
                                          simplicity, length & disclosure, degrees of
                                          freedom, defaults vs menus, over-prescription,
@@ -87,7 +87,7 @@ finding and instructs the reviewer in nothing else. The apply phase offers
                                          redesign recommendation. The detail sweep
                                          becomes an explicit follow-up choice —
                                          run it anyway, or redesign first.
-3. Pass 2 — DETAIL                       the detail-reviewer subagent sweeps the full
+3. Pass 2 — DETAIL                       the skill-detail-reviewer subagent sweeps the full
                                          nine groups; the shared B–G criteria and the
                                          prose conventions are preloaded into it.
                                          Offline — the report states how old the
@@ -163,8 +163,8 @@ commands, not eyeballed.
 ## Behavior notes
 
 - **The heavy reading happens in subagents.** The target bundle and the shared
-  criteria load in two dedicated subagent contexts — `structure-reviewer` and
-  `detail-reviewer` — which
+  criteria load in two dedicated subagent contexts — `skill-structure-reviewer` and
+  `skill-detail-reviewer` — which
   return findings only, so a review does not crowd the conversation it runs
   in. The main conversation reads just what it verifies (spot-checks of
   quoted evidence) or edits (apply mode). When an agent type can't resolve

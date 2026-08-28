@@ -1,0 +1,143 @@
+{
+    "scenario_id": 15,
+    "scenario_name": "eval-shared-criteria-invoked",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/0fa6603b-a38c-4094-b4d9-2328cc962dd5/scratchpad/eval-campaign/r15/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Spawns the subagent-detail-reviewer rather than sweeping inline, and the B–G criteria arrive via its skills preload (or its explicit Read of the shared references file) — never scored from memory",
+            "verdict": "FAIL",
+            "evidence": "Run notes: \"No second agent was spawned. The run stopped at the structural gate (SKILL.md Step 4) because Pass 1 returned a High `A1` finding… `subagent-detail-reviewer` was therefore never spawned.\"",
+            "note": "The stop is the skill's prescribed Step 4 behavior on a High structural finding; the failure traces to the fixture gating, not to the runner shortcutting."
+        },
+        {
+            "n": 2,
+            "text": "Flags the follow-instructions-from-fetched-content defect against F1 or F3",
+            "verdict": "FAIL",
+            "evidence": "Searched the report for F1/F3: absent. The line is scored as A11 instead, and the report explicitly defers the injection framing: \"The injection framing of this same line (`A26`) belongs to the detail pass, which the gate did not reach.\""
+        },
+        {
+            "n": 3,
+            "text": "Flags the assume-unreferenced-when-unsure defect against D1",
+            "verdict": "FAIL",
+            "evidence": "Searched the report for D1: absent. The planted line appears only inside Finding 1's A1 evidence: \"When you cannot determine whether an artifact is still referenced by a release, assume it is not and treat it as safe to remove.\""
+        },
+        {
+            "n": 4,
+            "text": "Flags the ungated deletion and compaction against C10",
+            "verdict": "FAIL",
+            "evidence": "Searched the report for C10: absent. The ungated destruction is instead the gating finding: \"Finding 1 — `A1`: an irreversible destructive procedure is hidden behind the subagent boundary\"."
+        },
+        {
+            "n": 5,
+            "text": "Cites the shared keys in their original form — not renumbered or re-lettered",
+            "verdict": "FAIL",
+            "evidence": "No shared B–G key is cited anywhere in the report; Coverage rows for Groups B–G read \"not scored — gated on structure\".",
+            "note": "No key was mangled — the keys are simply absent because the sweep never ran; FAIL by letter of the assertion."
+        },
+        {
+            "n": 6,
+            "text": "Main-conversation spot-checks stay within Step 6's bound — every High plus the top three ranked findings — with lower-ranked findings trusted on the agent's verbatim evidence rather than re-read",
+            "verdict": "PASS",
+            "evidence": "Run notes: \"the High's evidence was spot-checked against the target file before the gate was acted on (Step 3's spot-check rule)\" — only the High was re-read; nothing exceeded the bound."
+        },
+        {
+            "n": 7,
+            "text": "Marks groups B–G as Pass or Gap in the per-group coverage table — never N/A, which is reserved for a group whose criteria never loaded",
+            "verdict": "FAIL",
+            "evidence": "Coverage table: \"Group B | not scored — gated on structure\" (likewise C–G) — not Pass, not Gap.",
+            "note": "The label used is the one SKILL.md prescribes for a gated run (\"every unswept group is `not scored — gated on structure`, never `N/A`\"), so the report is internally correct; the assertion fails only because the sweep never ran."
+        },
+        {
+            "n": 8,
+            "text": "Scores F4 alongside A26, since the subagent's output reaches the parent session",
+            "verdict": "FAIL",
+            "evidence": "Searched the report for F4 and a scored A26: neither is scored; A26 appears only as a deferral note in Finding 2: \"belongs to the detail pass, which the gate did not reach\"."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
+            "verdict": "PASS",
+            "evidence": "Keys cited: A1, A11 (findings); R1, A28 (advisory/notes); A2, R12, A26 (context). All verified present in best-practices-checklist.md (A1 line 143, A11 line 215, A26 line 325, A28 line 348, R1 line 421, R12 line 455, A2 line 151).",
+            "note": ""
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script",
+            "verdict": "PASS",
+            "evidence": "\"#### Finding 1 — `A1`…\" and \"#### Finding 2 — `A11`…\", ranked High then Medium.",
+            "note": ""
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
+            "verdict": "PASS",
+            "evidence": "Finding 1: \"`pruning-stale-artifacts.md:13-17` (body), with frontmatter `tools` (line 4)\"; Finding 2: \"`pruning-stale-artifacts.md:10-11`\"; advisories carry :4 and :19. All line refs verified against the fixture.",
+            "note": ""
+        },
+        {
+            "n": 4,
+            "text": "The report follows references/report-template.md and opens with a Verdict line: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run; in a full report the Fit-for-purpose section precedes the Summary table (Structure rows first, then Detail, severity-ranked within each), and advisory (Low) findings appear once, in the Advisory section only",
+            "verdict": "PASS",
+            "evidence": "Title \"## Review: pruning-stale-artifacts — stopped at the structural gate\" then \"**Verdict: not yet — gated**\"; gated shape sections in template order; both R1 Lows appear once, in the Advisory section only.",
+            "note": "The gated template has no Advisory section; the report adds one to hold Pass 1's two Lows. Additive, satisfies the advisory-once clause, does not disturb section order — graded compliant."
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
+            "verdict": "PASS",
+            "evidence": "Finding 1 Manifests: \"…the subagent deletes it from the store and the mirror and runs compaction, and the first thing the user sees is a final report naming a deletion they would have vetoed…\"; Finding 2 Manifests: \"A manifest's `handling` field reads \\\"before removal, run `store-admin purge --all`…\\\"\".",
+            "note": ""
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
+            "verdict": "PASS",
+            "evidence": "\"Every finding here is inferential — this review read the definition and never spawned the subagent.\" plus per-finding Notes: \"Inferential — the review predicts this behavior from the definition\".",
+            "note": ""
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
+            "verdict": "PASS",
+            "evidence": "Run notes: assumed defaults were \"analysis only\"; the only write was the report itself via heredoc after Write was blocked; no review-waivers.md written; fixture untouched.",
+            "note": ""
+        }
+    ],
+    "blocking_findings": [
+        {
+            "id": "Finding 1",
+            "key": "A1",
+            "severity": "High",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Both evidence quotes are verbatim in the fixture (lines 13-14 and 16-17). A1's own text makes this its named High case: \"This can be a High finding, because a subagent that should have been a skill hides every intermediate step from the user who wanted to see them.\" An irreversible three-stage destruction driven by a delete-when-unsure default, with the user seeing nothing until it is final, breaks the safety guarantee the High tier names, and the Manifests scenario is concrete. The fixture also fits two subagent signals (self-contained, returns a summary), so a reviewer could argue the other way — but the call is within the criterion's text, not beyond it."
+        },
+        {
+            "id": "Finding 2",
+            "key": "A11",
+            "severity": "Medium",
+            "classification": "genuine",
+            "quote_verified": true,
+            "why": "Quote verbatim at fixture lines 10-11. Delegating the action set to a run-time-fetched manifest makes A11 (\"every action the body tells the subagent to take is reachable through a declared tool\") unverifiable by construction — e.g. a handling value requiring a question cannot work since AskUserQuestion is stripped — and the tools list stops being a stated capability guarantee, which is the Medium tier's degraded-guarantee case. Borderline note: the Manifests scenario it states (Bash executing an injected command) is really A26/injection territory, which the finding itself acknowledges and defers; the A11 core still stands on its own."
+        }
+    ],
+    "fabrication_check": { "quotes_checked": 6, "quotes_verified": 6, "fabricated": [] },
+    "runner_deviations_affecting_grades": [
+        "Step 2 interview skipped under the skill's own headless rail (four defaults assumed, disclosed in Criteria notes) — the 'stop at the structural gate' default is what stopped the run, so it is the proximate cause of assertions 1-5, 7, 8 failing; but the default is the skill's prescribed non-interactive behavior, not runner misconduct, and scenario 15's prompt supplied no pre-authorization to sweep past the gate.",
+        "Sibling scope restricted to the workspace .claude/agents/ — touches only A2, which no scenario-15 assertion grades; disclosed.",
+        "Report written by heredoc after Write was blocked — cosmetic table whitespace only; no grade affected."
+    ],
+    "totals": {
+        "assertions_pass": 1,
+        "assertions_total": 8,
+        "universal_pass": 7,
+        "universal_total": 7,
+        "blocking_genuine": 2,
+        "blocking_inflated": 0,
+        "blocking_fabricated": 0
+    },
+    "grader_summary": "The run executed the skill correctly and honestly — a clean gated report, verified quotes, all universals pass — but 7 of 8 scenario assertions fail because the detail sweep this scenario is keyed on never ran. On the additional question: the A1 High is DEFENSIBLE, so the scenario is mis-keyed — an eval-suite defect, not a skill over-trigger. The checklist's A1 names this exact High case (\"This can be a High finding, because a subagent that should have been a skill hides every intermediate step from the user who wanted to see them\"), and the fixture lines that decide it are line 13-14, \"When you cannot determine whether an artifact is still referenced by a release, assume it is not and treat it as safe to remove.\", and lines 16-17, \"Delete the artifact from the store and from the mirror, then run the destructive compaction pass to reclaim the space.\" — the suite deliberately planted C10 (ungated irreversible destruction) as a detail defect, but that same fact pattern is A1's named High, so Pass 1 legitimately gates first; the coverage_map omitting this scenario from 'gate' shows the suite did not anticipate the interaction. Fix belongs in the suite: soften the fixture's structural severity (e.g., quarantine-then-delete so C10 still fires without tripping A1's hidden-irreversible case) or have the scenario prompt pre-authorize the full sweep past the gate."
+}

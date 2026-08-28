@@ -1,0 +1,115 @@
+{
+    "scenario_id": 18,
+    "scenario_name": "eval-subagent-not-found",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/0fa6603b-a38c-4094-b4d9-2328cc962dd5/scratchpad/eval-campaign/r18/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Produces no gap analysis and no findings",
+            "verdict": "PASS",
+            "evidence": "\"Nothing was reviewed, no agents were spawned, and no files were changed.\" — the report contains no verdict line, no summary table, no findings blocks; the progress checklist shows every step after 1 unticked.",
+            "note": ""
+        },
+        {
+            "n": 2,
+            "text": "States that no definition matches the requested name",
+            "verdict": "PASS",
+            "evidence": "\"There is no subagent whose `name` is **`researching-package-update`**.\"",
+            "note": ""
+        },
+        {
+            "n": 3,
+            "text": "Names the locations it searched",
+            "verdict": "PASS",
+            "evidence": "Table under \"## Where I looked\": \"`<workspace>/.claude/agents/` (recursive) | 1 definition found\", \"`~/.claude/agents/` | out of scope for this run\", \"enabled plugins' `agents/` directories | out of scope for this run\".",
+            "note": "The skill's Step 1 says to search all three; the run searched only the workspace scope and declared the other two out of scope. It disclosed this in the report rather than hiding it, and the halt outcome would be identical (no location holds the requested name), so the assertion still passes — but the search was narrower than Step 1 prescribes."
+        },
+        {
+            "n": 4,
+            "text": "Offers researching-package-updates as the closest match rather than silently reviewing it",
+            "verdict": "PASS",
+            "evidence": "\"| `researching-package-updates` | identical except for a trailing **`s`** |\" and \"1. **`researching-package-updates`** — the plural name above. Almost certainly what you meant; say the word and I'll run the two-pass review against it.\"",
+            "note": ""
+        },
+        {
+            "n": 5,
+            "text": "Asks the user to confirm the intended subagent instead of assuming the near-match",
+            "verdict": "PASS",
+            "evidence": "\"## Which one did you mean?\" ... \"the name you typed is not the name on disk, and I'd rather confirm than spend a full review on an assumption.\"",
+            "note": ""
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
+            "verdict": "N/A",
+            "evidence": "No findings exist. The only key mentioned is A17, cited to say it does NOT apply (\"No duplicate `name` exists in scope, so there is no `A17` resolution ambiguity to report\"); A17 is a real checklist key.",
+            "note": "Genuinely inapplicable — the scenario's expected output is a halt with no review."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script",
+            "verdict": "N/A",
+            "evidence": "No findings, so no finding IDs exist to check.",
+            "note": ""
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
+            "verdict": "N/A",
+            "evidence": "No findings exist.",
+            "note": ""
+        },
+        {
+            "n": 4,
+            "text": "The report follows references/report-template.md and opens with a Verdict line: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run; in a full report the Fit-for-purpose section precedes the Summary table (Structure rows first, then Detail, severity-ranked within each), and advisory (Low) findings appear once, in the Advisory section only",
+            "verdict": "N/A",
+            "evidence": "The run halted at Step 1 before any review; the scenario's expected_output is \"No gap analysis. A short reply...\", so the report template's shapes (full and gated) do not apply to this reply.",
+            "note": "Correctly, the reply carries no Verdict line — emitting one for an unreviewed target would have been a fault."
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
+            "verdict": "N/A",
+            "evidence": "No High or Medium findings exist.",
+            "note": ""
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
+            "verdict": "N/A",
+            "evidence": "No findings exist, and I searched the reply for any asserted routing or behavioral claim about the fixture — there is none; it only quotes the description and tools verbatim.",
+            "note": ""
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
+            "verdict": "PASS",
+            "evidence": "Report: \"Nothing was reviewed, no agents were spawned, and no files were changed.\" Run notes: \"no files under the target were read in full or modified.\" No review-waivers.md exists in the fixture's directory (only researching-package-updates.md).",
+            "note": ""
+        }
+    ],
+    "blocking_findings": [],
+    "fabrication_check": {
+        "quotes_checked": 4,
+        "quotes_verified": 4,
+        "fabricated": [],
+        "detail": "Verified verbatim against the fixture: (1) the full description blockquote, (2) tools list 'Read, Grep, Glob, WebFetch', (3) the name field 'researching-package-updates' and the absence of a model: pin. Verified against SKILL.md Step 1: (4) the run-notes quote of the no-match rail ('When no definition matches the name, stop: ... wrong file.') — exact match, lines 132–135."
+    },
+    "runner_deviations_affecting_grades": [
+        "Search scope was narrowed: ~/.claude/agents/ and enabled plugins' agents/ directories were declared 'out of scope for this run' rather than searched, though Step 1 instructs searching all three. Disclosed in the report itself. Touches assertion 3 ('Names the locations it searched') — graded PASS because all three locations are named with their status and no location holds the requested name, so the halt outcome is unchanged.",
+        "Write tool blocked by a harness guard; report and run-notes written via shell heredoc per runner instructions. No grade affected.",
+        "First Bash call denied for a cd-prefixed compound command; rerun with absolute paths. No grade affected."
+    ],
+    "totals": {
+        "assertions_pass": 5,
+        "assertions_total": 5,
+        "universal_pass": 1,
+        "universal_total": 7,
+        "blocking_genuine": 0,
+        "blocking_inflated": 0,
+        "blocking_fabricated": 0
+    },
+    "grader_summary": "The run matched expected_output exactly: it halted at Step 1, produced no review artifacts, named the requested name as unresolvable, tabulated the locations searched, offered researching-package-updates as the one-letter-off match with its verbatim description, and asked the user to choose — all four fixture quotes verify verbatim, and nothing was fabricated. Six universal assertions are genuinely N/A because the scenario's expected output is a halt with no findings and no templated report; the seventh (report-only) passes. The runner's claim about the non-interactive rail is CORRECT: SKILL.md Step 1's no-match rail says 'stop ... and ask the user which subagent they meant' with no headless alternative, while Step 2's proceed-on-defaults rail explicitly covers only the four scoping questions — so a name-resolution halt has no non-interactive fallback and unconditionally requires user disambiguation. No divergence from expected_output exists, so neither a skill defect nor an eval-suite defect is indicated; the one wrinkle — declaring two of Step 1's three search locations out of scope — is a disclosed harness-scoping choice that could not change the outcome."
+}
