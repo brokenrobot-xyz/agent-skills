@@ -56,6 +56,9 @@ outside the checkout        →  READINESS
 
 inside it, and regenerable  →  PREPARATION
                                dependency trees, indexes, generated code, warmed caches
+
+inside it, not regenerable  →  READINESS
+                               .env files, credentials, git identity
 ```
 
 Two facts sit behind the rule:
@@ -63,6 +66,10 @@ Two facts sit behind the rule:
 1. Resolving anything outside the checkout requires **judgment** — a version, a platform, a global
    install — and judgment cannot be delegated to a hook that runs before anyone is listening.
 2. Resolving something inside it only rebuilds regenerable state, which is why acting there is safe.
+
+The third line follows from the second: regenerability is what decides, and location is only its
+usual proxy. Anything that cannot be rebuilt from what the checkout carries — wherever it lives —
+is readiness.
 
 ### What makes preparation worth having
 
@@ -79,6 +86,18 @@ It sets priority within a category. It does not decide the category.
 
 The two are layered, never parallel. A preparation step with no probe is acting blind. A report
 showing work with no finding to justify it is the same defect seen from the other end.
+
+### Authority by source
+
+`SessionStart` fires for `startup`, `resume`, `clear`, `compact`, and `fork` (verified against the
+current docs, 2026-08-31). Authority follows the source, not just the category:
+
+- `startup` and `resume` get both authorities — the cases with real bootstrapping to do.
+- `fork` and `clear` get neither: both continue in a checkout that is already bootstrapped, and a
+  forked session runs **concurrently with its parent** — preparation firing there races a live
+  install.
+- `compact`, if matched at all, is report-only: re-injecting findings into a rebuilt context is
+  defensible; re-running preparation under a live session is not.
 
 ## The report: findings and actions never interleave
 
@@ -109,7 +128,7 @@ actions carry what they cost and what they now enable.
 | `SessionStart` hook | The automatic consumer. Exercises both authorities: reports findings, performs preparation. |
 | On-demand skill | The invited consumer, for when a human asks. Readiness authority only — it diagnoses and guides, never fixes. |
 | Troubleshooting doc | Where every remedy lives, keyed by symptom. Without it the remedy half has nowhere to sit, and the next model to read a `✗` line will invent a fix. |
-| Self-check script | One script that exercises the produced hook end to end and reports whether it holds to contract. Not a case suite. |
+| Self-check script | One script that exercises the produced hook end to end and reports whether it holds to contract. Not a case suite. It also asserts the detect/remedy join: every probe symptom key resolves to a troubleshooting entry, so a probe added without its remedy fails loudly instead of shipping a `✗` line that invites an invented fix. |
 
 The on-demand skill's narrower authority is the categories expressed as permissions — the same model,
 enforced rather than described.
@@ -143,18 +162,40 @@ numbered and the categories are not.
 | Discovery | Inspect, then confirm | Evidence-based and short; catches forgotten concerns. |
 | Remedies | Interview for every fix | Nothing unverified ships. Accepted cost: a long interaction. |
 | Output | All four artifacts, plus a self-check | Mirrors what the website repository has today. |
-| Re-runs | Update in place | Reads what exists, asks about anything hand-modified. |
+| Re-runs | Update in place | Generated code is ordinary repo code: re-analyzed from scratch, no provenance tracking. Accepted cost: fresh analysis cannot tell deliberate choices from drift, so re-runs re-ask. |
+| Implementation language | User's and repo's preference | The skill ships the know-how; bash, Node, Rust — whatever the repository already speaks. One taught exception: the hook's entry point is recommended in an always-present runtime (POSIX sh), because a hook in the repo's language can never report that runtime as missing — the interview lets the user override with eyes open. |
 | Ecosystems | Language-agnostic | Widest reach; more detection to keep correct. |
 | Verification | One self-check | Cheaper than a case suite, catches the big failures. |
 
 ## Risks
 
-- **The skill is large.** Language-agnostic detection, update-in-place, five artifacts, and a per-fix
-  interview together make this substantially bigger than the hook it generalizes. Per-ecosystem
-  detection belongs in `references/` under progressive disclosure rather than in the skill body.
+- **The skill is large.** Update-in-place, five artifacts, and a per-fix interview together make
+  this substantially bigger than the hook it generalizes. Kept in check by what the skill ships:
+  the knowledge and know-how — why heavy readiness checking and preparation matter, and the
+  invariants the artifacts must hold — not per-ecosystem detection recipes or code templates. The
+  model's training carries ecosystem and language specifics. What it does not reliably carry is
+  the Claude Code platform contract — hook JSON output shapes, matcher sources, stdout being
+  consumed only after exit — so those few version-dependent facts belong in the skill body.
 - **No reviewer yet.** Generated artifacts drift from the contract the moment they are generated. The
   author/reviewer pairing used elsewhere in this repository is the answer, but it is deliberately out
   of the first build.
+
+## Pre-build tasks
+
+Both are bounded and both de-risk the build; neither is started yet.
+
+- **Enumerate the invariant catalog.** The skill's payload is "the invariants the artifacts must
+  hold", and that list exists nowhere — it is scattered across the website hook's comments and this
+  record. Mine `session-start.sh`, `lib/dev-env-checks.sh`, and `checking-dev-env` for the full
+  set: single report emission on every exit path, the freshness stamp living inside the regenerable
+  state it describes, never failing the session, degraded modes when a probe's own dependency is
+  missing, idempotence under concurrent sessions, probes cheap enough to pay every session while
+  expensive verification stays on the invited path. If the catalog comes out thin, the idea is
+  thinner than this record assumes — better learned before the skill is written.
+- **Pilot the inspect step on `agent-skills`.** The whole pattern generalizes from one repository.
+  Dry-running discovery against a repository of a different shape — plugins and evals rather than a
+  Node app — stress-tests the categories before the skill hardens, and produces the real generated
+  output the deferred reviewing skill is waiting on.
 
 ## Deferred
 
@@ -165,5 +206,22 @@ numbered and the categories are not.
   generated output rather than designed against one example.
 - **Orientation facts.** Branch divergence, in-flight specs, unfinished work — a genuinely different
   category from readiness, set aside rather than dismissed.
-- **Hook triggers.** Whether `compact` is available as a `SessionStart` source, and whether
-  re-reporting after a compaction is worth it, still needs verifying against the current CLI.
+- **Hook triggers.** `compact` is confirmed available as a `SessionStart` source (verified
+  2026-08-31; see References). What remains open is only whether re-reporting after a compaction
+  earns its context cost.
+
+## References
+
+Where the platform-contract facts in this record came from, and where the build re-verifies them —
+they are version-dependent, and the links, not this record, track the current CLI.
+
+- [Hooks reference](https://code.claude.com/docs/en/hooks) — the contract itself: `SessionStart`
+  matcher sources (`startup`/`resume`/`clear`/`compact`/`fork`), exit-code semantics (exit 2 does
+  not block a session start), JSON output shapes (`systemMessage`, `additionalContext`), the
+  600-second default timeout.
+- [Hooks guide](https://code.claude.com/docs/en/hooks-guide) — worked `SessionStart` examples,
+  including context re-injection after compaction.
+- [Skills](https://code.claude.com/docs/en/skills) — authoring rules for the on-demand skill and
+  for the authoring skill itself.
+- [Plugins reference](https://code.claude.com/docs/en/plugins-reference) — feeds the deferred
+  packaging decision.
