@@ -1,6 +1,6 @@
 # Session Readiness Toolkit — design record
 
-**Status:** design agreed, not built. **Date:** 2026-08-31.
+**Status:** design agreed, not built; amended 2026-09-02 after the pre-build tasks. **Date:** 2026-08-31.
 **Derived from:** `brokenrobot-xyz/website` — `.claude/hooks/session-start.sh`,
 `.claude/hooks/lib/dev-env-checks.sh`, and the `checking-dev-env` skill.
 
@@ -28,21 +28,21 @@ Detecting that `node` is absent is trivial. Telling the model **what the absence
 product: it stops the model attributing a tool failure to the code and "fixing" something that was
 never broken.
 
-| Idea | Portable | Notes |
-| :--- | :--- | :--- |
-| **Consequence mapping** | Fully | Every line pairs a fact about the machine with what it breaks. `✗ jq missing` is noise; `✗ jq missing — the codegraph health probe cannot be parsed` changes what the model does next. A writing discipline more than a coding one. |
-| **Detect / remedy split** | Fully | Detection is mechanical and lives in code. Remediation is judgment and lives in human-authored prose. They join on a symptom key, and the check may not invent a cure — which is what stops a model emitting a plausible, wrong, platform-specific install command. |
-| **One truth, two consumers** | As a shape | An automatic path that runs unbidden — fast, and never able to fail the session — and an invited path that runs when a human asks. Same detection, different authority to act. |
-| **The probes themselves** | No | The bulk of the existing code and the least of the value. The generator writes these per repository; none of them ship. |
+| Idea                         | Portable   | Notes                                                                                                                                                                                                                                                               |
+| :--------------------------- | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Consequence mapping**      | Fully      | Every line pairs a fact about the machine with what it breaks. `✗ jq missing` is noise; `✗ jq missing — the codegraph health probe cannot be parsed` changes what the model does next. A writing discipline more than a coding one.                                 |
+| **Detect / remedy split**    | Fully      | Detection is mechanical and lives in code. Remediation is judgment and lives in human-authored prose. They join on a symptom key, and the check may not invent a cure — which is what stops a model emitting a plausible, wrong, platform-specific install command. |
+| **One truth, two consumers** | As a shape | An automatic path that runs unbidden — fast, and never able to fail the session — and an invited path that runs when a human asks. Same detection, different authority to act.                                                                                      |
+| **The probes themselves**    | No         | The bulk of the existing code and the least of the value. The generator writes these per repository; none of them ship.                                                                                                                                             |
 
 ## The model: two categories, separated by authority
 
 The dividing line is what the artifact is permitted to do, not what the concern is about.
 
-**Env readiness** — concerns the session must *know about*, where the artifact has **no authority to
+**Env readiness** — concerns the session must _know about_, where the artifact has **no authority to
 change anything**. It observes and states the consequence. The human decides what to do.
 
-**Session preparation** — concerns the session must *resolve* before work begins, where the artifact
+**Session preparation** — concerns the session must _resolve_ before work begins, where the artifact
 has **explicit authority to act**, and then reports what it did.
 
 ### The assignment rule
@@ -59,6 +59,9 @@ inside it, and regenerable  →  PREPARATION
 
 inside it, not regenerable  →  READINESS
                                .env files, credentials, git identity
+
+fetched by its own consumer →  NOT A CONCERN
+on first use                   pinned container images, package-runner caches
 ```
 
 Two facts sit behind the rule:
@@ -71,9 +74,14 @@ The third line follows from the second: regenerability is what decides, and loca
 usual proxy. Anything that cannot be rebuilt from what the checkout carries — wherever it lives —
 is readiness.
 
+The fourth line came out of the pilot (2026-09-02). A pinned container image or a package-runner
+cache is regenerable and sits outside the checkout, but its consumer fetches it on first start, so
+no artifact needs to act and none should. It is probed only when the first-start cost, or the
+network that fetch needs, is worth a line.
+
 ### What makes preparation worth having
 
-A missing dependency tree *screams*: the first command fails unmistakably. A stale index *lies*: it
+A missing dependency tree _screams_: the first command fails unmistakably. A stale index _lies_: it
 answers confidently and out of date, and the model gets no signal at all. That asymmetry, not
 convenience, is why preparation exists.
 
@@ -120,18 +128,30 @@ DONE
 Anything both observed and acted on appears once, under `DONE`. Findings carry their consequence;
 actions carry what they cost and what they now enable.
 
+Two states the pilot found are carried by wording, not new glyphs (decided 2026-09-02). A concern
+the session's own sandbox hides from every subprocess — a credential denied to hook and probe
+alike — is a `✗ … not checked — hidden by design` line that names the in-session check that does
+work. A fact with no pin to judge against — the git identity commits will carry — rides on a `✓`
+line, stated, the way the tools line states versions. The contract stays two glyphs, which keeps
+the self-check and the join simple.
+
 ## What the skill writes into a repository
 
-| Artifact | Purpose |
-| :--- | :--- |
-| Probe implementation | The detection layer, shared by both consumers so it cannot drift apart. |
-| `SessionStart` hook | The automatic consumer. Exercises both authorities: reports findings, performs preparation. |
-| On-demand skill | The invited consumer, for when a human asks. Readiness authority only — it diagnoses and guides, never fixes. |
-| Troubleshooting doc | Where every remedy lives, keyed by symptom. Without it the remedy half has nowhere to sit, and the next model to read a `✗` line will invent a fix. |
-| Self-check script | One script that exercises the produced hook end to end and reports whether it holds to contract. Not a case suite. It also asserts the detect/remedy join: every probe symptom key resolves to a troubleshooting entry, so a probe added without its remedy fails loudly instead of shipping a `✗` line that invites an invented fix. |
+| Artifact             | Purpose                                                                                                                                                                                                                                                                                                                               |
+| :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Probe implementation | The detection layer, shared by both consumers so it cannot drift apart.                                                                                                                                                                                                                                                               |
+| `SessionStart` hook  | The automatic consumer. Exercises both authorities: reports findings, performs preparation.                                                                                                                                                                                                                                           |
+| On-demand skill      | The invited consumer, for when a human asks. Readiness authority only — it diagnoses and guides, never fixes.                                                                                                                                                                                                                         |
+| Troubleshooting doc  | Where every remedy lives, keyed by symptom. Without it the remedy half has nowhere to sit, and the next model to read a `✗` line will invent a fix.                                                                                                                                                                                   |
+| Self-check script    | One script that exercises the produced hook end to end and reports whether it holds to contract. Not a case suite. It also asserts the detect/remedy join: every probe symptom key resolves to a troubleshooting entry, so a probe added without its remedy fails loudly instead of shipping a `✗` line that invites an invented fix. |
 
 The on-demand skill's narrower authority is the categories expressed as permissions — the same model,
 enforced rather than described.
+
+It also carries the one probe class the probe implementation cannot: checks only a model inside the
+session can make — whether the working-copy plugins are loaded, whether an MCP server is connected
+and authenticated. Those live in the skill's body, not in the shared probes, and they are what turns
+the hook's `not checked — hidden by design` line into a real answer.
 
 ## How a run goes
 
@@ -153,19 +173,22 @@ numbered and the categories are not.
 
 ## Decisions taken
 
-| Question | Decision | Consequence |
-| :--- | :--- | :--- |
-| Shareable unit | Authoring skill | Ships the pattern; generated code is owned by the consumer. |
-| Audience | Own repositories and marketplace consumers | Trust matters, which is what settles the unit above. |
-| Category assignment | Fixed rule, scope decides | No per-item interview; placement is checkable mechanically. |
-| First build | Both categories together | The categories only prove themselves when both exist. |
-| Discovery | Inspect, then confirm | Evidence-based and short; catches forgotten concerns. |
-| Remedies | Interview for every fix | Nothing unverified ships. Accepted cost: a long interaction. |
-| Output | All four artifacts, plus a self-check | Mirrors what the website repository has today. |
-| Re-runs | Update in place | Generated code is ordinary repo code: re-analyzed from scratch, no provenance tracking. Accepted cost: fresh analysis cannot tell deliberate choices from drift, so re-runs re-ask. |
-| Implementation language | User's and repo's preference | The skill ships the know-how; bash, Node, Rust — whatever the repository already speaks. One taught exception: the hook's entry point is recommended in an always-present runtime (POSIX sh), because a hook in the repo's language can never report that runtime as missing — the interview lets the user override with eyes open. |
-| Ecosystems | Language-agnostic | Widest reach; more detection to keep correct. |
-| Verification | One self-check | Cheaper than a case suite, catches the big failures. |
+| Question                | Decision                                   | Consequence                                                                                                                                                                                                                                                                                                                         |
+| :---------------------- | :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Shareable unit          | Authoring skill                            | Ships the pattern; generated code is owned by the consumer.                                                                                                                                                                                                                                                                         |
+| Audience                | Own repositories and marketplace consumers | Trust matters, which is what settles the unit above.                                                                                                                                                                                                                                                                                |
+| Category assignment     | Fixed rule, scope decides                  | No per-item interview; placement is checkable mechanically.                                                                                                                                                                                                                                                                         |
+| First build             | Both categories together                   | The categories only prove themselves when both exist.                                                                                                                                                                                                                                                                               |
+| Discovery               | Inspect, then confirm                      | Evidence-based and short; catches forgotten concerns.                                                                                                                                                                                                                                                                               |
+| Remedies                | Interview for every fix                    | Nothing unverified ships. Accepted cost: a long interaction.                                                                                                                                                                                                                                                                        |
+| Output                  | All four artifacts, plus a self-check      | Mirrors what the website repository has today.                                                                                                                                                                                                                                                                                      |
+| Re-runs                 | Update in place                            | Generated code is ordinary repo code: re-analyzed from scratch, no provenance tracking. Accepted cost: fresh analysis cannot tell deliberate choices from drift, so re-runs re-ask.                                                                                                                                                 |
+| Implementation language | User's and repo's preference               | The skill ships the know-how; bash, Node, Rust — whatever the repository already speaks. One taught exception: the hook's entry point is recommended in an always-present runtime (POSIX sh), because a hook in the repo's language can never report that runtime as missing — the interview lets the user override with eyes open. |
+| Ecosystems              | Language-agnostic                          | Widest reach; more detection to keep correct.                                                                                                                                                                                                                                                                                       |
+| Verification            | One self-check                             | Cheaper than a case suite, catches the big failures.                                                                                                                                                                                                                                                                                |
+| Self-healing state      | Not a concern                              | Pinned container images and package-runner caches fetched by their own consumer on first use get no step; at most a first-start-cost note. (pilot, 2026-09-02)                                                                                                                                                                      |
+| Extra report states     | Wording inside ✓/✗                         | Unobservable-by-design is a ✗ `not checked — hidden by design` naming the in-session check; unjudged facts ride on ✓ lines. No third glyph. (2026-09-02)                                                                                                                                                                            |
+| Model-observed checks   | Invited path only, in the skill body       | The probe implementation stays script-only; session properties are checked by the model. (pilot, 2026-09-02)                                                                                                                                                                                                                        |
 
 ## Risks
 
@@ -182,7 +205,7 @@ numbered and the categories are not.
 
 ## Pre-build tasks
 
-Both are bounded and both de-risk the build. The first is done; the second is not started.
+Both are bounded and both de-risk the build. Both are done.
 
 - **Enumerate the invariant catalog.** Done 2026-09-02:
   [session-readiness-invariants.md](session-readiness-invariants.md). The skill's payload is "the
@@ -192,10 +215,14 @@ Both are bounded and both de-risk the build. The first is done; the second is no
   this record assumes. The mining also corrected this record in eight places; the catalog's
   § What the mining changed lists them, and this record is not restated to match — the catalog
   wins where they differ.
-- **Pilot the inspect step on `agent-skills`.** The whole pattern generalizes from one repository.
-  Dry-running discovery against a repository of a different shape — plugins and evals rather than a
-  Node app — stress-tests the categories before the skill hardens, and produces the real generated
-  output the deferred reviewing skill is waiting on.
+- **Pilot the inspect step on `agent-skills`.** Inspect done 2026-09-02:
+  [session-readiness-pilot-agent-skills.md](session-readiness-pilot-agent-skills.md). The whole
+  pattern generalizes from one repository. Dry-running discovery against a repository of a
+  different shape — plugins and evals rather than a Node app — stress-tests the categories before
+  the skill hardens. The categories held; the pilot's § Where the categories strained lists the
+  three amendments they needed, now folded into this record — the assignment rule's fourth line,
+  the report's two wording-carried states, and the on-demand skill's model-observed checks — and
+  its draft was confirmed 2026-09-02.
 
 ## Deferred
 
