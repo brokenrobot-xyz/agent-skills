@@ -182,16 +182,16 @@ numbered and the categories are not.
 
 ## Pre-build tasks
 
-Both are bounded and both de-risk the build; neither is started yet.
+Both are bounded and both de-risk the build. The first is done; the second is not started.
 
-- **Enumerate the invariant catalog.** The skill's payload is "the invariants the artifacts must
-  hold", and that list exists nowhere — it is scattered across the website hook's comments and this
-  record. Mine `session-start.sh`, `lib/dev-env-checks.sh`, and `checking-dev-env` for the full
-  set: single report emission on every exit path, the freshness stamp living inside the regenerable
-  state it describes, never failing the session, degraded modes when a probe's own dependency is
-  missing, idempotence under concurrent sessions, probes cheap enough to pay every session while
-  expensive verification stays on the invited path. If the catalog comes out thin, the idea is
-  thinner than this record assumes — better learned before the skill is written.
+- **Enumerate the invariant catalog.** Done 2026-09-02:
+  [session-readiness-invariants.md](session-readiness-invariants.md). The skill's payload is "the
+  invariants the artifacts must hold", and that list existed nowhere — it was scattered across the
+  website hook's comments and this record. Mining `session-start.sh`, `lib/dev-env-checks.sh`, and
+  `checking-dev-env` produced sixty-odd invariants in seven groups, so the idea is not thinner than
+  this record assumes. The mining also corrected this record in eight places; the catalog's
+  § What the mining changed lists them, and this record is not restated to match — the catalog
+  wins where they differ.
 - **Pilot the inspect step on `agent-skills`.** The whole pattern generalizes from one repository.
   Dry-running discovery against a repository of a different shape — plugins and evals rather than a
   Node app — stress-tests the categories before the skill hardens, and produces the real generated
