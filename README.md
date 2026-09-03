@@ -3,9 +3,9 @@
 The [brokenrobot.xyz](https://www.brokenrobot.xyz) plugin marketplace for
 [Claude Code](https://claude.com/claude-code). Plugins are focused, so you
 install only what you want: most ship exactly one agent skill, and a skill
-with a hook never rides along with an unrelated one. `frontend-toolkit` and
-`agent-authoring-toolkit` are the exceptions — suites that scope their
-skills under the suite's name.
+with a hook never rides along with an unrelated one. `frontend-toolkit`,
+`agent-authoring-toolkit`, and `session-readiness-toolkit` are the exceptions —
+suites that scope their skills under the suite's name.
 
 ## Install
 
@@ -35,6 +35,7 @@ conventions.
 | [prompt-quality-criteria](plugins/prompt-quality-criteria/README.md)                           | skill-authoring | Supplies criteria groups B–G for grading any Markdown prompt that steers Claude — model-specific prompting, hallucination guards, output consistency, injection and prompt-leak defenses. Returns the criteria; the caller scores.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | [agent-authoring-toolkit](plugins/agent-authoring-toolkit/README.md)                           | agent-authoring | A suite for authoring Claude Code artifacts, four skills scoped under the suite's name: `reviewing-claude-skills` and `reviewing-claude-subagents` each review their artifact in two passes — structure first (fit-for-purpose leads the subagent gate), then a full sweep — ending in a computed verdict that honors recorded waivers; `improving-claude-skills` and `improving-claude-subagents` loop the matching review autonomously — review → apply every blocking finding → commit → re-review — until the verdict is acceptable, the findings plateau, or the round cap is hit; the subagent loop ends instead of converting when a review says the subagent should be a skill. Depends on `prompt-quality-criteria` and `writing-simplified-technical-english`. |
 | [frontend-toolkit](plugins/frontend-toolkit/README.md)                                         | frontend        | A suite of frontend skills, starting with `updating-dependencies`: detects and categorizes outdated npm packages, researches the bumps the user selects with a dedicated subagent, and applies only the bumps the user approves. Never commits.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| [session-readiness-toolkit](plugins/session-readiness-toolkit/README.md)                       | environment     | A suite for session readiness, starting with `authoring-readiness-checks`: inspects the host repository, confirms the sorted concerns, interviews for every remedy, and writes a per-repository kit — a `SessionStart` hook that reports what the machine is missing and what each absence forbids and installs only regenerable state behind a probe, a shared probe library, an on-demand diagnosing skill, a troubleshooting doc keyed by symptom, and a self-check. Ships no hook of its own.                                                                                                                                                                                                                                                                        |
 
 ## Category vocabulary
 
@@ -42,13 +43,14 @@ Marketplace entries carry one `category` plus free-form `tags`. Categories are
 a controlled vocabulary — reuse an existing one before adding a new one, and
 add new ones here first:
 
-| Category          | Scope                                                               |
-| ----------------- | ------------------------------------------------------------------- |
-| `git`             | Version-control workflow: commits, branches, history.               |
-| `writing`         | Prose quality: documentation, agent-facing text, style enforcement. |
-| `skill-authoring` | Building, reviewing, and maintaining agent skills themselves.       |
-| `agent-authoring` | Reviewing and improving agent artifacts: skills and subagents.      |
-| `frontend`        | Frontend project upkeep: npm dependencies, tooling, build hygiene.  |
+| Category          | Scope                                                                         |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `git`             | Version-control workflow: commits, branches, history.                         |
+| `writing`         | Prose quality: documentation, agent-facing text, style enforcement.           |
+| `skill-authoring` | Building, reviewing, and maintaining agent skills themselves.                 |
+| `agent-authoring` | Reviewing and improving agent artifacts: skills and subagents.                |
+| `frontend`        | Frontend project upkeep: npm dependencies, tooling, build hygiene.            |
+| `environment`     | Development-environment readiness: session-start hooks, probes, and remedies. |
 
 ## Repository layout
 
@@ -57,7 +59,7 @@ each following the [Agent Skills](https://agentskills.io) layout (`SKILL.md`
 at the root, with `scripts/`, `references/`, `evals/` as needed), plus a
 `.claude-plugin/plugin.json` manifest and, where the skill spawns subagents,
 an `agents/` directory. A suite plugin (`frontend-toolkit`,
-`agent-authoring-toolkit`) instead holds one such layout per skill under
+`agent-authoring-toolkit`, `session-readiness-toolkit`) instead holds one such layout per skill under
 `skills/<name>/`, with `agents/` and an optional `.mcp.json` at the plugin
 root. The
 marketplace manifest is
@@ -113,6 +115,7 @@ claude \
   --plugin-dir plugins/committing-conventionally \
   --plugin-dir plugins/frontend-toolkit \
   --plugin-dir plugins/prompt-quality-criteria \
+  --plugin-dir plugins/session-readiness-toolkit \
   --plugin-dir plugins/writing-simplified-technical-english
 ```
 

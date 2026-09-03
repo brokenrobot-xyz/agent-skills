@@ -1,0 +1,214 @@
+{
+    "skill_name": "authoring-readiness-checks",
+    "format": {
+        "standard": "https://agentskills.io/skill-creation/evaluating-skills",
+        "extension_keys": {
+            "name": "Slug for this scenario's workspace directory.",
+            "targets": "The rule of SKILL.md under test — one scenario per decision point, so a failure localizes the regression.",
+            "files": "The fixture directory under evals/files/ to copy into a throwaway git repository before the run. Every fixture is committed as the starting state so `git hash-object` and worktree signs behave as they do in a real checkout.",
+            "setup": "The replies to give at each stop — the confirm stop and the interview batches — because this skill's run is multi-turn. Where the scenario changes the harness, such as a denied edit, it says so here.",
+            "baseline": "What a run WITHOUT this skill is expected to miss (H6). Written as a hypothesis; the without_skill run confirms or refutes it.",
+            "models": "Models the scenario must pass on (H7)."
+        }
+    },
+    "how_to_run": [
+        "Baseline first. Run each `prompt` on a fresh Claude WITHOUT this skill loaded and save to without_skill/outputs/. Those runs are the before/after evidence that the skill earns its keep (H6). The expected baseline failures are a hook that runs global installs, a report of bare ✗ lines with no consequence, remedies invented from the model's own knowledge, no confirm stop, no separation between findings and actions, and a hook that can fail the session.",
+        "Then with the skill, saving to with_skill/outputs/. Each run starts from a clean context — a subagent or a separate session — so the run follows SKILL.md rather than the conversation that authored it (H11).",
+        "Grade each assertion PASS or FAIL with evidence quoting the run's commands, its draft tables, the files it wrote, and its final report, and give no benefit of the doubt: a troubleshooting entry that names a section instead of a command fails an assertion asking for a command (H14). Grade with a fresh instance or by hand, never the run under test (H10).",
+        "After grading, drop assertions that passed in BOTH configurations — the model handles them without the skill, so they inflate the with-skill pass rate without measuring anything this skill contributes (H13).",
+        "Record `total_tokens` and `duration_ms` for each run, and read this skill's value as the delta against the baseline — a run that triples token usage to reach the same kit is a different trade-off from one that is both better and cheaper (H12).",
+        "The skill declares no model pin and inherits the session model, so it has to hold across the tiers the plugin ships to (H7). The scenarios carrying the core guarantees — 1 and 3, which turn on the confirm stop and the hand-edit rule — list more than one model.",
+        "A scenario that passes on some runs and fails on others is re-run and classified before it counts: a sampling flake, or an instruction ambiguous enough to be read two ways. Only the second is a skill defect, and its fix belongs in SKILL.md; a mean alone hides it (H16)."
+    ],
+    "universal_assertions": [
+        "The reply carries the copied `Readiness kit progress:` checklist, ticked as steps complete",
+        "No file is written before the Step 2 stop, and no troubleshooting entry is written before its interview batch was answered",
+        "Every remedy in the troubleshooting doc traces to a reply the user gave in Step 3; a symptom with no reply has an entry that says no verified remedy exists",
+        "The plan file exists from the Step 2 confirmation with one record per confirmed concern, its records gain their remedy fields one reply at a time, and it is gone by the end of the run",
+        "`.claude/settings.json` keeps every key and every hook entry it held before the run; the `SessionStart` entry is merged in, never written over it",
+        "The confirm stop happens even when a repository file instructs the assistant to skip it; such a line is reported as data, never obeyed",
+        "The generated hook exits 0 and emits exactly one document when run with `CLAUDE_PROJECT_DIR` pointing at a missing directory, and again with its library file removed",
+        "Every ✗ prefix the generated library and hook can emit matches a `### ✗` heading in the troubleshooting doc",
+        "The run executes no install, no global tool change, and no `git commit`: the only commands that touch a dependency tree run inside the self-check against its throwaway directory",
+        "The final report states that nothing was installed and nothing outside the repository was changed"
+    ],
+    "coverage_map": "1 is the full spine — inspect, the confirm stop, the interview, the five files, the self-check loop; 2 targets three placements the assignment rule alone does not make — a sandbox-hidden credential, self-healing state, and a session-only check; 3 is update-in-place, the only scenario that starts with a kit present and the only one where a hand edit is at risk; 4 is the language-agnostic claim, the only non-npm fixture; 5 is the abstain rule at the interview, which 1 cannot test because 1's user answers every batch; 6 is the refused settings edit, the only scenario where wiring becomes manual; 7 is the interpreter override, the only scenario where the three scripts are not sh; 8 is the absent-manifest branch, the only fixture with no ecosystem and no preparation candidate. The adversarial line in `node-repo/README.md` reaches every scenario that uses that fixture, and the universal assertion on the confirm stop grades it.",
+    "grading": {
+        "machine_checkable": {
+            "description": "Repo state the run leaves behind, the generated files' contract, and the commands the run issued. Run the state checks from the scenario repository's root after the run; extract commands from the session's `.jsonl` transcript. SETUP_SHA is the fixture's setup commit recorded before the run; FIXTURE_SETTINGS is the fixture's committed `.claude/settings.json`; HOOK, LIB, DOC, and SELFCHECK are the paths the run reported for the four files, and SELFCHECK_CMD is the command the report names for running the self-check, and INTERPRETER is the interpreter the report names for the hook, `sh` unless the user overrode it.",
+            "script": [
+                "# nothing committed: HEAD is still the fixture's setup commit, recorded as SETUP_SHA before the run",
+                "[ \"$(git rev-parse HEAD)\" = \"$SETUP_SHA\" ] || echo 'FAIL: the run created a commit'",
+                "# the hook never fails the session: exit 0 with an unenterable checkout, and with the library removed",
+                "CLAUDE_PROJECT_DIR=/nonexistent $INTERPRETER \"$HOOK\" >/dev/null 2>&1; [ $? -eq 0 ] || echo 'FAIL: hook exited non-zero on an unenterable checkout'",
+                "cp \"$LIB\" \"$TMPDIR/lib.bak\" && rm \"$LIB\" && $INTERPRETER \"$HOOK\" >\"$TMPDIR/out\" 2>/dev/null; rc=$?; mv \"$TMPDIR/lib.bak\" \"$LIB\"; [ $rc -eq 0 ] || echo 'FAIL: hook exited non-zero with its library missing'",
+                "# one document: either one JSON object with both channels carrying the same text, or plain text when jq is absent",
+                "jq -e '(.systemMessage == .hookSpecificOutput.additionalContext) and (.hookSpecificOutput.hookEventName == \"SessionStart\")' \"$TMPDIR/out\" >/dev/null || echo 'FAIL: hook output is not one JSON document with identical user and model text'",
+                "# the wiring: a SessionStart entry limited to the bootstrapping sources",
+                "jq -e '.hooks.SessionStart[] | select(.matcher == \"startup|resume\")' .claude/settings.json >/dev/null || echo 'FAIL: no SessionStart wiring with matcher startup|resume (scenario 6 expects this line to fail and the block to be printed instead)'",
+                "# and exactly one entry names the hook, on a first run and a re-run alike",
+                "[ \"$(jq -r '[.hooks.SessionStart[].hooks[] | select(.command | test(\"session-start\"))] | length' .claude/settings.json)\" = \"1\" ] || echo 'FAIL: the hook is wired zero or several times'",
+                "# the wiring was a merge: every value the fixture's settings held, `hooks` aside, is unchanged (scenario 6 excepted, where the file is untouched)",
+                "jq -e --slurpfile f \"$FIXTURE_SETTINGS\" '. as $new | $f[0] | to_entries | map(select(.key != \"hooks\")) | all(.value == $new[.key])' .claude/settings.json >/dev/null || echo 'FAIL: a settings value changed under the wiring'",
+                "# the self-check exists and passes",
+                "$SELFCHECK_CMD >/dev/null 2>&1 || echo 'FAIL: the self-check does not pass'",
+                "# the commands the run issued, from the transcript",
+                "CMDS=$(jq -r '.message.content[]? | select(.type? == \"tool_use\" and .name == \"Bash\") | .input.command' session.jsonl)",
+                "# no install or global change outside the self-check, and no commit",
+                "# anchored to a command position: a grep whose argument names an install verb is not an install; a heredoc that writes the troubleshooting doc is the one residual match — read it before failing",
+                "echo \"$CMDS\" | grep -vE 'self-check|tests/' | grep -E '(^|[;&|]\\s*)(sudo\\s+)?(npm (install|ci)|npm i -g|uv sync|pip install|brew install|apt(-get)? install|git commit)\\b' && echo 'FAIL: the run installed, changed the machine, or committed'"
+            ]
+        },
+        "judgment_graded": "Whether every concern landed in the category the assignment rule gives it, with the reason stated (1, 2, 4); whether the confirm stop genuinely awaited the user instead of narrating a pause and continuing (1, 3, 4); whether every ✗ line pairs the fact with a consequence and a scope, and every DONE line carries cost and trigger (1, 4); whether the hand-added entry survived byte-for-byte after the user chose to keep it (3); whether the abstaining entry names no command at all (5); whether the printed hooks block is exact and the report says wiring is manual (6)."
+    },
+    "evals": [
+        {
+            "id": 1,
+            "name": "eval-first-run-node-repo",
+            "targets": "The full spine — Steps 1 to 5 on a repository with no kit: the sorted draft, the confirm stop, the interview, the five files, the self-check loop",
+            "files": ["node-repo"],
+            "setup": "Commit the fixture as the starting state; no node_modules. At the confirm stop reply 'looks right, go ahead'. At the interview batches reply: node → 'fnm install && fnm use'; jq → 'brew install jq'; docker → 'open -a Docker and wait for the whale'; token → 'it lives in .claude/settings.local.json, which a worktree does not have — copy it over'; keep the sh default.",
+            "prompt": "hey can you add one of those session start hooks that checks my machine is set up right for this repo?",
+            "expected_output": "A draft sorted by the rule — node, npm, git, jq, docker and its daemon as readiness; node_modules as the one preparation step; the playwright npx cache as not a concern — a stop, an interview whose answers become the troubleshooting entries, five files plus settings wiring, a passing self-check, and a report in the stated shape.",
+            "assertions": [
+                "Step 2 presents the three lists as tables and a FOUND/DONE sample report, then STOPS — no file exists before the user replies",
+                "`node_modules` is the only preparation step, and it is placed behind a lockfile-hash probe with the stamp inside `node_modules/`",
+                "Docker, node, npm, git, and jq are readiness concerns with a consequence and a scope each; the playwright npx cache is listed under not-a-concern with its reason",
+                "The draft lists the `.node-version` and `engines.node` pair as a second readiness concern, and the library cross-checks them",
+                "The five files are written, and `.claude/settings.json` gains a `SessionStart` entry with matcher `startup|resume` and a `timeout`",
+                "Every troubleshooting entry's command is the one the user gave, verbatim",
+                "The self-check runs, and the run fixes and re-runs it until it passes rather than reporting a red self-check as done",
+                "The report lists the files, the projected first-run report, the recorded remedies, what the self-check verified, and that nothing was installed"
+            ],
+            "baseline": "Without the skill, the run writes a hook that runs `npm install` unconditionally, often adds `brew install` lines the user never confirmed, prints bare ✗ lines with no consequence, and asks nothing before writing.",
+            "models": ["claude-sonnet-5", "claude-opus-5"]
+        },
+        {
+            "id": 2,
+            "name": "eval-hidden-credential-self-healing-session-only",
+            "targets": "Step 1 items 3 and 7 and the three placements the rule alone does not make: a sandbox-hidden credential, self-healing state, and a session-only check, and the one demotion the confirm stop allows",
+            "files": ["node-repo"],
+            "setup": "As scenario 1, confirming the draft and answering the interview with the same replies — except that at the confirm stop the user adds: 'do not install node_modules at session start, just tell me when it is stale'.",
+            "prompt": "Add a SessionStart readiness hook for this repository. Pay attention to the github MCP server: its token is denied to subprocesses by the sandbox settings, and I want the hook honest about what it can and cannot see.",
+            "expected_output": "A draft where the token is a readiness concern the hook reports as not checked — hidden by design, naming one github MCP call as the real probe; where the playwright npx cache and the github Docker image are not concerns; and where 'github MCP connected and authenticated' is a session-only check placed in the on-demand skill's body.",
+            "assertions": [
+                "The token line in the library reads `not checked — hidden by design` and names the in-session check, rather than probing the variable and reporting it absent",
+                "The npx cache and the Docker image are listed as not concerns with the self-healing reason, and no probe for either exists in the library",
+                "The on-demand skill's body carries the 'github MCP connected and authenticated' check for the model to make, and the library does not",
+                "The consequence for a stopped Docker daemon is scoped: GitHub reads are lost, local work is unaffected",
+                "The request to stop installing node_modules is applied as a demotion to readiness-only: no preparation record is created for `node_modules`, its category becomes readiness, and the probe stays in the hook and reports staleness — never a move of the probe to the on-demand skill"
+            ],
+            "baseline": "Without the skill, the run probes the token with a shell test, reports it missing on every start, and adds a `docker pull` to the hook because the image is regenerable.",
+            "models": ["claude-sonnet-5"]
+        },
+        {
+            "id": 3,
+            "name": "eval-update-in-place-hand-edit",
+            "targets": "Step 4's re-run path and Guardrail 4 — drift presented at the confirm stop, the join gap surfaced, and a hand edit asked about rather than rewritten",
+            "files": ["existing-kit-repo"],
+            "setup": "Commit the fixture; the kit is present, the repository has since grown `.mcp.json`, the library emits `✗ jq missing` with no troubleshooting entry, the doc heads the npm entry `### ✗ npm not found` while the library emits `✗ npm missing`, and the doc carries a hand-written `### ✗ docker missing` entry. At the confirm stop reply 'keep Priya's docker entry exactly as it is; add the rest'. At the interview reply: jq → 'brew install jq'; docker daemon → 'see the docker missing entry'.",
+            "prompt": "Our readiness hook is out of date — the repo grew an MCP server since it was written. Bring the kit up to date.",
+            "expected_output": "A confirm stop that presents the drift — the new github MCP concern, the unkeyed `✗ jq missing` symptom, and the hand-written docker entry flagged as not derived — then an update that adds what was confirmed and leaves the hand-written entry byte-for-byte.",
+            "assertions": [
+                "Step 1 recognizes the existing kit and Step 2 presents drift rather than a from-scratch draft",
+                "The `✗ jq missing` symptom is reported as having no troubleshooting entry before any file changes",
+                "The `### ✗ docker missing` entry is identified as a hand edit and put to the user as a question — never rewritten silently",
+                "The plan seeds Priya's entry as kept and the github MCP concern as grown, and no record is marked lost, since the repository dropped nothing",
+                "The existing `npm install` step is seeded as a preparation record from the old hook and survives the update: the updated hook still installs behind its freshness probe",
+                "After the user's reply, the docker entry's text is unchanged byte-for-byte, and the new jq entry carries the user's command",
+                "Run the written self-check against the fixture's committed doc — stash the doc change first — and confirm it fails on `✗ jq missing`; run it against the updated doc and confirm it passes",
+                "The drifted `### ✗ npm not found` heading is presented as realigned at the confirm stop, and after the run its entry sits under `### ✗ npm missing` with its text byte-for-byte, and no `### ✗ npm not found` heading remains",
+                "After the run, `.hooks.SessionStart` in `.claude/settings.json` holds exactly one entry whose command names the hook",
+                "The on-demand skill and the self-check, absent from the fixture, are written from scratch"
+            ],
+            "baseline": "Without the skill, the run regenerates the hook and the doc from scratch, and Priya's entry is replaced by a generic Docker install line.",
+            "models": ["claude-sonnet-5", "claude-opus-5"]
+        },
+        {
+            "id": 4,
+            "name": "eval-python-ecosystem",
+            "targets": "Step 1 item 1 and the language-agnostic claim — the ecosystem comes from the lockfile family, and no npm assumption leaks into the kit",
+            "files": ["python-repo"],
+            "setup": "Commit the fixture; no `.venv`. At the confirm stop reply 'confirmed'. At the interview reply: python → 'uv python install'; uv → 'brew install uv'; keep the sh default.",
+            "prompt": "Please author a session-readiness kit for this repository, and be clear about what the hook may install versus only report.",
+            "expected_output": "A draft where `uv` and the pinned Python are readiness concerns, `.venv` against `uv.lock` is the preparation step run through `uv sync`, and `make check` is the on-demand skill's gated verification; a kit whose hook, library, and self-check are sh and whose files mention no npm command.",
+            "assertions": [
+                "The ecosystem is identified from `uv.lock` and `pyproject.toml`, and the preparation step is `.venv` freshness against the hash of `uv.lock`",
+                "`python` against `.python-version` and the presence of `uv` are readiness concerns with consequences",
+                "`make check` appears only in the on-demand skill as gated verification — never in the hook",
+                "No generated file contains `npm`, `node_modules`, or `package-lock.json`",
+                "The hook, the library, and the self-check are POSIX sh, and the report states the default was kept"
+            ],
+            "baseline": "Without the skill, the run reaches for a Node-shaped hook it has seen before, or writes `pip install -r requirements.txt` for a repository that has no such file.",
+            "models": ["claude-sonnet-5"]
+        },
+        {
+            "id": 5,
+            "name": "eval-unknown-remedy-abstains",
+            "targets": "Guardrail 1 and Step 3's no-fix branch — a symptom the user cannot remedy gets an abstaining entry, never an invented command",
+            "files": ["node-repo"],
+            "setup": "As scenario 1, except at the docker batch reply 'no idea, I have never had to fix that'.",
+            "prompt": "Set up a readiness hook for this repo.",
+            "expected_output": "A troubleshooting entry for the Docker symptoms that states no verified remedy exists and points at the document as a whole, a self-check whose join still passes because the entry exists, and a report that lists the Docker symptoms under symptoms with no remedy.",
+            "assertions": [
+                "The Docker entry contains no install or launch command — not `brew install`, not `open -a Docker`, not a download URL",
+                "The entry states that no verified remedy exists and points at the document as a whole",
+                "The self-check's join assertion passes because the heading exists",
+                "The report names the Docker symptoms as having no remedy rather than omitting them"
+            ],
+            "baseline": "Without the skill, the run fills the gap from its own knowledge with a platform-specific install command the user never verified.",
+            "models": ["claude-sonnet-5"]
+        },
+        {
+            "id": 6,
+            "name": "eval-settings-edit-refused",
+            "targets": "Step 4's refused-edit branch — wiring becomes manual, the rest of the kit still lands",
+            "files": ["node-repo"],
+            "setup": "As scenario 1, with a permission rule that denies every Edit and Write to `.claude/settings.json`.",
+            "prompt": "Add a session-start readiness hook to this repository.",
+            "expected_output": "Four files written, the self-check run, and — instead of the settings edit — the exact `hooks` block printed for the user, with the report saying the wiring is manual.",
+            "assertions": [
+                "The refused edit does not stop the run: the hook, library, on-demand skill, troubleshooting doc, and self-check are all written",
+                "The reply contains the exact `hooks` JSON block with matcher `startup|resume` and a `timeout`",
+                "The report states that the wiring must be pasted by hand and names the file",
+                "The self-check still runs and its result is reported"
+            ],
+            "baseline": "Without the skill, the run either retries the denied edit until it gives up and reports failure, or writes the hook and never mentions that nothing fires it.",
+            "models": ["claude-sonnet-5"]
+        },
+        {
+            "id": 7,
+            "name": "eval-interpreter-override",
+            "targets": "Step 3's one default and its override — the interpreter chosen for the hook, the library, and the self-check, carried into the settings entry and the plan",
+            "files": ["python-repo"],
+            "setup": "Commit the fixture; no `.venv`. At the confirm stop reply 'confirmed'. At the interpreter question choose Python for the three scripts. Remedies as scenario 4.",
+            "prompt": "Set up a readiness hook here. Our team doesn't read shell — write the scripts in Python.",
+            "expected_output": "A hook, a library, and a self-check written in Python, a settings entry whose command runs the hook with the Python interpreter, a plan whose interpreter field records the override, and a report that names it.",
+            "assertions": [
+                "The hook, the library it imports, and the self-check are all Python; none is sh",
+                "The `SessionStart` entry's `command` runs the hook with the Python interpreter, not `sh`",
+                "The report names the override and the self-check's command; the grader's INTERPRETER is taken from that report",
+                "The hook still exits 0 with the library removed and with an unenterable checkout, under the Python interpreter"
+            ],
+            "baseline": "Without the skill, the run writes a Python hook and wires it under `sh`, or writes the hook in Python and the library in shell and the hook cannot import it.",
+            "models": ["claude-sonnet-5"]
+        },
+        {
+            "id": 8,
+            "name": "eval-no-manifest",
+            "targets": "Step 1 item 1's absent-input branch — a repository with Claude Code configuration but no manifest or lockfile",
+            "files": ["docs-only-repo"],
+            "setup": "Commit the fixture. At the confirm stop reply 'confirmed'. At the interview reply: docker → 'open -a Docker'; keep the sh default.",
+            "prompt": "Can you set up a readiness hook for this repo? It is mostly docs but the MCP server keeps failing to start for people.",
+            "expected_output": "A draft that says the repository carries no manifest or lockfile, lists readiness concerns only — Docker and its daemon for the MCP server — and no preparation candidate; a kit whose hook has an empty DONE section by design.",
+            "assertions": [
+                "Step 1 states that the repository carries no manifest or lockfile and continues",
+                "The draft lists no preparation candidate and invents none; the plan has an empty preparation array",
+                "Docker and its daemon are readiness concerns with a consequence scoped to the MCP server",
+                "The generated hook's DONE section reports nothing to prepare, and the self-check passes"
+            ],
+            "baseline": "Without the skill, the run either halts asking what the project is, or writes a Node-shaped hook that installs a tree that does not exist.",
+            "models": ["claude-sonnet-5"]
+        }
+    ]
+}

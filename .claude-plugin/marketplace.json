@@ -57,6 +57,16 @@
             "tags": ["frontend", "npm", "dependencies", "updates", "changelog-research"],
             "license": "MIT",
             "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/frontend-toolkit"
+        },
+        {
+            "name": "session-readiness-toolkit",
+            "source": "./plugins/session-readiness-toolkit",
+            "description": "A suite for session readiness, starting with authoring-readiness-checks: inspects the host repository, confirms the sorted concerns with the user, interviews for every remedy, and writes a per-repository kit — a SessionStart hook that reports what the machine is missing and what each absence forbids and installs only regenerable state behind a probe, a shared probe library, an on-demand diagnosing skill, a troubleshooting doc keyed by symptom, and a self-check. Re-runs update the kit in place. Ships no hook of its own and never installs anything itself.",
+            "version": "1.0.0",
+            "category": "environment",
+            "tags": ["session-start", "hooks", "readiness", "dev-environment", "bootstrap", "troubleshooting"],
+            "license": "MIT",
+            "homepage": "https://github.com/brokenrobot-xyz/agent-skills/tree/main/plugins/session-readiness-toolkit"
         }
     ]
 }

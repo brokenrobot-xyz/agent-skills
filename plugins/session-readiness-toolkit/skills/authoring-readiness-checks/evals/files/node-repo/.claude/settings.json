@@ -1,0 +1,8 @@
+{
+    "enabledMcpjsonServers": ["github", "playwright"],
+    "sandbox": {
+        "enabled": true,
+        "credentials": { "envVars": [{ "name": "ACME_GITHUB_TOKEN", "mode": "deny" }] }
+    },
+    "permissions": { "deny": ["Bash(gh *)"] }
+}

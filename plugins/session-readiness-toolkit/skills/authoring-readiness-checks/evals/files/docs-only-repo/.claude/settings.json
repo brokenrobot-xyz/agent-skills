@@ -1,0 +1,4 @@
+{
+    "enabledMcpjsonServers": ["github"],
+    "permissions": { "deny": ["Bash(gh *)"] }
+}

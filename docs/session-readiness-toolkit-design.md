@@ -1,6 +1,6 @@
 # Session Readiness Toolkit — design record
 
-**Status:** design agreed, not built; amended 2026-09-02 after the pre-build tasks. **Date:** 2026-08-31.
+**Status:** built 2026-09-02 as `session-readiness-toolkit:authoring-readiness-checks`, then reviewed by `reviewing-claude-skills` over seven structure passes and three detail sweeps through 2026-09-03; every blocking finding was applied, the last sweep's six without a further verification pass. Amended 2026-09-02 after the pre-build tasks. **Date:** 2026-08-31.
 **Derived from:** `brokenrobot-xyz/website` — `.claude/hooks/session-start.sh`,
 `.claude/hooks/lib/dev-env-checks.sh`, and the `checking-dev-env` skill.
 
@@ -173,22 +173,23 @@ numbered and the categories are not.
 
 ## Decisions taken
 
-| Question                | Decision                                   | Consequence                                                                                                                                                                                                                                                                                                                         |
-| :---------------------- | :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Shareable unit          | Authoring skill                            | Ships the pattern; generated code is owned by the consumer.                                                                                                                                                                                                                                                                         |
-| Audience                | Own repositories and marketplace consumers | Trust matters, which is what settles the unit above.                                                                                                                                                                                                                                                                                |
-| Category assignment     | Fixed rule, scope decides                  | No per-item interview; placement is checkable mechanically.                                                                                                                                                                                                                                                                         |
-| First build             | Both categories together                   | The categories only prove themselves when both exist.                                                                                                                                                                                                                                                                               |
-| Discovery               | Inspect, then confirm                      | Evidence-based and short; catches forgotten concerns.                                                                                                                                                                                                                                                                               |
-| Remedies                | Interview for every fix                    | Nothing unverified ships. Accepted cost: a long interaction.                                                                                                                                                                                                                                                                        |
-| Output                  | All four artifacts, plus a self-check      | Mirrors what the website repository has today.                                                                                                                                                                                                                                                                                      |
-| Re-runs                 | Update in place                            | Generated code is ordinary repo code: re-analyzed from scratch, no provenance tracking. Accepted cost: fresh analysis cannot tell deliberate choices from drift, so re-runs re-ask.                                                                                                                                                 |
-| Implementation language | User's and repo's preference               | The skill ships the know-how; bash, Node, Rust — whatever the repository already speaks. One taught exception: the hook's entry point is recommended in an always-present runtime (POSIX sh), because a hook in the repo's language can never report that runtime as missing — the interview lets the user override with eyes open. |
-| Ecosystems              | Language-agnostic                          | Widest reach; more detection to keep correct.                                                                                                                                                                                                                                                                                       |
-| Verification            | One self-check                             | Cheaper than a case suite, catches the big failures.                                                                                                                                                                                                                                                                                |
-| Self-healing state      | Not a concern                              | Pinned container images and package-runner caches fetched by their own consumer on first use get no step; at most a first-start-cost note. (pilot, 2026-09-02)                                                                                                                                                                      |
-| Extra report states     | Wording inside ✓/✗                         | Unobservable-by-design is a ✗ `not checked — hidden by design` naming the in-session check; unjudged facts ride on ✓ lines. No third glyph. (2026-09-02)                                                                                                                                                                            |
-| Model-observed checks   | Invited path only, in the skill body       | The probe implementation stays script-only; session properties are checked by the model. (pilot, 2026-09-02)                                                                                                                                                                                                                        |
+| Question                | Decision                                                                                           | Consequence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| :---------------------- | :------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Shareable unit          | Authoring skill                                                                                    | Ships the pattern; generated code is owned by the consumer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Audience                | Own repositories and marketplace consumers                                                         | Trust matters, which is what settles the unit above.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Category assignment     | Fixed rule, scope decides                                                                          | No per-item interview; placement is checkable mechanically.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| First build             | Both categories together                                                                           | The categories only prove themselves when both exist.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Discovery               | Inspect, then confirm                                                                              | Evidence-based and short; catches forgotten concerns.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Remedies                | Interview for every fix                                                                            | Nothing unverified ships. Accepted cost: a long interaction.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Output                  | All four artifacts, plus a self-check                                                              | Mirrors what the website repository has today.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Re-runs                 | Update in place                                                                                    | Generated code is ordinary repo code: re-analyzed from scratch, no provenance tracking. Accepted cost: fresh analysis cannot tell deliberate choices from drift, so re-runs re-ask. Built as: a re-run seeds its plan from the existing doc, asks at the confirm stop about every entry it did not derive, and interviews only the ✗ prefixes with no entry (2026-09-02).                                                                                                                                                                                  |
+| Implementation language | User's and repo's preference                                                                       | The skill ships the know-how; bash, Node, Rust — whatever the repository already speaks. One taught exception: the hook's entry point is recommended in an always-present runtime (POSIX sh), because a hook in the repo's language can never report that runtime as missing — the interview lets the user override with eyes open. Built as: one interpreter for the hook, the library it sources, and the self-check — POSIX sh by default, the repository's language on the user's override; the on-demand skill and the doc are Markdown (2026-09-02). |
+| Ecosystems              | Language-agnostic                                                                                  | Widest reach; more detection to keep correct.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Verification            | One self-check                                                                                     | Cheaper than a case suite, catches the big failures.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Self-healing state      | Not a concern                                                                                      | Pinned container images and package-runner caches fetched by their own consumer on first use get no step; at most a first-start-cost note. (pilot, 2026-09-02)                                                                                                                                                                                                                                                                                                                                                                                             |
+| Extra report states     | Wording inside ✓/✗                                                                                 | Unobservable-by-design is a ✗ `not checked — hidden by design` naming the in-session check; unjudged facts ride on ✓ lines. No third glyph. (2026-09-02)                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Model-observed checks   | Invited path only, in the skill body                                                               | The probe implementation stays script-only; session properties are checked by the model. (pilot, 2026-09-02)                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Packaging and naming    | One suite plugin, `session-readiness-toolkit`; the authoring skill is `authoring-readiness-checks` | Matches the repository’s other suites and scopes as `session-readiness-toolkit:authoring-readiness-checks`. The invariant catalog ships as that skill’s `references/` file. The future reviewer is `reviewing-readiness-checks`; `D15` extracts `session-readiness-criteria` only when that grader exists, because a split ahead of a grader pays the conventions’ split costs for nothing. (2026-09-02)                                                                                                                                                   |
 
 ## Risks
 
@@ -208,13 +209,12 @@ numbered and the categories are not.
 Both are bounded and both de-risk the build. Both are done.
 
 - **Enumerate the invariant catalog.** Done 2026-09-02:
-  [session-readiness-invariants.md](session-readiness-invariants.md). The skill's payload is "the
+  [references/invariants.md](../plugins/session-readiness-toolkit/skills/authoring-readiness-checks/references/invariants.md). The skill's payload is "the
   invariants the artifacts must hold", and that list existed nowhere — it was scattered across the
   website hook's comments and this record. Mining `session-start.sh`, `lib/dev-env-checks.sh`, and
   `checking-dev-env` produced sixty-odd invariants in seven groups, so the idea is not thinner than
-  this record assumes. The mining also corrected this record in eight places; the catalog's
-  § What the mining changed lists them, and this record is not restated to match — the catalog
-  wins where they differ.
+  this record assumes. The mining also corrected this record in eight places; § Catalog notes below lists them, and
+  this record is not restated to match — the catalog wins where they differ.
 - **Pilot the inspect step on `agent-skills`.** Inspect done 2026-09-02:
   [session-readiness-pilot-agent-skills.md](session-readiness-pilot-agent-skills.md). The whole
   pattern generalizes from one repository. Dry-running discovery against a repository of a
@@ -226,9 +226,9 @@ Both are bounded and both de-risk the build. Both are done.
 
 ## Deferred
 
-- **Packaging and naming.** One plugin, or two plus a shared contract skill. Names must be checked
-  against [skill-conventions.md](skill-conventions.md) — gerund form for a skill that does something,
-  and the split test (`D15`) decides whether the contract becomes its own skill.
+- **Criteria extraction.** Packaging and naming were decided 2026-09-02 (see the ledger). What
+  stays deferred is the `D15` split: `session-readiness-criteria` is created when the reviewing
+  skill arrives and must grade against the catalog, not before.
 - **The reviewing skill.** Sequenced after the author, once the contract has been proven by real
   generated output rather than designed against one example.
 - **Orientation facts.** Branch divergence, in-flight specs, unfinished work — a genuinely different
@@ -236,6 +236,51 @@ Both are bounded and both de-risk the build. Both are done.
 - **Hook triggers.** `compact` is confirmed available as a `SessionStart` source (verified
   2026-08-31; see References). What remains open is only whether re-reporting after a compaction
   earns its context cost.
+
+## Catalog notes
+
+Moved here from the invariant catalog when it became the skill's shipped reference, so the
+reference carries only the contract.
+
+### What the mining changed
+
+Where the sources disagreed with, or added to, the design record.
+
+1. **Concurrency is weaker than stated** (A10). The record lists "idempotence under concurrent
+   sessions"; the website delivers idempotence across sequential sessions, excludes `fork` by
+   matcher, and accepts the concurrent-start race with a stated reason. The generated hook must say
+   which it does.
+2. **The join has holes on the automatic path** (J3). Every ✗ the library or the invited path emits
+   resolves to a doc heading. Six templates only the hook emits do not: the missing-library line,
+   `dependencies: skipped`, `codegraph: skipped`, `codegraph init|index failed`, and both
+   `codegraph sync failed` variants. The record's self-check assertion (C4) would have caught this.
+   J3 is stated to cover action outcomes as well as probe symptoms, widening the record's "every
+   probe symptom key".
+3. **Same implementation, different selection** (P11). "One truth, two consumers" reads as the same
+   probes; in fact the hook runs the subset the session will feel, and the audit runs all of them.
+   The selection rule is now explicit.
+4. **Skipped steps need a line under DONE** (R7). The FOUND/DONE split leaves a skipped preparation
+   step with no home — it was neither observed nor acted on. The website's "never implies work that
+   never ran" rule says it still needs its line.
+5. **Three platform facts the record did not list.** Hooks run non-interactively (P7); MCP servers
+   start before the hook completes (A11); the sandbox constrains destructive operations inside the
+   checkout (A5). The first two belong in the skill body next to the JSON shapes.
+6. **The copy allowance** (J2). The record says the check may not invent a fix; the website lets a
+   ✗ line carry a copy of the doc's fix inline. Recorded as copy-yes, invent-no, kept in step.
+7. **Multi-location pin drift is a readiness sub-family** (P6). It fits the assignment rule —
+   inside the checkout, not regenerable — but the inspect step has to look for it deliberately: a
+   version pinned in a hook, an MCP config, and a script block is three places to drift.
+8. **Consumer tolerance is a repository assumption** (A11). Whether the tools that read prepared
+   state cope with its absence during the hook's window is a property of the repository, not of the
+   artifacts. The inspect step verifies it per preparation target.
+
+### Left out
+
+Website-specific, and deliberately not invariants: the index tool's state machine and command
+choice; the exact sandbox failure behind `npm install` over `npm ci`, kept only as A5's general
+form; the invited path's delegation to a separate quality-gate skill, which is a per-repository
+decision; the reply checklist in the skill body, which is a skill-authoring convention rather than a
+readiness rule.
 
 ## References
 

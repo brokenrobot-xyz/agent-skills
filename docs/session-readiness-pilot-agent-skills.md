@@ -2,7 +2,7 @@
 
 **Status:** inspect done, draft confirmed. **Date:** 2026-09-02.
 **Companion to:** [session-readiness-toolkit-design.md](session-readiness-toolkit-design.md), whose
-second pre-build task this is, and [session-readiness-invariants.md](session-readiness-invariants.md),
+second pre-build task this is, and [references/invariants.md](../plugins/session-readiness-toolkit/skills/authoring-readiness-checks/references/invariants.md),
 whose IDs this record cites.
 
 A hand-run of step 1 (inspect) against this repository, written up the way step 2 (confirm) would
