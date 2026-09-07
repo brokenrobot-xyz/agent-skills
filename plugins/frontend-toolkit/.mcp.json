@@ -2,11 +2,11 @@
     "mcpServers": {
         "playwright": {
             "command": "npx",
-            "args": ["-y", "@playwright/mcp@0.0.78", "--browser=chrome", "--headless", "--isolated"]
+            "args": ["-y", "@playwright/mcp@0.0.80", "--browser=chrome", "--headless", "--isolated"]
         },
         "chrome-devtools": {
             "command": "npx",
-            "args": ["-y", "chrome-devtools-mcp@1.6.0", "--headless", "--isolated"]
+            "args": ["-y", "chrome-devtools-mcp@1.8.0", "--headless", "--isolated"]
         }
     }
 }
