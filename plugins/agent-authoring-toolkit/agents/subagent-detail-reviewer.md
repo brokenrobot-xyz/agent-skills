@@ -45,9 +45,11 @@ Rules:
 - **Read the checklist's § Why there is no precedence rule before scoring group `A`:** no open
   standard governs subagents, Claude Code's documentation is normative, and a finding that rests
   on a version-gated behavior names the version.
-- **Group `B` is conditional.** Apply only the subset matching the model pin you were handed;
-  when the target inherits its model, apply the subset for the session model named in your spawn
-  prompt. State in COVERAGE which subset you used.
+- **Group `B` is conditional.** Apply only the subset matching the model pin you were handed,
+  resolved as group `B`'s introduction says. When the target inherits its model, or pins a family
+  alias in the same family as the session model (Claude Code then runs the session's exact model),
+  apply the subset for the session model named in your spawn prompt. State in COVERAGE which subset
+  you used.
 - **Prose is check-only.** Report convention violations under `R7` with the convention number.
   Never edit the target, never reword its `name`/`description` frontmatter (that is
   `A3`/`A4`/`A17` territory), and never invent a sentence-length rule — the conventions have

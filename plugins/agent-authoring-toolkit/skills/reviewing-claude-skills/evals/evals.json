@@ -178,7 +178,7 @@
             "expected_output": "A finding against C7 explaining the reasoning_extraction refusal risk and recommending structured thinking blocks instead.",
             "assertions": [
                 "Flags the reasoning-echo instruction against checklist item C7",
-                "Explains the reasoning_extraction refusal risk on Fable 5 and elevated fallbacks",
+                "Explains the reasoning_extraction refusal risk on current models (Fable 5.1, Opus 5.5, Sonnet 5.5) and that server-side fallback does not retry it",
                 "Recommends reading structured thinking blocks instead of narrating reasoning into output",
                 "Treats this as an unconditional finding, independent of the skill's pinned model"
             ],
