@@ -3,7 +3,7 @@ name: improving-claude-subagents
 description: "Autonomously improves a Claude Code subagent definition in a review→fix→re-review loop: each round invokes the reviewing-claude-subagents review non-interactively, applies every blocking finding — High and structural findings included — without per-fix approval, commits the round, and re-reviews, until the review's verdict is acceptable, the blocking findings plateau, or the round cap is hit. A gated verdict recommending a different artifact form — 'this should be a skill' — ends the loop for the human instead of being applied. Advisory findings are reported, never chased. Asks one question only: confirming the intent brief at kickoff. Use when the user asks to improve a subagent autonomously, in a loop, or until it passes review."
 compatibility: Designed for Claude Code — requires the reviewing-claude-subagents skill, shipped in this same plugin, whose review each round invokes, and works best on a git-tracked target so every round is a commit. Runs offline.
 allowed-tools: Read Edit Write Bash Grep Glob Skill Agent
-model: opus
+model: claude-opus-5-5
 ---
 
 # Improve a subagent until its review says acceptable
