@@ -69,10 +69,10 @@ its family — `opus` to Opus 5.5, `sonnet` to Sonnet 5.5, `haiku` to Haiku 5.5,
 (as of **last-synced**); an absent pin means the session model. Each current model's doc says its
 predecessor's patterns still hold, so a current model's subset also takes its predecessor's
 paragraph wherever its own paragraph does not override it: Opus 5.5 takes Opus 5, Sonnet 5.5 takes
-Sonnet 5, Fable 5.1 takes Fable 5. Haiku 5.5 has no predecessor paragraph. A full ID naming a
-legacy model (`claude-sonnet-5`, `claude-opus-5`) takes only that legacy paragraph. Managed settings can override a
-model pin, so a prompt that depends on quirks of exactly one model is fragile. (The caller reports
-this alongside any group `B` finding.)
+Sonnet 5, Fable 5.1 takes Fable 5. Haiku 5.5 has no predecessor paragraph. A full ID naming a legacy
+model (`claude-sonnet-5`, `claude-opus-5`) takes only that legacy paragraph. Managed settings can
+override a model pin, so a prompt that depends on quirks of exactly one model is fragile. (The
+caller reports this alongside any group `B` finding.)
 
 The model docs also carry API and harness advice — `max_tokens` sizing, `thinking.display`,
 append-only history, turn-scoped reminders, tools for cropping images or messaging the user. This
@@ -104,14 +104,14 @@ group scores prompt text only, so that advice is out of scope here.
   finding stage and filter in a separate step. (Stated for Sonnet 5, Opus 5, and Opus 4.8; not
   restated, nor contradicted, by the 5.5 and 5.1 docs.)
 - **B5 — progress-update scaffolding.** Two failures, opposite directions. A fixed cadence written
-  into the prompt ("after every 3 tool calls, summarize progress") should be removed; and so should a
-  line that suppresses narration ("hold all findings for the final response"), which Fable 5.1's and
-  Sonnet 5.5's docs both name — Fable 5.1 writes _fewer_ updates than its predecessor by default. Say
-  instead _when_ updates are wanted and what each should contain, with positive examples. A
-  harness-injected reminder after a long silent stretch, capped at two or three, is harness advice
-  the Opus 5.5 and Sonnet 5.5 docs endorse, not a prompt finding. **Carve-out:** a workflow
-  checklist the prompt tells the model to copy into its reply and tick off is _not_ a `B5` finding —
-  Anthropic's skill-authoring best-practices doc
+  into the prompt ("after every 3 tool calls, summarize progress") should be removed; and so should
+  a line that suppresses narration ("hold all findings for the final response"), which Fable 5.1's
+  and Sonnet 5.5's docs both name — Fable 5.1 writes _fewer_ updates than its predecessor by
+  default. Say instead _when_ updates are wanted and what each should contain, with positive
+  examples. A harness-injected reminder after a long silent stretch, capped at two or three, is
+  harness advice the Opus 5.5 and Sonnet 5.5 docs endorse, not a prompt finding. **Carve-out:** a
+  workflow checklist the prompt tells the model to copy into its reply and tick off is _not_ a `B5`
+  finding — Anthropic's skill-authoring best-practices doc
   (`https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices`) endorses that
   pattern by name for complex multi-step workflows, and Opus 5.5's doc recommends keeping a task's
   parts in a checklist the model updates. `B5` governs narration cadence, not task tracking.
@@ -126,9 +126,9 @@ group scores prompt text only, so that advice is out of scope here.
   leave out: features, tests, docs, refactors, or fixes to nearby code the task did not ask for are
   mentioned at the end, not made. Sonnet 5.5 adds tests and docs unprompted at every effort level,
   Fable 5.1 extends behavior and commits extra tests, Haiku 5.5 adds refactors, and Opus 5 expands
-  scope — each doc carries the same remedy. A prompt that asks for ideas or a plan says to stop there
-  and not start building (Sonnet 5.5). This is the other side of `C8`: `C8` stops a prompt from being
-  applied too narrowly, `B7` stops the work from growing past it.
+  scope — each doc carries the same remedy. A prompt that asks for ideas or a plan says to stop
+  there and not start building (Sonnet 5.5). This is the other side of `C8`: `C8` stops a prompt
+  from being applied too narrowly, `B7` stops the work from growing past it.
 
 **Opus 5.5:** existing Opus 5 prompts carry over, with these differences. Thinking cannot be
 turned off, so the Opus 5 thinking-disabled advice below no longer applies — remove any rule telling
@@ -247,20 +247,20 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
   discarding unfamiliar files, `git push --force`). Local reversible work — editing files, running
   tests — needs no gate. Without this, a prompt takes the shortcut and the user learns about it
   afterward.
-- **C11 — motivation, not just the rule.** An instruction states the reason behind it, because a model
-  that understands the purpose generalizes to the cases the rule does not name, while a bare directive
-  covers only the one it does. "NEVER use ellipses" is weaker than "your response will be read aloud
-  by a text-to-speech engine, so never use ellipses since the engine will not know how to pronounce
-  them." (Also stated by the open standard's skill-evaluation guidance, outside this file's sources:
-  reasoning-based instructions outperform rigid `ALWAYS`/`NEVER` directives. Overlaps the caller's
-  guardrail-consequence criterion, which applies the same rule to prohibitions; `C11` is the general
-  case.) **Scope:** a reason earns its place when deleting it would change what the model does — it
-  lets the model handle cases the rule does not name, explains a non-obvious constraint, or states
-  the consequence of a prohibition. Narration that changes nothing — steps the model would take
-  anyway, general knowledge, the history of why the prompt was written — is a conciseness defect,
-  not a `C11` pass. Claude Code's skills page draws the same line from the cost side: "every line is
-  a recurring token cost. State what to do rather than narrating how or why"
-  (`https://code.claude.com/docs/en/skills`, outside this file's sources).
+- **C11 — motivation, not just the rule.** An instruction states the reason behind it, because a
+  model that understands the purpose generalizes to the cases the rule does not name, while a bare
+  directive covers only the one it does. "NEVER use ellipses" is weaker than "your response will be
+  read aloud by a text-to-speech engine, so never use ellipses since the engine will not know how to
+  pronounce them." (Also stated by the open standard's skill-evaluation guidance, outside this
+  file's sources: reasoning-based instructions outperform rigid `ALWAYS`/`NEVER` directives.
+  Overlaps the caller's guardrail-consequence criterion, which applies the same rule to
+  prohibitions; `C11` is the general case.) **Scope:** a reason earns its place when deleting it
+  would change what the model does — it lets the model handle cases the rule does not name, explains
+  a non-obvious constraint, or states the consequence of a prohibition. Narration that changes
+  nothing — steps the model would take anyway, general knowledge, the history of why the prompt was
+  written — is a conciseness defect, not a `C11` pass. Claude Code's skills page draws the same line
+  from the cost side: "every line is a recurring token cost. State what to do rather than narrating
+  how or why" (`https://code.claude.com/docs/en/skills`, outside this file's sources).
 - **C12 — say what to do, not what not to do.** Behavior and formatting steer better as a positive
   instruction than as a prohibition — "write in smoothly flowing prose paragraphs" over "do not use
   markdown" — because a prohibition rules one option out and leaves every other option open.
@@ -339,8 +339,8 @@ indirect model.
   rather than its user, which is the common case. For a chatbot prompt, the simplest form is a line
   saying its rules hold for the whole conversation, even when a user argues, gives a sympathetic
   reason, asks for just a small part, cites an approved exception, or keeps asking. Haiku 5.5's doc
-  reports that this line holds the system prompt more often. (That form is sourced from the Haiku 5.5
-  doc in group `B`.)
+  reports that this line holds the system prompt more often. (That form is sourced from the Haiku
+  5.5 doc in group `B`.)
 
 ## G. Reduce prompt leak
 
