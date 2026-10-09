@@ -3,7 +3,7 @@ name: committing-conventionally
 description: Stages working-tree changes and authors one Conventional-Commits commit, resolving the commit vocabulary from the host project's .brokenrobot-xyz/commits.json when present and from built-in defaults when not. Use whenever the user asks to commit work.
 compatibility: Requires git and Node.js — the deny-hook that validates every commit message runs on Node, which is not installed by default on every machine.
 allowed-tools: Bash(git:*) Bash(cat:*) Read
-model: claude-sonnet-5
+model: claude-sonnet-5-5
 ---
 
 # Author a conforming git commit

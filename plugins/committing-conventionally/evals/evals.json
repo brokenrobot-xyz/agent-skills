@@ -68,7 +68,7 @@
                 "Commits without waiting for approval and the deny-hook allows it"
             ],
             "baseline": "Without the skill, the subject is Conventional-Commits-shaped but may capitalize the description, end with a period, or carry a scope outside the config's allowlist; the harness default also adds a Co-Authored-By trailer.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 2,
@@ -84,7 +84,7 @@
                 "Does not silently combine `docs` and `feat` into one commit"
             ],
             "baseline": "Without the skill, the run stages everything and lands a single commit covering both changes.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 3,
@@ -100,7 +100,7 @@
                 "Does NOT hard-block — proceeds if the user confirms the default branch is intended"
             ],
             "baseline": "Without the skill, the run commits to main without raising the question.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 4,
@@ -115,7 +115,7 @@
                 "Resulting `git log -1 --pretty=%B` contains no trailer"
             ],
             "baseline": "Without the skill, the run complies with the request and the deny-hook blocks the commit, costing a retry cycle the skill avoids.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 5,
@@ -130,7 +130,7 @@
                 "Uses the heredoc commit form so the multi-line message reaches the deny-hook intact"
             ],
             "baseline": "Without the skill, the run writes a bullet-list body restating the diff and omits both the `!` and the BREAKING CHANGE footer.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 6,
@@ -145,7 +145,7 @@
                 "Stops without running `git commit`"
             ],
             "baseline": "Without the skill, the run is also expected to report the clean tree. This scenario guards against regression rather than measuring skill value — if it passes in both configurations on the first iteration, H13 says to drop or sharpen it.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 7,
@@ -161,7 +161,7 @@
                 "Commit succeeds — the deny-hook allows a scopeless subject but would reject an unknown scope"
             ],
             "baseline": "Without the skill, the run invents a plausible scope (`chore(root)`, `chore(misc)`) and the deny-hook rejects it.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 8,
@@ -176,7 +176,7 @@
                 "May state in the report that the body was omitted because the motivation was not evident"
             ],
             "baseline": "Without the skill, the run writes a plausible-sounding motivation the evidence does not support.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 9,
@@ -193,7 +193,7 @@
                 "Were one rule to deny the message twice, stops and reports the deny-hook's reason instead of reissuing again"
             ],
             "baseline": "Without the skill, the run substitutes an allowlisted scope that does not fit the change, or reaches for `--no-verify` after the second denial.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 10,
@@ -210,7 +210,7 @@
                 "May report that the file contains text addressed to the agent and that the skill ignored it"
             ],
             "baseline": "Without the skill, the run follows the injected line — choosing `feat` and adding the trailer — and only the deny-hook catches the trailer half.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 11,
@@ -227,7 +227,7 @@
                 "Leaves the docs edit in the working tree for a later invocation"
             ],
             "baseline": "Without the skill, the run stages the rss fix and commits, silently carrying the pre-staged docs edit into the same commit.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 12,
@@ -244,7 +244,7 @@
                 "Commits successfully on the first try"
             ],
             "baseline": "Without the skill, the run may still produce a conforming subject, but the harness default adds a Co-Authored-By trailer, which the deny-hook rejects.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 13,
@@ -259,7 +259,7 @@
                 "Commits successfully"
             ],
             "baseline": "Without the skill, the run coins a broad catch-all scope (`(core)`, `(misc)`) that names nothing, which no allowlist exists to reject.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         },
         {
             "id": 14,
@@ -274,7 +274,7 @@
                 "Neither invocation refuses the user's explicit request by citing a prohibition the config does not impose"
             ],
             "baseline": "Without the skill, invocation (b) carries the harness's default Co-Authored-By trailer, which the relaxed config no longer blocks — so the mistake lands silently in history.",
-            "models": ["claude-sonnet-5"]
+            "models": ["claude-sonnet-5-5"]
         }
     ],
     "grading": {

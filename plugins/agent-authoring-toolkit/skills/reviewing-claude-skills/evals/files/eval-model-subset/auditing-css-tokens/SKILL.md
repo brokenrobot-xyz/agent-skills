@@ -1,7 +1,7 @@
 ---
 name: auditing-css-tokens
 description: Audits a stylesheet folder for hard-coded values that duplicate an existing design token — colors, spacing, radii — and reports each with the token to use instead. Use before a release or after importing third-party CSS.
-model: claude-sonnet-5
+model: claude-sonnet-5-5
 allowed-tools: Read Grep Glob
 ---
 

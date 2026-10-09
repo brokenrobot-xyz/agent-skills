@@ -3,7 +3,7 @@ name: reviewing-claude-subagents
 description: "Reviews a Claude Code subagent definition — its frontmatter, body, declared tools, and the siblings it competes with for routing — in two passes. Structure first: a definition whose form or shape fails High stops at a structural verdict with a redesign recommendation. Otherwise a full detail sweep against subagent-authoring and prompting best practices plus the host project's conventions produces a severity-ranked gap analysis ending in a computed verdict — acceptable, or not yet — honoring the subagent's recorded waivers, optionally applying approved fixes. Use when the user asks to review, audit, or improve a subagent or an agent definition."
 compatibility: Designed for Claude Code — reviews a subagent definition in .claude/agents/, ~/.claude/agents/, or a plugin's agents/ directory, delegating each pass to a plugin subagent. Runs offline — the criteria ship with the plugin, and a review fetches nothing.
 allowed-tools: Read Edit Write Bash Grep Glob Skill Agent AskUserQuestion
-model: opus
+model: claude-opus-5-5
 ---
 
 # Review a subagent against best practices
@@ -37,8 +37,9 @@ their confidence and never assert a routing failure they cannot demonstrate; pre
 marks in the report, because an asserted prediction reads to the user as an observation and
 costs trust in every finding beside it.
 
-**Why this skill pins `opus`.** The severity calibration was authored and tuned on Opus 5,
-against the five real subagents behind the checklist's dry run. The pin is turn-scoped: it holds
+**Why this skill pins `claude-opus-5-5`.** The severity calibration was authored and tuned on
+Opus 5, against the five real subagents behind the checklist's dry run, and the pin moved to Opus
+5.5 when it replaced Opus 5; re-run the evals to confirm the calibration holds. The pin is turn-scoped: it holds
 for the rest of the turn that invokes the skill, and the session model resumes on the user's
 next prompt — which is why Step 2 asks its scoping questions with `AskUserQuestion`, which stays
 inside the invoking turn. The pin does not choose the group `B` subset — Step 5 reads that from
