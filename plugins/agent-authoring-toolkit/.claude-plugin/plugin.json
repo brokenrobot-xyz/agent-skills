@@ -1,7 +1,7 @@
 {
     "name": "agent-authoring-toolkit",
     "description": "A suite for authoring Claude Code artifacts: reviewing-claude-skills and reviewing-claude-subagents each review their artifact in two passes — structure first, stopping at a structural verdict when the shape fails (fit-for-purpose leads the subagent gate), otherwise a full sweep ending in a computed verdict that honors the artifact's recorded waivers; improving-claude-skills and improving-claude-subagents loop the matching review autonomously — review → apply every blocking finding → commit → re-review — until the verdict is acceptable, the findings plateau, or the round cap is hit, asking only one question: the intent brief at kickoff. The subagent loop ends instead of converting when a review says the subagent should be a skill.",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "author": {
         "name": "Tamas Mezei",
         "url": "https://www.brokenrobot.xyz"

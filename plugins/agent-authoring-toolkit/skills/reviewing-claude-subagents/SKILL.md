@@ -318,7 +318,7 @@ to provide. The content rules, whatever the shape:
   entries (omit when zero); the group `B` subset applied; every ungraded group; every stage that
   ran inline under the fallback; the supplied scope, when Step 2's answers came from the
   invoking context rather than an interview; and, when group `B` produced findings, a note that
-  the model pin is overridable from three directions, so the subagent should not depend on the
+  the model pin is overridable (`A19` lists how), so the subagent should not depend on the
   quirks of exactly one model.
 
 ### 8. Offer interactive apply

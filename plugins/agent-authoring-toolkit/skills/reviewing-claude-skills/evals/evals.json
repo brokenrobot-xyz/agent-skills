@@ -379,7 +379,7 @@
             "assertions": [
                 "Raises a Low against the comma-separated `allowed-tools`, citing A16 and the spec's space-separated form",
                 "Does NOT flag `model:` or `context:` as spec violations — A20 permits client extensions",
-                "Explains the portability consequence rather than asserting a bare rule: the extensions do not carry to other agents",
+                "Explains the portability consequence rather than asserting a bare rule: the extensions do not carry to other agents, and packaging for claude.ai or the Skills API rejects them",
                 "Does NOT recommend removing `model:` or `context:` in the name of spec conformance"
             ],
             "baseline": "Without the skill, either all four non-spec elements are treated as equally fine, or spec conformance is read as forbidding every Claude Code extension.",
