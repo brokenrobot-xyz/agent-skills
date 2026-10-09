@@ -1,0 +1,139 @@
+{
+    "a06": {
+        "scenario_dir": "scenario-06",
+        "runner_agent_id": "ad3ce45c6a1712ab9",
+        "nested_agents": [
+            "subagent-detail-reviewer-a70606004f8f6e002",
+            "subagent-structure-reviewer-a70ba3d3ffaa57291"
+        ],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 61486,
+                "duration_ms": 202594
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 72711,
+                "duration_ms": 224822
+            }
+        ]
+    },
+    "a07": {
+        "scenario_dir": "scenario-07",
+        "runner_agent_id": "a9d97b34bf75b31d3",
+        "nested_agents": [
+            "subagent-detail-reviewer-a32a7dccf55235904",
+            "subagent-structure-reviewer-a24fa62dfcfe38933"
+        ],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 62027,
+                "duration_ms": 199075
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 75495,
+                "duration_ms": 280575
+            }
+        ]
+    },
+    "a13-opus": {
+        "scenario_dir": "scenario-13-opus",
+        "runner_agent_id": "a204aaa880bf12159",
+        "nested_agents": [
+            "subagent-detail-reviewer-a54d6f5e471cd2b31",
+            "subagent-structure-reviewer-afc45e79c0ed0f24c"
+        ],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 66437,
+                "duration_ms": 232095
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 88141,
+                "duration_ms": 359974
+            }
+        ]
+    },
+    "a13-sonnet": {
+        "scenario_dir": "scenario-13-sonnet",
+        "runner_agent_id": "a9a01e09378f5ab2b",
+        "nested_agents": [
+            "subagent-detail-reviewer-acded88c9d582c7a5",
+            "subagent-structure-reviewer-a3312f6dfa43072e5"
+        ],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 58627,
+                "duration_ms": 264466
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 83781,
+                "duration_ms": 356690
+            }
+        ]
+    },
+    "a15": {
+        "scenario_dir": "scenario-15-gated",
+        "runner_agent_id": "ac8bda87854f112b5",
+        "nested_agents": ["subagent-structure-reviewer-a3d9d195ed8ab0c1d"],
+        "legs": [
+            {
+                "leg": "gated",
+                "total_tokens": 58505,
+                "duration_ms": 189898
+            },
+            {
+                "leg": "grader-gated",
+                "total_tokens": 80305,
+                "duration_ms": 257963
+            }
+        ]
+    },
+    "a15-forced": {
+        "scenario_dir": "scenario-15-forced-sweep",
+        "runner_agent_id": "ae28f862f2e848f09",
+        "nested_agents": [
+            "subagent-detail-reviewer-a1ff9135676661fe0",
+            "subagent-structure-reviewer-a4d9f802563fb0ab3"
+        ],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 75638,
+                "duration_ms": 401449
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 161847,
+                "duration_ms": 538600
+            }
+        ]
+    },
+    "a19": {
+        "scenario_dir": "scenario-19",
+        "runner_agent_id": "aa80f22c861d516a6",
+        "nested_agents": [
+            "subagent-detail-reviewer-a213994e89d59263a",
+            "subagent-structure-reviewer-a45a6913c8bb092c1"
+        ],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 68994,
+                "duration_ms": 265338
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 118382,
+                "duration_ms": 386171
+            }
+        ]
+    }
+}

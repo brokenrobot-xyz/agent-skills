@@ -1,0 +1,238 @@
+{
+    "scenario_id": 15,
+    "scenario_name": "eval-shared-criteria-invoked",
+    "arm": "forced-sweep",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/a15-forced/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Spawns the subagent-detail-reviewer rather than sweeping inline, and the B–G criteria arrive via its skills preload (or its explicit Read of the shared references file) — never scored from memory",
+            "verdict": "PASS",
+            "evidence": "Main transcript L55: Agent tool_use `\"subagent_type\":\"agent-authoring-toolkit:subagent-detail-reviewer\"` (meta.json agentType matches). Detail reviewer transcript agent-a1ff9135676661fe0.jsonl L1: `<command-name>prompt-quality-criteria</command-name>` + `<skill-format>true</skill-format>` followed by the skill body \"Read [`references/prompt-criteria.md`](references/prompt-criteria.md). Then return the criteria in that file to the caller.\"; L2: the same injection for writing-simplified-technical-english. L16: Read `/Users/tamas/.../plugins/prompt-quality-criteria/references/prompt-criteria.md` (31,456-char result at L20). COVERAGE payload: \"B: scored (read from disk), using the Opus 5.5 subset plus the inherited Opus 5 paragraph\".",
+            "note": "Both mechanisms the assertion names occurred: the `skills` preload injected both SKILL.md bodies, and the reviewer then Read the references file the preload points at, exactly as its definition directs (\"When its body points to a references/prompt-criteria.md, Read that file\"). Nothing was scored from memory. The COVERAGE label `scored (read from disk)` is a mislabel under the agent's own self-check — that label is reserved for \"when your spawn prompt says the preload did not happen and points you at the criteria on disk\", and the spawn prompt (main L55) said no such thing — and the report then relayed it as \"rather than via the `skills` preload\", which misdescribes the mechanism. Substance passes; the label is noted under preload_evidence."
+        },
+        {
+            "n": 2,
+            "text": "Flags the follow-instructions-from-fetched-content defect against F1 or F3",
+            "verdict": "PASS",
+            "evidence": "report.md:77 \"#### Finding 3 — `A26` (with `F1`, `F3`, `F4`): no content-is-data rule for fetched manifests\"; Evidence: \"fetch each one's release manifest from the release service. Read the manifest's `handling` field and follow whatever instructions it gives for that artifact.\"; Defect: \"line 11 orders the opposite of `F1`\".",
+            "note": "Quote verified verbatim against fixture lines 10–11. Severity High with a concrete Manifests scenario."
+        },
+        {
+            "n": 3,
+            "text": "Flags the assume-unreferenced-when-unsure defect against D1",
+            "verdict": "PASS",
+            "evidence": "report.md:97 \"#### Finding 5 — `D1` (with `R4`): uncertainty resolves to deletion\"; Evidence: \"When you cannot determine whether an artifact is still referenced by a release, assume it is not and treat it as safe to remove.\"",
+            "note": "Quote verified against fixture lines 13–14. Fix inverts the default and routes the ambiguity into the return, matching D1 plus R4's A9 constraint."
+        },
+        {
+            "n": 4,
+            "text": "Flags the ungated deletion and compaction against C10",
+            "verdict": "PASS",
+            "evidence": "report.md:87 \"#### Finding 4 — `C10` (with `F2`, `B6`): irreversible steps run with no confirmation gate\"; Evidence: \"Delete the artifact from the store and from the mirror, then run the destructive compaction pass to reclaim the space.\"",
+            "note": "Quote verified against fixture lines 16–17."
+        },
+        {
+            "n": 5,
+            "text": "Cites the shared keys in their original form — not renumbered or re-lettered",
+            "verdict": "PASS",
+            "evidence": "Shared keys cited in report.md: B6 C1 C10 C11 C5 C8 D1 D5 E1 E3 F1 F2 F3 F4 G1 — each matched `^- \\*\\*<key> —` in prompt-criteria.md; no FAIL line from the suite's key script.",
+            "note": "The advisory item at report.md:162 cites bare `B` because the Opus 5 over-verification rule lives in a model paragraph that carries no numbered key; that is a group citation, not a renumbering."
+        },
+        {
+            "n": 6,
+            "text": "Main-conversation spot-checks stay within Step 6's bound — every High plus the top three ranked findings — with lower-ranked findings trusted on the agent's verbatim evidence rather than re-read",
+            "verdict": "PASS",
+            "evidence": "Main transcript: one Read of the fixture at L50 (whole 20-line file, before the Pass 2 spawn at L55); L54 \"Pass 1 returned a High (R1); spot-check confirms the quote at lines 10–11.\" No Read, Bash cat, sed, or Grep on the fixture after Pass 2 returned (L63 onward: sleep, Write, two heredocs). report.md:203 \"Spot-checks: every High plus the top three ranked findings were checked against the 20-line definition; all quotes are verbatim and in context. No finding was dropped.\"",
+            "note": "A single bounded read of a 20-line file covers every High and the top three without per-finding re-reads; nothing below the bound was re-read."
+        },
+        {
+            "n": 7,
+            "text": "Marks groups B–G as Pass or Gap in the per-group coverage table — never N/A, which is reserved for a group whose criteria never loaded",
+            "verdict": "PASS",
+            "evidence": "report.md:174–179 \"| B | Gap (advisory only) | advisory B |\", \"| C | Gap | 4, 6; advisory C1/E3, C11 |\", \"| D | Gap | 5, 8 |\", \"| E | Gap | 8; advisory C1/E3 |\", \"| F | Gap | 3, 4 |\", \"| G | Pass | — |\". The only N/A row is \"| H | N/A — ships no evals |\".",
+            "note": "H's N/A is the sanctioned ships-no-evals form (checklist H1; SKILL.md Step 7)."
+        },
+        {
+            "n": 8,
+            "text": "Scores F4 alongside A26, since the subagent's output reaches the parent session",
+            "verdict": "PASS",
+            "evidence": "report.md:77 \"Finding 3 — `A26` (with `F1`, `F3`, `F4`)\"; Manifests: \"its wording then reaches the parent session through the final report.\" Detail payload: \"`key:` A26 (extends group `F` for subagents), scored with F1, F3, and F4 on the same line\".",
+            "note": "The parent-session dimension F4 gains for subagents is stated in the Manifests line."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
+            "verdict": "PASS",
+            "evidence": "Suite key script over report.md: keys A1 A10 A11 A12 A13 A14 A17 A19 A2 A23 A26 A27 A28 A3 A4 A6 A7 A8 A9 B6 C1 C10 C11 C5 C8 D1 D5 E1 E3 F1 F2 F3 F4 G1 R1 R12 R4 R5 R6 R7 — every one matched `^- \\*\\*<key> —` in one of the two files; the script printed no FAIL line.",
+            "note": "One advisory line (report.md:162) is keyed to bare `B` because the criteria file has no numbered key for a model paragraph; the machine check passes and no keyed citation is invented. Flagged as a criteria-file gap, not a report defect."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script",
+            "verdict": "PASS",
+            "evidence": "report.md headers at lines 57,67,77,87,97,107,117,127,137,147: \"#### Finding 1 — `R1`\" through \"#### Finding 10 — `A7`\"; Summary `#` column reads 1–10 in the same order.",
+            "note": "Rank numbers shared between the table and the blocks."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
+            "verdict": "FAIL",
+            "evidence": "report.md:150 Finding 10: \"**Where:** body (no length bound)\" — no file name, no line, no named frontmatter field. Compare Finding 8 (report.md:130): \"**Where:** body (whole), compared with frontmatter `description`\", which does name a field. Findings 1–7 and 9 carry `pruning-stale-artifacts.md:<lines>` or `frontmatter `tools` (line 4)`.",
+            "note": "Nine of ten blocking findings carry a conforming locator. Finding 10 is an absence finding, but its own Evidence line rests on the `description` field (\"and reports what it removed\" (description)), so a conforming locator was available and was not written. Graded strictly per H14."
+        },
+        {
+            "n": 4,
+            "text": "The report follows references/report-template.md and opens with a Verdict line: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run; in a full report the Fit-for-purpose section precedes the Summary table (Structure rows first, then Detail, severity-ranked within each), and advisory (Low) findings appear once, in the Advisory section only",
+            "verdict": "PASS",
+            "evidence": "report.md:1 \"## Review: pruning-stale-artifacts — an open remit over irreversible deletion\"; :3 \"**Verdict: not yet — 10 blocking**\" (6 High + 4 Medium = 10); :15 \"### Fit-for-purpose\" precedes :25 \"### Summary\"; table rows 1–2 Structure (High, Medium), rows 3–10 Detail (High ×4 then Medium ×4); 0 rows containing \"Low\" in the table; \"### Advisory\" at :157 lists each Low once; section order Fit-for-purpose, Summary, What's already right, Findings, Advisory, Coverage, Criteria notes matches the full template.",
+            "note": "Main transcript L37 shows the template was Read before writing, as Step 7 requires."
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
+            "verdict": "PASS",
+            "evidence": "10 `**Manifests:**` lines across the 10 blocking blocks (report.md:55–156), e.g. Finding 5: \"A manifest fetch that times out or returns 404 makes every affected artifact undeterminable, and each is deleted — an outage in the release service becomes data loss.\"; Finding 10: \"A store near quota holds thousands of stale artifacts, and listing every removed ID floods the parent's context.\"",
+            "note": "Each scenario is a concrete prediction, admissible under the checklist's inferential-review rule."
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
+            "verdict": "PASS",
+            "evidence": "report.md:12–13 \"Every finding predicts behavior from the text. No finding observes a run, because this review never spawns the subagent.\"; 10 Notes lines contain \"inferential\" (e.g. :65 \"inferential — a prediction, not a demonstrated run.\"). A2 is scored as a strength (:44–45) with the sibling-scope limit disclosed at :200–201.",
+            "note": "No routing failure is asserted anywhere."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
+            "verdict": "PASS",
+            "evidence": "diff of <workspace>/.claude/agents/pruning-stale-artifacts.md against evals/files/eval-shared-criteria-invoked/pruning-stale-artifacts.md: IDENTICAL. Main transcript tool_use list: zero Edit; one Write at L69 targeting report.md (refused by the harness); Bash heredocs at L74 and L78 wrote report.md and run-notes.md only. `.claude/agents/` holds only the fixture — no review-waivers.md. report.md:196 \"deliverable — gap analysis only\".",
+            "note": "Both reviewer subagents used only Read/Glob/Bash-read calls (structure: Read ×2, Glob ×1; detail: Bash cat/ls ×1, Read ×3)."
+        }
+    ],
+    "preload_evidence": {
+        "mechanism_observed": "skills preload DID arrive, then the directed Read of the references file",
+        "transcript": "/Users/tamas/.claude/projects/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/subagents/agent-a1ff9135676661fe0.jsonl",
+        "quotes": [
+            "L1 (user, isMeta): `<command-message>prompt-quality-criteria</command-message>\\n<command-name>prompt-quality-criteria</command-name>\\n<skill-format>true</skill-format>` + \"Base directory for this skill: .../plugins/prompt-quality-criteria\\n\\n# Prompt quality criteria\\n\\nRead [`references/prompt-criteria.md`](references/prompt-criteria.md). Then return the criteria in that file to the caller.\"",
+            "L2 (user, isMeta): `<command-name>writing-simplified-technical-english</command-name>` + the 8,518-char SKILL.md body",
+            "L16: Read `/Users/tamas/Development/github/brokenrobot-xyz/agent-skills/plugins/prompt-quality-criteria/references/prompt-criteria.md` → L20 tool_result 31,456 chars beginning \"# Prompt quality criteria ... This file holds criteria groups `B`–`G`\"",
+            "L17: Read `.../writing-simplified-technical-english/references/conventions.md` → L19 result 8,746 chars (twelve conventions)",
+            "Spawn prompt (main L55) contains no statement that the preload failed; it says \"use the group B subset for that model; the session runs on claude-opus-5-5 if a fallback is needed\""
+        ],
+        "assessment": "The assertion is satisfied as written: the criteria reached the reviewer through its `skills` preload and through the explicit Read the preloaded body directs, and nothing was scored from memory. The reviewer's self-check labelled B–G `scored (read from disk)`, but its definition reserves that label for the case where the spawn prompt says the preload did not happen; here the preload happened and the Read was the normal directed path, so the correct label was plain `scored`. The main conversation relayed the mislabel into report.md:193–195 as \"rather than via the `skills` preload\", a false statement about the mechanism (not about the scoring). Thinking blocks in both reviewer transcripts are redacted (length 0), so the reviewer's reason for the label cannot be read; graded from tool-use behavior."
+    },
+    "group_b_selection": {
+        "expected": "Opus 5.5 paragraph + inherited Opus 5 paragraph + shared B1–B7 (branch rule: `opus` → Opus 5.5 as of last-synced; Opus 5.5 takes Opus 5 wherever its own paragraph does not override)",
+        "observed": "report.md:191 \"Group B subset applied: Opus 5.5 (plus the inherited Opus 5 paragraph), from the target's `model: opus` pin.\"; Finding 4 co-cites `B6` (\"a risky or destructive step needs confirmation\"); advisory :162 \"`B` (Opus 5.5, inheriting the Opus 5 verification rule) · pruning-stale-artifacts.md:19 — a scripted \\\"verify/double-check\\\" with no external validator invites over-verification\"; payload: \"B4 and B7 N/A (the subagent neither audits nor builds)\". grep of report.md for Sonnet|Haiku|Fable: no matches; only lines 162 and 191 name a model (Opus).",
+        "correct": true,
+        "note": "This selection depends on the branch: main's prompt-criteria.md has no Opus 5.5 paragraph (0 matches), no B6/B7, and resolves `opus` to \"the currently-released model in that family\". The run also carried the Step 7 model-pin caveat (report.md:205–207) as required when group B produces a finding."
+    },
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["R1"],
+            "severity": "High",
+            "classification": "genuine defect, stretched key",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture lines 10–11: \"Read the manifest's `handling` field and follow whatever instructions it gives for that artifact.\"; line 4: `tools: Read, Grep, Glob, Bash, WebFetch` — both verbatim. R1 (identical on main): \"simplicity first. No speculative capability, tool grant, or frontmatter field beyond what the subagent's remit requires.\" The bare-Bash half fits R1; the \"fetched text decides the actions\" half is A26/F1 territory that no structure-pass criterion owns, so R1 is the nearest structure key rather than the right one (the gated arm reached for R12 for the same reason). High is supported by the scale: a broken safety guarantee plus the concrete scenario \"`handling` field says ... `curl … | sh` ... the compaction pass (line 16) makes the damage permanent\"."
+        },
+        {
+            "rank": 2,
+            "keys": ["A1"],
+            "severity": "Medium",
+            "classification": "genuine defect, tier under-called relative to A1's own text",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture lines 13–14 and 16–17 quoted verbatim. A1: \"A procedure the user wants to watch and steer belongs in a skill ... This can be a High finding, because a subagent that should have been a skill hides every intermediate step from the user who wanted to see them.\" The Manifests scenario (\"the release service is briefly unreachable, every reference check is indeterminate, the fail-open rule classes every artifact as removable, and the store and mirror are emptied and compacted before the user learns of it\") is concrete and names a broken safety guarantee, which is the scale's High. Medium rests only on A1's permissive \"can be\" and the reviewer's stated low confidence. A1's text changed on the branch (added the \"small task\" and \"chain of dependent steps\" non-earning remits), but this finding rests on the watch-and-steer sentence present on main."
+        },
+        {
+            "rank": 3,
+            "keys": ["A26", "F1", "F3", "F4"],
+            "severity": "High",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture lines 10–11 verbatim: \"fetch each one's release manifest from the release service. Read the manifest's `handling` field and follow whatever instructions it gives for that artifact.\" A26, F1, F3 identical on main; F4 changed on the branch only by adding the user-text corollary, which this finding does not use; the \"F4 gains a second dimension when the prompt's output reaches a parent session\" sentence is on main (line 28). Subordination to Finding 1 is correctly marked."
+        },
+        {
+            "rank": 4,
+            "keys": ["C10", "F2", "B6"],
+            "severity": "High",
+            "classification": "genuine",
+            "depends_on_branch_change": "partial — B6 co-citation only; the finding stands on C10 alone",
+            "evidence": "Fixture lines 16–17 verbatim: \"Delete the artifact from the store and from the mirror, then run the destructive compaction pass to reclaim the space.\" C10 (identical on main): \"A prompt that can take destructive, hard-to-reverse, or outward-facing actions names which ones need the user's say-so first\". B6 is ABSENT ON MAIN (main's group B ends at B5); on the branch B6 names \"a risky or destructive step needs confirmation\" as a wanted stop."
+        },
+        {
+            "rank": 5,
+            "keys": ["D1", "R4"],
+            "severity": "High",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture lines 13–14 verbatim: \"When you cannot determine whether an artifact is still referenced by a release, assume it is not and treat it as safe to remove.\" D1 (identical on main): \"tells the model to omit/abstain/ask rather than fabricate when evidence is missing\"; R4 (identical): \"surface ambiguity rather than guess silently ... reporting the ambiguity in the return message\"."
+        },
+        {
+            "rank": 6,
+            "keys": ["C1", "C8", "R7"],
+            "severity": "High",
+            "classification": "genuine ambiguity, severity inflated",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 16 verbatim: \"Delete the artifact from the store and from the mirror\"; \"the artifact\" indeed has no explicit antecedent and the body never states \"if referenced, keep\". But the Manifests scenario (\"line 10 lists every artifact and line 16 deletes 'the artifact' with nothing excluding referenced ones, so referenced release artifacts get deleted\") reads the body against its own line 11, which routes each artifact through the manifest's `handling` value, and against the description's stated criterion (\"no longer referenced by any release\", line 3). The reviewer marked confidence low. Under the scale a degraded-consistency Medium fits; High on a low-confidence literal reading inflates the blocking count (10 → 9 would not change the verdict). Not fabricated. C1, C8, R7 identical on main."
+        },
+        {
+            "rank": 7,
+            "keys": ["A10"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 4 verbatim: `tools: Read, Grep, Glob, Bash, WebFetch`. A10 (identical on main): \"An unrestricted `Bash` grant defeats a read-only claim ... Recommend one of the two mechanisms that do exist: a `PreToolUse` hook ... or a `permissions.deny` rule ... State the trade-off\" — the Fix states both mechanisms and the trade-off. Subordinate to Finding 1, correctly marked."
+        },
+        {
+            "rank": 8,
+            "keys": ["A6", "E1", "D5"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 3 \"and reports what it removed\" and line 19 \"Verify your work, then double-check the deletions before reporting.\" — both verbatim. A6 (identical on main): \"an unstated shape produces a different report every run ... Prefer named fields in a fixed order\". The body states no output shape."
+        },
+        {
+            "rank": 9,
+            "keys": ["A9", "A27"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 8 \"You prune the artifact store.\", line 10 \"fetch each one's release manifest from the release service\", line 16 \"from the mirror\" — all verbatim. A9/A27 (identical on main): \"The body either states every input the subagent needs, or names it as something the delegation message must carry\". None of the three locations is identified or named as delegation cargo."
+        },
+        {
+            "rank": 10,
+            "keys": ["A7"],
+            "severity": "Medium",
+            "classification": "genuine, low confidence as marked",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 3 \"and reports what it removed\" verbatim; the body gives no bound. A7: \"A body that lists what to report without bounding how much is a finding.\" — present on main; the branch only adds the artifact-system alternative (file + reference), which the Fix already offers (\"or write the full list to a file and return its path\"). Manifests is concrete (\"thousands of stale artifacts\"). Locator defect noted under U3."
+        }
+    ],
+    "structure_pass_disagreement": {
+        "gated_arm": "A1 High (\"an irreversible destructive procedure is hidden from the user who should steer it\"; confidence \"high that the form is wrong; low on how often it bites\") + R12 High (\"the remit is set by fetched data, not by the definition\", lines 10–11).",
+        "forced_arm": "R1 High (\"the remit is open — fetched text decides what the subagent does\", lines 10–11 + `tools`) + A1 Medium, low confidence (\"classification and irreversible deletion share one subagent\", lines 13–17).",
+        "what_is_the_same": "Both arms found the same two defects on the same fixture lines with the same verbatim quotes and the same redesign (read-only classifier + user-approved deletion skill, or make the whole thing a skill). Both gated/would gate (≥1 High). Neither disagreement changes the verdict class.",
+        "key_disagreement_R12_vs_R1": "An ambiguous criterion set, not a judgment error. Neither R12 (\"does one job ... split test\") nor R1 (\"no speculative capability, tool grant, or frontmatter field beyond what the remit requires\") describes 'the remit is delegated to fetched content'; that defect is A26/F1, which belong to Pass 2. The structure pass has no criterion for an open remit driven by fetched content, so each run attached the nearest structure-pass key — R12 via 'scope', R1 via 'Bash beyond the remit'. Both arms' own text concedes the overlap (gated: \"the detail sweep would probably also raise ... `A26` and group `F`. Treat that as the same defect\"; forced: \"The detail pass should also score A26 and A10 on this same line\"). Fix belongs to the checklist: either give A26 a structure-pass companion or say which structure key owns an open remit.",
+        "tier_disagreement_A1": "Primarily sampling variance on a permissive criterion. A1's own text supports High: \"This can be a High finding, because a subagent that should have been a skill hides every intermediate step from the user who wanted to see them\", and the forced arm's own Manifests scenario (store and mirror emptied and compacted before the user learns of it) is concrete and safety-breaking, which the scale defines as High. The forced arm's Medium rests on (a) \"can be\" being permissive rather than mandatory and (b) low confidence that the form is wrong — but the scale maps confidence to a separate axis, not to tier, and the demotion rule demotes only when the scenario cannot be stated concretely. The fixture and A1's text therefore support the gated arm's High better. Contributing factor: the forced arm's structure spawn prompt carried the focus note \"the user pre-authorized the full detail sweep regardless of the gate\", which may have lowered the stakes of the tier call; thinking blocks are redacted so this cannot be confirmed.",
+        "material_consequence": "Subordination. SKILL.md Step 4/7 subordinate line-level findings only to a High structural finding, so with A1 at Medium the forced arm marked only A26 and A10 subordinate (to R1) and labelled C10/D1/C1 as \"related to Finding 2\" (run-notes.md:22, overriding the detail reviewer's request to subordinate them too). Under the gated arm's A1 High reading, Findings 3–6 would all be subordinate to A1 and the blocking count would read differently to an autonomous consumer."
+    },
+    "fabrication_check": "No fabrication. Every Evidence quote in the ten blocking blocks, the seven advisory lines, and the strengths matches the fixture verbatim (lines 3, 4, 8, 10–11, 13–14, 16–17, 19); `name` length 23 is correct; the fixture in the workspace is byte-identical to the committed one. Every finding, strength, N/A, and the WAIVED result traces 1:1 to the two handback payloads (structure: R1/A1/A28 + 3 strengths; detail: 8 blocking + 6 Low + 7 strengths + COVERAGE); the main conversation added no finding of its own. Criteria-age claims verified against the main transcript's grep result (L61): working copies `last-synced: 2026-10-09` ×2, installed cache `2026-08-19`. One misstatement of mechanism, not of fact about the subagent: report.md:193 \"Groups B–G were reported by the detail reviewer as `scored (read from disk)` rather than via the `skills` preload\" — the preload did occur (detail transcript L1–L2); the main conversation relayed the payload faithfully but the payload's label was wrong. Plugin cache version numbers (1.1.1 / 1.1.0) were not independently re-verified by this grader.",
+    "runner_deviations_affecting_grades": [
+        "The arm's defining input: the runner supplied all four scope answers including \"run the full detail sweep regardless\" (main L14 Skill args). This is the skill's documented Step 2/Step 4 escape, so it is the scenario's intended path for this arm, not a deviation; it is what makes all eight scenario assertions reachable here (they were UNREACHABLE in the gated arm).",
+        "Harness refused the Write tool for report.md (\"Subagents should return findings as text, not write report files\"); the report was written by Bash heredoc with the same content (L69 → L74). The refused Write targeted report.md, not the fixture; U7 unaffected.",
+        "Sibling scope narrowed by the runner: both spawn prompts say the workspace `.claude/agents/` is \"the ONLY scope in play\" and exclude ~/.claude/agents and plugin agents/. A2 Pass is therefore workspace-scoped; disclosed at report.md:200–201. No graded assertion depends on A2.",
+        "`sleep 120` hit the Bash timeout (exit 143) while waiting for Pass 1 — harmless, no grade affected.",
+        "Thinking blocks in all three transcripts are redacted (thinking length 0), so the reviewers' reasons for the `scored (read from disk)` label and for the A1 Medium tier were graded from tool-use behavior and payload text only.",
+        "The detail reviewer's `scored (read from disk)` label was applied without the spawn-prompt condition its definition requires; the main conversation relayed it verbatim. This is a reviewer-definition/self-check defect (the label's trigger is under-specified for the normal preload-then-Read path), not a runner deviation, but it is the reason assertion 1 needed transcript evidence rather than the report's own statement."
+    ],
+    "totals": {
+        "passed": 14,
+        "failed": 1,
+        "total": 15
+    },
+    "grader_summary": "Forced-sweep arm: 14/15 PASS. All eight scenario assertions pass with transcript or report quotes — detail reviewer spawned as the plugin agent type, B–G criteria arrived through the `skills` preload (detail transcript L1–L2) and the preload-directed Read of prompt-criteria.md (L16), F1/F3/F4+A26, D1, C10 each flagged on the planted line, shared keys cited unchanged, spot-checks bounded to one 20-line read, coverage rows B–G Pass/Gap with no N/A, F4 scored with A26. One universal FAIL: U3, Finding 10's locator \"body (no length bound)\" names neither the file, a line, nor a frontmatter field. The reviewer's COVERAGE label `scored (read from disk)` is a mislabel (its definition reserves it for a failed preload) that the report relayed as \"rather than via the `skills` preload\"; substance unaffected. Group B correctly resolved `opus` → Opus 5.5 + inherited Opus 5, B6 cited, no Sonnet/Haiku/Fable paragraph applied (branch-dependent: main has neither Opus 5.5 nor B6). Blocking findings: 8 genuine, R1 High is a genuine defect under a stretched key (no structure criterion owns an open remit driven by fetched content — same root cause as the gated arm's R12), A1 Medium is under-called against A1's own High note and a concrete safety scenario, Finding 6 (C1/C8 High, low confidence) is inflated — Medium fits. No fabrication; every fixture quote verified; the fixture is untouched."
+}

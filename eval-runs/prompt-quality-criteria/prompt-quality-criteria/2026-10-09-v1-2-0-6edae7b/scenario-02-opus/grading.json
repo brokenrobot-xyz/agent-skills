@@ -1,0 +1,82 @@
+{
+    "scenario_id": 2,
+    "scenario_name": "eval-group-b-conditional",
+    "model_arm": "opus",
+    "reply": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/p02-opus/reply.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Selects the Fable 5.1 subset (fable resolves to Fable 5.1) from the fixture's model: fable frontmatter",
+            "verdict": "PASS",
+            "evidence": "`generating-alt-text` pins `model: fable` in its frontmatter. As of the criteria's **last-synced** date (2026-10-09, so they're current), the `fable` alias resolves to **Fable 5.1**. That gives you this group B subset: ... **2. The Fable 5.1 paragraph.**",
+            "note": "Reads the pin, resolves the alias via the criteria file's last-synced rule, and names the Fable 5.1 paragraph as the selected subset. Transcript confirms the fixture was Read before the reply."
+        },
+        {
+            "n": 2,
+            "text": "Does not apply the Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Opus 4.8, or Sonnet 5 paragraphs; the legacy Fable 5 paragraph applies as Fable 5.1's predecessor where not overridden",
+            "verdict": "PASS",
+            "evidence": "**Excluded:** the Opus 5.5, Sonnet 5.5, Haiku 5.5, Sonnet 5, Opus 5 and Opus 4.8 paragraphs, plus the Opus half of the verification note. ... **3. The Fable 5 paragraph (its predecessor).** It applies wherever the 5.1 paragraph doesn't override it:",
+            "note": "All six non-applicable paragraphs are named as excluded and none of their content is applied; the only Opus mention ('This is the opposite of the Opus rule') is a contrast, not an application. Fable 5 is included with the correct inheritance qualifier."
+        },
+        {
+            "n": 3,
+            "text": "Surfaces the never-instruct-it-to-reproduce-its-reasoning rule for this model",
+            "verdict": "PASS",
+            "evidence": "- never instruct it to reproduce its reasoning (`C7`)   [listed under '2. The Fable 5.1 paragraph' and again under '3. The Fable 5 paragraph']",
+            "note": "Rule surfaced under the selected model's paragraph with its correct cross-reference key C7. The reply does not point at the fixture's 'write out your reasoning step by step' line, but the user said they are scoring and no assertion requires the fixture match."
+        },
+        {
+            "n": 4,
+            "text": "Still supplies the shared B1–B7 items, which are not model-conditional",
+            "verdict": "PASS",
+            "evidence": "**1. Shared items. These apply to every current model:** - **B1**: verbosity. No forced ceremony. - **B2**: effort and thinking aren't over-scaffolded. - **B3**: tool nudges. On Fable 5.x thinking is always on, so only the `low`-effort case applies. - **B4**: coverage before filtering. ... - **B5**: progress-update scaffolding. - **B6**: the turn ends when the work does. ... - **B7**: unrequested additions are contained.",
+            "note": "All seven shared items present with keys as written and marked as applying to every model. They are abbreviated to titles plus a qualifier (B5 and B7 are title-only), so the caller must still open the criteria file for full text; the assertion tests inclusion versus omission, which is met."
+        },
+        {
+            "n": 5,
+            "text": "Notes that a managed setting can override the model pin",
+            "verdict": "PASS",
+            "evidence": "One caveat to put next to any group B finding you write: managed settings can override a model pin. A prompt that depends on the quirks of exactly one model is therefore fragile.",
+            "note": "States the override and the fragility consequence, and places it where the criteria file says it belongs (alongside any group B finding)."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every criterion key cited resolves to an item defined in references/prompt-criteria.md",
+            "verdict": "PASS",
+            "evidence": "Keys cited in reply.md (grep -oE '\\b[B-G][0-9]{1,2}\\b' | sort -u): B1 B2 B3 B4 B5 B6 B7 C2 C7. Each matches a '- **<key> —' line in prompt-criteria.md (lines 83, 86, 93, 100, 106, 118, 125, 222, 229).",
+            "note": "Nine distinct keys, nine resolutions, zero misses."
+        },
+        {
+            "n": 2,
+            "text": "Criterion keys are cited as written (B4, D1, F5) — never renumbered, re-lettered, or invented",
+            "verdict": "PASS",
+            "evidence": "Cite the keys exactly as written (`B5`, `C7`, …) so your report lines up with other reviewers'.",
+            "note": "No invented, re-lettered, or renumbered keys appear; every key in the reply is in the criteria file's own letter-number form."
+        },
+        {
+            "n": 3,
+            "text": "No fixture file is modified in any scenario (byte-identical before and after)",
+            "verdict": "PASS",
+            "evidence": "cmp <workspace>/generating-alt-text/SKILL.md evals/files/eval-group-b-conditional/generating-alt-text/SKILL.md -> IDENTICAL; fixture mtime Oct 9 20:34 predates reply.md/run-notes.md at 21:06; transcript tool_use sequence: Bash, Skill, Read, Read, Bash, Bash, SubagentHandback — no Edit or Write call.",
+            "note": "The workspace copy is byte-identical to the bundle fixture and the transcript shows only a Read of it."
+        }
+    ],
+    "group_b_selection": {
+        "expected": "Shared B1–B7 + Fable 5.1 paragraph + inherited legacy Fable 5 paragraph where 5.1 does not override it (+ the Fable half of the verification-by-model note); NOT Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Opus 4.8, or Sonnet 5.",
+        "observed": "Shared B1–B7; Fable 5.1 paragraph (all eleven points of the criteria paragraph); Fable 5 paragraph 'applies wherever the 5.1 paragraph doesn't override it'; Fable half of the verification note; explicit exclusion of Opus 5.5, Sonnet 5.5, Haiku 5.5, Sonnet 5, Opus 5, Opus 4.8 and the Opus half of the verification note.",
+        "correct": true
+    },
+    "runner_deviations_affecting_grades": [],
+    "runner_deviations_noted": [
+        "reply.md and run-notes.md were written via a Bash heredoc rather than the Write tool (runner's choice; Write was not attempted). No effect on any grade.",
+        "run-notes records that the skill's 'user invokes directly -> score it yourself' branch was not followed because the user said they were scoring; this matches the scenario's expected_output (criteria subset, no scoring) and does not affect any grade."
+    ],
+    "totals": {
+        "passed": 8,
+        "failed": 0,
+        "total": 8
+    },
+    "grader_summary": "All five scenario assertions and all three universal assertions pass with quoted evidence. The run read the fixture's model: fable pin, resolved it to Fable 5.1 via the last-synced rule, returned the shared B1–B7 items plus the Fable 5.1 paragraph with the inherited Fable 5 paragraph, surfaced the reasoning-echo rule (C7) under that model, named the six non-applicable paragraphs as excluded, and carried the managed-settings override caveat. Every cited key (B1–B7, C2, C7) resolves in prompt-criteria.md and the fixture is byte-identical to the bundle copy with no Edit/Write in the transcript. Group B selection matches the expected subset exactly. Minor quality note, not a failure: B1–B7 are given as abbreviated titles rather than full criterion text. Run executed on claude-opus-5-5 as the opus arm requires."
+}

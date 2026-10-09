@@ -1,0 +1,36 @@
+{
+    "p02-opus": {
+        "scenario_dir": "scenario-02-opus",
+        "runner_agent_id": "a1fc471d46d306051",
+        "nested_agents": [],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 47815,
+                "duration_ms": 32343
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 65763,
+                "duration_ms": 136446
+            }
+        ]
+    },
+    "p02-sonnet": {
+        "scenario_dir": "scenario-02-sonnet",
+        "runner_agent_id": "a4376b3a2814d7a36",
+        "nested_agents": [],
+        "legs": [
+            {
+                "leg": "full",
+                "total_tokens": 49968,
+                "duration_ms": 33092
+            },
+            {
+                "leg": "grader",
+                "total_tokens": 59297,
+                "duration_ms": 165566
+            }
+        ]
+    }
+}

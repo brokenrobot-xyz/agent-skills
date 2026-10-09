@@ -1,0 +1,39 @@
+# reviewing-claude-skills — key resolution (suite script, run from repo root)
+s06          PASS: every cited key resolves
+s08          PASS: every cited key resolves
+s16          PASS: every cited key resolves
+s18          PASS: every cited key resolves
+s19          PASS: every cited key resolves
+s19-forced   PASS: every cited key resolves
+
+# reviewing-claude-subagents
+a06          PASS: every cited key resolves
+a07          PASS: every cited key resolves
+a13-opus     PASS: every cited key resolves
+a13-sonnet   PASS: every cited key resolves
+a15          PASS: every cited key resolves
+a15-forced   PASS: every cited key resolves
+a19          PASS: every cited key resolves
+
+# prompt-quality-criteria
+p02-opus     PASS: every cited key resolves
+p02-sonnet   PASS: every cited key resolves
+
+# fixture integrity (shasum before/after, scratch copies)
+a06: unchanged
+a07: unchanged
+a13-opus: unchanged
+a13-sonnet: unchanged
+a15-forced: unchanged
+a15: unchanged
+a19: unchanged
+p02-opus: unchanged
+p02-sonnet: unchanged
+s06: unchanged
+s07-retry: unchanged
+s07: unchanged
+s08: unchanged
+s16: unchanged
+s18: unchanged
+s19-forced: unchanged
+s19: unchanged

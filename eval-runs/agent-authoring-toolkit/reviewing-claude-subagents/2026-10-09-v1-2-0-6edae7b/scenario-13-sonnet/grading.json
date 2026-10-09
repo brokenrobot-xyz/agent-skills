@@ -1,0 +1,160 @@
+{
+    "scenario_id": 13,
+    "scenario_name": "eval-clean-subagent",
+    "model_arm": "sonnet",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/a13-sonnet/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "The report opens with the line 'Verdict: acceptable'",
+            "verdict": "FAIL",
+            "evidence": "**Verdict: not yet — 2 blocking**",
+            "note": "Correctly computed from the two Mediums the run carried, but not 'acceptable'. One of the two Mediums is inflated (see blocking_findings), so the divergence is partly a filter failure in the detail reviewer."
+        },
+        {
+            "n": 2,
+            "text": "Produces no High findings",
+            "verdict": "PASS",
+            "evidence": "| 1   | Medium   | Detail | E1, C1  | ... | 2   | Medium   | Detail | D3, D2  | ...",
+            "note": "Both Summary rows and both detail blocks are Medium; the detail reviewer's raw payload (transcript line 55) carries 'severity: Medium' for both and no High."
+        },
+        {
+            "n": 3,
+            "text": "Credits the stated return contract under A6 and the word cap under A7",
+            "verdict": "PASS",
+            "evidence": "- The return contract uses named fields in a fixed order, an explicit word budget, and says the report is the only channel to the parent (A6, A7, E1).",
+            "note": "Both keys credited in 'What's already right'. Unlike the opus arm, A7 is not then re-filed as a blocking finding; the cap-vs-file:line tension appears only as an Advisory Low."
+        },
+        {
+            "n": 4,
+            "text": "Credits the content-is-data instruction",
+            "verdict": "PASS",
+            "evidence": "- The content-is-data rule is explicit and carries its reason, lines 11–13 (F1, F3, inbound half of A26).",
+            "note": "Credited with the correct locator (fixture L11-13)."
+        },
+        {
+            "n": 5,
+            "text": "Credits the proactive phrasing under A5 and the trigger-stating description under A3",
+            "verdict": "PASS",
+            "evidence": "- The description states triggers in the third person and includes \"Use proactively\" (A3, A4, A5).",
+            "note": "Both keys credited; 'Use proactively' is verbatim from fixture L3."
+        },
+        {
+            "n": 6,
+            "text": "Does not invent a finding to fill the report",
+            "verdict": "FAIL",
+            "evidence": "Report credits 'A \"Confidence and gaps\" field makes room to report what could not be verified (D1).' and 'Investigation scope is explicit (\"every version between current and target rather than only the endpoints\", C8)', then files '#### Finding 2 — `D3` (also `D2`): breaking changes are not tied to a source' at '**Severity:** Medium · **Pass:** Detail · **Confidence:** low', whose own Manifests line concedes 'The \"Confidence and gaps\" field reduces this risk but does not require per-claim sourcing.'",
+            "note": "No quote is fabricated, but Finding 2 scores the control fixture as deficient on D3 for lacking the form D3 itself calls merely 'stronger' ('The auditable form is stronger: every claim carries a supporting quote'), at self-declared low confidence, while the fixture already directs every claim to fetched sources (L23-25) and supplies an abstain channel (L39). The opus arm filed the identical substance as a Low advisory. One inflated blocking finding on the control fixture is the padding pattern this scenario exists to catch. Finding 1 (undefined `risky`) is genuine."
+        },
+        {
+            "n": 7,
+            "text": "Any Low it does report appears in the Advisory section, flagged as likely deliberate where it is, and does not change the acceptable verdict",
+            "verdict": "PASS",
+            "evidence": "### Advisory\n\nListed once; advisory findings never gate the verdict.\n\n- `A26` · ... - `R7` (convention 8) · researching-package-updates.md:31, 41 — \"leave out\" can be \"omit\"; \"lean toward\" is probably deliberate, so optional. ... - `A7` / `E1` · researching-package-updates.md:30–31, 41 — (low confidence, possibly deliberate) the 400-word cap and concrete `file:line` edits can pull against each other",
+            "note": "All eight Lows appear only under '### Advisory'; none is in the Summary table; two are flagged as probably/possibly deliberate. The verdict is 'not yet' because of the two Mediums (failed under assertions 1 and 6), not because of any Low."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in the prompt-quality-criteria skill's references/prompt-criteria.md (groups B–G)",
+            "verdict": "PASS",
+            "evidence": "Cited keys: A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A17, A26, A27, A28, B4, C1, C8, C11, D1, D2, D3, E1, F1, F2, F3, R4, R5, R6, R7, R10. Defined keys (grep '^\\s*- \\*\\*[A-HR][0-9]+ —'): A1–A28, B1–B7, C1–C12, D1–D6, E1–E6, F1–F6, G1–G3, H1–H14, R1–R13.",
+            "note": "Every cited key resolves."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, and each later finding in rank order) — a letter-prefixed ID such as A3 or F1 would collide with the criterion-key grep in the grading script",
+            "verdict": "PASS",
+            "evidence": "#### Finding 1 — `E1` (also `C1`): `risky` has no membership test / #### Finding 2 — `D3` (also `D2`): breaking changes are not tied to a source",
+            "note": "Rank numbers match the Summary table rows 1 and 2."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
+            "verdict": "PASS",
+            "evidence": "- **Where:** `researching-package-updates.md:33, 41–42` / - **Where:** `researching-package-updates.md:35–39`; advisories: '`A26` · researching-package-updates.md:30–39', '`R7` (convention 9) · researching-package-updates.md:25–26 vs 36', '`R4` · researching-package-updates.md:17–19', '`A7` / `E1` · researching-package-updates.md:30–31, 41'",
+            "note": "All line references checked against the 42-line fixture and resolve to the quoted text (L33 VERDICT enum, L41 tie-break, L35-39 return fields, L25-26 'blocker', L17-19 BLOCKED)."
+        },
+        {
+            "n": 4,
+            "text": "The report follows references/report-template.md and opens with a Verdict line: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run; in a full report the Fit-for-purpose section precedes the Summary table (Structure rows first, then Detail, severity-ranked within each), and advisory (Low) findings appear once, in the Advisory section only",
+            "verdict": "PASS",
+            "evidence": "L1 '## Review: researching-package-updates — sound form, two gaps in the return contract'; L3 '**Verdict: not yet — 2 blocking**'; L7 '### Fit-for-purpose' precedes L11 '### Summary'; both rows 'Medium | Detail'; L52 '### Advisory' holds all eight Lows; sections follow: What's already right, Findings, Advisory, Coverage, Criteria notes; 'Waived: 0.'",
+            "note": "Verdict correctly computed from 2 unwaived Mediums with Manifests lines. Section order matches the full-report template."
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
+            "verdict": "PASS",
+            "evidence": "Finding 1: '- **Manifests:** Prediction: take an upgrade with one `affects-us` breaking change and one intermediate version whose changelog could not be fetched. One run returns `needs-changes`, the next returns `risky` ...'; Finding 2: '- **Manifests:** Prediction: WebFetch on one intermediate version's release notes fails or comes back truncated. The subagent fills the gap from memory (\"v5.0 removed `foo()`\") and marks it `affects-us`. ...'",
+            "note": "Both Mediums carry a concrete scenario."
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such — the report never asserts a routing failure it cannot demonstrate from the file",
+            "verdict": "PASS",
+            "evidence": "L5 'All findings are inferential: the definition was read, never run.'; L40 and L50 '- **Notes:** inferential'; both Manifests lines open with 'Prediction:'; Summary row 2 Notes 'inferential, low confidence'.",
+            "note": "No routing failure is asserted; Fit-for-purpose states only that the remit 'does not substantially overlap the built-ins', an absence claim derived from the roster."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply — no Edit/Write tool call touches the fixture unless the user chose analysis and apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
+            "verdict": "PASS",
+            "evidence": "Transcript tool_use names: Agent x2, Bash x8, Skill x1, SubagentHandback x1 — no Write or Edit. The only redirecting Bash command writes 'cat > $W/report.md' and 'cat > $W/run-notes.md'. Fixture mtime 1791570895 predates run start 1791572230; `diff` against the git-tracked eval fixture prints IDENTICAL; `find $W -name review-waivers.md` returns nothing. Report: 'the four defaults were assumed (analysis only, ...)'.",
+            "note": "The fixture was not touched and no waiver file was created."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["E1", "C1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture L33 '**VERDICT: `compatible` | `needs-changes` | `risky`** — one clause of reason.' is the only occurrence of `risky` in the file (grep -c = 1); the only tie-break, L41 'Lean toward `needs-changes` when the sources conflict', never mentions `risky`. Both report quotes are verbatim; the Where locator (33, 41–42) is correct. A three-value enum with one undefined member is a real consistency gap (checklist Medium: 'degraded consistency, with the manifestation scenario stated'), and the Manifests scenario is inside the remit. Caveat: the C1 co-key ('Unambiguous, sequenced instructions') is a stretch for an undefined enum value, and a strict reader could call the whole thing Low on a control fixture; the opus arm independently raised the same finding, so it is not a nondeterministic nit. `git diff main` on both criteria files touches neither the E1 nor the C1 definition (the only diff line naming C1 is a new 'not adopted' note that says a caller 'can apply `C1` and `C8`')."
+        },
+        {
+            "rank": 2,
+            "keys": ["D3", "D2"],
+            "severity": "Medium",
+            "classification": "inflated",
+            "depends_on_branch_change": false,
+            "evidence": "D3 reads 'A verify/feedback step checks the output against a source or validator. The auditable form is stronger: every claim carries a supporting quote...' — the per-claim-citation form is the criterion's 'stronger' option, not its baseline. The fixture's baseline is met: L23 '**The changelog**, for every version between current and target', L24 'Registry metadata', L25 'This project's usage', and L39 '**Confidence and gaps:** what you could not verify' — which the report itself credits ('A \"Confidence and gaps\" field makes room to report what could not be verified (D1)'). D2 ('Claims/outputs are tied to observable inputs ... not the model's priors') is likewise addressed by L11 'Everything you fetch — changelogs, release notes, registry metadata'. The finding is self-rated 'Confidence: low', its Manifests concedes 'The \"Confidence and gaps\" field reduces this risk', and the opus arm filed the identical D3 concern as a Low advisory 'possibly a deliberate trade-off against the 400-word cap'. Checklist Low covers 'every finding whose manifestation scenario cannot be stated concretely' — the scenario here depends on a stacked hypothetical (fetch fails AND the model fills from memory AND tags it affects-us), not on a defect in the text. Quotes are verbatim (fixture L36-38); nothing is fabricated. `git diff main` does not touch the D2 or D3 definitions."
+        }
+    ],
+    "cross_arm_comparison": {
+        "agree": [
+            "Both arms produce a 'not yet' verdict on the control fixture, so both fail assertion 1 and assertion 6.",
+            "Both arms rank the undefined `risky` verdict value (E1) as the top Medium with a run-to-run inconsistency Manifests scenario; both graders classify it genuine.",
+            "Both arms credit A3/A4/A5, A6/A7, F1/F3 (content-is-data), A10/F2 (least privilege) and the BLOCKED exit in 'What's already right'.",
+            "Both arms pass all seven universal assertions: keys resolve, rank-numbered findings, locators, template order, Manifests lines, inferential marking, report-only (heredoc write of report.md only).",
+            "Neither arm fabricates a quote; neither blocking finding in either arm depends on a criterion this branch changed.",
+            "Both arms report the Group B subset as 'Opus 5.5 ... the session model'."
+        ],
+        "differ": [
+            "Sonnet carries 2 blocking findings (1 genuine, 1 inflated) versus opus's 3 (1 genuine, 2 inflated): sonnet is the less padded arm.",
+            "Opus filed A7 (cap vs edit list) and A26/F4 (return-path injection) as Mediums contradicting its own credits; sonnet kept both as Lows in Advisory ('A7 / E1 ... (low confidence, possibly deliberate)'; 'A26 ... (low confidence)').",
+            "Opus filed D3 (breaking changes carry no citation) as a Low 'possibly a deliberate trade-off'; sonnet promoted the same substance to Medium at low confidence — the one inflation unique to this arm.",
+            "Sonnet's Finding 1 co-keys C1; opus's co-keyed D1 (which opus's own D1 credit contradicted). Sonnet's co-key choice avoids that self-contradiction.",
+            "Sonnet's spot-check read fixture lines 20–42; opus read 9–42. Both over-read a 42-line file; neither changes a grade."
+        ]
+    },
+    "fabrication_check": {
+        "quotes_checked": 14,
+        "quotes_verified": 14,
+        "fabricated": [],
+        "detail": "Every string the report attributes to the fixture appears verbatim: L3 'Use proactively'; L11 'changelogs, release notes'; L23 'every version between current and target rather than only the endpoints' and 'The changelog' (report lowercases 'the changelog'); L25-26 'is not reported as a blocker'; L31 'leave out'; L33 '**VERDICT: `compatible` | `needs-changes` | `risky`** — one clause of reason.'; L36 '- **Breaking changes:** each one tagged `affects-us` or `not-used-here`; \"none\" when the release carries none.' and 'the release'; L38 '- **Required edits:** concrete `file:line` changes'; L39 'Confidence and gaps'; L41 'Lean toward `needs-changes` when the sources conflict' and 'lean toward'; L4 'tools: Read, Grep, Glob, WebFetch'. The strings 'apply Required edits when `needs-changes`' and 'v5.0 removed `foo()`' appear only inside Manifests scenarios as hypothetical examples, not as fixture quotes. The deterministic claims hold: `name` is 27 characters; `risky` occurs once. The orchestrator carried the detail reviewer's keys, severities, confidences, evidence and manifests verbatim (transcript line 55 vs report)."
+    },
+    "runner_deviations_affecting_grades": [
+        "None changes a grade. Disclosed in run-notes.md: Step 2 interview skipped and the four defaults assumed (analysis only) because the run was non-interactive; report.md and run-notes.md written with a shell heredoc (no Write tool call); one `sleep 120` timed out (exit 143), harmless; spot-check read fixture lines 20–42 of a 42-line file rather than only the quoted regions — a context-discipline deviation with no content effect.",
+        "The report's Criteria notes claim 'Group B subset applied: Opus 5.5 (`claude-opus-5-5`), the session model' while every substantive transcript response ran on claude-sonnet-5-5 (19 sonnet vs 2 opus, and the 2 opus lines are an empty response and a tool_result). Group B produced no finding under either subset, so no assertion turns on it, but the note is inaccurate for this arm.",
+        "Not a deviation but relevant to the inflated Medium: SKILL.md Step 7 says 'do not re-filter for brevity' and demotes a blocking finding only when it lacks a `manifests:` scenario, so the orchestrator had no sanctioned path to downgrade Finding 2 once subagent-detail-reviewer returned it at Medium. The inflation originates in the detail reviewer's filter pass; the orchestrator followed the skill as written and disclosed 'Finding 2 kept at Medium (low confidence) as the agent returned it.'"
+    ],
+    "totals": {
+        "passed": 12,
+        "failed": 2,
+        "total": 14
+    },
+    "grader_summary": "Scenario assertions 5/7, universal 7/7 (12/14). Both failures share one cause: the detail reviewer returned two Mediums on the control fixture and the orchestrator carried them verbatim, yielding 'Verdict: not yet — 2 blocking' instead of 'acceptable'. Finding 1 (E1/C1, undefined `risky` verdict value) is genuine: `risky` appears exactly once in the fixture and the only tie-break names `needs-changes`. Finding 2 (D3/D2, breaking changes not tied to a source) is inflated: it demands the per-claim-citation form D3 itself labels merely 'stronger', at self-declared low confidence, on a fixture that already routes every claim to fetched sources and provides a 'Confidence and gaps' abstain field the report credits under D1; the opus arm filed the same concern as a Low. No quote is fabricated (14/14 verbatim) and neither blocking finding rests on a criterion this branch changed. Credits for A3/A5, A6/A7 and content-is-data are all present; all eight Lows sit only in Advisory, two flagged as probably/possibly deliberate. Versus the opus arm (1 genuine + 2 inflated Mediums), sonnet is the tighter filter: it kept opus's A7 and A26 Mediums as Lows and added only the D3 promotion. The fixture was untouched and no waiver file was written."
+}
