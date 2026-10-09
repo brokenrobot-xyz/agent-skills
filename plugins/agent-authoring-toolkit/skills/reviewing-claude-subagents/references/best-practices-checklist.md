@@ -142,28 +142,28 @@ _Unexercised:_ note.
 
 ### Fit-for-purpose — score this first
 
-- **A1 — the artifact earns its form.** _(structure pass)_ A subagent is the right choice when the task produces verbose
-  output the parent does not need, when tool restriction is the point, or when the work is
-  self-contained and returns a summary. A procedure the user wants to watch and steer belongs in a
-  skill: "Use a skill when you want the procedure to play out inside the main thread so you can see
-  and steer each step." A deterministic trigger belongs in a hook, and a standing rule belongs in
-  `CLAUDE.md`. Two remits do not earn a subagent at all, from _How and when to use subagents in
-  Claude Code_: a small task, because "for a quick fix or a focused question, the overhead of
-  delegation outweighs the benefit", and a chain of dependent steps, because "a single session
-  handling the chain is usually cleaner than a relay of subagents passing state through files."
-  When you recommend a different form, name it. This can be a High finding, because a
-  subagent that should have been a skill hides every intermediate step from the user who wanted to see
-  them.
-- **A2 — no sibling duplication.** _(structure pass)_ The subagent's remit does not substantially overlap a sibling's,
-  because "flooding Claude with options makes automatic delegation less reliable" and an overlap
-  degrades routing for both definitions. The comparison set includes the built-in subagents the
-  documentation names — `Explore`, `Plan`, and `general-purpose` — because they sit in the same
-  roster Claude routes over, so a custom subagent that duplicates Explore's research remit degrades
-  routing the same way a custom sibling does. Judge from `name` and `description` fields only. Do
-  not write a per-sibling finding; this review covers one subagent. The roster also has a size
-  budget: the documentation asks you to "keep the combined set within the 15,000-token description
-  budget", and Claude Code shows a startup warning past it, so a long description is a cost every
-  sibling pays.
+- **A1 — the artifact earns its form.** _(structure pass)_ A subagent is the right choice when the
+  task produces verbose output the parent does not need, when tool restriction is the point, or when
+  the work is self-contained and returns a summary. A procedure the user wants to watch and steer
+  belongs in a skill: "Use a skill when you want the procedure to play out inside the main thread so
+  you can see and steer each step." A deterministic trigger belongs in a hook, and a standing rule
+  belongs in `CLAUDE.md`. Two remits do not earn a subagent at all, from _How and when to use
+  subagents in Claude Code_: a small task, because "for a quick fix or a focused question, the
+  overhead of delegation outweighs the benefit", and a chain of dependent steps, because "a single
+  session handling the chain is usually cleaner than a relay of subagents passing state through
+  files." When you recommend a different form, name it. This can be a High finding, because a
+  subagent that should have been a skill hides every intermediate step from the user who wanted to
+  see them.
+- **A2 — no sibling duplication.** _(structure pass)_ The subagent's remit does not substantially
+  overlap a sibling's, because "flooding Claude with options makes automatic delegation less
+  reliable" and an overlap degrades routing for both definitions. The comparison set includes the
+  built-in subagents the documentation names — `Explore`, `Plan`, and `general-purpose` — because
+  they sit in the same roster Claude routes over, so a custom subagent that duplicates Explore's
+  research remit degrades routing the same way a custom sibling does. Judge from `name` and
+  `description` fields only. Do not write a per-sibling finding; this review covers one subagent.
+  The roster also has a size budget: the documentation asks you to "keep the combined set within the
+  15,000-token description budget", and Claude Code shows a startup warning past it, so a long
+  description is a cost every sibling pays.
 
 ### Routing
 
@@ -190,11 +190,11 @@ _Unexercised:_ note.
   summary of its work (often 1,000-2,000 tokens)", from _Effective context engineering for AI
   agents_ — not from the multi-agent research post, so a re-sync checks the page the quote actually
   came from. A body that lists what to report without bounding how much is a finding. One
-  alternative satisfies this criterion without a length bound: _How we built our multi-agent research
-  system_ recommends to "implement artifact systems where specialized agents can create outputs that
-  persist independently" — the subagent stores its full output in a file or other external system
-  and returns a lightweight reference to it. A body that does this and returns only the reference
-  passes.
+  alternative satisfies this criterion without a length bound: _How we built our multi-agent
+  research system_ recommends to "implement artifact systems where specialized agents can create
+  outputs that persist independently" — the subagent stores its full output in a file or other
+  external system and returns a lightweight reference to it. A body that does this and returns only
+  the reference passes.
 
 ### Context inheritance
 
@@ -202,12 +202,13 @@ _Unexercised:_ note.
   `CLAUDE.md` hierarchy that the main conversation loads. Restating those rules in the body spends
   tokens on every delegation and buys nothing, and the two copies drift. Read the host project's
   `CLAUDE.md` before scoring this, and quote the overlap. _Exceptions:_ the built-in `Explore` and
-  `Plan` agents skip `CLAUDE.md` and the git status snapshot, and a rule that must reach them belongs
-  in the delegation message rather than in a definition. A definition that sets `omitClaudeMd: true`
-  (v2.1.271 or later) launches without the user, project, and local `CLAUDE.md` files — managed
-  policy files still load — so restating a rule it needs is correct there, not duplication. Score the
-  reverse case instead: an `omitClaudeMd` definition whose remit depends on a project rule it neither
-  restates nor names as delegation-message cargo.
+  `Plan` agents skip `CLAUDE.md` and the git status snapshot, and a rule that must reach them
+  belongs in the delegation message rather than in a definition. A definition that sets
+  `omitClaudeMd: true` (v2.1.271 or later) launches without the user, project, and local `CLAUDE.md`
+  files — managed policy files still load — so restating a rule it needs is correct there, not
+  duplication. A plugin's own `CLAUDE.md` is not part of that hierarchy: "Claude Code doesn't load a
+  `CLAUDE.md` at the plugin root", and the page's direction is "To include instructions in a plugin,
+  write them as a skill" (source: Add components to a plugin).
 - **A9 — the body assumes no conversation.** A non-fork subagent sees only its system prompt, the
   delegation message, and the context listed under `A8`. It does not see prior messages, the skills
   already invoked, or the files Claude already read. A body that refers to "the change we discussed",
@@ -277,94 +278,98 @@ _Unexercised:_ note.
 - **A16 — `permissionMode` is safe and effective.** **A definition cannot rely on `permissionMode`
   for safety**, because when the parent is in `bypassPermissions`, `acceptEdits`, or auto mode, the
   subagent runs in the parent's mode and Claude Code ignores the subagent's own setting. **A
-  definition cannot grant itself `bypassPermissions` either:** from v2.1.267, a subagent that sets it
-  under a parent in `default`, `dontAsk`, or `plan` mode keeps the parent's mode — "a subagent runs in
-  this mode only when the main conversation does." So a `bypassPermissions` value is dead
-  configuration on current versions; on older versions it is a grant that needs a stated reason. The same fallback applies to `auto`
-  when auto mode is not available to the subagent. Under a parent in auto mode, the classifier also
-  reviews the subagent's work and final report before the report is delivered. Score `N/A` when the
-  field is absent.
-  _Unexercised:_ none of the five real subagents set this field.
+  definition cannot grant itself `bypassPermissions` either:** from v2.1.267, a subagent that sets
+  it under a parent in `default`, `dontAsk`, or `plan` mode keeps the parent's mode — "a subagent
+  runs in this mode only when the main conversation does." So a `bypassPermissions` value is dead
+  configuration on current versions; on older versions it is a grant that needs a stated reason. The
+  same fallback applies to `auto` when auto mode is not available to the subagent. Under a parent in
+  auto mode, the classifier also reviews the subagent's work and final report before the report is
+  delivered. Score `N/A` when the field is absent. _Unexercised:_ none of the five real subagents
+  set this field.
 
 ### Frontmatter validity
 
 - **A17 — `name` is loadable.** Lowercase letters and hyphens, at most 256 characters. **Claude Code
   does not load a `name` that contains `:`, starts with `-`, or exceeds 256 characters**, and the
   only trace is a line in the debug log; `:` is reserved for plugin-scoped identifiers. Identity
-  comes from `name` alone and the filename is free, so a filename mismatch is not a finding here.
-  A plugin-shipped subagent registers under a scoped name: the plugin name, each subfolder of the
+  comes from `name` alone and the filename is free, so a filename mismatch is not a finding here. A
+  plugin-shipped subagent registers under a scoped name: the plugin name, each subfolder of the
   plugin's `agents/` directory, and the `name` (or the file name when `name` is absent), joined with
-  colons — `agents/review/security.md` in `my-plugin` loads as `my-plugin:review:security`. Moving a
-  plugin agent between subfolders therefore renames it, and breaks every caller that names it. This
-  is a deterministic lookup.
+  colons — `agents/review/security.md` in `my-plugin` loads as `my-plugin:review:security`. A file
+  listed in the manifest's `agents` field "loads without subfolder names", so
+  `"agents": "./custom/review/security.md"` loads as `my-plugin:security`, and "the `agents`
+  manifest key replaces the `agents/` scan", so a file left only under `agents/` then does not load.
+  Moving a plugin agent between subfolders therefore renames it, and breaks every caller that names
+  it. This is a deterministic lookup.
 
-    **Two definitions sharing a `name` resolve differently depending on where they sit.** In the same
-    `.claude/agents/` tree, including its subfolders, Claude Code loads one of them chosen by
+    **Two definitions sharing a `name` resolve differently depending on where they sit.** In the
+    same `.claude/agents/` tree, including its subfolders, Claude Code loads one of them chosen by
     filesystem read order, with no documented precedence, and `/doctor` reports the clash. Across
-    nested project directories, the definition closest to the working directory wins.
-    Across scopes, the higher-priority location wins: managed settings, then the `--agents` CLI
-    flag, then `.claude/agents/`, then `~/.claude/agents/`, then a plugin's `agents/` directory.
-    Report the same-tree case as a defect and the other two as resolution rules the reader should
-    know.
+    nested project directories, the definition closest to the working directory wins. Across scopes,
+    the higher-priority location wins: managed settings, then the `--agents` CLI flag, then
+    `.claude/agents/`, then `~/.claude/agents/`, then a plugin's `agents/` directory. Report the
+    same-tree case as a defect and the other two as resolution rules the reader should know.
 
 - **A18 — plugin-shipped fields.** A subagent shipped in a plugin supports `name`, `description`,
   `model`, `effort`, `maxTurns`, `tools`, `disallowedTools`, `skills`, `memory`, `background`,
-  `omitClaudeMd`, `isolation`, `color`, and the `cacheTtl` key of `experimental` (source: Add components
-  to a plugin). **Claude Code ignores `hooks`, `mcpServers`, and `permissionMode` for
+  `omitClaudeMd`, `isolation`, `color`, and the `cacheTtl` key of `experimental` (source: Add
+  components to a plugin). **Claude Code ignores `hooks`, `mcpServers`, and `permissionMode` for
   security reasons**, and `initialPrompt` as well, and nothing warns the author. A plugin subagent
-  declaring `permissionMode: plan` as a safety measure has no safety measure. Frontmatter that does
-  not parse loads the agent with every field ignored, named after its file. Score `N/A` when the
-  subagent is not plugin-shipped. _Unexercised:_ none of the five real subagents is plugin-shipped.
+  declaring `permissionMode: plan` as a safety measure has no safety measure. The documented remedy:
+  "An agent file can't add hooks or MCP servers on its own, so add those as plugin hooks and MCP
+  servers instead." Frontmatter that does not parse loads the agent with every field ignored, named
+  after its file, with the description `Agent from <plugin> plugin`; the page points to
+  `claude plugin validate` "to find these files". Score `N/A` when the subagent is not
+  plugin-shipped.
+  _Unexercised:_ none of the five real subagents is plugin-shipped.
 
     **Every subagent, plugin-shipped or not:** Claude Code ignores an unrecognized field without an
     error, and multi-word fields are camelCase (`maxTurns`, `disallowedTools`, `omitClaudeMd`), so a
     misspelled or snake_case field is dead configuration. `cacheTtl` belongs inside the
-    `experimental` map, never at the top level. `initialPrompt` takes effect only when the agent runs
-    as the main session agent via `--agent`, so in a definition meant only for delegation it is dead
-    configuration.
+    `experimental` map, never at the top level. `initialPrompt` takes effect only when the agent
+    runs as the main session agent via `--agent`, so in a definition meant only for delegation it is
+    dead configuration.
 
-- **A19 — `model`, `effort`, and `maxTurns` are justified.** A pin needs a stated reason. Claude Code
-  resolves a subagent's model in this order: the per-invocation `model` parameter, the `model`
+- **A19 — `model`, `effort`, and `maxTurns` are justified.** A pin needs a stated reason. Claude
+  Code resolves a subagent's model in this order: the per-invocation `model` parameter, the `model`
   frontmatter (where `inherit` selects the main conversation's model), the
   `CLAUDE_CODE_SUBAGENT_MODEL` environment variable, then the main conversation's model. Before
   v2.1.251 the environment variable came first and overrode the other two. Omitting `model` is
   therefore not the same as `model: inherit`: an omitted field lets the environment variable apply,
-  and `inherit` outranks it. **The pin is still overridable:** the per-invocation parameter wins over
-  it; `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` (v2.1.257 or later) makes Claude Code ignore every definition's `model`; and
-  an organization's `availableModels` allowlist substitutes for a blocked value — a blocked family
-  alias such as `opus` runs on the newest version of that family the allowlist permits (from
-  v2.1.222), and any other blocked value, or an alias whose family the allowlist permits no version
-  of, falls back to the inherited model. **A family alias does not always mean the alias target:**
-  when the main conversation's model belongs to that family, `model: opus` runs on the main
-  conversation's exact model, including any `[1m]` suffix. A definition depending on the quirks of
-  exactly one model is therefore fragile. All five real subagents pinned a model with no stated
-  reason.
+  and `inherit` outranks it. **The pin is still overridable:** the per-invocation parameter wins
+  over it; `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` (v2.1.257 or later) makes Claude Code ignore every
+  definition's `model`; and an organization's `availableModels` allowlist substitutes for a blocked
+  value — a blocked family alias such as `opus` runs on the newest version of that family the
+  allowlist permits (from v2.1.222), and any other blocked value, or an alias whose family the
+  allowlist permits no version of, falls back to the inherited model. **A family alias does not
+  always mean the alias target:** when the main conversation's model belongs to that family, `model:
+opus` runs on the main conversation's exact model, including any `[1m]` suffix. A definition
+  depending on the quirks of exactly one model is therefore fragile. All five real subagents pinned
+  a model with no stated reason.
 
     **`effort`** overrides the session's effort level but not the `CLAUDE_CODE_EFFORT_LEVEL`
-    environment variable, and for a non-fork subagent Claude can pass a per-invocation `effort` (v2.1.292 or later)
-    that overrides the field and persists on resume. Available levels depend on the model, so an `effort`
-    pin is coupled to the `model` pin, and a level the resolved model lacks is a finding.
-    **`maxTurns`** stops the subagent at the limit; from v2.1.246 Claude Code returns the output
-    marked as partial and Claude can resume it, so a body whose return contract (`A6`) assumes a
-    complete run should say what a partial return contains.
+    environment variable, and for a non-fork subagent Claude can pass a per-invocation `effort`
+    (v2.1.292 or later) that overrides the field and persists on resume. Available levels depend on
+    the model. **`maxTurns`** stops the subagent at the limit; from v2.1.246 Claude Code returns the
+    output marked as partial and Claude can resume it.
 
 - **A20 — `memory` scope fits, and the body uses it.** `project` is the documented recommended
   default. When memory is on, the body also tells the subagent when to read and when to write it, or
   the directory stays empty and the field buys nothing. Subagent memory is part of auto memory: when
   auto memory is off (`autoMemoryEnabled` or `CLAUDE_CODE_DISABLE_AUTO_MEMORY`), the field has no
-  effect, so a remit that depends on memory states that dependency. Score `N/A` when the field is
+  effect. Score `N/A` when the field is
   absent.
   _Unexercised:_ none of the five real subagents set this field.
 - **A21 — `isolation: worktree` is warranted.** It costs setup time and disk, and it branches by
-  default from the default branch rather than the parent's `HEAD` (the base branch is configurable), so a subagent expecting the parent's uncommitted
-  work will not find it. Score `N/A` when the field is absent. _Unexercised:_ none of the five real
-  subagents set this field.
+  default from the default branch rather than the parent's `HEAD` (the base branch is configurable),
+  so a subagent expecting the parent's uncommitted work will not find it. Score `N/A` when the field
+  is absent. _Unexercised:_ none of the five real subagents set this field.
 - **A22 — `skills` preload versus the Skill tool.** `skills` injects **full** skill content at
   startup, on every delegation, so it suits knowledge the subagent always needs. A subagent reaches
-  everything else through the Skill tool, which costs nothing until it is used. Preloading a skill the
-  subagent rarely needs pays for it every time. A skill with `disable-model-invocation: true` cannot
-  be preloaded at all, and only the first 32 distinct names in the list are preloaded — a 33rd
-  entry is dead configuration.
+  everything else through the Skill tool, which costs nothing until it is used. Preloading a skill
+  the subagent rarely needs pays for it every time. A skill with `disable-model-invocation: true`
+  cannot be preloaded at all, and only the first 32 distinct names in the list are preloaded — a
+  33rd entry is dead configuration.
 
 ### Body craft
 
@@ -375,25 +380,29 @@ _Unexercised:_ note.
   duplicates from a skill it also invokes. Prefer clearly delineated sections with Markdown headers.
 - **A24 — delegation and fan-out, when the subagent delegates.** A subagent that spawns its own
   subagents states each child's objective, output format, guidance on tools and sources, and task
-  boundaries, because "without detailed task descriptions, agents duplicate work, leave gaps, or fail
-  to find necessary information." It also states how many children and when: subagents nest three
-  layers below the main conversation by default from v2.1.219, adjustable with
+  boundaries, because "without detailed task descriptions, agents duplicate work, leave gaps, or
+  fail to find necessary information." It also states how many children and when: subagents nest
+  three layers below the main conversation by default from v2.1.219, adjustable with
   `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` (`1` turns nesting off), and from v2.1.217, when 20
-  subagents are running in a session, spawning another **fails** with
-  `Concurrent subagent limit reached` and the error tells Claude not to retry — adjustable with
+  subagents are running in a session, spawning another **fails** with `Concurrent subagent limit
+reached` and the error tells Claude not to retry — adjustable with
   `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`. A fan-out wider than the limit does not queue: the spawns
-  past it fail. Parallel children must not edit the same file: "Two subagents editing the same file in parallel is a recipe for conflict" (_How and
-  when to use subagents in Claude Code_). Score `N/A` when the subagent has no `Agent` tool, which is
-  the common case.
+  past it fail. Parallel children must not edit the same file: "Two subagents editing the same file
+  in parallel is a recipe for conflict" (_How and when to use subagents in Claude Code_). Score
+  `N/A` when the subagent has no `Agent` tool, which is the common case.
 - **A25 — file references are reachable.** A body that references a path needs `Read` in its `tools`
-  list and a path that resolves. **A subagent starts in the main conversation's working directory, not in the
-  directory holding the definition file**, so a path written relative to the definition resolves
-  somewhere else entirely. Prefer a repository-root-relative path. This defect fired on a real subagent whose Markdown
-  links used `../../` from `.claude/agents/`. **A plugin-shipped subagent has a documented fix:**
-  write `${CLAUDE_PLUGIN_ROOT}` in the Markdown body, and Claude Code substitutes the plugin's install
-  path when it loads the content. The variable is not in the environment of Bash commands the
-  subagent runs, so a body that expects `$CLAUDE_PLUGIN_ROOT` to expand inside a shell command is
-  broken (source: the plugin manifest reference).
+  list and a path that resolves. **A subagent starts in the main conversation's working directory,
+  not in the directory holding the definition file**, so a path written relative to the definition
+  resolves somewhere else entirely. Prefer a repository-root-relative path. This defect fired on a
+  real subagent whose Markdown links used `../../` from `.claude/agents/`. **A plugin-shipped
+  subagent has a documented fix:** write `${CLAUDE_PLUGIN_ROOT}` in the Markdown body, and Claude
+  Code substitutes the plugin's install path when it loads the content. The variable is not in the
+  environment of Bash commands the subagent runs, so a `$CLAUDE_PLUGIN_ROOT` left for the shell to
+  expand resolves to nothing (source: the plugin manifest reference). Two more variables are
+  substituted in agent content: `${CLAUDE_PROJECT_DIR}`, "the project root", and
+  `${CLAUDE_PLUGIN_DATA}`, "a directory that survives updates". `${CLAUDE_PLUGIN_ROOT}` is
+  different: "the path changes when the plugin updates. Don't write state there" (source: Add
+  components to a plugin).
 - **A26 — the return path is an injection path into the parent.** A subagent that reads third-party
   content — fetched pages, command output, files the user never reviewed — and reports upward carries
   that content into the parent session. Claude Code scans subagent output from v2.1.210, but the scan
@@ -470,12 +479,12 @@ numbering and meaning, so a reader who knows one reviewer's report can read the 
   without the subagent. Write the scenarios against that gap. Measure the baseline. Then write the
   minimum body that passes. Assertions settle on the second pass, so a scenario set reaching its
   assertions after a first run is correct rather than late.
-- **H9 — criteria are specific, measurable, achievable, and relevant.** Base targets on a benchmark, a
-  prior experiment, or expert knowledge rather than on hope. "Most use cases need multidimensional
+- **H9 — criteria are specific, measurable, achievable, and relevant.** Base targets on a benchmark,
+  a prior experiment, or expert knowledge rather than on hope. "Most use cases need multidimensional
   evaluation along several success criteria", and each criterion defines its own terms — a bar like
-  "egregious" is not measurable until the eval says what it means. Volume of cheap automated checks beats a
-  handful of hand-graded ones: "More questions with slightly lower signal automated grading is better
-  than fewer questions with high-quality human hand-graded evals."
+  "egregious" is not measurable until the eval says what it means. Volume of cheap automated checks
+  beats a handful of hand-graded ones: "More questions with slightly lower signal automated grading
+  is better than fewer questions with high-quality human hand-graded evals."
 - **H10 — grader independence.** The instance that produced an output does not grade it. The source
   goes further than instance independence: "Generally best practice to use a different model to
   evaluate than the model used to generate the evaluated output." Self-grading in the same run is not
@@ -596,3 +605,9 @@ criteria on purpose. A refresh that reports one of them as drift has found nothi
 - **New interactive-session mechanics on the documentation page** — the `/tasks` row lifecycle, the
   subagent panel, mods' `agent.spawn` hook model override, and the `--append-subagent-system-prompt`
   flag. None is a property of a definition file.
+- **_Add components to a plugin_ beyond its agent rules** — the skills, commands, hooks, MCP, LSP,
+  executables, themes, channels, monitors, `userConfig` dialog, and dependency-install sections;
+  the plugin `settings.json` `agent` key that runs a plugin agent as the main thread, and its
+  precedence rules; the data-directory naming, Windows path form, `/reload-plugins`, and the
+  claude.ai and Cowork component differences. They configure the plugin or other component types,
+  not a subagent definition.
