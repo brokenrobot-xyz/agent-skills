@@ -254,7 +254,13 @@ subagents readily; never instruct it to reproduce its reasoning (`C7`).
   them." (Also stated by the open standard's skill-evaluation guidance, outside this file's sources:
   reasoning-based instructions outperform rigid `ALWAYS`/`NEVER` directives. Overlaps the caller's
   guardrail-consequence criterion, which applies the same rule to prohibitions; `C11` is the general
-  case.)
+  case.) **Scope:** a reason earns its place when deleting it would change what the model does — it
+  lets the model handle cases the rule does not name, explains a non-obvious constraint, or states
+  the consequence of a prohibition. Narration that changes nothing — steps the model would take
+  anyway, general knowledge, the history of why the prompt was written — is a conciseness defect,
+  not a `C11` pass. Claude Code's skills page draws the same line from the cost side: "every line is
+  a recurring token cost. State what to do rather than narrating how or why"
+  (`https://code.claude.com/docs/en/skills`, outside this file's sources).
 - **C12 — say what to do, not what not to do.** Behavior and formatting steer better as a positive
   instruction than as a prohibition — "write in smoothly flowing prose paragraphs" over "do not use
   markdown" — because a prohibition rules one option out and leaves every other option open.

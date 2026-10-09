@@ -184,8 +184,11 @@ bundle file — do not flag its presence under any criterion.
   prior models are often too prescriptive for Claude Fable 5 and can degrade output quality" (the
   Fable 5 prompting doc, a group `B` source in `prompt-quality-criteria`; the Fable 5.1 and Opus 5.5
   docs say their predecessors' prompts carry over, so the finding stands for them). The best-practices
-  doc's default assumption points the same way: "Claude is already very smart". Prefer short
-  steering + intent over exhaustive rule lists. Corroborated by the open
+  doc's default assumption points the same way: "Claude is already very smart", and the Claude Code
+  skills page adds "State what to do rather than narrating how or why". Prefer short steering +
+  intent over exhaustive rule lists. That page's line targets narration, not reasons: a short reason
+  that changes behavior is `prompt-quality-criteria`'s `C11`, not padding, and `C11`'s scope note
+  draws the line, so never flag the same reason under both. Corroborated by the open
   standard's iteration guidance: when pass rates plateau while rules keep accumulating, the skill is
   over-constrained, and removing instructions is the move to try.
 - **A18 — optional spec frontmatter used correctly.** `license` is a license name or the name of a
