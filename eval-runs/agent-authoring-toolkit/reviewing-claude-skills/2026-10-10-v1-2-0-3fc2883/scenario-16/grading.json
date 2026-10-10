@@ -1,0 +1,211 @@
+{
+    "scenario_id": 16,
+    "scenario_name": "eval-blanket-tool-default",
+    "arm": "rerun-after-3fc2883",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/s16-rerun/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Flags the blanket 'if in doubt' default against C9, explaining that it now causes overtriggering",
+            "verdict": "PASS",
+            "evidence": "`C9` · SKILL.md:10 intro — \"If in doubt, use the Grep tool.\" is the blanket nudge C9 names word for word. On Sonnet 5.5 it makes Grep fire too often, and it is redundant with step 4's scoped nudge. Delete it.",
+            "note": "Flagged under C9 with the over-triggering rationale tied to the pinned current model ('On Sonnet 5.5 it makes Grep fire too often'). The 'now' (older models undertriggered) survives only through the model reference, as in the first run. Severity is Low (advisory); the assertion does not constrain severity. The same line also feeds Finding 2 (A8 Medium, 'table never named'), so the blanket default's verdict weight comes from A8, not C9."
+        },
+        {
+            "n": 2,
+            "text": "Does NOT flag the scoped low-effort nudge — that is B3 working as intended",
+            "verdict": "PASS",
+            "evidence": "What's already right: \"Step 4 scopes its tool nudge to a step that states its effort level, the B3 pattern, so the B2 carve-out applies (B2, B3).\" / Coverage: \"| B | Pass | — |\" / Summary table keys: A22, A8, C8, D1 / R4, C1 / E3, H1 — no B2 or B3 anywhere in a finding.",
+            "note": "No blocking finding keys B2/B3 or names the nudge as a defect; the nudge is explicitly left standing as B3 behavior, which is the expected output verbatim. Finding 5 (C1/E3) sits on step 4 but attacks its ordering ('before you edit the table' vs numbered position) and the missing rewrite action, not the Grep nudge or its scoping clause. The advisory `A20` / `C1` Low (SKILL.md:4, :18 — 'step 4 says \"This step runs at low effort\", but no `effort:` field is set ... Add `effort: low`, or reword step 4 as \"when this step runs at low effort\"') is ruled a frontmatter-consistency flag, not a flag on the nudge: it cites A20 (Claude Code `model`/`effort` frontmatter extensions), its defect is that the frontmatter does not set what the prose asserts, both offered fixes keep the Grep nudge and keep it scoped to low effort, it is self-rated low confidence / 'possibly deliberate', and it never cites B2 or B3. Residual risk only: the same observation promoted to Medium in a later run would make this assertion contested."
+        },
+        {
+            "n": 3,
+            "text": "Recommends scoping the nudge to the case that needs it rather than deleting tool guidance wholesale",
+            "verdict": "PASS",
+            "evidence": "\"it is redundant with step 4's scoped nudge. Delete it.\" (C9 advisory) / Finding 2 Fix: \"Hardcode the table's path and entry format in the skill, and delete the \\\"if in doubt\\\" fallback.\" / What's already right: \"Step 4 scopes its tool nudge ... the B3 pattern\"",
+            "note": "Only the blanket line is deleted; the scoped step-4 nudge is named as the surviving guidance in both the C9 advisory and the strengths section. No recommendation removes or weakens the scoped nudge."
+        },
+        {
+            "n": 4,
+            "text": "Treats C9 and B3 as complementary, not contradictory",
+            "verdict": "PASS",
+            "evidence": "\"is the blanket nudge C9 names word for word ... and it is redundant with step 4's scoped nudge. Delete it.\" alongside \"Step 4 scopes its tool nudge to a step that states its effort level, the B3 pattern, so the B2 carve-out applies (B2, B3).\"",
+            "note": "Blanket nudge scored under C9, scoped nudge credited under B3, with the C9 fix pointing at the B3-compliant line as the replacement: applied as two halves of one rule. Cleaner than the first run, since B3 no longer appears in any blocking finding's key column. Not stated in so many words, but nothing sets the two criteria against each other."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key resolving to A/H/R in best-practices-checklist.md or B–G in prompt-criteria.md",
+            "verdict": "PASS",
+            "evidence": "Blocking: A22, A8, C8, D1, R4, C1, E3, H1. Advisory: A8, C9, A21, D3, C1, A9, A10, A20, F1, R7. Credits: A4 A5 A13 A17 R1 R12 R14 C10 R10 C11 A1 A3 A16 B2 B3 R3 G1 A11. Coverage: R5 R6 H2 H18.",
+            "note": "All 38 distinct keys grep-verified as a defined '- **KEY —' item in the current checklist or prompt-criteria file (each count = 1)."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers",
+            "verdict": "PASS",
+            "evidence": "#### Finding 1 — `A22` ... #### Finding 2 — `A8` ... #### Finding 6 — `H1`; summary '#' column 1–6.",
+            "note": "No letter-prefixed IDs anywhere in the report."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — a file plus a line or section",
+            "verdict": "PASS",
+            "evidence": "Where: `.claude/skills/mapping-redirects/SKILL.md:14–17` (Steps 1–3) / `:10, 14` (intro, step 1) / `:15–16` (step 2) / `:3` (description) with `:14` (step 1) / `:18–20` (step 4) / bundle root (contains only `SKILL.md`); every advisory line carries SKILL.md:<line> (F1: 'SKILL.md whole body').",
+            "note": "H1's bundle-root locator is the only possible locator for a missing directory."
+        },
+        {
+            "n": 4,
+            "text": "Report follows report-template.md: Summary table (Structure rows first, then Detail, severity-ranked) precedes detail blocks with matching ranks; advisory Lows appear once, in Advisory only",
+            "verdict": "PASS",
+            "evidence": "| 1 | Medium | Structure | A22 | ... | 2 | Medium | Structure | A8 | ... | 3 | Medium | Detail | C8 | ... | 6 | Medium | Detail | H1 | ... ### Findings #### Finding 1 ... #### Finding 6 ... ### Advisory Listed once; advisory findings never gate the verdict.",
+            "note": "Two Structure rows precede four Detail rows, all Medium; ranks 1–6 match the detail blocks; each Low appears exactly once, in Advisory. Section order matches the template (title, Verdict, paragraph, Summary, What's already right, Findings, Advisory, Coverage, Criteria notes). Minor: the Notes column and Notes lines carry confidence/overlap remarks ('low confidence; Advisory C1 overlaps') rather than the template's subordinate/contested notes; and the same gap is carried at two severities from the two passes (A8 Medium + C1 Low on the table name; C1/E3 Medium + A8 Low on step 4), cross-referenced rather than merged. Neither breaks the template's layout rules."
+        },
+        {
+            "n": 5,
+            "text": "Report opens with a Verdict line per the template",
+            "verdict": "PASS",
+            "evidence": "**Verdict: not yet — 6 blocking**",
+            "note": "Directly under the title; six unwaived Medium findings, no waivers file; count matches the summary table."
+        },
+        {
+            "n": 6,
+            "text": "Every High or Medium finding carries a Manifests line",
+            "verdict": "PASS",
+            "evidence": "F1: 'The table holds `/b → /a`, and the user reports that `/a` moved to `/b`. Step 1 writes `/a → /b 301`...'; F2: 'The repo holds two redirect sources ... The model greps, picks the wrong file...'; F3: 'The table holds `/a → /b`, and `/b` moves to `/c`...'; F4: 'A 404 report names `/pricing-2023`...'; F5: 'At step 4 it greps and finds 12 in-page links...'; F6: 'A later edit drops the loop stop in step 3...'",
+            "note": "All six blocking findings carry a concrete scenario."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless apply was chosen; review-waivers.md only on explicit waive",
+            "verdict": "PASS",
+            "evidence": "Transcript tool_use inventory: 2 Agent, 7 Bash, 3 Read, 1 Write (to .../s16-rerun/report.md, blocked: 'Subagents should return findings as text, not write report files'), 0 Edit. The only Bash commands naming mapping-redirects/ are `cat -n`, `find`, `sed -n` reads. All five 'review-waivers' mentions are 'WAIVED: none (the bundle has no `review-waivers.md`)' or skill text. Run notes: 'Step 8: skipped, because the deliverable is analysis only.'",
+            "note": "Fixture byte-identical to the repo copy (diff: IDENTICAL); fixture mtime 19:49:58 precedes run start 19:50:12. Scope reply 'use the defaults' = analysis only."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["A22"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_first_run": "carried over (first run Finding 1, same key, same lines)",
+            "depends_on_branch_change": "no — A22 text identical on main",
+            "evidence": "Fixture :14 '1. Add one entry per moved URL: old path to new path, status 301.' and :17 '3. Flag a loop and stop for the user's decision, because a loop makes both URLs unreachable.' — both verbatim. Writing to the live table before the loop check is a real ordering defect; A22's plan-validate-execute pattern for destructive/high-stakes operations fits a redirect table whose loop state makes URLs unreachable. Medium is at the upper edge for a 4-step skill but not inflated."
+        },
+        {
+            "rank": 2,
+            "keys": ["A8"],
+            "severity": "Medium",
+            "classification": "genuine (borderline; self-rated low confidence)",
+            "new_vs_first_run": "new — the first run's structure pass returned only A22",
+            "depends_on_branch_change": "no — main's A8 already reads 'Deterministic lookups are not left as vague prose'; the branch only appends a hooks sentence",
+            "evidence": "Fixture :10 'Keep the redirect table correct when pages move. If in doubt, use the Grep tool.' — verbatim. The table's path and entry format are deterministic facts for a project-scoped skill and the fixture leaves them to a vague search, which A8 names directly. The Manifests (two redirect sources, wrong file edited) is a plausible consequence. Borderline because the fixture is a 14-line eval device and the 'if in doubt' line is primarily C9 territory, which the report also flags as a Low; the runner cross-referenced rather than merged. Does not contradict any scenario assertion."
+        },
+        {
+            "rank": 3,
+            "keys": ["C8"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_first_run": "new in substance — first run's C8 was a co-key on the step-4 finding; this one targets step 2's chain-check scope",
+            "depends_on_branch_change": "no — C8 text identical on main",
+            "evidence": "Fixture :15–16 'Flag a chain — an entry whose target is itself redirected — and collapse it to the final target' — verbatim across the line wrap. The step does not say whether existing entries targeting the newly moved path are checked; C8 ('Instructions meant to apply broadly state their scope ... won't silently generalize') applies. The Manifests (/a → /b exists, /b moves to /c, new entry alone is checked) is concrete and correct."
+        },
+        {
+            "rank": 4,
+            "keys": ["D1", "R4"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_first_run": "carried over (first run Finding 2, same keys)",
+            "depends_on_branch_change": "no — D1 and R4 identical on main",
+            "evidence": "Fixture :3 'adds entries for renamed or deleted URLs ... Use when pages move or a 404 report comes in.' and :14 'old path to new path, status 301' — verbatim (ellipsis in the report is honest). No rule exists for a URL with no successor; D1/R4 ask for abstain/ask rather than invent."
+        },
+        {
+            "rank": 5,
+            "keys": ["C1", "E3"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_first_run": "carried over in substance (first run Finding 3 keyed C1/C8 on the same lines and the same missing-rewrite defect); re-keyed C1/E3 and now also names the numbered-order contradiction",
+            "depends_on_branch_change": "no — C1 and E3 identical on main",
+            "evidence": "Fixture :18–20 'use `Grep` to enumerate every occurrence of the old path across the content files before you edit the table, so no in-page link keeps pointing at the old URL.' — verbatim. Step 4 is numbered after the table edits it says it must precede, and nothing updates the enumerated links. Attacks ordering and the missing action, not the Grep nudge or its 'runs at low effort' scoping clause."
+        },
+        {
+            "rank": 6,
+            "keys": ["H1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_first_run": "carried over (first run Finding 5)",
+            "depends_on_branch_change": "no — H1 identical on main",
+            "evidence": "Workspace bundle contains only .claude/skills/mapping-redirects/SKILL.md (verified by find); H1 requires '≥3 scenarios, stored as `evals/evals.json`'. The runner's own `find` is in the transcript."
+        }
+    ],
+    "fix_assessment": {
+        "first_run_failure_resolved": true,
+        "evidence": "First run: '| 4 | Medium | Detail | B2, B3 | \"This step runs at low effort\" tries to set effort in prose ...' with Fix 'Delete \"This step runs at low effort:\"'. Rerun: no B2/B3-keyed finding at any severity; Coverage '| B | Pass | — |'; strengths entry 'Step 4 scopes its tool nudge to a step that states its effort level, the B3 pattern, so the B2 carve-out applies (B2, B3)'. The detail reviewer's raw payload (transcript line 44) reads 'Step 4 scopes a tool nudge to a low-effort step. That is the B3 pattern, and the B2 carve-out explicitly exempts a line that states effort conditions', which echoes the 3fc2883 wording ('A line that states the conditions a step runs under (\"this step runs at low effort\") is not such an instruction; it is the context `B3` scopes a nudge to'). The report's criteria notes confirm the sweep read the working-repo prompt-criteria.md (post-fix text), not the 2026-08-19 installed cache.",
+        "new_problems_introduced": "None attributable to 3fc2883. Two things changed between runs that are not caused by the fix: (a) the structure pass added an A8 Medium on the 'If in doubt' line (A8 unchanged on main; run-to-run variance), so the blanket default now carries a Medium under A8 while the C9 flag stays Low — assertion 1 is still met; (b) a new advisory A20/C1 Low notes the prose asserts 'runs at low effort' while the frontmatter sets no `effort:` field. (b) is a legitimate consistency observation that keeps the nudge and its scope, but it shows the reviewer still has a non-B2 route to comment on the fixture's scoping clause; if a future run escalated it, assertion 2 would become contested. Consider whether the fixture should carry `effort: low` in frontmatter to close that route, or whether the eval should tolerate it as advisory.",
+        "verdict_delta": "5 blocking → 6 blocking: the inflated B2/B3 Medium is gone; A8 (structure) and C8 (step-2 scope) Mediums are new; A22, D1/R4, C1/E3 (ex C1/C8), H1 carried over."
+    },
+    "fabrication_check": {
+        "result": "no fabricated quotes; one minor numeric misstatement in the strengths section",
+        "verified_quotes": [
+            {
+                "report": "1. Add one entry per moved URL: old path to new path, status 301.",
+                "fixture": "SKILL.md:14 — verbatim"
+            },
+            {
+                "report": "3. Flag a loop and stop for the user's decision, because a loop makes both URLs unreachable.",
+                "fixture": "SKILL.md:17 — verbatim"
+            },
+            {
+                "report": "Keep the redirect table correct when pages move. If in doubt, use the Grep tool.",
+                "fixture": "SKILL.md:10 — verbatim"
+            },
+            {
+                "report": "Flag a chain — an entry whose target is itself redirected — and collapse it to the final target",
+                "fixture": "SKILL.md:15–16 — verbatim across wrap"
+            },
+            {
+                "report": "adds entries for renamed or deleted URLs … Use when … a 404 report comes in",
+                "fixture": "SKILL.md:3 — verbatim with honest ellipses"
+            },
+            {
+                "report": "use `Grep` to enumerate every occurrence of the old path across the content files before you edit the table, so no in-page link keeps pointing at the old URL.",
+                "fixture": "SKILL.md:18–20 — verbatim across wraps"
+            },
+            { "report": "This step runs at low effort", "fixture": "SKILL.md:18 — verbatim" },
+            { "report": "because each hop costs the visitor a round trip", "fixture": "SKILL.md:16 — verbatim" },
+            {
+                "report": "model: claude-sonnet-5-5 / allowed-tools: Read Edit Grep / no effort: field",
+                "fixture": "SKILL.md:4–5 — correct"
+            },
+            { "report": "bundle contains only SKILL.md", "fixture": "find in workspace — correct" }
+        ],
+        "misstatements": [
+            "'The description is third person, 161 chars' — actual length is 159 (first run reported 159). Strengths-section detail, not a finding; both values are well under the limit.",
+            "'The skill is small (14 body lines)' — lines 8–20 are 13 lines (14 if the blank line 7 after the frontmatter is counted). Trivial."
+        ],
+        "unverifiable": ["'about 160 tokens' (plausible for a 20-line file)"],
+        "notes": "All Manifests scenarios (two redirect sources, /b → /a loop, /a → /b → /c chain, /pricing-2023, 12 in-page links, a later edit dropping the loop stop) are presented as hypotheticals, not attributed to the fixture."
+    },
+    "runner_deviations_affecting_grades": [
+        {
+            "deviation": "Scope reply 'use the defaults' was supplied by the operator as a simulated user rather than typed by a real user.",
+            "effect": "None on grades. It selects analysis-only, the path universal assertion 7 expects, and the run followed it (zero target edits)."
+        },
+        {
+            "deviation": "Write tool call for report.md was blocked by the harness ('Subagents should return findings as text, not write report files'); report.md and run-notes.md were written via shell heredoc.",
+            "effect": "None on grades. The graded content is the heredoc output; the blocked Write targeted report.md, not the skill."
+        },
+        {
+            "deviation": "The skill-detail-reviewer reported groups B–G as 'scored (read from disk)' from the working-repo prompt-criteria.md rather than a preload; the installed prompt-quality-criteria cache is 1.1.1 (synced 2026-08-19, pre-fix text).",
+            "effect": "Favourable to the fix assessment: it confirms the post-3fc2883 B2/B3 text was the one applied. Had the cache copy been read, the B3 criterion would have lacked the low-effort case entirely."
+        },
+        {
+            "deviation": "Working-repo plugin is 1.2.0 while installed_plugins.json records 1.1.0; the skill loaded from the working-repo path.",
+            "effect": "None on grades (version bookkeeping, recorded in Criteria notes as the skill requires)."
+        }
+    ],
+    "totals": { "passed": 11, "failed": 0, "total": 11 },
+    "grader_summary": "11/11. The 3fc2883 fix resolved the first run's assertion-2 failure: no finding at any severity keys B2 or B3, group B is 'Pass', and the scoped step-4 nudge is explicitly credited as 'the B3 pattern, so the B2 carve-out applies'. The C9 half holds as before: the blanket 'If in doubt, use the Grep tool.' is flagged under C9 (advisory) with the over-triggering rationale and deleted in favour of the scoped nudge. The advisory A20/C1 Low about the missing `effort:` field is ruled a frontmatter-consistency note, not a flag on the nudge — both of its fixes keep the nudge scoped — but it is the one residual route by which the fixture's scoping clause still draws comment. All six blocking Mediums are genuine against verified fixture quotes and independent of the branch's criteria changes; A8 (structure) and C8 (step-2 scope) are new, the rest carry over. Minor misstatement: description length reported as 161 (actual 159). Template, verdict, Manifests, key resolution, and report-only constraints all hold."
+}

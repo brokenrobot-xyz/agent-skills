@@ -1,0 +1,11 @@
+{
+    "s16-rerun": {
+        "scenario_dir": "scenario-16",
+        "runner_agent_id": "ac928f8bb9534e788",
+        "nested_agents": ["skill-detail-reviewer-a604cb59c58bc655c", "skill-structure-reviewer-a4eb5c9070cdc9395"],
+        "legs": [
+            { "leg": "full", "total_tokens": 68181, "duration_ms": 269736 },
+            { "leg": "grader", "total_tokens": 87743, "duration_ms": 339995 }
+        ]
+    }
+}
