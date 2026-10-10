@@ -89,9 +89,13 @@ group scores prompt text only, so that advice is out of scope here.
   directly does not reliably reduce its thinking, and Opus 5.5's doc recommends removing "think
   carefully before answering" lines from chat prompts. One documented exception: on Sonnet 5.5, a
   reasoning task that must answer in structured JSON benefits from "Think the problem through
-  before you answer."
+  before you answer." `B2` covers instructions that try to change how much the model thinks
+  ("think carefully", "answer without deliberating"). A line that states the conditions a step
+  runs under ("this step runs at low effort") is not such an instruction; it is the context `B3`
+  scopes a nudge to.
 - **B3 — tool nudges.** If the prompt relies on tool use where the model reasons least — thinking
   off, Sonnet 5.5's `between_tools`, or `low` effort — it nudges explicitly, scoped to that case.
+  A nudge scoped to such a step is the pattern this criterion asks for, not a `B2` finding.
   Sonnet 5.5, Haiku 5.5, and Fable 5.1 all skip searches, tool calls, or checks more often at `low`
   effort. The reverse is also a finding: language that discourages tools ("only use tools when
   strictly necessary", "minimize tool calls") should be removed (Sonnet 5.5). On Opus 5.5 and Fable
