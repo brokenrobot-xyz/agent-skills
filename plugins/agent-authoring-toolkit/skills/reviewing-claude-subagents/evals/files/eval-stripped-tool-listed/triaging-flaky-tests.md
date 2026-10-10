@@ -1,7 +1,7 @@
 ---
 name: triaging-flaky-tests
 description: Reruns the failing test suite, separates genuine failures from flakes, and reports which is which. Use when CI reports a red run that passes on retry.
-tools: Read, Grep, Glob, Bash, AskUserQuestion, EnterPlanMode, TaskOutput
+tools: Read, Grep, Glob, Bash, AskUserQuestion, EnterPlanMode, ScheduleWakeup
 model: sonnet
 ---
 

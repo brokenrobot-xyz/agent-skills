@@ -1,7 +1,7 @@
 ---
 name: validating-feeds
 description: Validates RSS and Atom feeds against their specifications — well-formedness, required elements, and date formats — and reports each violation with its element path. Use when a feed reader rejects a feed or after changing feed generation.
-model: claude-sonnet-5
+model: claude-sonnet-5-5
 context: fork
 allowed-tools: Read, Bash
 ---

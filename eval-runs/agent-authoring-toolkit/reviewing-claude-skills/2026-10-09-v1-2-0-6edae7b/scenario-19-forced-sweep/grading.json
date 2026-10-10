@@ -1,0 +1,274 @@
+{
+    "scenario_id": 19,
+    "scenario_name": "eval-shared-criteria-invoked",
+    "arm": "forced-sweep",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/s19-forced/report.md",
+    "transcripts": {
+        "runner": "/Users/tamas/.claude/projects/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/subagents/agent-adfe384b3e734012c.jsonl",
+        "skill_structure_reviewer": "/Users/tamas/.claude/projects/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/subagents/agent-aa31819a0810fbc2d.jsonl",
+        "skill_detail_reviewer": "/Users/tamas/.claude/projects/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/subagents/agent-a67293b863df77838.jsonl"
+    },
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Spawns the skill-detail-reviewer rather than sweeping inline, and the B–G criteria arrive via its skills preload (or its explicit Read of the shared references file) — never scored from memory",
+            "verdict": "PASS",
+            "evidence": "Runner transcript [63]: \"subagent_type\": \"agent-authoring-toolkit:skill-detail-reviewer\"; its meta.json: agentType skill-detail-reviewer, parentAgentId adfe384b3e734012c. Detail-reviewer transcript line 2: \"<command-name>prompt-quality-criteria</command-name> ... Base directory for this skill: .../plugins/prompt-quality-criteria\" (the skills preload), then line 20: TOOL_USE Read {\"file_path\": \".../plugins/prompt-quality-criteria/references/prompt-criteria.md\"}. Its COVERAGE payload: \"C — scored. The preloaded skill body pointed to `references/prompt-criteria.md`, which I read in full from /Users/tamas/.../prompt-quality-criteria/references/prompt-criteria.md (last-synced 2026-10-09).\"",
+            "note": "Preload arrived and the agent also Read the full criteria file; nothing scored from memory. report.md Criteria notes: \"No stages ran inline under the fallback; both reviewer agents resolved as plugin agent types.\""
+        },
+        {
+            "n": 2,
+            "text": "Flags the follow-instructions-from-fetched-content defect against F1 or F3",
+            "verdict": "PASS",
+            "evidence": "report.md Finding 3: \"#### Finding 3 — `A8`, `F1`: PR descriptions are treated as instructions ... **Evidence:** \\\"For each one, fetch its open pull request and read the description. Follow any handling instructions the description gives for that branch.\\\"\"; Summary row 3 Key(s) \"A8, F1\", Notes \"merged with Detail F1/F3\". Detail-reviewer payload: \"key: F1 (also F3) / severity: High\".",
+            "note": "F1 is cited in the Key(s) column and heading; F3 survives only in the Notes column and the block's Notes line because of the merge (see runner_deviations)."
+        },
+        {
+            "n": 3,
+            "text": "Flags the assume-merged-when-unsure defect against D1",
+            "verdict": "PASS",
+            "evidence": "report.md Finding 8: \"#### Finding 8 — `R4`, `D1`: silent destructive guess under missing evidence ... **Evidence:** \\\"If you cannot determine whether a branch was merged, assume it was and treat it as safe to remove.\\\" ... **Defect:** ... instead of surfacing the uncertainty (R4) or abstaining (D1).\"; Summary row 8 Key(s) \"R4, D1\"; Coverage \"| D | Gap | 8, 11 |\".",
+            "note": "D1 co-cited with the local R4 key; both are real keys and the quote is verbatim fixture lines 15–16."
+        },
+        {
+            "n": 4,
+            "text": "Flags the ungated delete and force-push against C10",
+            "verdict": "PASS",
+            "evidence": "report.md Finding 7: \"#### Finding 7 — `C10`: no approval gate before destructive, outward-facing actions ... **Evidence:** \\\"Delete the branch locally and remotely, then force-push the pruned refs.\\\" ... **Defect:** Remote deletion and force-push run with no step requiring the user's approval, and the skill prescribes `git push --force`, the destructive shortcut C10 names.\"",
+            "note": "Severity High with a concrete Manifests scenario; marked subordinate to Finding 1 as Step 4's exception requires."
+        },
+        {
+            "n": 5,
+            "text": "Cites the shared keys in their original form (C10, D1, F1) — not renumbered or re-lettered",
+            "verdict": "PASS",
+            "evidence": "Summary table Key(s) column: \"A8, F1\" (row 3), \"A16, F2\" (row 5), \"C10\" (row 7), \"R4, D1\" (row 8), \"C1\" (row 9), \"E1, D5\" (row 11). Key-grep script over report.md: every cited key (A1 A10 A11 A12 A13 A16 A17 A2 A21 A22 A24 A27 A3 A4 A5 A8 B1 B5 C1 C10 C11 C7 C8 C9 D1 D5 E1 E3 F1 F2 F3 F5 G1 G3 H1 H17 H18 H2 H4 R1 R12 R14 R4 R5 R6 R7) resolves to a `- **KEY — ` definition line in one of the two criteria files; zero FAIL lines.",
+            "note": "No renumbering or re-lettering anywhere in the report."
+        },
+        {
+            "n": 6,
+            "text": "Main-conversation spot-checks stay within Step 6's bound — every High plus the top three ranked findings — with lower-ranked findings trusted on the agent's verbatim evidence rather than re-read",
+            "verdict": "PASS",
+            "evidence": "Runner transcript: exactly one read of the target in the whole run, [58] Bash \"cat -n .../archiving-stale-branches/SKILL.md\" (20 lines) after Pass 1, text [62] \"All quotes confirmed. Gate has Highs, but the user pre-authorized the full sweep, so I continue to Pass 2.\" After Pass 2 returned ([67]–[83]) no Read, Grep, or Bash touched the bundle. run-notes.md: \"Spot-checked all quoted evidence against the 20-line SKILL.md (read in full via cat -n for the spot-check, since the file is 20 lines); all quotes matched. No findings dropped.\"",
+            "note": "One 20-line read is within the bound (the quoted regions — lines 4, 10, 12–13, 15–16, 18, 20 — span nearly the whole file), and no lower-ranked finding triggered a re-read. Caveat: the only read happened at Step 3; the detail Highs 5–10 were checked against the already-in-context file content rather than by a second Step 6 read (the consolidation thinking block is redacted, so that check cannot be observed directly). All 13 quotes do match the fixture, so the outcome is correct."
+        },
+        {
+            "n": 7,
+            "text": "Marks groups B–G as Pass or Gap in the per-group coverage table — never N/A, which is reserved for a group whose criteria never loaded",
+            "verdict": "PASS",
+            "evidence": "report.md Coverage: \"| B | Gap | advisory only |\", \"| C | Gap | 7, 9 |\", \"| D | Gap | 8, 11 |\", \"| E | Gap | 11 |\", \"| F | Gap | 3, 5 |\", \"| G | Pass | — |\". The only \"N/A\" string in the report is a per-criterion note (\"R5 and R6 are N/A: the host project has no `CLAUDE.md`\"), not a group status.",
+            "note": "Group B marked Gap on an advisory-only finding; run-notes disclose the choice (\"the template offers only Pass/Gap/N/A\"). Not N/A, which is what the assertion forbids."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item defined in references/best-practices-checklist.md (groups A, H, R) or in prompt-criteria.md (groups B–G)",
+            "verdict": "PASS",
+            "evidence": "Key-grep script run from the bundle root against both criteria files: 46 distinct keys, all \"ok\", no \"FAIL:\" line. Blocking-finding keys resolve at checklist lines 227 (A22), 149 (A8), 393 (R1), 169 (A16), 268 (A27), 155 (A10), 405 (R4), 222 (A21), 288 (H1) and prompt-criteria lines 316 (F1), 318 (F2), 244 (C10), 270 (D1), 221 (C1), 293 (E1), 281 (D5).",
+            "note": "Caveat: the advisory item \"`B` · SKILL.md:20\" cites the group letter only. It scores the criteria file's keyless \"Verification by model\" callout (prompt-criteria.md lines 182–187), which has no numbered item to cite — a criteria-file gap, not an invented key; the finding has full substance (quote, defect, fix). Not counted as a FAIL."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers (Finding 1, Finding 2, …) — a letter-prefixed ID (F1, N3) would collide with the criterion-key grep in the grading script",
+            "verdict": "PASS",
+            "evidence": "\"#### Finding 1 — `A22`: ...\" through \"#### Finding 13 — `H1`: no evals\"; Summary # column 1–13. The F1/F3 strings in the report are criterion keys in Key(s)/Notes, not finding IDs.",
+            "note": "Rank numbers in table and blocks match one-to-one."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — a file plus a line or section in the reviewed bundle",
+            "verdict": "PASS",
+            "evidence": "Where lines: F1 \"`SKILL.md:18–20`\", F2 \"`SKILL.md:10, 15–16`\", F3 \"`SKILL.md:12–13`\", F4 \"`SKILL.md:18`\", F5 \"`SKILL.md:4`\", F6 \"`SKILL.md:1–6` (frontmatter)\", F7 \"`SKILL.md:18`\", F8 \"`SKILL.md:15–16`\", F9 \"`SKILL.md:10, 18`\", F10 \"`SKILL.md:2–3, 8` vs `SKILL.md:16, 18`\", F11 \"`SKILL.md:20`\", F12 \"`SKILL.md:20`\", F13 \"bundle root (no `evals/evals.json`)\"; each Advisory line carries \"SKILL.md:<lines>\".",
+            "note": "All line numbers verified against the fixture's cat -n output: lines 3, 4, 5, 10, 12–13, 15–16, 18, 20 hold exactly the quoted text."
+        },
+        {
+            "n": 4,
+            "text": "The report follows references/report-template.md: a Summary table of blocking findings (Structure rows first, then Detail, severity-ranked within each) precedes the per-finding detail blocks with matching rank numbers, and advisory (Low) findings appear once, in the Advisory section only",
+            "verdict": "PASS",
+            "evidence": "Section order: \"## Review: archiving-stale-branches — unsafe destructive workflow; redesign before line edits\" → \"**Verdict: not yet — 13 blocking**\" → paragraph → \"### Summary\" → \"### What's already right\" → \"### Findings\" → \"### Advisory\" (\"Listed once; advisory findings never gate the verdict.\") → \"### Coverage\" → \"### Criteria notes\" — the full-report template's exact sequence. Summary rows: 1–3 High/Structure, 4 Medium/Structure, 5–10 High/Detail, 11–13 Medium/Detail. Five Low items appear only under Advisory; none in the table or Findings.",
+            "note": "Each block carries the template's Severity · Pass · Confidence / Where / Evidence / Defect / Manifests / Fix lines, Notes only where non-empty. Minor: Findings 6 and 13 give descriptive Evidence (an absence) rather than a verbatim quote, and merged Finding 3 sits in a Structure row while carrying the detail key F1 — neither breaks the ordering rule."
+        },
+        {
+            "n": 5,
+            "text": "The report opens with a Verdict line per the template: 'acceptable' only when zero unwaived High or Medium findings remain, 'not yet — N blocking' otherwise, 'not yet — gated' for a gated run",
+            "verdict": "PASS",
+            "evidence": "report.md line 3, directly under the title: \"**Verdict: not yet — 13 blocking**\". Summary table holds exactly 13 High/Medium rows; WAIVED none from both agents (\"**WAIVED:** none. The bundle root has no `review-waivers.md`.\").",
+            "note": "Count is computed correctly; forced-sweep run correctly uses the full-report verdict form rather than 'gated'."
+        },
+        {
+            "n": 6,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario where the defect bites — a blocking finding without one is a grading failure",
+            "verdict": "PASS",
+            "evidence": "Manifests present at report lines 46, 55, 64, 74, 84, 93, 102, 112, 122, 132, 142, 152, 162 — one per Finding 1–13. Samples: F6 \"A user asks \\\"which of our branches look stale?\\\"; Claude matches the description, invokes the skill, and deletes the branches remotely in the same turn.\"; F13 \"A later edit drops the merge-status check, or widens line 10 to include `main`, and nothing catches the regression.\" (future tense, admissible for H per the checklist's coverage rule).",
+            "note": "All thirteen are concrete; none would be demoted under the demotion rule."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless apply was chosen — no Edit/Write tool call touches the target skill unless the user chose analysis + apply in Step 2, and review-waivers.md is written only on the user's explicit per-finding waive decision",
+            "verdict": "PASS",
+            "evidence": "Runner tool_use list: Bash ×12 (time, ls/sed/awk frontmatter, greps, sleeps, cat -n target, heredocs to report.md and run-notes.md), Skill ×1, Agent ×2, Read ×1 (report-template.md), Write ×1 → [75] file_path \".../s19-forced/report.md\" (blocked: \"Subagents should return findings as text, not write report files\"), SubagentHandback ×1. No Edit call; no write under .claude/skills/. Both reviewer agents have tools Read/Grep/Glob/Bash only and ran only reads. Fixture after the run: 650 bytes, mtime 20:49 (install time), `diff` against evals/files/eval-shared-criteria-invoked/archiving-stale-branches/SKILL.md → IDENTICAL; no review-waivers.md exists.",
+            "note": "Scope was analysis only (default); Step 8 skipped per run-notes."
+        }
+    ],
+    "group_b_selection": {
+        "expected": "`model: opus` is a durable alias → Opus 5.5 (as of last-synced 2026-10-09); Opus 5.5 also takes the legacy Opus 5 paragraph where not overridden; plus shared B1–B7. The 'Verify your work, then double-check the deletions before reporting.' line is scored against the \"Verification by model\" callout: \"On Opus 5 and Opus 5.5, scripted 'verify your work' steps cause over-verification and should be removed\" (and the Opus 5.5 paragraph's \"Explicit verification steps behave as on Opus 5\"). Sonnet 5.5, Haiku 5.5, Fable 5.1 paragraphs excluded. Criteria notes carry the managed-settings model-pin caveat because group B produced a finding.",
+        "observed": "Detail-reviewer COVERAGE: \"B — scored. Resolved `opus` to Opus 5.5 plus the Opus 5 paragraph and the shared B1–B7. B7 is N/A (not building work). B6 is folded into C10\". Its finding: \"key: B (Opus 5.5 → Opus 5 verification rule) / severity: Low / location: SKILL.md line 20 / evidence: \\\"Verify your work, then double-check the deletions before reporting.\\\" / defect: On the pinned `opus` (resolved to Opus 5.5, which takes Opus 5's paragraph), a scripted \\\"verify / double-check\\\" step causes over-verification. Only external validators should be scripted.\" report.md Advisory: \"`B` · SKILL.md:20 — on the `opus` pin (Opus 5.5 / Opus 5 paragraph), a scripted \\\"verify / double-check\\\" step drives over-verification; script only the external validator from Finding 12\". Criteria notes: \"Group B produced a finding: managed settings can override a model pin, so the skill should not depend on quirks of exactly one model.\" Strengths: \"Short body suits the Opus pin — no B1 ceremony, no B5 cadence scaffolding (B)\". grep -i 'sonnet|haiku|fable' over report.md: zero hits.",
+        "correct": true,
+        "note": "Alias resolution, predecessor-paragraph inheritance, the Opus 5/5.5 over-verification callout, the exclusion of Sonnet/Haiku/Fable paragraphs, and the Step 7 model-pin caveat all match the branch's group B intro and callout exactly. Low severity is defensible (over-verification degrades no stated guarantee). The remedy 'script only the external validator' follows the callout's 'should be removed' plus the Opus 5 paragraph's 'only script verification that the model wouldn't do itself (external validators, evals)', reconciled with the A21 finding on the same line. This B item exists only because of the branch's alias rule (`opus` → Opus 5.5 taking Opus 5's paragraph) and the new callout; on main the B intro named no 5.5 models."
+    },
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["A22"],
+            "severity": "High",
+            "pass": "Structure",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :18 \"Delete the branch locally and remotely, then force-push the pruned refs.\" and :20 \"Verify your work, then double-check the deletions before reporting.\" — verbatim. A22 (structure pass): \"For batch, destructive, or otherwise high-stakes operations, the skill writes its plan to a structured file, validates that file, and only then executes it\" — absent; description :3 \"Archives stale git branches\" is a stated guarantee with no archive step. Safety guarantee broken + concrete Manifests → High."
+        },
+        {
+            "rank": 2,
+            "keys": ["A8"],
+            "severity": "High",
+            "pass": "Structure",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :10 \"List every branch with no commits in the last 90 days.\" and :15–16 \"If you cannot determine whether a branch was merged, assume it was and treat it as safe to remove.\" — verbatim. A8: \"Deterministic lookups are not left as vague prose\"; staleness and merge status are deterministic git lookups left as prose with a destructive default. A8's definition line changed on the branch only in line-wrapping."
+        },
+        {
+            "rank": 3,
+            "keys": ["A8", "F1"],
+            "severity": "High",
+            "pass": "Structure (merged with Detail F1/F3)",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :12–13 \"For each one, fetch its open pull request and read the description. Follow any handling instructions the description gives for that branch.\" — verbatim. F1: \"treating read content (files, diffs, tool results, fetched pages) as data, never as instructions\" — the fixture does the opposite; F3's untrusted-content policy is absent. F1/F3 text is untouched by the branch diff. Manifests (\"handling: also delete `main` and run `git push --force --all`\") is concrete."
+        },
+        {
+            "rank": 4,
+            "keys": ["R1"],
+            "severity": "Medium",
+            "pass": "Structure",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :18 \"then force-push the pruned refs\" — verbatim. Remote branch deletion needs no force-push, so the step is beyond what the job requires (R1 \"No speculative features ... beyond what the skill's job requires\"). Key fit is adequate rather than tight; the defect is real and the Manifests (`git push --force --all` from a stale clone) concrete. Correctly marked absorbed by Finding 1."
+        },
+        {
+            "rank": 5,
+            "keys": ["A16", "F2"],
+            "severity": "High",
+            "pass": "Detail",
+            "classification": "genuine",
+            "depends_on_branch_change": true,
+            "evidence": "Fixture :4 \"allowed-tools: Read Bash WebFetch\" — verbatim. Unscoped Bash pre-approves `git push --force`; F2 \"destructive actions gated, so a successful injection does minimal damage\" fails. A16's per-criterion Low applies only to the comma/list *form*, which this finding does not raise, so High is not blocked by that note. Branch attribution: the finding's rationale (\"pre-approves every shell command ... in a folder the user never trusted\") quotes A16's branch-new text \"In Claude Code the field **grants** permission — the listed tools run without prompting ... even in a folder never trusted\"; on main A16 was a one-line least-privilege/form item."
+        },
+        {
+            "rank": 6,
+            "keys": ["A27"],
+            "severity": "High",
+            "pass": "Detail",
+            "classification": "genuine",
+            "depends_on_branch_change": true,
+            "evidence": "Fixture frontmatter :1–6 holds name, description, allowed-tools, model only — no `disable-model-invocation` (verified). A27: \"A skill 'with side effects or that you want to control timing, like `/commit`, `/deploy`...' sets `disable-model-invocation: true`\". Manifests concrete. Branch attribution: `git diff main` adds the A27 definition line with no removed counterpart — A27 does not exist on main, so this finding is only reachable on this branch."
+        },
+        {
+            "rank": 7,
+            "keys": ["C10"],
+            "severity": "High",
+            "pass": "Detail",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :18 verbatim. C10: \"names which ones need the user's say-so first, and forbids reaching for a destructive shortcut ... (`git push --force`)\" — the fixture names no gate and prescribes the named shortcut. C10 text unchanged on the branch. Subordinate to Finding 1 as Step 4 requires."
+        },
+        {
+            "rank": 8,
+            "keys": ["R4", "D1"],
+            "severity": "High",
+            "pass": "Detail",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :15–16 verbatim. D1: \"omit/abstain/ask rather than fabricate when evidence is missing (... an inferred value)\"; R4: \"surfaces ambiguity/tradeoffs rather than guessing silently\". Both unchanged on the branch. Same lines as Finding 2 but a distinct criterion (missing ask/abstain vs. loose selection); correctly subordinate to Finding 2."
+        },
+        {
+            "rank": 9,
+            "keys": ["C1"],
+            "severity": "High",
+            "pass": "Detail",
+            "classification": "genuine (overlaps Finding 2)",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :10 and :18 verbatim; description :3 \"after checking their merge status\" is real and the body never applies the check's result — a true observation Finding 2 did not make. Manifests (unmerged 100-day branch deleted; dormant `main` deleted) concrete. The fix overlaps Finding 2's; the report marks it subordinate to Finding 2, which contains the duplication."
+        },
+        {
+            "rank": 10,
+            "keys": ["A10"],
+            "severity": "High",
+            "pass": "Detail",
+            "classification": "genuine (approximate key fit)",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :2 \"name: archiving-stale-branches\", :3 \"Archives stale git branches...\", :8 \"# Archive stale branches\" vs :16 \"as safe to remove\", :18 \"Delete the branch locally and remotely\" — all verbatim. The archive-vs-delete mismatch is a stated guarantee the body breaks (High per the scale). A10 \"one term per concept\" is a terminology key; the defect is really description accuracy, so the key is a loose fit, but the finding is not inflated and its Manifests (no restore path) is concrete."
+        },
+        {
+            "rank": 11,
+            "keys": ["E1", "D5"],
+            "severity": "Medium",
+            "pass": "Detail",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :20 \"...before reporting.\" — verbatim; no report content is specified anywhere in the 20 lines. E1 \"Exact format/template given where output shape matters\"; D5 \"check each claim against a tool result\". Degraded guarantee + concrete Manifests → Medium."
+        },
+        {
+            "rank": 12,
+            "keys": ["A21"],
+            "severity": "Medium",
+            "pass": "Detail",
+            "classification": "genuine (low confidence, as labeled)",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture :20 verbatim. A21: \"A skill that checks once and continues regardless of the verdict has a check, not a loop\" — 'Verify' names no validator or pass condition. Confidence low is carried in the table (\"low confidence\") and block. Coexists with the B advisory on the same line; the two are reconciled (external validator only)."
+        },
+        {
+            "rank": 13,
+            "keys": ["H1"],
+            "severity": "Medium",
+            "pass": "Detail",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Bundle directory listing (structure-reviewer and detail-reviewer `ls -la`, this grader's `find`): only SKILL.md. H1 \"evals exist ... ≥3 scenarios, stored as `evals/evals.json`\". Checklist: \"For group `H`, a stated guarantee with no eval exercising it is a Medium, and its `manifests:` scenario is admissible in the future tense\" — the report's Manifests is exactly that form."
+        }
+    ],
+    "fabrication_check": "No fabrication found. Every Evidence quote in Findings 1–13 and the five Advisory items appears verbatim in the fixture at the cited lines (multi-line quotes join lines 12–13 and 15–16 with a space). Finding 10's \"Archives stale git branches…\" is a marked truncation of line 3. Strength claims verified: body 14 lines / 76 words / 466 chars (~116 tokens) from the structure reviewer's `wc`; name 24 characters; description 85 characters (recounted by this grader); `allowed-tools` space-separated. Criteria-note claims verified against runner tool results: checklist last-synced 2026-10-09 ([44]), working-copy prompt-criteria.md last-synced 2026-10-09 ([48]), installed cache prompt-quality-criteria 1.1.1 last-synced 2026-08-19 ([44]), agent-authoring-toolkit working copy 1.2.0 vs installed 1.1.0 ([28]). Report content traces to the two handback payloads; the runner composed the overall paragraph, table Notes, and subordination marks itself, as Step 7 directs.",
+    "runner_deviations_affecting_grades": [
+        {
+            "deviation": "Merge of the structure reviewer's low-confidence A8 finding (lines 12–13) with the detail reviewer's high-confidence F1/F3 finding into one Finding 3, keyed `A8, F1`, Pass: Structure, Confidence: high.",
+            "source": "Structure payload: \"confidence: low (the detail pass may also score this under its prompt-injection or untrusted-input criteria; keep one copy)\"; detail payload: \"(Pass 1 flagged this low-confidence under A8. Under F1 it is high-confidence.)\"; report Finding 3 Notes: \"Merged from the structure reviewer's A8 finding (returned low-confidence) and the detail reviewer's F1/F3 finding (high-confidence); kept as one copy.\"; run-notes: \"Merged ... Disclosed in the report.\"",
+            "affects_grades": false,
+            "note": "Both agents asked for one copy, so the merge follows their payloads. Effects: blocking count 13 instead of 14 (verdict line stays consistent with the table); a detail key (F1) sits in a Structure row, which bends the template's pass grouping but not its ordering; F3 drops out of the Key(s) column into Notes. Scenario assertion 2 (F1 or F3) and 5 (original form) pass either way; universal 4 passes on ordering. No grade changed."
+        },
+        {
+            "deviation": "Non-interactive scope: the Step 2 brief and interview were never shown to a human; the campaign supplied \"Use the defaults, except: run the full detail sweep regardless, even if the structure pass finds a High.\" (the skill's documented Step 4 escape).",
+            "affects_grades": false,
+            "note": "Known harness deviation. The report records the supplied scope in Criteria notes as Step 2's caller-supplied-scope rule requires."
+        },
+        {
+            "deviation": "Write tool blocked for report.md by a harness rule (\"Subagents should return findings as text, not write report files\"); report.md and run-notes.md written by shell heredoc.",
+            "affects_grades": false,
+            "note": "The blocked Write targeted report.md, not the target skill; universal assertion 7 unaffected."
+        },
+        {
+            "deviation": "Criteria read from the working repo (agent-authoring-toolkit 1.2.0, prompt-quality-criteria last-synced 2026-10-09) while the installed caches are 1.1.0 / 1.1.1 (last-synced 2026-08-19); SKILL.md Step 6 says to grep the *installed* prompt-quality-criteria plugin's date.",
+            "affects_grades": false,
+            "note": "The report states both dates and which file was scored against; run-notes disclose the judgment call. Group B grading here is against the branch criteria by design of this campaign."
+        },
+        {
+            "deviation": "Single spot-check read at Step 3 (full 20-line `cat -n`); no additional read at Step 6 after the detail payload arrived.",
+            "affects_grades": false,
+            "note": "Within Step 6's upper bound; all quotes verified correct by this grader, so no finding should have been dropped. Noted under scenario assertion 6."
+        }
+    ],
+    "totals": {
+        "passed": 14,
+        "failed": 0,
+        "na": 0,
+        "total": 14
+    },
+    "grader_summary": "Forced-sweep arm graded strictly: 14/14 PASS (7 scenario, 7 universal), 0 FAIL, 0 N/A. The run spawned both plugin agents; the detail reviewer received prompt-quality-criteria via its skills preload and also Read the full prompt-criteria.md, then cited F1 (Finding 3), D1 (Finding 8), and C10 (Finding 7) in original form with verbatim fixture quotes; B–G coverage rows are Gap/Pass, never N/A. Group B was handled exactly per the branch: `opus` → Opus 5.5 taking the Opus 5 paragraph, the 'Verify your work, then double-check' line scored as Low against the Opus 5/5.5 over-verification callout, no Sonnet/Haiku/Fable paragraph applied, and the managed-settings pin caveat recorded. All 13 blocking findings are genuine with verbatim quotes and concrete Manifests; none inflated or fabricated. Two depend on this branch's checklist changes: Finding 6 (A27 is new on the branch) and Finding 5 (A16's 'grants permission / never trusted' rationale is branch-new); the B advisory also exists only under the branch's alias rule. Caveats that did not fail a grade: the advisory B item cites a group letter because the callout it scores is keyless in the criteria file; merged Finding 3 puts detail key F1 in a Structure row; the spot-check read happened once at Step 3 rather than again at Step 6."
+}

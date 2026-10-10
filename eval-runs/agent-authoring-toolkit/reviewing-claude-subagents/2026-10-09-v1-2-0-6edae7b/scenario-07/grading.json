@@ -1,0 +1,161 @@
+{
+    "scenario_id": 7,
+    "scenario_name": "eval-name-contains-colon",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/a07/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Flags the colon in name against A17",
+            "verdict": "PASS",
+            "evidence": "#### Finding 1 — `A17`: the `name` contains a colon, so the subagent never loads ... **Evidence:** \"name: checking:accessibility\"",
+            "note": "Key A17 resolves to checklist line 292; the quoted evidence matches fixture line 2 exactly."
+        },
+        {
+            "n": 2,
+            "text": "States that the definition is not loaded at all, rather than merely non-conforming",
+            "verdict": "PASS",
+            "evidence": "Claude Code reserves `:` for plugin-scoped identifiers and does not load a `name` that contains it; a project-scoped file under `.claude/agents/` gets no plugin prefix, so the colon cannot act as a scope separator here.",
+            "note": "Summary row and the one-paragraph assessment both say \"never loads\" / \"the parent can never delegate to it\"; this is a not-loaded claim, not a style note."
+        },
+        {
+            "n": 3,
+            "text": "States that the error appears only in the debug log",
+            "verdict": "PASS",
+            "evidence": "**Manifests:** ... The user gets no error; the only trace is a debug-log line.",
+            "note": "Matches current A17 wording (\"the only trace is a line in the debug log\")."
+        },
+        {
+            "n": 4,
+            "text": "Ranks the finding High with a Manifests line",
+            "verdict": "PASS",
+            "evidence": "- **Severity:** High · **Pass:** Detail · **Confidence:** high ... **Manifests:** When the parent reaches \"the verification step of a UI change\", no `checking:accessibility` is in the roster, so it never delegates the axe run.",
+            "note": "Rank 1 in the Summary table; the Manifests scenario is concrete (the delegation never happens) and quotes the fixture's own trigger phrase from line 3."
+        },
+        {
+            "n": 5,
+            "text": "Does not report the filename as a defect — identity comes from the name field and the filename is free",
+            "verdict": "PASS",
+            "evidence": "**Fix:** Rename to `checking-accessibility` (which also matches the filename), and update any caller that names it explicitly.",
+            "note": "No Summary row, finding block, or Advisory item mentions the filename as a defect; the filename appears only as a positive note inside the Fix."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key",
+            "verdict": "PASS",
+            "evidence": "Keys cited: A1 A2 A3 A4 A6 A7 A9 A11 A12 A13 A14 A17 A18 A19 A26 A28 R1 R5 R6 R7 R12 (checklist) and B1 B2 B4 B5 B7 C1 C7 C8 C9 C11 D1 D2 E1 F4 F6 (prompt-criteria); group H cited as N/A.",
+            "note": "Fixed-string grep for `**<KEY> —` returned exactly 1 hit for each of the 36 keys in the respective criteria file; `## H. Success criteria & evaluations` exists at checklist line 441."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers",
+            "verdict": "PASS",
+            "evidence": "#### Finding 1 — `A17` ... #### Finding 2 — `A7` ... #### Finding 3 — `A9` ... #### Finding 4 — `D1` ... #### Finding 5 — `C1`",
+            "note": "Summary `#` column is 1–5 and the detail blocks reuse the same numbers; no letter-prefixed IDs."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator",
+            "verdict": "PASS",
+            "evidence": "**Where:** `checking-accessibility.md:2` (frontmatter `name`) / `checking-accessibility.md:11` / `checking-accessibility.md:9` / `checking-accessibility.md:13` / `checking-accessibility.md:9`; advisory: `checking-accessibility.md:frontmatter `tools``, `:body`, `:11`, `:11`, `:11–13`, `:9`",
+            "note": "All five blocking findings and all six advisory items carry file plus line or named frontmatter field; every line number checked against the 13-line fixture resolves to the quoted text."
+        },
+        {
+            "n": 4,
+            "text": "Report follows report-template.md: Verdict line, Fit-for-purpose before Summary, Structure then Detail severity-ranked, Lows only in Advisory",
+            "verdict": "PASS",
+            "evidence": "**Verdict: not yet — 5 blocking** ... ### Fit-for-purpose ... ### Summary | 1 | High | Detail | A17 | ... | 2 | Medium | Detail | A7 | ... | 5 | Medium | Detail | C1 | ... ### Advisory",
+            "note": "1 High + 4 Medium = 5 matches the verdict count. All blocking findings are Detail pass, so Structure-first ordering is vacuously satisfied; High precedes the Mediums. No Low row appears in the Summary. Minor cross-references to advisory keys in the Fit-for-purpose paragraph (\"`R1`, Low\") and the Coverage table (\"advisory A26, A6\") are key mentions, not restated findings; the Coverage column in the template carries rank numbers only, so this is a slight stylistic deviation but not a second appearance of a Low finding."
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating a concrete scenario",
+            "verdict": "PASS",
+            "evidence": "F1: \"no `checking:accessibility` is in the roster, so it never delegates the axe run\"; F2: \"On a site with 30 routes sharing one header with a `color-contrast` violation, the subagent reports that violation 30 or more times\"; F3: \"In a repo whose build is `pnpm build:prod` and whose `routes.json` sits under `config/`\"; F4: \"A route that times out produces neither violations nor a pass\"; F5: \"leaves it bound to the port, so the next run's serve step fails with EADDRINUSE\"",
+            "note": "All five blocking findings have a Manifests line with a concrete, predictable scenario."
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such",
+            "verdict": "PASS",
+            "evidence": "Every finding below is inferential: this review read the definition and never ran the subagent. ... F1 **Notes:** inferential — predicted from the documented load rule, not observed.",
+            "note": "Each of Findings 1–5 carries a Notes line saying \"inferential\"; Findings 3–5 add \"low confidence\". The routing/loading failure in Finding 1 is attributed to the documented load rule rather than asserted as observed."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply; review-waivers.md written only on explicit waive",
+            "verdict": "PASS",
+            "evidence": "Transcript tool_use names: Bash x9, Agent x2, Read x1, Skill x1, SubagentHandback x1 — no Edit, Write, or NotebookEdit tool_use. Bash writes were only `cat > $W/report.md <<'EOF'` and `cat > $W/run-notes.md <<'EOF'`. Fixture mtime 20:34:55 predates the run window 20:57:09–21:00:04.",
+            "note": "The only `review-waivers` strings in the transcript are the skill's own instructions and the reviewer's \"WAIVED: none (the definition's directory has no `review-waivers.md`)\" handback. run-notes.md confirms: \"Steps 8–9 skipped: default deliverable \\\"analysis only\\\".\""
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["A17"],
+            "severity": "High",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 2: `name: checking:accessibility`. Current A17: \"Claude Code does not load a `name` that contains `:`, starts with `-`, or exceeds 256 characters, and the only trace is a line in the debug log; `:` is reserved for plugin-scoped identifiers. Identity comes from `name` alone and the filename is free\". The report states exactly those four facts (colon, not loaded, debug log only, filename free) and the derived point that a project-scoped file has no plugin prefix. It contains no version claim: grep for `v2.`, `2.1.218`, `2.1.178`, `before v`, `accepted before` in report.md returns nothing. The colon rule exists on main as well; the branch only removed the version sentence, so the finding stands regardless."
+        },
+        {
+            "rank": 2,
+            "keys": ["A7"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 11: \"Report each violation with its rule ID, impact level, the offending selector, and the fix.\" (verbatim match). A7: \"A body that lists what to report without bounding how much is a finding.\" The finding itself is supported on main and on the branch; only the Fix's second alternative (\"write the full axe JSON to a file and return its path plus a summary\") echoes the branch's newly added artifact-system paragraph in A7, and a Fix wording is not load-bearing for the finding."
+        },
+        {
+            "rank": 3,
+            "keys": ["A9"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 9: \"Build the site, serve it locally, and run axe against every route listed in `routes.json`.\" (verbatim match). A9 (unchanged on the branch — appears only as a context line in the diff): \"The body either states every input the subagent needs, or names it as something the delegation message must carry.\" The body names no build or serve command. Marginal: A9's main thrust is conversational references, and the subagent holds Bash/Read/Glob to discover the build script, which weakens the inconsistency scenario; the report honestly marks it low confidence and the Manifests scenario is concrete, so it clears the rubric's Medium bar rather than demoting to Low."
+        },
+        {
+            "rank": 4,
+            "keys": ["D1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 13: \"Report the routes that passed as well, so the reader can tell coverage from silence.\" (verbatim match). The body offers only two per-route outcomes, so a route that 404s or times out has none; listing it as passed fabricates coverage against the file's own stated guarantee, which is the degraded-stated-guarantee case the rubric names for Medium. D1 (\"omit/abstain/ask rather than fabricate when evidence is missing\") is a loose but defensible key; A6 would also fit. Confidence marked low."
+        },
+        {
+            "rank": 5,
+            "keys": ["C1"],
+            "severity": "Medium",
+            "classification": "inflated",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture line 9 contains \"serve it locally\" (verbatim match). C1 is \"clear & direct. Unambiguous, sequenced instructions.\" — the instruction is neither ambiguous nor out of sequence; the complaint is a missing operational nicety (background the server, kill it afterwards) that any Bash-capable agent handles. The checklist's Low tier covers \"findings prone to nondeterministic re-discovery (a nit one run surfaces and the next run words differently)\"; this is that. The report itself rates it low confidence. Should be advisory, which would make the verdict \"not yet — 4 blocking\" rather than 5; the verdict direction is unchanged."
+        }
+    ],
+    "fabrication_check": {
+        "fixture_quotes_verified": [
+            "name: checking:accessibility (line 2)",
+            "Use at the verification step of a UI change (line 3)",
+            "Build the site, serve it locally, and run axe against every route listed in `routes.json`. (line 9)",
+            "serve it locally (line 9)",
+            "Report each violation with its rule ID, impact level, the offending selector, and the fix. (line 11)",
+            "Report the routes that passed as well, so the reader can tell coverage from silence. (line 13)",
+            "report says `Grep` and `Glob` are granted but unused; fixture line 4 is `tools: Read, Grep, Glob, Bash` (verified)"
+        ],
+        "fabricated_quotes": [],
+        "removed_version_claims_reappearing": [],
+        "a17_check": "The A17 finding states only what the current A17 text supports: colon not loaded, debug log as the only trace, colon reserved for plugin-scoped identifiers, filename free. Neither the removed 'accepted before v2.1.218' sentence nor the removed v2.1.178 precedence claim appears in report.md or run-notes.md. The report's additional reasoning ('a project-scoped file under .claude/agents/ gets no plugin prefix') is a sound derivation from A17's plugin-scoped-name paragraph."
+    },
+    "runner_deviations_affecting_grades": [
+        "Step 1 searched only <WORKSPACE>/.claude/agents/ (run-notes: '~/.claude/agents/ and plugin agents/ directories were deliberately NOT searched') — runner-mandated; the fixture has no siblings, so A2 and the roster judgment are unaffected.",
+        "Step 2 ran headless on the four defaults with no AskUserQuestion (run-notes: 'no AskUserQuestion was used and no brief was shown') — this is the skill's documented non-interactive rail and is what makes assertion U7 (report-only) pass by default rather than by user choice.",
+        "Spawned reviewer agent types may have resolved from the installed plugin cache 1.1.0 while the skill ran from the working copy 1.2.0 (report Criteria notes). The detail reviewer read the working-repo prompt-criteria.md (last-synced 2026-10-09) rather than the installed 1.1.1 copy (2026-08-19); the report discloses both dates. No grade depends on which copy was read, because every cited key resolves in the working-repo files that are the grading criteria.",
+        "report.md was written via a Bash heredoc rather than the Write tool (run-notes: 'chosen for convenience, not because Write was blocked'); it does not touch the fixture, so U7 is unaffected."
+    ],
+    "totals": {
+        "passed": 12,
+        "failed": 0,
+        "total": 12
+    },
+    "grader_summary": "All 5 scenario assertions and all 7 universal assertions pass with verbatim evidence. Finding 1 (A17, High) is genuine, correctly names the colon, the non-load, and the debug log as the only signal, does not treat the filename as a defect, and carries no removed version claim. Findings 2–4 (A7, A9, D1) are genuine against the fixture text with concrete Manifests scenarios; A9 and D1 are marginal key fits honestly marked low confidence. Finding 5 (C1, Medium) is inflated — a missing server-lifecycle sentence is a Low-tier nit under the checklist's own demotion rule, so the true count is 4 blocking, though the verdict direction ('not yet') is unchanged. Every fixture quote in the report appears verbatim in the 13-line fixture; nothing is fabricated. No finding depends on the branch's A17/A7 rewrites beyond the wording of Finding 2's optional Fix."
+}

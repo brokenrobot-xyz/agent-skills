@@ -178,7 +178,7 @@
             "expected_output": "A finding against C7 explaining the reasoning_extraction refusal risk and recommending structured thinking blocks instead.",
             "assertions": [
                 "Flags the reasoning-echo instruction against checklist item C7",
-                "Explains the reasoning_extraction refusal risk on Fable 5 and elevated fallbacks",
+                "Explains the reasoning_extraction refusal risk on current models (Fable 5.1, Opus 5.5, Sonnet 5.5) and that server-side fallback does not retry it",
                 "Recommends reading structured thinking blocks instead of narrating reasoning into output",
                 "Treats this as an unconditional finding, independent of the skill's pinned model"
             ],
@@ -189,13 +189,13 @@
             "id": 8,
             "name": "eval-model-subset",
             "targets": "Step 2 + Pass 2 — the target's model pin scoping group B, passed to the skill-detail-reviewer",
-            "setup": "The auditing-css-tokens fixture is pinned to `claude-sonnet-5` and is otherwise sound, including a copy-and-tick workflow checklist. Its prompt does not, and need not, address Opus-4.8 or Fable-5-specific behaviors (e.g. subagent spawning, long-turn timeouts).",
+            "setup": "The auditing-css-tokens fixture is pinned to `claude-sonnet-5-5` and is otherwise sound, including a copy-and-tick workflow checklist. Its prompt does not, and need not, address Opus-5.5 or Fable-5.1-specific behaviors (e.g. unattended early stops, a lead agent idling while subagents run).",
             "files": ["evals/files/eval-model-subset/auditing-css-tokens/SKILL.md"],
             "prompt": "Review the auditing-css-tokens skill.",
-            "expected_output": "A report applying only the Sonnet-5 subset of group B, with a note that managed settings can override a model pin.",
+            "expected_output": "A report applying only the Sonnet-5.5 subset of group B, with a note that managed settings can override a model pin.",
             "assertions": [
-                "Reads the target's `model:` frontmatter and applies only the Sonnet-5 subset of group B",
-                "Does NOT flag missing Opus-4.8 / Fable-5-specific guidance as gaps",
+                "Reads the target's `model:` frontmatter and applies only the Sonnet-5.5 subset of group B",
+                "Does NOT flag missing Opus-5.5 / Fable-5.1-specific guidance as gaps",
                 "Notes that a model pin can be overridden by managed settings, so the skill shouldn't depend on one model's quirks",
                 "Still applies the unconditional criteria (A, C, D–H, R) regardless of the pin",
                 "Raises NO B5 finding against the skill's copy-and-tick workflow checklist — the A authoring doc endorses that pattern, and B5's carve-out says so"
@@ -337,13 +337,13 @@
             "id": 16,
             "name": "eval-blanket-tool-default",
             "targets": "Pass 2 (skill-detail-reviewer) — scoring C9 against B3",
-            "setup": "The mapping-redirects fixture is pinned to `claude-sonnet-5` and contains the line `If in doubt, use the Grep tool.` plus a separate, correctly scoped nudge in step 4, which runs with extended thinking disabled.",
+            "setup": "The mapping-redirects fixture is pinned to `claude-sonnet-5-5` and contains the line `If in doubt, use the Grep tool.` plus a separate, correctly scoped nudge in step 4, which runs at low effort.",
             "files": ["evals/files/eval-blanket-tool-default/mapping-redirects/SKILL.md"],
             "prompt": "Review the mapping-redirects skill.",
-            "expected_output": "A C9 finding against the blanket default only, with the scoped thinking-disabled nudge explicitly left standing as correct B3 behavior.",
+            "expected_output": "A C9 finding against the blanket default only, with the scoped low-effort nudge explicitly left standing as correct B3 behavior.",
             "assertions": [
                 "Flags the blanket 'if in doubt' default against C9, explaining that it now causes overtriggering",
-                "Does NOT flag the scoped thinking-disabled nudge — that is B3 working as intended",
+                "Does NOT flag the scoped low-effort nudge — that is B3 working as intended",
                 "Recommends scoping the nudge to the case that needs it rather than deleting tool guidance wholesale",
                 "Treats C9 and B3 as complementary, not contradictory"
             ],
@@ -372,14 +372,14 @@
             "id": 18,
             "name": "eval-precedence-extensions-vs-spec",
             "targets": "§ Sources Precedence — open standard as base, client extensions permitted",
-            "setup": "The validating-feeds fixture is sound; its frontmatter carries `model: claude-sonnet-5`, `context: fork`, and a comma-separated `allowed-tools: Read, Bash`. None of the three is a spec field; only the separator diverges from a form the spec defines.",
+            "setup": "The validating-feeds fixture is sound; its frontmatter carries `model: claude-sonnet-5-5`, `context: fork`, and a comma-separated `allowed-tools: Read, Bash`. None of the three is a spec field; only the separator diverges from a form the spec defines.",
             "files": ["evals/files/eval-precedence-extensions-vs-spec/validating-feeds/SKILL.md"],
             "prompt": "Review the validating-feeds skill.",
             "expected_output": "A Low against the comma-separated allowed-tools on portability grounds, with `model:` and `context:` explicitly left alone as permitted Claude Code extensions.",
             "assertions": [
                 "Raises a Low against the comma-separated `allowed-tools`, citing A16 and the spec's space-separated form",
                 "Does NOT flag `model:` or `context:` as spec violations — A20 permits client extensions",
-                "Explains the portability consequence rather than asserting a bare rule: the extensions do not carry to other agents",
+                "Explains the portability consequence rather than asserting a bare rule: the extensions do not carry to other agents, and packaging for claude.ai or the Skills API rejects them",
                 "Does NOT recommend removing `model:` or `context:` in the name of spec conformance"
             ],
             "baseline": "Without the skill, either all four non-spec elements are treated as equally fine, or spec conformance is read as forbidding every Claude Code extension.",

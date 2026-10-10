@@ -1,0 +1,5 @@
+# reviewing-claude-skills — key resolution (suite script, run from repo root)
+scenario-16 PASS: every cited key resolves
+
+# fixture integrity (shasum before/after, scratch copy)
+scenario-16: unchanged

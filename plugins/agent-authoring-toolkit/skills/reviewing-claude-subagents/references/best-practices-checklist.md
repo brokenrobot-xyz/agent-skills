@@ -11,7 +11,7 @@ they live in the `prompt-quality-criteria` skill, which the `subagent-detail-rev
 preloads via its `skills` frontmatter (the inline fallback invokes it through the Skill tool).
 Their keys are unchanged, and a finding cites `B4` or `F1` exactly as the shared file writes it.
 
-**last-synced:** 2026-08-07. When this date is stale, re-fetch the URLs below and reconcile any new
+**last-synced:** 2026-10-09. When this date is stale, re-fetch the URLs below and reconcile any new
 guidance into this file. The shared criteria carry their own `last-synced` date for the docs behind
 groups `B`–`G`.
 
@@ -30,20 +30,22 @@ obviously old date: it removes the reader's only reason to check.
 - [H. Success criteria & evaluations](#h-success-criteria--evaluations)
 - [R. Craft and project conventions](#r-craft-and-project-conventions)
 - [What deliberately does not port from the skill checklist](#what-deliberately-does-not-port-from-the-skill-checklist)
+- [Reviewed and not adopted](#reviewed-and-not-adopted)
 
 ## Sources
 
-| Key | Doc                                                       | URL                                                                                |
-| --- | --------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| A   | **Create custom subagents** (normative for the format)    | https://code.claude.com/docs/en/sub-agents                                         |
-| A   | **Plugins reference** (normative for plugin subagents)    | https://code.claude.com/docs/en/plugins-reference                                  |
-| A   | How and when to use subagents in Claude Code              | https://claude.com/blog/subagents-in-claude-code                                   |
-| A   | Steering Claude Code (the fit-for-purpose framework)      | https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more |
-| A   | Effective context engineering for AI agents               | https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents  |
-| A   | How we built our multi-agent research system              | https://www.anthropic.com/engineering/multi-agent-research-system                  |
-| B–G | Supplied by the `prompt-quality-criteria` skill           | (that skill's `references/prompt-criteria.md` carries the source rows)             |
-| H   | Define success criteria & build evaluations               | https://platform.claude.com/docs/en/test-and-evaluate/develop-tests                |
-| R   | The host project's `CLAUDE.md` and the documents it links | (project-scoped; see § R)                                                          |
+| Key | Doc                                                             | URL                                                                                |
+| --- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| A   | **Create custom subagents** (normative for the format)          | https://code.claude.com/docs/en/sub-agents                                         |
+| A   | **Add components to a plugin** (normative for plugin subagents) | https://code.claude.com/docs/en/plugins/components                                 |
+| A   | Plugin manifest reference (plugin path variables)               | https://code.claude.com/docs/en/plugins-reference                                  |
+| A   | How and when to use subagents in Claude Code                    | https://claude.com/blog/subagents-in-claude-code                                   |
+| A   | Steering Claude Code (the fit-for-purpose framework)            | https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more |
+| A   | Effective context engineering for AI agents                     | https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents  |
+| A   | How we built our multi-agent research system                    | https://www.anthropic.com/engineering/multi-agent-research-system                  |
+| B–G | Supplied by the `prompt-quality-criteria` skill                 | (that skill's `references/prompt-criteria.md` carries the source rows)             |
+| H   | Define success criteria & build evaluations                     | https://platform.claude.com/docs/en/test-and-evaluate/develop-tests                |
+| R   | The host project's `CLAUDE.md` and the documents it links       | (project-scoped; see § R)                                                          |
 
 ## Why there is no precedence rule
 
@@ -140,21 +142,28 @@ _Unexercised:_ note.
 
 ### Fit-for-purpose — score this first
 
-- **A1 — the artifact earns its form.** _(structure pass)_ A subagent is the right choice when the task produces verbose
-  output the parent does not need, when tool restriction is the point, or when the work is
-  self-contained and returns a summary. A procedure the user wants to watch and steer belongs in a
-  skill: "Use a skill when you want the procedure to play out inside the main thread so you can see
-  and steer each step." A deterministic trigger belongs in a hook, and a standing rule belongs in
-  `CLAUDE.md`. When you recommend a different form, name it. This can be a High finding, because a
-  subagent that should have been a skill hides every intermediate step from the user who wanted to see
-  them.
-- **A2 — no sibling duplication.** _(structure pass)_ The subagent's remit does not substantially overlap a sibling's,
-  because "flooding Claude with options makes automatic delegation less reliable" and an overlap
-  degrades routing for both definitions. The comparison set includes the built-in subagents the
-  documentation names — `Explore`, `Plan`, and `general-purpose` — because they sit in the same
-  roster Claude routes over, so a custom subagent that duplicates Explore's research remit degrades
-  routing the same way a custom sibling does. Judge from `name` and `description` fields only. Do
-  not write a per-sibling finding; this review covers one subagent.
+- **A1 — the artifact earns its form.** _(structure pass)_ A subagent is the right choice when the
+  task produces verbose output the parent does not need, when tool restriction is the point, or when
+  the work is self-contained and returns a summary. A procedure the user wants to watch and steer
+  belongs in a skill: "Use a skill when you want the procedure to play out inside the main thread so
+  you can see and steer each step." A deterministic trigger belongs in a hook, and a standing rule
+  belongs in `CLAUDE.md`. Two remits do not earn a subagent at all, from _How and when to use
+  subagents in Claude Code_: a small task, because "for a quick fix or a focused question, the
+  overhead of delegation outweighs the benefit", and a chain of dependent steps, because "a single
+  session handling the chain is usually cleaner than a relay of subagents passing state through
+  files." When you recommend a different form, name it. This can be a High finding, because a
+  subagent that should have been a skill hides every intermediate step from the user who wanted to
+  see them.
+- **A2 — no sibling duplication.** _(structure pass)_ The subagent's remit does not substantially
+  overlap a sibling's, because "flooding Claude with options makes automatic delegation less
+  reliable" and an overlap degrades routing for both definitions. The comparison set includes the
+  built-in subagents the documentation names — `Explore`, `Plan`, and `general-purpose` — because
+  they sit in the same roster Claude routes over, so a custom subagent that duplicates Explore's
+  research remit degrades routing the same way a custom sibling does. Judge from `name` and
+  `description` fields only. Do not write a per-sibling finding; this review covers one subagent.
+  The roster also has a size budget: the documentation asks you to "keep the combined set within the
+  15,000-token description budget", and Claude Code shows a startup warning past it, so a long
+  description is a cost every sibling pays.
 
 ### Routing
 
@@ -180,16 +189,26 @@ _Unexercised:_ note.
   context saving that justified delegating to it. Anthropic's own anchor is "a condensed, distilled
   summary of its work (often 1,000-2,000 tokens)", from _Effective context engineering for AI
   agents_ — not from the multi-agent research post, so a re-sync checks the page the quote actually
-  came from. A body that lists what to report without bounding how much is a finding.
+  came from. A body that lists what to report without bounding how much is a finding. One
+  alternative satisfies this criterion without a length bound: _How we built our multi-agent
+  research system_ recommends to "implement artifact systems where specialized agents can create
+  outputs that persist independently" — the subagent stores its full output in a file or other
+  external system and returns a lightweight reference to it. A body that does this and returns only
+  the reference passes.
 
 ### Context inheritance
 
 - **A8 — the body does not restate `CLAUDE.md`.** A non-fork subagent receives every level of the
   `CLAUDE.md` hierarchy that the main conversation loads. Restating those rules in the body spends
   tokens on every delegation and buys nothing, and the two copies drift. Read the host project's
-  `CLAUDE.md` before scoring this, and quote the overlap. _Exception:_ the built-in `Explore` and
-  `Plan` agents skip `CLAUDE.md`, and a rule that must reach them belongs in the delegation message
-  rather than in a definition.
+  `CLAUDE.md` before scoring this, and quote the overlap. _Exceptions:_ the built-in `Explore` and
+  `Plan` agents skip `CLAUDE.md` and the git status snapshot, and a rule that must reach them
+  belongs in the delegation message rather than in a definition. A definition that sets
+  `omitClaudeMd: true` (v2.1.271 or later) launches without the user, project, and local `CLAUDE.md`
+  files — managed policy files still load — so restating a rule it needs is correct there, not
+  duplication. A plugin's own `CLAUDE.md` is not part of that hierarchy: "Claude Code doesn't load a
+  `CLAUDE.md` at the plugin root", and the page's direction is "To include instructions in a plugin,
+  write them as a skill" (source: Add components to a plugin).
 - **A9 — the body assumes no conversation.** A non-fork subagent sees only its system prompt, the
   delegation message, and the context listed under `A8`. It does not see prior messages, the skills
   already invoked, or the files Claude already read. A body that refers to "the change we discussed",
@@ -220,18 +239,22 @@ _Unexercised:_ note.
   three of the five real subagents in the dry run, which makes it the highest-yield item in this
   group.
 - **A12 — no always-stripped tool is listed.** Claude Code removes `AskUserQuestion`,
-  `EndConversation`, `EnterPlanMode`, `ScheduleWakeup`, `TaskOutput`, `WaitForMcpServers`, and
-  `Workflow` from every subagent, even when `tools` names them. It also removes `ExitPlanMode` unless
+  `EndConversation`, `EnterPlanMode`, `ScheduleWakeup`, `WaitForMcpServers`, and `Workflow` from
+  every subagent, even when `tools` names them. It also removes `ExitPlanMode` unless
   `permissionMode` is `plan`, and `Agent` at the depth limit. Listing one is dead configuration that
   misleads a reader about what the subagent can do. A fork is the exception: forks skip both tool
   filters and receive the main conversation's exact tool pool, and in a fork at the depth limit
   `Agent` stays listed but returns an error instead of spawning. This is a deterministic lookup, not
   a judgment.
-- **A13 — the toolset survives background mode.** Subagents run in the background by default from
-  v2.1.198, and a background subagent keeps every MCP tool but only these built-in tools: `Read`,
-  `Grep`, `Glob`, `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`, `WebSearch`,
-  `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`, `Monitor`, `TaskStop`,
-  `SendMessage`, and `Artifact`. A definition depending on a built-in tool outside that list behaves
+- **A13 — the toolset survives background mode.** Subagents run in the background by default. Where
+  fork mode is on — the default in interactive sessions from v2.1.232 — Claude Code runs every
+  subagent Claude spawns in the background and Claude cannot ask for the foreground; where it is
+  off, Claude runs a subagent in the foreground only when it needs the result before continuing. A
+  background subagent keeps every MCP tool but only these built-in tools: `Read`, `Grep`, `Glob`,
+  `LSP` (from v2.1.280), `Bash`, `PowerShell`, `Edit`, `Write`, `NotebookEdit`, `WebFetch`,
+  `WebSearch`, `TodoWrite`, `Skill`, `ToolSearch`, `EnterWorktree`, `ExitWorktree`, `Monitor`,
+  `TaskStop`, `SendMessage`, and `Artifact`, plus `SubagentHandback` for a subagent that reports
+  through it. A definition depending on a built-in tool outside that list behaves
   differently in the foreground and the background, and Claude Code reports no error when it removes
   the tool unless the removal leaves `tools` resolving to nothing. `Agent` and
   `ExitPlanMode` are the exceptions: they follow `A12`'s conditions wherever the subagent runs.
@@ -252,55 +275,101 @@ _Unexercised:_ note.
   additionally accepts the bare `mcp__*` wildcard, which removes every MCP tool from every server.
   When the body names an MCP
   tool, it names it the same way the grant does, so a reader can tell which grant covers it.
-- **A16 — `permissionMode` is safe and effective.** A `bypassPermissions` grant is justified where it
-  appears. **A definition cannot rely on `permissionMode` for safety**, because a parent on
-  `bypassPermissions` or `acceptEdits` takes precedence and the subagent cannot override it, and a parent in
-  auto mode makes Claude Code ignore the subagent's own setting entirely. Score `N/A` when the field is absent.
-  _Unexercised:_ none of the five real subagents set this field.
+- **A16 — `permissionMode` is safe and effective.** **A definition cannot rely on `permissionMode`
+  for safety**, because when the parent is in `bypassPermissions`, `acceptEdits`, or auto mode, the
+  subagent runs in the parent's mode and Claude Code ignores the subagent's own setting. **A
+  definition cannot grant itself `bypassPermissions` either:** from v2.1.267, a subagent that sets
+  it under a parent in `default`, `dontAsk`, or `plan` mode keeps the parent's mode — "a subagent
+  runs in this mode only when the main conversation does." So a `bypassPermissions` value is dead
+  configuration on current versions; on older versions it is a grant that needs a stated reason. The
+  same fallback applies to `auto` when auto mode is not available to the subagent. Under a parent in
+  auto mode, the classifier also reviews the subagent's work and final report before the report is
+  delivered. Score `N/A` when the field is absent. _Unexercised:_ none of the five real subagents
+  set this field.
 
 ### Frontmatter validity
 
-- **A17 — `name` is loadable.** Lowercase letters and hyphens. **Claude Code does not load a `name`
-  containing `:` at all**, because it reserves `:` for plugin-scoped identifiers, and the only trace is
-  a line in the debug log. Claude Code accepted such names before v2.1.218, so a definition that worked once can stop
-  loading after an upgrade. Identity comes from `name` alone and the filename is free, so a filename
-  mismatch is not a finding here. This is a deterministic lookup.
+- **A17 — `name` is loadable.** Lowercase letters and hyphens, at most 256 characters. **Claude Code
+  does not load a `name` that contains `:`, starts with `-`, or exceeds 256 characters**, and the
+  only trace is a line in the debug log; `:` is reserved for plugin-scoped identifiers. Identity
+  comes from `name` alone and the filename is free, so a filename mismatch is not a finding here. A
+  plugin-shipped subagent registers under a scoped name: the plugin name, each subfolder of the
+  plugin's `agents/` directory, and the `name` (or the file name when `name` is absent), joined with
+  colons — `agents/review/security.md` in `my-plugin` loads as `my-plugin:review:security`. A file
+  listed in the manifest's `agents` field "loads without subfolder names", so
+  `"agents": "./custom/review/security.md"` loads as `my-plugin:security`, and "the `agents`
+  manifest key replaces the `agents/` scan", so a file left only under `agents/` then does not load.
+  Moving a plugin agent between subfolders therefore renames it, and breaks every caller that names
+  it. This is a deterministic lookup.
 
-    **Two definitions sharing a `name` resolve differently depending on where they sit.** In the same
-    `.claude/agents/` tree, including its subfolders, Claude Code loads one of them chosen by
+    **Two definitions sharing a `name` resolve differently depending on where they sit.** In the
+    same `.claude/agents/` tree, including its subfolders, Claude Code loads one of them chosen by
     filesystem read order, with no documented precedence, and `/doctor` reports the clash. Across
-    nested project directories, the definition closest to the working directory wins from v2.1.178.
-    Across scopes, the higher-priority location wins: managed settings, then the `--agents` CLI
-    flag, then `.claude/agents/`, then `~/.claude/agents/`, then a plugin's `agents/` directory.
-    Report the same-tree case as a defect and the other two as resolution rules the reader should
-    know.
+    nested project directories, the definition closest to the working directory wins. Across scopes,
+    the higher-priority location wins: managed settings, then the `--agents` CLI flag, then
+    `.claude/agents/`, then `~/.claude/agents/`, then a plugin's `agents/` directory. Report the
+    same-tree case as a defect and the other two as resolution rules the reader should know.
 
 - **A18 — plugin-shipped fields.** A subagent shipped in a plugin supports `name`, `description`,
-  `model`, `effort`, `maxTurns`, `tools`, `disallowedTools`, `skills`, `memory`, `background`, and
-  `isolation`. **Claude Code ignores `hooks`, `mcpServers`, and `permissionMode` for security reasons**, and
-  nothing warns the author. A plugin subagent declaring `permissionMode: plan` as a safety measure has
-  no safety measure. Score `N/A` when the subagent is not plugin-shipped. _Unexercised:_ none of the
-  five real subagents is plugin-shipped.
-- **A19 — `model`, `effort`, and `maxTurns` are justified.** The default is `inherit`, so a pin needs
-  a stated reason. **The pin is overridable from three directions:** the
-  `CLAUDE_CODE_SUBAGENT_MODEL` environment variable, the per-invocation `model` parameter, and an
-  organization's `availableModels` allowlist. From v2.1.222 a blocked family alias such as `opus` runs
-  on the newest version of that family the allowlist permits, and any other blocked value falls back
-  to the inherited model. A definition depending on the quirks of exactly one model is therefore
-  fragile. All five real subagents pinned a model with no stated reason.
+  `model`, `effort`, `maxTurns`, `tools`, `disallowedTools`, `skills`, `memory`, `background`,
+  `omitClaudeMd`, `isolation`, `color`, and the `cacheTtl` key of `experimental` (source: Add
+  components to a plugin). **Claude Code ignores `hooks`, `mcpServers`, and `permissionMode` for
+  security reasons**, and `initialPrompt` as well, and nothing warns the author. A plugin subagent
+  declaring `permissionMode: plan` as a safety measure has no safety measure. The documented remedy:
+  "An agent file can't add hooks or MCP servers on its own, so add those as plugin hooks and MCP
+  servers instead." Frontmatter that does not parse loads the agent with every field ignored, named
+  after its file, with the description `Agent from <plugin> plugin`; the page points to
+  `claude plugin validate` "to find these files". Score `N/A` when the subagent is not
+  plugin-shipped.
+  _Unexercised:_ none of the five real subagents is plugin-shipped.
+
+    **Every subagent, plugin-shipped or not:** Claude Code ignores an unrecognized field without an
+    error, and multi-word fields are camelCase (`maxTurns`, `disallowedTools`, `omitClaudeMd`), so a
+    misspelled or snake_case field is dead configuration. `cacheTtl` belongs inside the
+    `experimental` map, never at the top level. `initialPrompt` takes effect only when the agent
+    runs as the main session agent via `--agent`, so in a definition meant only for delegation it is
+    dead configuration.
+
+- **A19 — `model`, `effort`, and `maxTurns` are justified.** A pin needs a stated reason. Claude
+  Code resolves a subagent's model in this order: the per-invocation `model` parameter, the `model`
+  frontmatter (where `inherit` selects the main conversation's model), the
+  `CLAUDE_CODE_SUBAGENT_MODEL` environment variable, then the main conversation's model. Before
+  v2.1.251 the environment variable came first and overrode the other two. Omitting `model` is
+  therefore not the same as `model: inherit`: an omitted field lets the environment variable apply,
+  and `inherit` outranks it. **The pin is still overridable:** the per-invocation parameter wins
+  over it; `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` (v2.1.257 or later) makes Claude Code ignore every
+  definition's `model`; and an organization's `availableModels` allowlist substitutes for a blocked
+  value — a blocked family alias such as `opus` runs on the newest version of that family the
+  allowlist permits (from v2.1.222), and any other blocked value, or an alias whose family the
+  allowlist permits no version of, falls back to the inherited model. **A family alias does not
+  always mean the alias target:** when the main conversation's model belongs to that family, `model:
+opus` runs on the main conversation's exact model, including any `[1m]` suffix. A definition
+  depending on the quirks of exactly one model is therefore fragile. All five real subagents pinned
+  a model with no stated reason.
+
+    **`effort`** overrides the session's effort level but not the `CLAUDE_CODE_EFFORT_LEVEL`
+    environment variable, and for a non-fork subagent Claude can pass a per-invocation `effort`
+    (v2.1.292 or later) that overrides the field and persists on resume. Available levels depend on
+    the model. **`maxTurns`** stops the subagent at the limit; from v2.1.246 Claude Code returns the
+    output marked as partial and Claude can resume it.
+
 - **A20 — `memory` scope fits, and the body uses it.** `project` is the documented recommended
   default. When memory is on, the body also tells the subagent when to read and when to write it, or
-  the directory stays empty and the field buys nothing. Score `N/A` when the field is absent.
+  the directory stays empty and the field buys nothing. Subagent memory is part of auto memory: when
+  auto memory is off (`autoMemoryEnabled` or `CLAUDE_CODE_DISABLE_AUTO_MEMORY`), the field has no
+  effect. Score `N/A` when the field is
+  absent.
   _Unexercised:_ none of the five real subagents set this field.
-- **A21 — `isolation: worktree` is warranted.** It costs setup time and disk, and it branches from
-  the default branch rather than the parent's `HEAD`, so a subagent expecting the parent's uncommitted
-  work will not find it. Score `N/A` when the field is absent. _Unexercised:_ none of the five real
-  subagents set this field.
+- **A21 — `isolation: worktree` is warranted.** It costs setup time and disk, and it branches by
+  default from the default branch rather than the parent's `HEAD` (the base branch is configurable),
+  so a subagent expecting the parent's uncommitted work will not find it. Score `N/A` when the field
+  is absent. _Unexercised:_ none of the five real subagents set this field.
 - **A22 — `skills` preload versus the Skill tool.** `skills` injects **full** skill content at
   startup, on every delegation, so it suits knowledge the subagent always needs. A subagent reaches
-  everything else through the Skill tool, which costs nothing until it is used. Preloading a skill the
-  subagent rarely needs pays for it every time. A skill with `disable-model-invocation: true` cannot
-  be preloaded at all.
+  everything else through the Skill tool, which costs nothing until it is used. Preloading a skill
+  the subagent rarely needs pays for it every time. A skill with `disable-model-invocation: true`
+  cannot be preloaded at all, and only the first 32 distinct names in the list are preloaded — a
+  33rd entry is dead configuration.
 
 ### Body craft
 
@@ -311,17 +380,29 @@ _Unexercised:_ note.
   duplicates from a skill it also invokes. Prefer clearly delineated sections with Markdown headers.
 - **A24 — delegation and fan-out, when the subagent delegates.** A subagent that spawns its own
   subagents states each child's objective, output format, guidance on tools and sources, and task
-  boundaries, because "without detailed task descriptions, agents duplicate work, leave gaps, or fail
-  to find necessary information." It also states how many children and when: subagents nest three
-  layers below the main conversation by default from v2.1.219, and Claude Code runs at most 20
-  subagents concurrently by default from v2.1.217, adjustable with
-  `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, so a wider fan-out queues rather than failing. Score `N/A`
-  when the subagent has no `Agent` tool, which is the common case.
+  boundaries, because "without detailed task descriptions, agents duplicate work, leave gaps, or
+  fail to find necessary information." It also states how many children and when: subagents nest
+  three layers below the main conversation by default from v2.1.219, adjustable with
+  `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` (`1` turns nesting off), and from v2.1.217, when 20
+  subagents are running in a session, spawning another **fails** with `Concurrent subagent limit
+reached` and the error tells Claude not to retry — adjustable with
+  `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`. A fan-out wider than the limit does not queue: the spawns
+  past it fail. Parallel children must not edit the same file: "Two subagents editing the same file
+  in parallel is a recipe for conflict" (_How and when to use subagents in Claude Code_). Score
+  `N/A` when the subagent has no `Agent` tool, which is the common case.
 - **A25 — file references are reachable.** A body that references a path needs `Read` in its `tools`
-  list and a path that resolves. **A subagent starts in the main conversation's working directory, not in the
-  directory holding the definition file**, so a path written relative to the definition resolves
-  somewhere else entirely. Prefer a repository-root-relative path. This defect fired on a real subagent whose Markdown
-  links used `../../` from `.claude/agents/`.
+  list and a path that resolves. **A subagent starts in the main conversation's working directory,
+  not in the directory holding the definition file**, so a path written relative to the definition
+  resolves somewhere else entirely. Prefer a repository-root-relative path. This defect fired on a
+  real subagent whose Markdown links used `../../` from `.claude/agents/`. **A plugin-shipped
+  subagent has a documented fix:** write `${CLAUDE_PLUGIN_ROOT}` in the Markdown body, and Claude
+  Code substitutes the plugin's install path when it loads the content. The variable is not in the
+  environment of Bash commands the subagent runs, so a `$CLAUDE_PLUGIN_ROOT` left for the shell to
+  expand resolves to nothing (source: the plugin manifest reference). Two more variables are
+  substituted in agent content: `${CLAUDE_PROJECT_DIR}`, "the project root", and
+  `${CLAUDE_PLUGIN_DATA}`, "a directory that survives updates". `${CLAUDE_PLUGIN_ROOT}` is
+  different: "the path changes when the plugin updates. Don't write state there" (source: Add
+  components to a plugin).
 - **A26 — the return path is an injection path into the parent.** A subagent that reads third-party
   content — fetched pages, command output, files the user never reviewed — and reports upward carries
   that content into the parent session. Claude Code scans subagent output from v2.1.210, but the scan
@@ -372,7 +453,10 @@ numbering and meaning, so a reader who knows one reviewer's report can read the 
   only graded success-criteria surface, so weigh their findings accordingly.
 - **H2 — measurable and specific.** Expected behaviors are concrete and checkable. "Clearly define
   what you want to achieve. Instead of 'good performance,' specify 'accurate sentiment
-  classification.'"
+  classification.'" For a subagent that changes state, the expectation is the end state, not the
+  path: "evaluate whether it achieved the correct final state", and "for complex workflows, break
+  evaluation into discrete checkpoints where specific state changes should have occurred" (_How we
+  built our multi-agent research system_, a group `A` source).
 - **H3 — distinct decision points.** Each scenario targets a different branch of the body, so a
   failure localizes the regression rather than implicating the whole body.
 - **H4 — edge cases.** Covers absent input, boundary cases, and adversarial input. The source names
@@ -380,19 +464,27 @@ numbering and meaning, so a reader who knows one reviewer's report can read the 
   reach consensus.
 - **H5 — grading split.** The eval set separates machine-checkable checks from judgment-graded ones,
   and automates the machine-checkable half. "Structure questions to allow for automated grading."
+  The source ranks the methods: code-based grading first, LLM-based grading for judgment, and human
+  grading last — "Most flexible and high quality, but slow and expensive. Avoid if possible." An
+  LLM-graded check carries a detailed, clear rubric, and its grader runs with thinking on, "so that
+  it reasons before it produces an evaluation score."
 - **H6 — baseline-first.** The evals record what a run without the subagent misses, which is the
   before-and-after evidence that delegating earns its cost.
 - **H7 — model coverage.** Scenarios name the models the subagent must pass on. `A19` makes this
-  matter more than it does for a skill: the model pin is overridable from three directions, so a
-  subagent tested on one model only is tested on a configuration the user can change.
+  matter more than it does for a skill: the per-invocation parameter, the force variable, and the
+  `availableModels` allowlist can all replace the pin, and a family alias runs on the session's own
+  model when the families match, so a subagent tested on one model only is tested on a
+  configuration the user can change.
 - **H8 — evals precede the prose, assertions follow the first run.** Find the gap by running the task
   without the subagent. Write the scenarios against that gap. Measure the baseline. Then write the
   minimum body that passes. Assertions settle on the second pass, so a scenario set reaching its
   assertions after a first run is correct rather than late.
-- **H9 — criteria are specific, measurable, achievable, and relevant.** Base targets on a benchmark, a
-  prior experiment, or expert knowledge rather than on hope. Volume of cheap automated checks beats a
-  handful of hand-graded ones: "More questions with slightly lower signal automated grading is better
-  than fewer questions with high-quality human hand-graded evals."
+- **H9 — criteria are specific, measurable, achievable, and relevant.** Base targets on a benchmark,
+  a prior experiment, or expert knowledge rather than on hope. "Most use cases need multidimensional
+  evaluation along several success criteria", and each criterion defines its own terms — a bar like
+  "egregious" is not measurable until the eval says what it means. Volume of cheap automated checks
+  beats a handful of hand-graded ones: "More questions with slightly lower signal automated grading
+  is better than fewer questions with high-quality human hand-graded evals."
 - **H10 — grader independence.** The instance that produced an output does not grade it. The source
   goes further than instance independence: "Generally best practice to use a different model to
   evaluate than the model used to generate the evaluated output." Self-grading in the same run is not
@@ -493,3 +585,29 @@ mistake.
 | `H1` `evals/evals.json`                  | **Replaced.** No equivalent convention exists; see this checklist's `H1`.                                                                                                                                                                                                                                                                                                 |
 | `R14` bounded decision space             | **Folded into `R12`, 2026-08-26.** The non-convergence rule survives there — review-fix rounds that fail to converge are evidence against scope coherence, and the improvement loop cites `R12` for its non-acceptance exits. The rest of `R14` scores a workflow's decision space, which a single definition file does not have.                                         |
 | Severity tiers, verdict, and waivers     | **Ported, 2026-08-26.** The contract now lives in this file's § Severity, verdict, and waivers — a computed acceptable/not-yet verdict, `manifests:` scenarios on blocking findings, and a `review-waivers.md` beside the definition. It was deliberately withheld until the skills side had exercised it; the 2026-08-25 eval runs on that side are the evidence it ran. |
+
+## Reviewed and not adopted
+
+The 2026-10-09 reconciliation reviewed these source recommendations and kept them out of the
+criteria on purpose. A refresh that reports one of them as drift has found nothing new.
+
+- **Usage tips in _How and when to use subagents in Claude Code_** — keyboard shortcuts, `/tasks`,
+  and when a user should ask for a subagent. They govern how a person drives a session, not what a
+  definition says.
+- **_Steering Claude Code_ beyond its fit-for-purpose framework** — `CLAUDE.md` sizing, rules files,
+  and output styles. `A1` already carries the framework; the rest concerns other artifact types.
+- **Compaction, note-taking, and tool-design advice in _Effective context engineering for AI
+  agents_** — these are prompt and harness concerns that the shared `prompt-quality-criteria` groups
+  cover, or that no subagent definition controls.
+- **Multi-agent research items outside `A7`, `A24`, `A27`, and `H2`** — orchestrator prompt tuning,
+  parallel tool calls, and production tracing. They apply to the orchestrating harness rather than
+  to one subagent's definition.
+- **New interactive-session mechanics on the documentation page** — the `/tasks` row lifecycle, the
+  subagent panel, mods' `agent.spawn` hook model override, and the `--append-subagent-system-prompt`
+  flag. None is a property of a definition file.
+- **_Add components to a plugin_ beyond its agent rules** — the skills, commands, hooks, MCP, LSP,
+  executables, themes, channels, monitors, `userConfig` dialog, and dependency-install sections;
+  the plugin `settings.json` `agent` key that runs a plugin agent as the main thread, and its
+  precedence rules; the data-directory naming, Windows path form, `/reload-plugins`, and the
+  claude.ai and Cowork component differences. They configure the plugin or other component types,
+  not a subagent definition.

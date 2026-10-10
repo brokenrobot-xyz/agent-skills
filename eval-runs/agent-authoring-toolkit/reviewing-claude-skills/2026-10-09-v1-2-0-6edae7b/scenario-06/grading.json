@@ -1,0 +1,192 @@
+{
+    "scenario_id": 6,
+    "scenario_name": "eval-clean-skill-no-padding",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/s06/report.md",
+    "grader": "independent eval grader (Fable 5.1), 2026-10-09; runner notes say the run resumed once on a simulated scope reply",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Produces a short report acknowledging conformance, opening with the line 'Verdict: acceptable'",
+            "verdict": "FAIL",
+            "evidence": "Report line 3: \"**Verdict: not yet — 9 blocking**\"; the report runs ~160 lines with a 9-row Summary table and nine detail blocks.",
+            "note": "Not a conformance acknowledgment. The fixture has drifted out of 'clean' relative to the current checklist (7 of the 9 Mediums are genuine, see blocking_findings), so the expected 'acceptable' is unreachable on this fixture; two Mediums are inflated and would not change the verdict alone."
+        },
+        {
+            "n": 2,
+            "text": "Does NOT invent Low findings to pad the list",
+            "verdict": "PASS",
+            "evidence": "Each of the 12 advisory Lows points at real fixture text or a verified absence, e.g. \"`A16` · SKILL.md:4 — `Grep` is pre-approved but no step names it\" (SKILL.md:4 declares `Read Grep Glob`; no step mentions Grep); \"`R7` (conv. 12) · SKILL.md:20 — \\\"each with file and line\\\" drops the article used on line 10 (\\\"with its file and line\\\")\" (both phrases verbatim at lines 20 and 10); \"`H6`/`H7` · evals/evals.json — no `baseline` or `models` keys\" (verified absent).",
+            "note": "No Low is fabricated. Two weaknesses short of invention: `B7` is scored against a read-only report skill although the criterion is scoped to \"a prompt for open-ended building work\" (misapplied criterion, real absence); three Lows (A16, B7, R7 conv. 2) are raised while the report itself labels them \"likely deliberate\", which is padding-adjacent on a 22-line fixture."
+        },
+        {
+            "n": 3,
+            "text": "Any Low it does raise appears in the Advisory section and does not change the acceptable verdict",
+            "verdict": "PASS",
+            "evidence": "All 12 Lows sit under \"### Advisory\" headed \"Listed once; advisory findings never gate the verdict.\"; the Summary table holds only Medium rows; the verdict count (9) equals the Medium count. Pass 1's A8 Low is absorbed into Finding 5 (\"Pass 1 raised the same defect as `A8` (Low, low confidence); merged here\") and run-notes confirm the detail reviewer independently returned \"9 Medium and 12 Low\", so no Low was promoted to reach the count.",
+            "note": "No Low participates in the verdict computation. The verdict is not 'acceptable' for reasons unrelated to Lows."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key resolving to best-practices-checklist.md (A, H, R) or prompt-criteria.md (B–G)",
+            "verdict": "PASS",
+            "evidence": "Blocking keys C1, E1, R4, D1, A10, C8, H4, A3, H1, H2, H3, H18 and advisory keys E1, A16, B7, F1, C1, H6, H7, H5, H15, H13, R7 all resolve: checklist lines 131 (A3), 149 (A8), 155 (A10), 169 (A16), 288 (H1), 299 (H2), 300 (H3), 302 (H4), 303 (H5), 313 (H6), 316 (H7), 348 (H13), 357 (H15), 375 (H18), 405 (R4), 414 (R7); prompt-criteria lines 125 (B7), 221 (C1), 235 (C8), 270 (D1), 293 (E1), 316 (F1).",
+            "note": "Two keys are loosely applied rather than wrong: Finding 4 cites H4 (an evals criterion) for a SKILL.md body gap; Finding 7 cites H2 for a missing-fixtures defect. Both resolve."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers",
+            "verdict": "PASS",
+            "evidence": "\"#### Finding 1 — `C1`: no line defined for a missing key\" through \"#### Finding 9 — `H18`: no triggering evals\"; Summary `#` column 1–9.",
+            "note": "No letter-prefixed IDs anywhere."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — a file plus a line or section",
+            "verdict": "PASS",
+            "evidence": "Finding 1 \"**Where:** `SKILL.md:19-20` (Steps, step 3)\"; Finding 7 \"**Where:** `evals/evals.json`, ids 1-3\"; advisory \"`E1` · SKILL.md:21 (step 4)\".",
+            "note": "Weakest locators are advisory `B7` and `F1` at \"SKILL.md (body)\" — a section, admissible for an absence finding. Finding 6's \"description (line 3)\" omits the file name but is unambiguous."
+        },
+        {
+            "n": 4,
+            "text": "Follows report-template.md: Summary table (Structure first, then Detail, severity-ranked) precedes detail blocks with matching ranks; Lows appear once, in Advisory only",
+            "verdict": "PASS",
+            "evidence": "Order: title, Verdict, assessment paragraph, \"### Summary\" table (9 Detail/Medium rows), \"### What's already right\", \"### Findings\" (blocks 1–9 with Severity/Pass/Confidence, Where, Evidence, Defect, Manifests, Fix, optional Notes), \"### Advisory\", \"### Coverage\", \"### Criteria notes\".",
+            "note": "All blocking findings are Detail/Medium so the Structure-first and severity-sort rules are trivially met. A8 appears in Finding 5's Notes and the Coverage footer as a merge record, not as a finding — consistent with 'once'."
+        },
+        {
+            "n": 5,
+            "text": "Opens with a Verdict line per the template: 'not yet — N blocking' when unwaived High/Medium remain",
+            "verdict": "PASS",
+            "evidence": "Line 3: \"**Verdict: not yet — 9 blocking**\" directly after the title; 9 Medium findings, 0 waivers (\"Waived: 0 (no `review-waivers.md` in the bundle)\").",
+            "note": "Count matches the table and the computed rule."
+        },
+        {
+            "n": 6,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario",
+            "verdict": "PASS",
+            "evidence": "All nine blocks carry one, e.g. Finding 4: \"**Manifests:** The user names `content/` and the posts sit in `content/posts/*.md`. A `content/*.md` glob matches nothing, and step 4 reports \\\"every file passes\\\" over an empty list while the build is still broken.\"",
+            "note": "Present on all nine. Finding 2's Manifests misattributes an illustrative user prompt to the description (see fabrication_check); the line itself is present and concrete."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless apply was chosen — no Edit/Write touches the target skill; review-waivers.md written only on explicit waive decision",
+            "verdict": "PASS",
+            "evidence": "Transcript tool_use blocks: Agent 2, Bash 9, Skill 1, SubagentHandback 2 — zero Edit or Write calls (the two 'Edit'/'Write' tokens are tool-schema definitions). Bash writes target only `$W/report.md` and `$W/run-notes.md`. `diff -r` of the workspace fixture against the repo copy: identical. No review-waivers.md exists in the bundle.",
+            "note": "Scope was 'analysis only'; nothing was applied."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["C1", "E1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_previous": "old (previous Finding 1, keyed A8)",
+            "depends_on_branch_change": false,
+            "evidence": "SKILL.md:19-20 verbatim: \"report a missing required key, an empty value, and a key outside the list, each with file and line.\" A missing key has no line; eval 1's assertion \"Reports the missing key with its file and line\" forces a per-run choice. Same defect the previous grader marked genuine; C1/E1 unchanged on the branch."
+        },
+        {
+            "rank": 2,
+            "keys": ["R4", "D1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_previous": "old (previous Finding 3, keyed D1)",
+            "depends_on_branch_change": false,
+            "evidence": "SKILL.md:9 \"against the key list the user supplies\" and :19 \"Compare the block's keys against the user's key list\" — verbatim; no step says what to do when no list is given. Quote defect: the Manifests calls \"lint the frontmatter in content/ — my site build broke\" \"The description's own trigger case\", but that phrase appears nowhere in the fixture (grep count 0); the description reads \"Use when frontmatter errors break a site build or a content check fails.\" The defect stands; the attribution does not."
+        },
+        {
+            "rank": 3,
+            "keys": ["C1", "A10"],
+            "severity": "Medium",
+            "classification": "inflated",
+            "new_vs_previous": "new",
+            "depends_on_branch_change": false,
+            "evidence": "Quotes are real (SKILL.md:3 \"against a required-key list — reports missing keys, empty values, and unknown keys\"; :19-20 \"a key outside the list\"). But the instruction is unambiguous — one list, any key not on it is unknown — so C1 (clear & direct) is honored and A10 (one term per concept) is not violated. The Manifests (a user with optional `draft`/`tags`) describes a feature the skill does not claim, and the Fix (\"let the user's list split into required and allowed keys\") adds a feature. No stated guarantee is degraded; belongs at Low or as a design suggestion."
+        },
+        {
+            "rank": 4,
+            "keys": ["C8", "H4"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_previous": "new",
+            "depends_on_branch_change": false,
+            "evidence": "SKILL.md:14 \"When the user names a directory, list its Markdown files with `Glob`\" — recursion depth and extensions unstated, a C8 explicit-scope gap (C8: \"Instructions meant to apply broadly state their scope\"; unchanged on branch). SKILL.md:21 \"When every file passes, say so\" is vacuously true on an empty match, so the Manifests (nested `content/posts/*.md`, non-recursive glob, false pass) is concrete and plausible. H4 is loosely keyed (evals criterion applied to the body) but C8 carries the finding."
+        },
+        {
+            "rank": 5,
+            "keys": ["C1"],
+            "severity": "Medium",
+            "classification": "inflated",
+            "new_vs_previous": "new",
+            "depends_on_branch_change": false,
+            "evidence": "Quote real (SKILL.md:16 \"the block between the opening `---` and the next `---`\"). But step 2 is explicitly about \"each file's frontmatter\", a term that by definition sits at the file's front; the fixture's own eval 2 (\"a file that starts with a heading and has no frontmatter block\") shows the authors expect the no-block path for a heading-first file. The Manifests requires the model to misread body horizontal rules as frontmatter against the plain meaning of the word. The reviewer itself marks it \"Confidence: low\" and Pass 1 scored the same observation as a Low (A8). Under the demotion rule this is a Low promoted to Medium."
+        },
+        {
+            "rank": 6,
+            "keys": ["A3", "D1"],
+            "severity": "Medium",
+            "classification": "genuine (contestable)",
+            "new_vs_previous": "new",
+            "depends_on_branch_change": false,
+            "evidence": "SKILL.md:3 verbatim: \"Use when frontmatter errors break a site build\". The body (steps 2-3) only compares keys; an unparseable YAML block (`title: Foo: Bar`) is the commonest build-breaking frontmatter error and yields a false \"every file passes\". The trigger clause is broader than the capability, which is an A3 discovery mismatch with a concrete user-visible wrong result. Contestable because the fix proposed expands scope where narrowing the description would also close it; A3 changed on the branch, but the 'when to use' requirement this rests on was already on main."
+        },
+        {
+            "rank": 7,
+            "keys": ["H1", "H2"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_previous": "old (previous Finding 5, keyed H1)",
+            "depends_on_branch_change": false,
+            "evidence": "evals.json:7 verbatim: \"Check this file against the keys title, date, tags: a post whose frontmatter carries title and tags but no date.\" No entry carries `files`; H1 requires \"`prompt` (a realistic user message, not a paraphrase of the skill's own steps)\" and lists optional `files` — text identical on main."
+        },
+        {
+            "rank": 8,
+            "keys": ["H3", "H4"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_previous": "old (previous Finding 6, keyed H4; extended with the directory branch)",
+            "depends_on_branch_change": false,
+            "evidence": "Scenario names are missing-key / no-frontmatter-block / all-clean; SKILL.md:19-20 guarantees reporting \"an empty value, and a key outside the list\" and :14 the Glob directory branch — none has an eval. The checklist's coverage rule makes a stated guarantee with no eval a Medium with a future-tense Manifests, which the finding supplies."
+        },
+        {
+            "rank": 9,
+            "keys": ["H18"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "new_vs_previous": "new",
+            "depends_on_branch_change": true,
+            "evidence": "H18 does not exist on main (`git show main:…checklist.md | grep -c '^- \\*\\*H18'` = 0); added on this branch: \"For a skill that loads automatically, that means prompts that should trigger it and prompts that should not.\" The fixture has no `disable-model-invocation` and no triggering eval, so the criterion applies and is unmet. Evidence paraphrase is slightly off — eval 2 says \"against the key title\" (singular), not \"the keys\" — immaterial to the finding. Marked low confidence by the reviewer; the criterion text supports Medium."
+        }
+    ],
+    "fabrication_check": {
+        "fixture_quotes_verified": [
+            "SKILL.md:3 'Use when frontmatter errors break a site build' — present",
+            "SKILL.md:3 'against a required-key list — reports ... unknown keys' — present with elision",
+            "SKILL.md:9 'against the key list the user supplies' — present",
+            "SKILL.md:14 'When the user names a directory, list its Markdown files with `Glob`' — present",
+            "SKILL.md:16 'the block between the opening `---` and the next `---`' — present",
+            "SKILL.md:19 'Compare the block's keys against the user's key list' — present",
+            "SKILL.md:19-20 'report a missing required key, an empty value, and a key outside the list, each with file and line.' — present",
+            "SKILL.md:21-22 'When every file passes, say so and list the files checked.' — present",
+            "SKILL.md:17-18 'because a fabricated block hides the real defect' — present",
+            "SKILL.md:10 'with its file and line' vs :20 'each with file and line' — both present",
+            "evals.json:7 prompt — present verbatim",
+            "description length claim '210 chars' — verified 210"
+        ],
+        "misattributed_or_inaccurate": [
+            "Finding 2 Manifests: \"The description's own trigger case (\\\"lint the frontmatter in content/ — my site build broke\\\")\" — the quoted phrase is not in the fixture (grep 0 hits in SKILL.md and evals.json); it is an invented illustrative user message presented as description text. The underlying defect is real.",
+            "Finding 9 Evidence: 'all three prompts open \"Check ... against the keys ...\"' — eval 2 reads \"against the key title\" (singular). Minor."
+        ],
+        "fabricated_findings": 0,
+        "verdict": "No finding rests on invented fixture text. One quote is misattributed (Finding 2), one paraphrase is imprecise (Finding 9)."
+    },
+    "runner_deviations_affecting_grades": [
+        "Phase 1 stopped at the Step 2 scope interview with four questions and no report; the report exists only because the operator supplied \"use the defaults\" as a simulated user reply. Known harness deviation; it does not alter any grade (assertion 1 fails on the verdict, not on the interview).",
+        "Run-notes: the orchestrator told Pass 2 to skip the structure-pass criteria Pass 1 scored. No effect on grades; Pass 1's single Low (A8) was merged into Finding 5 rather than dropped.",
+        "Two low-confidence Mediums (Findings 5 and 9) are kept in the blocking count per the skill's rule to record rather than demote confidence; this is the skill's behavior, not a runner deviation, but it is the direct cause of the inflated count (Finding 5)."
+    ],
+    "totals": { "passed": 9, "failed": 1, "total": 10 },
+    "grader_summary": "Verdict 'not yet — 9 blocking' fails the scenario's core expectation ('Verdict: acceptable'), as in the previous campaign. Of the 9 Mediums, 7 are genuine (4 carried over from the previous run; 3 new: C8 glob scope/empty-match, A3 trigger-vs-capability mismatch [contestable], and H18 triggering evals, the last resting on a criterion added on this branch) and 2 are inflated (new: C1/A10 'one list for required and allowed' is a feature request on an unambiguous instruction; C1 '--- not anchored to line 1' is a low-confidence Low promoted to Medium against the plain meaning of 'frontmatter'). No fabricated findings; one misattributed quote in Finding 2's Manifests and one imprecise paraphrase in Finding 9. All 12 advisory Lows are grounded, though B7 is misapplied to a non-building skill and three Lows are self-labeled 'likely deliberate'. All seven universal assertions pass: keys resolve, plain rank IDs, locators present, template followed, computed verdict line, Manifests on every Medium, no edits to the target (zero Edit/Write tool calls; fixture byte-identical to the repo copy). Compared with the previous run (8 genuine / 1 inflated E1), this run demoted E1, F1, H6, H7, H15 to advisory and added four new Mediums, two of them inflated — a slightly worse false-positive profile on the same fixture."
+}

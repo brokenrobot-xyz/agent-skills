@@ -1,0 +1,149 @@
+{
+    "scenario_id": 18,
+    "scenario_name": "eval-precedence-extensions-vs-spec",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/s18/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Raises a Low against the comma-separated `allowed-tools`, citing A16 and the spec's space-separated form",
+            "verdict": "PASS",
+            "evidence": "Advisory: \"`A16` · SKILL.md:6 — `allowed-tools` is comma-separated; the open standard defines a space-separated string (`Read Bash`)\"",
+            "note": "Low, in the Advisory section only, cites A16 and the space-separated form. Note the same key A16 is also used for a separate Medium (Finding 3) on least privilege."
+        },
+        {
+            "n": 2,
+            "text": "Does NOT flag `model:` or `context:` as spec violations — A20 permits client extensions",
+            "verdict": "PASS",
+            "evidence": "Advisory: \"`A20` · SKILL.md:4-5 — nothing records why the skill pins a model or forks; likely deliberate\"; Finding 1 is keyed A28 (fork fits content), not spec conformance.",
+            "note": "Neither field is called a spec violation anywhere. The report does not leave them 'explicitly alone' as expected_output asks (an A20 undocumented-purpose Low and an A28 Medium touch them), but A20's own text permits the undocumented-purpose flag, so the assertion as written holds."
+        },
+        {
+            "n": 3,
+            "text": "Explains the portability consequence rather than asserting a bare rule: the extensions do not carry to other agents, and packaging for claude.ai or the Skills API rejects them",
+            "verdict": "FAIL",
+            "evidence": "The only A16 form text is \"the open standard defines a space-separated string (`Read Bash`)\"; the only A20 text is \"nothing records why the skill pins a model or forks; likely deliberate\". The strings \"other agents\", \"claude.ai\", \"Skills API\", \"Unexpected key\" do not occur in report.md.",
+            "note": "Bare rule only. The sole portability remark is in Finding 3 (\"another agent may ignore the field\") and concerns the Experimental status of `allowed-tools`, not the comma form and not `model:`/`context:`. The packaging-rejection consequence — the sentence this branch added to A20 — is absent entirely."
+        },
+        {
+            "n": 4,
+            "text": "Does NOT recommend removing `model:` or `context:` in the name of spec conformance",
+            "verdict": "PASS",
+            "evidence": "Finding 1 Fix: \"Change line 11 to \\\"Check each feed file in $ARGUMENTS …\\\" and add \\\"When no file is named, report that and stop.\\\"\" — keeps `context: fork`; A20 advisory ends \"likely deliberate\".",
+            "note": "No removal recommended for either field anywhere in the report."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key resolving to best-practices-checklist.md (A, H, R) or prompt-criteria.md (B–G)",
+            "verdict": "PASS",
+            "evidence": "Keys used: A28, F1, F3, A16, F2, E1, C8, H1, A8, A20, D1, D2, A9, R7, B7. Checklist defines A8, A9, A16, A20, A28, H1, R7; prompt-criteria defines B7, C8, D1, D2, E1, F1, F2, F3.",
+            "note": "All resolve on this branch. A28 and B7 exist only on this branch (not on main) — the detail reviewer read the working-repo criteria, confirmed because the installed cache (prompt-quality-criteria 1.1.1, last-synced 2026-08-19) has no B7."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers",
+            "verdict": "PASS",
+            "evidence": "\"#### Finding 1 — `A28`: forked body has no input placeholder and no empty-input rule\" … \"#### Finding 6 — `H1`: no evals\"; Summary `#` column 1–6.",
+            "note": "No letter-prefixed IDs."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — a file plus a line or section",
+            "verdict": "PASS",
+            "evidence": "Where lines: \"`SKILL.md:5` with `SKILL.md:11`\", \"`SKILL.md:9-18` (whole body)\", \"`SKILL.md:6`\", \"`SKILL.md:18`, read with `SKILL.md:11`\", \"`SKILL.md:15`\", \"bundle root — no `evals/` directory\"; every Advisory line carries `SKILL.md:<n or section>`.",
+            "note": "Finding 6's locator is the bundle root, the only sensible locator for an absent directory."
+        },
+        {
+            "n": 4,
+            "text": "Report follows report-template.md: Summary table of blocking findings precedes detail blocks with matching ranks, Structure rows first then Detail, severity-ranked; Lows appear once in Advisory only",
+            "verdict": "PASS",
+            "evidence": "Summary rows 1–6 all \"Medium | Detail\"; detail blocks \"Finding 1\"–\"Finding 6\" match; Advisory opens \"Listed once; advisory findings never gate the verdict.\" and holds the ten Lows (A8, A16, A20, D1, D2, A9, R7×3, B7); no Low in the Summary table.",
+            "note": "Sections present in template order: title, Verdict, paragraph, Summary, What's already right, Findings, Advisory, Coverage, Criteria notes."
+        },
+        {
+            "n": 5,
+            "text": "Report opens with a Verdict line per the template",
+            "verdict": "PASS",
+            "evidence": "Line 3: \"**Verdict: not yet — 6 blocking**\" immediately after the title line; six Medium findings listed.",
+            "note": "Count matches the Summary table."
+        },
+        {
+            "n": 6,
+            "text": "Every High or Medium finding carries a Manifests line",
+            "verdict": "PASS",
+            "evidence": "Six \"- **Manifests:**\" lines, e.g. Finding 5: \"The user names three feeds and the first is malformed; the model reports one XML error and ends, and the other two files are never checked.\"",
+            "note": "All six blocking findings carry one."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless apply was chosen — no Edit/Write touches the target skill; review-waivers.md written only on explicit waive decision",
+            "verdict": "PASS",
+            "evidence": "Transcript tool_use blocks: one Write to \".../s18/report.md\" (refused by the harness), Bash heredocs to report.md and run-notes.md; zero Edit/Write calls to any path under .claude/skills/validating-feeds/; scope reply \"use the defaults\" → \"analysis only\".",
+            "note": "No review-waivers.md created; the fixture SKILL.md is unchanged (18 lines, matches the eval fixture)."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["A28"],
+            "severity": "Medium",
+            "classification": "inflated",
+            "depends_on_branch_change": "yes — A28 is new on this branch (absent from main)",
+            "evidence": "Fixture: \"context: fork\" (l.5), \"Check each named feed file against its specification and report violations with element paths.\" (l.11). Quotes verified. A28's text warns only that \"a body of guidelines with no task 'returns without meaningful output'\"; this body is an explicit 3-step task. The `$ARGUMENTS`/empty-input requirement is not in A28, and Claude Code appends skill arguments to the prompt when `$ARGUMENTS` is absent, so the Manifests scenario (\"nothing named\") assumes the invoker passes no path — plausible for auto-invocation, but the defect is stretched past the criterion's stated content."
+        },
+        {
+            "rank": 2,
+            "keys": ["F1", "F3"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no — F1 and F3 are unchanged from main",
+            "evidence": "Fixture body (l.9–18) contains no statement that feed content is data; quoted \"1. Parse the feed.\" is on l.15 (verified). F3 applies to \"prompts that process third-party content\" — RSS/Atom feeds are third-party content — and the Manifests scenario (injected `<description>` reaching pre-approved Bash) is concrete. Severity is at the generous end (safety concern on a read-and-report skill with no stated safety guarantee), but the gap is real."
+        },
+        {
+            "rank": 3,
+            "keys": ["A16", "F2"],
+            "severity": "Medium",
+            "classification": "inflated",
+            "depends_on_branch_change": "partly — the \"grants permission… run without prompting\" premise comes from this branch's A16 rewrite; main's A16 had only \"Only the tools the skill needs\"; F2 is unchanged",
+            "evidence": "Fixture: \"allowed-tools: Read, Bash\" (l.6, verified). The reviewer itself marks it \"Confidence: low — the author may intend the model to choose its own parser\"; step 1 \"Parse the feed\" plausibly needs a shell parser, so `Bash` is not evidently excess. A16's own severity note fixes its form defect at Low; the least-privilege Medium leans on the F1 injection scenario rather than a standalone one. Not fabricated, but a low-confidence Medium that the demotion rule would reasonably make a Low."
+        },
+        {
+            "rank": 4,
+            "keys": ["E1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no — E1 unchanged from main",
+            "evidence": "Fixture: \"Report one table: element path, rule, and the violating value.\" (l.18) vs \"each named feed file\" (l.11); both verified. One table with no file column for a multi-file run, and no shape for a malformed or clean file, is a concrete output-format gap; the Manifests scenario (two feeds both missing title → indistinguishable rows) follows directly from the text."
+        },
+        {
+            "rank": 5,
+            "keys": ["C8"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no — C8 unchanged from main",
+            "evidence": "Fixture: \"Parse the feed. Report an XML error with its line and column and stop\" (l.15, verified) against \"each named feed file\" (l.11). \"stop\" has no stated scope and \"the feed\" is singular where the task is plural; a literal reading ends the run after the first malformed file. Reviewer self-rates confidence low, which is appropriate, but the ambiguity is in the text."
+        },
+        {
+            "rank": 6,
+            "keys": ["H1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no — H1 and the \"Coverage findings block\" Medium rule are unchanged from main",
+            "evidence": "Workspace `find` lists only `.claude/skills/validating-feeds/SKILL.md`; no `evals/` exists (verified). H1 requires \"≥3 scenarios, stored as `evals/evals.json`\" and the checklist's coverage rule makes a stated guarantee with no eval a Medium with a future-tense Manifests; the finding names specific guarantees (stop on malformed XML; element path + value). A fixture described as 'sound' for the spec-precedence scenario still has no evals, so this is a genuine finding against the fixture as shipped."
+        }
+    ],
+    "fabrication_check": "All fixture quotes attributed in the report were checked against .claude/skills/validating-feeds/SKILL.md: \"context: fork\" (l.5), \"allowed-tools: Read, Bash\" (l.6), \"Check each named feed file against its specification\" (l.11), \"1. Parse the feed.\" / \"Report an XML error with its line and column and stop\" (l.15), \"because element checks on a malformed document report noise\" (l.15–16, spans a wrap), \"Check the required elements for the detected feed type\" (l.17), \"Report one table: element path, rule, and the violating value.\" (l.18). Description length \"237 chars\" verified (237). \"Body is 11 lines\" matches lines 8–18 after the closing `---`. No fabricated quotes; no finding references text absent from the fixture. The Criteria-notes remark that Group B \"produced an advisory: managed settings can override a model pin\" does not correspond to any finding returned by the detail reviewer and is not listed in Advisory — a reporter-added model-pin caveat, not a fabricated fixture quote.",
+    "runner_deviations_affecting_grades": [
+        "Scope reply \"use the defaults\" was injected by the operator as a simulated user (known harness deviation). It fixed deliverable = analysis only, which is the basis for universal assertion 7; no effect on the four scenario assertions.",
+        "The runner's Write to report.md was refused by the harness (\"Subagents should return findings as text\"); report.md and run-notes.md were written via Bash heredocs. Content graded is the heredoc output; no effect on any grade.",
+        "The detail reviewer resolved the working-repo criteria (branch copy with A28/B7), not the installed cache (1.1.1, 2026-08-19, no B7). This is what the branch-attribution question requires, so Findings 1 and 3 reflect branch-added/rewritten criteria rather than main.",
+        "Both passes ran as background agents; the main agent's report preserved the detail reviewer's severities unchanged (6 Medium, 10 Low). Editorial merging only: F1→\"F1, F3\" and A16→\"A16, F2\" key labels per the agent's own defect text."
+    ],
+    "totals": {
+        "passed": 10,
+        "failed": 1,
+        "total": 11
+    },
+    "grader_summary": "10/11. The one FAIL is scenario assertion 3: the report states the space-separated rule and the A20 undocumented-purpose Low as bare rules and never explains the portability consequence (does not carry to other agents; claude.ai / Skills API packaging rejects the extensions) — the very sentence this branch added to A20 went unused. Six blocking findings on a fixture meant to be 'sound': four are genuine against the fixture text and independent of this branch (F1/F3 no content-is-data rule; E1 single table without a file column for a multi-file run; C8 unscoped 'stop'; H1 no evals under the unchanged coverage-block rule). Two are inflated and trace to this branch: Finding 1 (A28, new) stretches 'instructions must stand on their own' into a `$ARGUMENTS` requirement the criterion does not state; Finding 3 (A16 rewrite's 'grants permission without prompting' premise) is a self-declared low-confidence Medium that the demotion rule would make a Low. No fabricated quotes. The run's inflation therefore rests partly on branch criteria (A28, A16) and partly on a fixture that, while spec-sound, has no evals or injection guard — the eval's 'sound' premise does not match the full checklist."
+}

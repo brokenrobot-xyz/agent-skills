@@ -38,10 +38,11 @@ Two kinds of caller reach the skill, and the skill behaves differently for each:
 
 Every finding cites the criterion key as `references/prompt-criteria.md` writes it — `B4`, `D1`,
 `F5`. The keys are stable for every caller, so two callers' reports stay comparable. The file holds
-thirty-eight criteria in six groups:
+forty criteria in six groups:
 
-- **B** — model-specific prompting, matched to the prompt's pinned model (Sonnet 5, Opus 5, Opus
-  4.8, and Fable 5 with Mythos 5). Apply only the subset that matches the model.
+- **B** — model-specific prompting, matched to the prompt's pinned model (Opus 5.5, Sonnet 5.5, Haiku 5.5,
+  and Fable 5.1 with Mythos 5.1, plus the legacy Sonnet 5, Opus 5, Opus 4.8, and Fable 5). Apply
+  only the shared items and the subset that matches the model.
 - **C** — general Claude prompting: clarity, examples, structure, chaining, explicit scope, and
   confirmation before an irreversible action.
 - **D** — hallucination guards: permitting "I do not know", grounding in evidence, verifying, and

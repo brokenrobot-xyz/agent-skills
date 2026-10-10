@@ -1,0 +1,80 @@
+{
+    "scenario_id": 2,
+    "scenario_name": "eval-group-b-conditional",
+    "model_arm": "sonnet",
+    "reply": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/p02-sonnet/reply.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Selects the Fable 5.1 subset (fable resolves to Fable 5.1) from the fixture's model: fable frontmatter",
+            "verdict": "PASS",
+            "evidence": "**Pin:** `model: fable`. The alias resolves to Fable 5.1 as of last-synced. [...] 2. The Fable 5.1 paragraph (also covers Mythos 5.1).",
+            "note": "Reads the pin from the fixture (transcript Read #4 of generating-alt-text/SKILL.md) and resolves the alias exactly as prompt-criteria.md line 68 does."
+        },
+        {
+            "n": 2,
+            "text": "Does not apply the Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Opus 4.8, or Sonnet 5 paragraphs; the legacy Fable 5 paragraph applies as Fable 5.1's predecessor where not overridden",
+            "verdict": "PASS",
+            "evidence": "**Excluded:** the Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Opus 4.8 and Sonnet 5 paragraphs, because they do not match this pin. [...] Fable 5.1 also takes its predecessor's Fable 5 paragraph wherever its own paragraph does not override it. [...] 3. The Fable 5 paragraph (the predecessor).",
+            "note": "All six non-matching paragraphs are named and excluded; the inheritance rule is stated. Completeness gap, not a selection error: the reply says the Fable 5 paragraph 'adds three points' but the file's paragraph (lines 208-211) has four; 'dispatches parallel subagents readily' is dropped."
+        },
+        {
+            "n": 3,
+            "text": "Surfaces the never-instruct-it-to-reproduce-its-reasoning rule for this model",
+            "verdict": "PASS",
+            "evidence": "C7: never instruct it to reproduce its reasoning. [...] Never instruct it to reproduce its reasoning (C7). [...] The skill's reasoning line (\"write out your reasoning step by step in the response\") touches the Fable 5.1 and Fable 5 paragraphs, B2, and C7.",
+            "note": "Surfaced under both the Fable 5.1 and Fable 5 paragraphs and tied to the fixture's planted line verbatim."
+        },
+        {
+            "n": 4,
+            "text": "Still supplies the shared B1-B7 items, which are not model-conditional",
+            "verdict": "PASS",
+            "evidence": "1. The shared items, B1 to B7: - B1: verbosity - B2: effort and thinking not over-scaffolded - B3: tool nudges - B4: coverage before filtering - B5: progress-update scaffolding - B6: the turn ends when the work does - B7: unrequested additions are contained",
+            "note": "All seven keys listed with the titles the file gives them (lines 83-131). Titles only, not the criterion bodies; the user asked which criteria apply, so this answers the question."
+        },
+        {
+            "n": 5,
+            "text": "Notes that a managed setting can override the model pin",
+            "verdict": "PASS",
+            "evidence": "Because a managed setting can override a model pin, report the pin's fragility alongside any group B finding.",
+            "note": "Matches prompt-criteria.md lines 73-75, including the caller-reports-it clause."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every criterion key cited resolves to an item defined in references/prompt-criteria.md",
+            "verdict": "PASS",
+            "evidence": "grep -oE '\\b[B-G][0-9]{1,2}\\b' reply.md | sort -u -> B1 B2 B3 B4 B5 B6 B7 C2 C7; each matched a '^- \\*\\*<key> —' line (OK B1 ... OK C7, zero FAIL lines).",
+            "note": "Nine distinct keys cited, nine resolve."
+        },
+        {
+            "n": 2,
+            "text": "Criterion keys are cited as written (B4, D1, F5) - never renumbered, re-lettered, or invented",
+            "verdict": "PASS",
+            "evidence": "B1 ... B7, C2, C7 as cited; the Fable 5.1 paragraph in the file cross-references exactly (`B5`), (`C2`), (`B6`), (`B7`), (`C7`) and the reply cites the same five.",
+            "note": "No renumbering or invented keys. The reply's phrase 'It names these keys' is accurate: the per-model paragraph cross-references those keys rather than defining them, and the reply does not claim ownership. It does, however, render the paragraph only through its five key-tagged points and drops the six untagged ones (dense prose, formatting rule, low-effort search, surgical edits, hidden tool output, compaction prompt)."
+        },
+        {
+            "n": 3,
+            "text": "No fixture file is modified in any scenario (byte-identical before and after)",
+            "verdict": "PASS",
+            "evidence": "cmp <workspace>/generating-alt-text/SKILL.md evals/files/eval-group-b-conditional/generating-alt-text/SKILL.md -> IDENTICAL; shasum 39aacfbec9235f9b5280b0c9e165c7bd69e56653 for both. Transcript tool_use calls touching the fixture: one Read only.",
+            "note": "The transcript's Write calls target reply.md and run-notes.md only; the two 'Edit' and 'Agent' name hits in a raw grep were tool-definition text, not tool_use blocks."
+        }
+    ],
+    "group_b_selection": {
+        "expected": "Shared B1-B7 + the Fable 5.1 paragraph + the inherited legacy Fable 5 paragraph where 5.1 does not override it (+ the Fable half of the 'Verification by model' note); NOT Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Opus 4.8, or Sonnet 5.",
+        "observed": "Shared B1-B7; the Fable 5.1 paragraph; the Fable 5 paragraph as predecessor 'wherever its own paragraph does not override it'; the Fable 5/5.1 self-verification note; explicit exclusion of Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Opus 4.8, Sonnet 5.",
+        "correct": true
+    },
+    "runner_deviations_affecting_grades": [
+        "None affecting any grade. The run's first Bash heredoc write of reply.md/run-notes.md was denied by the permission system (transcript result #5: 'Permission to use Bash with command cd ... && cat > reply.md <<EOF ...'); the run fell back to the Write tool and the delivered reply.md matches the denied heredoc's content. Model confirmed as claude-sonnet-5-5 (12 occurrences, no other model). run-notes.md timing (22 s) comes from two `date +%s` calls, so the end timestamp precedes the notes write, as the notes themselves state."
+    ],
+    "totals": {
+        "passed": 8,
+        "failed": 0,
+        "total": 8
+    },
+    "grader_summary": "8/8 PASS. Group B selection is exactly the expected subset: B1-B7 + Fable 5.1 + inherited Fable 5, with the six non-matching paragraphs named and excluded, the reasoning-echo rule surfaced against the fixture's planted line, and the managed-setting override noted. Severity withheld ('I assigned no severities. Those are yours.'). Fixture byte-identical. Two completeness gaps that no assertion covers: the Fable 5 paragraph is summarized as 'three points' when the file has four (parallel-subagent dispatch dropped), and the Fable 5.1 paragraph is rendered only through its five key-tagged points, omitting six untagged guidance items. The 'names these keys' wording is not a misstatement of key ownership; the paragraph does cross-reference exactly B5, C2, B6, B7, C7."
+}

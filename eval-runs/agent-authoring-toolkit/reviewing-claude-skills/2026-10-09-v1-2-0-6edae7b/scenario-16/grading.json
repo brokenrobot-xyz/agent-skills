@@ -1,0 +1,183 @@
+{
+    "scenario_id": 16,
+    "scenario_name": "eval-blanket-tool-default",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/s16/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Flags the blanket 'if in doubt' default against C9, explaining that it now causes overtriggering",
+            "verdict": "PASS",
+            "evidence": "`C9` · SKILL.md:10 — \"If in doubt, use the Grep tool.\" is a blanket tool nudge that invites over-triggering; delete it (step 4 already carries the scoped one)",
+            "note": "Flagged under C9 with the over-triggering rationale. Weak spot: the report drops the subagent's 'On current models' clause, so the 'now' (changed-behavior) part of the explanation survives only implicitly. Severity Low (advisory), which the assertion does not constrain."
+        },
+        {
+            "n": 2,
+            "text": "Does NOT flag the scoped low-effort nudge — that is B3 working as intended",
+            "verdict": "FAIL",
+            "evidence": "| 4 | Medium | Detail | B2, B3 | \"This step runs at low effort\" tries to set effort in prose, on the step that must be exhaustive | low confidence | ... Finding 4 — `B2` (with `B3`) ... Where: `SKILL.md:18` (step 4) ... Evidence: \"This step runs at low effort: use `Grep` to enumerate every occurrence\" ... Fix: Delete \"This step runs at low effort:\"",
+            "note": "The step-4 line is the fixture's scoped nudge, and 'This step runs at low effort:' is the clause that scopes it to the case B3 names ('low effort ... nudges explicitly, scoped to that case'). The report raises a blocking Medium against that exact line, lists B3 in its Key(s), and recommends deleting the scoping clause. 'Keep the scoped Grep nudge' and the B3 credit under What's already right do not offset a blocking finding on the nudge line; the expected output is the nudge 'explicitly left standing'."
+        },
+        {
+            "n": 3,
+            "text": "Recommends scoping the nudge to the case that needs it rather than deleting tool guidance wholesale",
+            "verdict": "PASS",
+            "evidence": "delete it (step 4 already carries the scoped one) ... Keep the scoped `Grep` nudge. ... The step 4 Grep nudge is scoped. (B3, ...)",
+            "note": "Only the blanket line is deleted; the scoped step-4 nudge is named as the surviving tool guidance. Tension: Finding 4's fix deletes the 'low effort' clause, which removes the case-scoping C9 asks for, but the C9 recommendation itself is not wholesale deletion."
+        },
+        {
+            "n": 4,
+            "text": "Treats C9 and B3 as complementary, not contradictory",
+            "verdict": "PASS",
+            "evidence": "`C9` · SKILL.md:10 — ... blanket tool nudge ... delete it (step 4 already carries the scoped one) / What's already right: The step 4 Grep nudge is scoped. ... (B3, B1, B5)",
+            "note": "Blanket nudge scored under C9, scoped nudge credited under B3, with the former's fix pointing at the latter: applied as two halves of one rule. Never stated explicitly, and muddled by B3 appearing in a blocking finding's Key(s) column (see assertion 2), but nothing in the report sets the two criteria against each other."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key resolving to A/H/R in best-practices-checklist.md or B–G in prompt-criteria.md",
+            "verdict": "PASS",
+            "evidence": "Keys used: A22, D1, R4, C1, C8, B2, B3, H1; advisory A8, C9, A21, A9, A10, R7, F1; credits A1 A3 A4 A5 A13 A16 A17 B1 B5 C10 C11 F2 R1 R12 R14; coverage F6 H2 H18 R2 R5 R6 R13",
+            "note": "Each key grep-verified as a defined '**KEY —' item in the current checklist or prompt-criteria file."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers",
+            "verdict": "PASS",
+            "evidence": "#### Finding 1 — `A22`: ... #### Finding 2 — `D1` (with `R4`): ... #### Finding 5 — `H1`: no evals",
+            "note": "No letter-prefixed IDs anywhere; summary table '#' column is 1–5."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — a file plus a line or section",
+            "verdict": "PASS",
+            "evidence": "Where: `SKILL.md:14, 17, 18–20` (§ Steps, steps 1, 3, 4) / `SKILL.md:3` (description) vs. `SKILL.md:14` (step 1) / `SKILL.md:18–20` (step 4) / `SKILL.md:18` (step 4) / bundle root (no `evals/` directory; the bundle holds only `SKILL.md`); advisory lines all carry SKILL.md:<line>",
+            "note": "H1's locator is the bundle root, which is the only possible locator for a missing directory. F1 advisory uses 'SKILL.md (whole body)'."
+        },
+        {
+            "n": 4,
+            "text": "Report follows report-template.md: Summary table (Structure rows first, then Detail, severity-ranked) precedes detail blocks with matching ranks; advisory Lows appear once, in Advisory only",
+            "verdict": "PASS",
+            "evidence": "### Summary | 1 | Medium | Structure | A22 | ... | 2 | Medium | Detail | D1, R4 | ... | 5 | Medium | Detail | H1 | ... ### Findings #### Finding 1 — `A22` ... #### Finding 5 — `H1` ... ### Advisory Listed once; advisory findings never gate the verdict.",
+            "note": "Structure row first, Detail rows after, all Medium; ranks 1–5 match the detail blocks; Lows appear only in Advisory (plus key references in the Coverage table, which the template permits). Minor: Finding 4's Notes line carries a confidence remark rather than a subordination/contested note."
+        },
+        {
+            "n": 5,
+            "text": "Report opens with a Verdict line per the template",
+            "verdict": "PASS",
+            "evidence": "**Verdict: not yet — 5 blocking**",
+            "note": "Five unwaived Medium findings, no waivers file; count matches the summary table."
+        },
+        {
+            "n": 6,
+            "text": "Every High or Medium finding carries a Manifests line",
+            "verdict": "PASS",
+            "evidence": "F1: 'The table already holds `/b -> /a`, and the user reports that `/a` moved to `/b`...'; F2: 'A 404 report names a deleted page `/pricing-2023`...'; F3: 'It lists 14 Grep hits, adds the table entry, and finishes...'; F4: 'The model reads \"low effort\" as permission to be cursory...'; F5: 'A later edit drops \"stop for the user's decision\" from step 3...'",
+            "note": "All five blocking findings carry a concrete scenario."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless apply was chosen; review-waivers.md only on explicit waive",
+            "verdict": "PASS",
+            "evidence": "Transcript: the only Edit/Write tool_use is Write to .../s16/report.md (blocked by harness); heredocs wrote only report.md and run-notes.md; zero tool calls name mapping-redirects/ or review-waivers.md. Run notes: 'Step 8 (interactive apply) was skipped because the deliverable was analysis only. No edits were made to the target.'",
+            "note": "Scope defaults = analysis only. Target bundle byte-identical to the repo fixture after the run (diff: IDENTICAL)."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["A22"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no",
+            "evidence": "Fixture line 14 '1. Add one entry per moved URL' precedes line 18–19 '4. ... enumerate every occurrence of the old path across the content files before you edit the table'. The ordering contradiction is real and unchanged from main. A22 ('plan-validate-execute' for destructive/high-stakes ops) is a defensible fit for a table whose loop state makes URLs unreachable; Medium is at the upper edge for a 4-step skill but not inflated."
+        },
+        {
+            "rank": 2,
+            "keys": ["D1", "R4"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no",
+            "evidence": "Fixture line 3 'adds entries for renamed or deleted URLs' vs line 14 'old path to new path, status 301' — no rule for a URL with no successor. D1 ('omit/abstain/ask rather than fabricate when evidence is missing') applies directly."
+        },
+        {
+            "rank": 3,
+            "keys": ["C1", "C8"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no",
+            "evidence": "Fixture lines 18–20 'enumerate every occurrence ... so no in-page link keeps pointing at the old URL' — the stated guarantee needs a rewrite step the skill never states, and 'the content files' is undefined. Manifests leans on 'Sonnet 5.5 follows instructions literally', which the criteria support via the Sonnet 5 predecessor paragraph ('literal instruction following (state scope — see C8)'); the defect itself does not depend on the model pin."
+        },
+        {
+            "rank": 4,
+            "keys": ["B2", "B3"],
+            "severity": "Medium",
+            "classification": "inflated",
+            "depends_on_branch_change": "yes — B2 rewrite ('Effort, not prompt text, is the control for how much a current model thinks'), B3 rewrite (adds the `low`-effort case), and the fixture's step 4 changing from 'runs with extended thinking disabled' to 'runs at low effort'",
+            "evidence": "Fixture line 18 'This step runs at low effort: use `Grep` to enumerate every occurrence' is a declarative scoping clause, the eval's device for the B3 case ('scoped nudge in step 4, which runs at low effort'). Current B2 targets prompt text that asks the model to think less or more ('asking the model to think less or answer directly does not reliably reduce its thinking'); this line issues no such request. The report reads it as 'tries to set effort in prose', raises a blocking Medium at low confidence, attaches B3 as a co-key, and its fix ('set that through the `effort` field') names a per-step effort control a SKILL.md does not have. The quoted text is real; the defect reading is strained and the severity unearned. On main the line read 'extended thinking disabled', which the pre-rewrite B2 could not have caught, so this finding exists only because of the branch changes."
+        },
+        {
+            "rank": 5,
+            "keys": ["H1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": "no",
+            "evidence": "Bundle contains only SKILL.md (verified with find in the workspace); H1 requires '≥3 scenarios, stored as `evals/evals.json`'."
+        }
+    ],
+    "fabrication_check": {
+        "result": "no fabricated quotes",
+        "verified_quotes": [
+            {
+                "report": "1. Add one entry per moved URL: old path to new path, status 301.",
+                "fixture": "SKILL.md:14 — verbatim"
+            },
+            {
+                "report": "3. Flag a loop and stop for the user's decision, because a loop makes both URLs unreachable.",
+                "fixture": "SKILL.md:17 — verbatim"
+            },
+            {
+                "report": "4. This step runs at low effort: use `Grep` to enumerate every occurrence of the old path across the content files before you edit the table",
+                "fixture": "SKILL.md:18–19 — verbatim across the line wrap"
+            },
+            { "report": "adds entries for renamed or deleted URLs", "fixture": "SKILL.md:3 — verbatim" },
+            { "report": "so no in-page link keeps pointing at the old URL.", "fixture": "SKILL.md:19–20 — verbatim" },
+            { "report": "If in doubt, use the Grep tool.", "fixture": "SKILL.md:10 — verbatim" },
+            {
+                "report": "each hop costs the visitor a round trip / a loop makes both URLs unreachable",
+                "fixture": "SKILL.md:16, 17 — verbatim"
+            },
+            {
+                "report": "17-char gerund name ... 159-char third-person description",
+                "fixture": "len('mapping-redirects')=17, len(description)=159 — correct"
+            },
+            { "report": "allowed-tools: Read Edit Grep", "fixture": "SKILL.md:5 — verbatim" }
+        ],
+        "unverifiable": ["'about 160 tokens' (not checked; plausible for a 20-line file)"],
+        "notes": "Finding 3's Manifests ('It lists 14 Grep hits') and Finding 1's Manifests ('/b -> /a') are hypothetical scenarios, presented as such, not attributed to the fixture."
+    },
+    "runner_deviations_affecting_grades": [
+        {
+            "deviation": "Scope reply 'use the defaults' was scripted by the operator (non-interactive runner) rather than typed by a user.",
+            "effect": "None on grades. It selects analysis-only, which is the path universal assertion 7 expects; the run followed it (no target edits)."
+        },
+        {
+            "deviation": "Write tool call for report.md was blocked by the harness ('Subagents should return findings as text, not write report files'); report.md and run-notes.md were written via shell heredoc.",
+            "effect": "None on grades. Content graded is the heredoc output; the blocked Write targeted report.md, not the skill."
+        },
+        {
+            "deviation": "Bash 'cd ...; grep plugin.json; grep installed_plugins.json' denied by the permission system; the runner read the files with Read instead.",
+            "effect": "None on grades (version bookkeeping only)."
+        },
+        {
+            "deviation": "Two prompt-criteria.md copies were present (working repo, last-synced 2026-10-09 = branch text; installed cache 1.1.1, 2026-08-19 = main text). The detail-reviewer subagent's own reads are not in this transcript, so which copy it preloaded is unproven. Run notes flag the same uncertainty.",
+            "effect": "Potentially material to assertion 2 and Finding 4's classification, but the subagent's wording ('Prompt text cannot set effort, because effort is an API parameter'; 'The explicit Grep nudge can stay, because it is scoped (B3)') echoes the branch B2/B3 text, not main's ('If the prompt relies on tool use with thinking off, it nudges explicitly'). Graded on the assumption the branch text was applied; if the cache copy was used instead, Finding 4 would be even less supportable since old B2 has no effort-vs-prompt-text clause."
+        }
+    ],
+    "totals": {
+        "passed": 10,
+        "failed": 1,
+        "total": 11
+    },
+    "grader_summary": "10/11. The run gets the C9 half right: the blanket 'If in doubt, use the Grep tool.' is flagged under C9 with the over-triggering rationale and the scoped step-4 nudge is named as the surviving guidance. It fails the B3 half: Finding 4 raises a blocking Medium (B2, with B3 as co-key) against the step-4 line, reading the eval's scoping clause 'This step runs at low effort:' as prose trying to set effort, and recommends deleting it. Current B2 targets text that asks the model to think less; a declarative condition is not that, and current B3/C9 make 'low effort' exactly the case where a scoped nudge is correct. The finding is inflated, self-rated low confidence, and exists only because of the branch's B2/B3 rewrite plus the fixture's 'extended thinking disabled' -> 'low effort' change. Findings 1, 2, 3, 5 are genuine against the fixture text and independent of the branch changes. All fixture quotes verified verbatim; all cited keys resolve; template, verdict, Manifests, and report-only constraints hold."
+}

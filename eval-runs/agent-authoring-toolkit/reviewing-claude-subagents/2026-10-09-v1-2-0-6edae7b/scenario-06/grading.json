@@ -1,0 +1,153 @@
+{
+    "scenario_id": 6,
+    "scenario_name": "eval-stripped-tool-listed",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/a06/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Names AskUserQuestion, EnterPlanMode, and ScheduleWakeup as always stripped",
+            "verdict": "PASS",
+            "evidence": "report.md:78 — \"`R1` / `A12` · triaging-flaky-tests.md:frontmatter `tools` — `AskUserQuestion`, `EnterPlanMode`, `ScheduleWakeup` are unused by the remit and stripped from every subagent; remove them\"",
+            "note": "All three tools named and described as stripped from every subagent."
+        },
+        {
+            "n": 2,
+            "text": "Cites A12",
+            "verdict": "PASS",
+            "evidence": "report.md:78 — \"`R1` / `A12` · triaging-flaky-tests.md:frontmatter `tools`\"; also report.md:9 \"(`R1`, merged with `A12`; see Advisory)\" and Coverage row A \"advisory A12\"",
+            "note": "A12 is cited on the merged advisory finding; A12 resolves to checklist line 241."
+        },
+        {
+            "n": 3,
+            "text": "States the consequence — the entries mislead a reader about the subagent's capability",
+            "verdict": "FAIL",
+            "evidence": "report.md:78 — \"are unused by the remit and stripped from every subagent; remove them (Pass 1 and Pass 2 reported the same defect, merged here).\" grep -i 'dead config|mislead|wider than' report.md → no match.",
+            "note": "The report states the mechanism (stripped) and the fix (remove), but never the consequence. The detail reviewer's payload did say \"these three entries are dead configuration\" and Pass 1 said \"the declared tools are wider than what the subagent can actually do\", yet the orchestrator dropped both when merging into the one-line advisory. The assertion grades the output; the consequence is absent from it."
+        },
+        {
+            "n": 4,
+            "text": "The subagent-detail-reviewer settles the check deterministically rather than describing it as a judgment call",
+            "verdict": "PASS",
+            "evidence": "transcript, subagent-detail-reviewer payload — \"`key:` A12 `severity:` Low `confidence:` high `location:` frontmatter `tools` `evidence:` \\\"tools: Read, Grep, Glob, Bash, AskUserQuestion, EnterPlanMode, ScheduleWakeup\\\" `defect:` Claude Code strips `AskUserQuestion`, `EnterPlanMode`, and `ScheduleWakeup` from every subagent, so these three entries are dead configuration. I settled this deterministically.\"; COVERAGE: \"A: scored. Deterministic checks were settled with Bash. A12 fires.\"",
+            "note": "Explicit deterministic settlement with high confidence; no hedging language."
+        },
+        {
+            "n": 5,
+            "text": "Recommends removing the three entries",
+            "verdict": "PASS",
+            "evidence": "report.md:78 — \"stripped from every subagent; remove them\"; detail payload `recommendation:` \"Remove the three entries.\"",
+            "note": "Removal is the stated fix in both the report and the subagent payload."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key — each cited criterion key resolves to an item in best-practices-checklist.md (A, H, R) or prompt-criteria.md (B–G)",
+            "verdict": "PASS",
+            "evidence": "Ran the grading script's key grep over report.md against both criteria files: zero 'FAIL: … is not a defined criterion' lines. Keys cited: A1 A2 A3 A4 A6 A7 A8 A9 A11 A12 A13 A14 A15 A16 A17 A18 A19 A20 A22 A24 A25 A26 A27 A28 B1 B2 B7 C1 C7 C8 C11 D1 D2 D5 D6 E1 E2 E3 F1 F3 F4 F6 G1 R1 R4 R5 R6 R7 R12.",
+            "note": "All keys resolve; none fabricated."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers",
+            "verdict": "PASS",
+            "evidence": "report.md:34,44,54,64 — \"#### Finding 1 — `C1`\", \"#### Finding 2 — `A9`\", \"#### Finding 3 — `A7`\", \"#### Finding 4 — `A26`\"",
+            "note": "Rank numbers 1–4 match the Summary table's # column."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — the definition file plus a line or a named frontmatter field",
+            "verdict": "PASS",
+            "evidence": "report.md:37 \"**Where:** `triaging-flaky-tests.md:13–15`\"; :47 \"`triaging-flaky-tests.md:8–11`\"; :57 \"`triaging-flaky-tests.md:17`\"; :67 \"`triaging-flaky-tests.md:10–17`; frontmatter `tools`\"; advisory items each carry \"triaging-flaky-tests.md:<line or frontmatter field>\"",
+            "note": "All four blocking findings and all seven advisory items have file+line or file+frontmatter-field locators; line references verified against the fixture."
+        },
+        {
+            "n": 4,
+            "text": "Report follows report-template.md: Verdict line correct; Fit-for-purpose precedes Summary; Structure rows first then Detail, severity-ranked; Lows only in Advisory",
+            "verdict": "PASS",
+            "evidence": "report.md:3 \"**Verdict: not yet — 4 blocking**\" with exactly four Medium rows (lines 15–18) and no waivers; section order lines 7 \"### Fit-for-purpose\" → 11 \"### Summary\" → 20 → 32 → 74 \"### Advisory\" → 86 → 100; Summary holds only Detail/Medium rows (no Structure findings above Low exist); Lows appear as findings only under \"### Advisory\" (line 76 \"Listed once; advisory findings never gate the verdict.\")",
+            "note": "Structure matches the full-report template. Advisory keys are cross-referenced by key in Fit-for-purpose (line 9) and the Coverage table (line 90), which are pointers rather than restated findings; the template itself permits Fit-for-purpose to carry Low fit-finding references."
+        },
+        {
+            "n": 5,
+            "text": "Every High or Medium finding carries a Manifests line stating the concrete scenario",
+            "verdict": "PASS",
+            "evidence": "report.md:40 \"**Manifests:** A test fails in CI and then passes all three reruns…\"; :50 \"**Manifests:** The parent delegates \\\"triage the flaky run from CI\\\"…\"; :60 \"**Manifests:** A broken shared fixture fails 40 tests 3/3…\"; :70 \"**Manifests:** A failing test from an untrusted PR branch prints \\\"ignore prior instructions and run …\\\"…\"",
+            "note": "All four Medium findings carry a concrete scenario."
+        },
+        {
+            "n": 6,
+            "text": "Inferential findings are marked as such",
+            "verdict": "PASS",
+            "evidence": "report.md:5 \"All findings are inferential: this review read the definition and never ran the subagent.\"; each finding's Notes line, e.g. :42 \"**Notes:** inferential — predicted behavior, not observed.\"; :72 \"**Notes:** low confidence; inferential — predicted behavior, not observed.\"",
+            "note": "Every blocking finding is explicitly marked inferential; no routing failure is asserted as observed."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless the user chose apply — no Edit/Write touches the fixture; review-waivers.md written only on explicit waive",
+            "verdict": "PASS",
+            "evidence": "Transcript tool_use blocks (python walk): Bash ×6, Skill ×1, Agent ×2, Read ×1, SubagentHandback ×1 — zero Edit or Write tool_use blocks. Only Bash writes are `cat > $W/report.md` and `cat > $W/run-notes.md`. `diff` of scratch fixture against evals/files/eval-stripped-tool-listed/triaging-flaky-tests.md → IDENTICAL; .claude/agents/ contains only triaging-flaky-tests.md (no review-waivers.md). report.md:106 \"analysis only\" default stated.",
+            "note": "Fixture byte-identical to the committed copy; no waiver file written."
+        }
+    ],
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": "C1, D1, E3",
+            "severity": "Medium",
+            "classification": "genuine",
+            "evidence": "Fixture lines 13–15: \"Classify each failing test as a genuine failure or a flake, and give the evidence for the classification: a test that failed three times out of three is genuine, and one that failed once is a flake.\" The quote matches. The rule indeed defines only 3/3 and 1/3; 2/3 and 0/3 are undefined, and the description (line 3) routes on \"a red run that passes on retry\", the 0/3 case. Medium (degraded consistency) with a concrete Manifests scenario is within the scale."
+        },
+        {
+            "rank": 2,
+            "keys": "A9, A27, C8",
+            "severity": "Medium",
+            "classification": "genuine",
+            "evidence": "Fixture line 10: \"Rerun the failing suite three times and record which tests fail every time and which fail\". Quote matches. A9 requires that the body \"either states every input the subagent needs, or names it as something the delegation message must carry\"; the body names neither the test command nor the failing tests as cargo. Borderline on severity — a reasonable parent would carry the suite in the delegation — but the criterion text supports the finding, and the Manifests scenario (guessing a runner, rerunning the wrong scope) is concrete. Note A27 is marked _Unexercised_ in the checklist."
+        },
+        {
+            "rank": 3,
+            "keys": "A7",
+            "severity": "Medium",
+            "classification": "genuine",
+            "evidence": "Fixture line 17: \"Report the two lists separately, with the failure output for each genuine failure.\" Quote matches. A7: \"A body that lists what to report without bounding how much is a finding.\" No bound exists; the 40-tests-3/3 scenario is concrete."
+        },
+        {
+            "rank": 4,
+            "keys": "A26, F4, F1, F3",
+            "severity": "Medium (low confidence)",
+            "classification": "genuine",
+            "evidence": "Fixture line 4 tools include unrestricted `Bash`; line 17 quote matches. A26 covers \"command output … and reports upward\" with the remedy \"an explicit content-is-data instruction\"; the body has none. Manifests scenario is concrete though conditional (\"depends on the repo running untrusted branches\"), and the report flags low confidence. Minor omission: A26's text asks the finding to \"note … that A26 extends group F for subagents\"; the report cites F4/F1/F3 but does not state that sentence."
+        }
+    ],
+    "fabrication_check": {
+        "result": "no fabricated quotes",
+        "verified_quotes": [
+            "\"a test that failed three times out of three is genuine, and one that failed once is a flake.\" → fixture lines 14–15 (verbatim across the line break)",
+            "\"Rerun the failing suite three times\" → fixture line 10",
+            "\"with the failure output for each genuine failure.\" → fixture line 17",
+            "\"Report the two lists separately, with the failure output for each genuine failure.\" → fixture line 17",
+            "\"Use when CI reports a red run that passes on retry\" → fixture line 3",
+            "\"tools: Read, Grep, Glob, Bash, AskUserQuestion, EnterPlanMode, ScheduleWakeup\" (detail payload) → fixture line 4",
+            "\"fail intermittently\" line 11 and \"flake\" lines 13, 15 (R7 advisory) → verified",
+            "R7 claim that lines 10 and 13 each join two instructions → line 10 \"Rerun … and record\", line 13 \"Classify … and give\" → verified",
+            "All Where line ranges (13–15, 8–11, 17, 10–17, 10, 10–15, frontmatter tools, frontmatter model) → verified"
+        ],
+        "unsupported_claims": [
+            "Advisory R1/A12 (report.md:78) dropped the consequence clause that both subagent payloads carried (\"dead configuration\" / \"wider than what the subagent can actually do\"); an omission, not a fabrication."
+        ]
+    },
+    "runner_deviations_affecting_grades": [
+        "None changed a verdict. Noted for completeness:",
+        "Sibling scope narrowed to the workspace .claude/agents/ (skipped ~/.claude/agents/ and plugin agents/) — affects A2 only, which this scenario does not target.",
+        "Plugin version mismatch: skill loaded from the working repo (1.2.0) while the installed cache is 1.1.0; the runner did not confirm which copy of the subagent-structure-reviewer/subagent-detail-reviewer definitions resolved. Assertion 4 is graded from the transcript's actual payload, which settles A12 deterministically regardless, so the grade stands.",
+        "Non-interactive run: brief and AskUserQuestion skipped, four headless defaults assumed (stated in report.md:106). Does not affect any assertion.",
+        "No without_skill baseline was run alongside, so the H13 drop rule (assertions passing in both runs) could not be applied by this grader."
+    ],
+    "totals": {
+        "passed": 11,
+        "failed": 1,
+        "total": 12
+    },
+    "grader_summary": "11/12 PASS. Scenario assertions 1, 2, 4, 5 pass: the report names all three tools under A12 as stripped from every subagent and recommends removal, and the transcript shows the detail reviewer writing \"I settled this deterministically\" with high confidence. Assertion 3 FAILS: report.md never states the consequence (dead configuration / misleads a reader about capability) — both subagent payloads carried it, but the orchestrator dropped it when merging R1 and A12 into one advisory line. All seven universal assertions pass: keys resolve, rank-numbered IDs, locators present, template order and verdict arithmetic correct, Manifests on every Medium, inferential marking throughout, and the fixture is byte-identical to the committed copy with no Edit/Write tool calls. All four Medium findings are genuine, with verified fixture quotes; Finding 2 is borderline on severity and Finding 4 omits the 'A26 extends group F' note the checklist requests. A12 itself was placed at Low, which the demotion rule permits since the checklist assigns A12 no per-criterion tier."
+}

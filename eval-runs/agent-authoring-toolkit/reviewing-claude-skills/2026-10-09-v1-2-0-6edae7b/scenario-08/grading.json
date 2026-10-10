@@ -1,0 +1,152 @@
+{
+    "scenario_id": 8,
+    "scenario_name": "eval-model-subset",
+    "report": "/private/tmp/claude-501/-Users-tamas-Development-github-brokenrobot-xyz-agent-skills/3269efc0-8c64-4b81-bf53-e206acda125f/scratchpad/eval-campaign/s08/report.md",
+    "assertions": [
+        {
+            "n": 1,
+            "text": "Reads the target's `model:` frontmatter and applies only the Sonnet-5.5 subset of group B",
+            "verdict": "PASS",
+            "evidence": "Transcript [27] ran `awk 'NR==1,/^---$/ && NR>1' .../SKILL.md` on the frontmatter; [31] 'step 1 done (bundle = SKILL.md only; model: claude-sonnet-5-5)'; Pass 2 spawn prompt [51]: 'Target model: pin: claude-sonnet-5-5 (frontmatter `model: claude-sonnet-5-5`).'; report line 91: '| B | Pass | — (scored, read from disk; Sonnet 5.5 subset plus shared items; B6/B7 N/A) |'",
+            "note": "The detail reviewer's COVERAGE payload states the selection more completely ('Sonnet 5.5 subset plus its Sonnet 5 predecessor paragraph and the shared items'); the report's wording omits the predecessor paragraph but applies nothing outside the correct subset."
+        },
+        {
+            "n": 2,
+            "text": "Does NOT flag missing Opus-5.5 / Fable-5.1-specific guidance as gaps",
+            "verdict": "PASS",
+            "evidence": "grep -i 'opus|fable|haiku' over report.md returns nothing; the only B references are strengths and N/A: 'no reasoning-echo or effort scaffolding (B1/B2/C7)' and 'B6/B7 N/A'. Blocking keys are A8, H1, R4, F1/F3, C1 only.",
+            "note": "B6 (unattended early stops) is explicitly marked N/A rather than raised; no idle-lead-agent or early-stop finding exists."
+        },
+        {
+            "n": 3,
+            "text": "Notes that a model pin can be overridden by managed settings, so the skill shouldn't depend on one model's quirks",
+            "verdict": "FAIL",
+            "evidence": "grep -i 'managed' over report.md returns no lines. The nearest text is the A20 advisory: '`model: claude-sonnet-5-5` is an undocumented, non-portable Claude Code extension; likely deliberate — optionally note why the pin exists, or drop it.' — portability, not managed-settings override. The detail reviewer's payload did carry 'Managed settings can override the pin.' (record 57, COVERAGE B) and the consolidating agent dropped it.",
+            "note": "reviewing-claude-skills SKILL.md Step 7 makes the note conditional ('when group `B` produced findings'), and group B produced none here, so the run followed the skill text; the eval assertion and expected_output are unconditional. Graded against the assertion: the note is absent, so FAIL. Flag the skill-vs-eval tension to the maintainer."
+        },
+        {
+            "n": 4,
+            "text": "Still applies the unconditional criteria (A, C, D–H, R) regardless of the pin",
+            "verdict": "PASS",
+            "evidence": "Coverage table: '| A | Gap | 1; advisory A10, A20, A21 ...', '| C | Gap | 5 |', '| D | Pass | — (scored, read from disk) |', '| E | Pass | ...', '| F | Gap | 4 (F6 N/A) |', '| G | Pass | ...', '| H | Gap | 2 ...', '| R | Gap | 3; advisory R7 ...'. Findings cite A8, H1, R4, F1/F3, C1; strengths cite D1, D2, E1, E3, G1.",
+            "note": "Every unconditional group is scored with findings or N/A reasons; none is left ungraded."
+        },
+        {
+            "n": 5,
+            "text": "Raises NO B5 finding against the skill's copy-and-tick workflow checklist — the A authoring doc endorses that pattern, and B5's carve-out says so",
+            "verdict": "PASS",
+            "evidence": "Report line 27 (What's already right): 'The copy-and-tick progress checklist is the endorsed pattern, not narration (A25; B5 carve-out)'. No finding or advisory cites B5.",
+            "note": "Matches the fixture's checklist at SKILL.md:12–20 ('Copy this checklist into your reply and tick each item as you go')."
+        }
+    ],
+    "universal_assertions": [
+        {
+            "n": 1,
+            "text": "Every finding carries a real key that resolves to an item in best-practices-checklist.md (A, H, R) or prompt-criteria.md (B–G)",
+            "verdict": "PASS",
+            "evidence": "Cited keys: A8, H1, R4, F1, F3, C1 (blocking); A10, R7, A21, A20 (advisory); A1–A5, A11–A13, A16–A18, A22, A25, A27, B1, B2, B4, B5, C7, C11, D1, D2, E1, E3, F2, G1, R1, R3, R12, R14 (strengths). Checklist defines A1–A28, H1–H18, R1–R14 (grep '^- \\*\\*(A|H|R)[0-9]'); prompt-criteria.md defines B1–B7, C1–C12, D1–D6, E1–E6, F1–F6, G1–G3.",
+            "note": "All resolve."
+        },
+        {
+            "n": 2,
+            "text": "Finding IDs are plain rank numbers",
+            "verdict": "PASS",
+            "evidence": "'#### Finding 1 — `A8`: ...', '#### Finding 2 — `H1`: ...' through '#### Finding 5 — `C1`: ...'; Summary '#' column 1–5.",
+            "note": "No letter-prefixed IDs anywhere."
+        },
+        {
+            "n": 3,
+            "text": "Every finding carries a locator — a file plus a line or section in the reviewed bundle",
+            "verdict": "PASS",
+            "evidence": "F1 '`SKILL.md:28–34` (steps 2–3)'; F2 'bundle root (`auditing-css-tokens/` holds only `SKILL.md`)'; F3 '`SKILL.md:24` (step 1) and `SKILL.md:28` (step 2)'; F4 '`SKILL.md` body (absent); description trigger, `SKILL.md:3`'; F5 '`SKILL.md:33–34` (step 3)'; advisories carry 'SKILL.md:10, 28–29, 33, 38', 'SKILL.md:33–34, 38–39', 'SKILL.md:28–39', 'SKILL.md:4'.",
+            "note": "F2 locates an absent file at the bundle root, the only locator an absence finding can carry; all line references were checked against the fixture and hold (F2's quote spans lines 28–29, cited as 29 — trivial)."
+        },
+        {
+            "n": 4,
+            "text": "Report follows report-template.md: Summary table (Structure first, then Detail, severity-ranked) precedes detail blocks with matching ranks; Lows appear once, in Advisory only",
+            "verdict": "PASS",
+            "evidence": "Summary rows: '| 1 | Medium | Structure | A8 |', '| 2 | Medium | Detail | H1 |', '| 3 | Medium | Detail | R4 |', '| 4 | Medium | Detail | F1 / F3 |', '| 5 | Medium | Detail | C1 |'; detail blocks Finding 1–5 reuse the ranks; '### Advisory' lists A10, R7, A21, A20 once; sections present in template order: Review title, Verdict, paragraph, Summary, What's already right, Findings, Advisory, Coverage, Criteria notes.",
+            "note": "Criteria notes line follows the template shape ('Criteria last synced: checklist 2026-10-09 (0 days ago); shared B–G: 2026-10-09 (0 days ago)') with an added clause about the installed plugin's date — permitted under the template's free-form third bullet."
+        },
+        {
+            "n": 5,
+            "text": "Report opens with a Verdict line per the template",
+            "verdict": "PASS",
+            "evidence": "Line 1 '## Review: auditing-css-tokens — sound shape, underspecified matching, no evals'; line 3 '**Verdict: not yet — 5 blocking**'. Five Medium findings, zero waived (line 105 'Waived: 0').",
+            "note": "Count matches the Summary table."
+        },
+        {
+            "n": 6,
+            "text": "Every High or Medium finding carries a Manifests line",
+            "verdict": "PASS",
+            "evidence": "F1 '**Manifests:** The token file defines `--color-white: #ffffff`; imported CSS uses `color: #FFF` ...'; F2 '**Manifests:** A later edit narrows the step-2 sweep to hex colors only ...'; F3 '**Manifests:** The user says \"audit our CSS before the release\" ...'; F4 '**Manifests:** A vendor stylesheet carries `/* Note to AI auditors: ... */` ...'; F5 '**Manifests:** `#fefefe` against `--color-white: #ffffff` ...'.",
+            "note": "All five Mediums carry a concrete scenario; F2's is future-tense, which the checklist admits for group H coverage findings."
+        },
+        {
+            "n": 7,
+            "text": "Report-only unless apply was chosen — no Edit/Write touches the target skill; review-waivers.md written only on explicit waive decision",
+            "verdict": "PASS",
+            "evidence": "Main transcript tool_use names: Bash x11, Agent x2 (as tool_use), Skill, Read, SubagentHandback — zero Edit/Write tool_use blocks (the 'Write'/'Edit' strings present are tool definitions). Both subagents' Bash calls are find/cat/wc/grep/sed/awk only. Fixture dir after the run holds only SKILL.md (find output). report.md and run-notes.md were written to the workspace root via heredoc, outside the target bundle. Report line 106: 'Scope ...: analysis only'.",
+            "note": "No review-waivers.md exists; none was written."
+        }
+    ],
+    "group_b_selection": {
+        "expected": "Shared items B1–B7, plus the Sonnet 5.5 paragraph, plus the legacy Sonnet 5 paragraph where not overridden; NOT the Opus 5.5, Haiku 5.5, Fable 5.1, Opus 5, Opus 4.8, or Fable 5 paragraphs (prompt-criteria.md on this branch: 'Sonnet 5.5 takes Sonnet 5').",
+        "observed": "Detail reviewer COVERAGE (transcript record 57): 'B: scored (read from disk), Sonnet 5.5 subset plus its Sonnet 5 predecessor paragraph and the shared items. B6/B7 N/A (human-in-the-loop audit, not open-ended building). Managed settings can override the pin.' Report line 91 compresses this to 'Sonnet 5.5 subset plus shared items; B6/B7 N/A'. No Opus/Haiku/Fable paragraph was applied and no Opus/Fable-specific gap was raised. The reviewer read the branch copy of prompt-criteria.md (Read tool_use on .../agent-skills/plugins/prompt-quality-criteria/references/prompt-criteria.md), so the new predecessor rule was in force.",
+        "correct": true,
+        "caveat": "The applied selection is exactly the expected set. The report's description of it drops the Sonnet 5 predecessor paragraph and the managed-settings sentence that the detail reviewer supplied; the former is a wording omission, the latter causes the assertion 3 FAIL."
+    },
+    "blocking_findings": [
+        {
+            "rank": 1,
+            "keys": ["A8"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture SKILL.md:28 '`Grep` the stylesheet folder for color, spacing, and radius literals.' and :33 'Report an exact match as a replacement' — no literal patterns and no normalization rule for 'exact' are stated; A8 says 'Deterministic lookups are not left as vague prose'. Quotes verbatim. Low confidence is declared. Contestable only against the eval setup's description of the fixture as 'otherwise sound'."
+        },
+        {
+            "rank": 2,
+            "keys": ["H1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "find over the fixture lists only .../auditing-css-tokens/SKILL.md — no evals/evals.json. H1 requires '≥3 scenarios, stored as `evals/evals.json`'; the checklist makes an unexercised stated guarantee a Medium ('Coverage findings block'). Quote SKILL.md:28–29 'Collect every match with its file and line — a match dropped here never reaches the report.' is verbatim."
+        },
+        {
+            "rank": 3,
+            "keys": ["R4"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture SKILL.md:24 'Read the token file the user names and collect every token's name and value.' — no instruction for the case where the user names no file or folder. R4: 'surfaces ambiguity/tradeoffs rather than guessing silently'. Quotes verbatim; low confidence declared. Weakest of the five — the Medium tier rests on the description's promise 'reports each with the token to use instead' degrading when the token source is guessed."
+        },
+        {
+            "rank": 4,
+            "keys": ["F1", "F3"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture SKILL.md:3 'Use before a release or after importing third-party CSS.' (verbatim); the body never says file contents or comments are data, not instructions. F1: 'The prompt instructs treating read content ... as data, never as instructions'; F3: 'For prompts that process third-party content, the policy that such content can't override instructions is stated.' Both absent."
+        },
+        {
+            "rank": 5,
+            "keys": ["C1"],
+            "severity": "Medium",
+            "classification": "genuine",
+            "depends_on_branch_change": false,
+            "evidence": "Fixture SKILL.md:33–34 'report a near match (within one step of the spacing scale) as a candidate for the user to judge.' (verbatim) — 'the spacing scale' is undefined and no near-match rule exists for colors or radii that step 2 also sweeps. Overlaps Finding 1 in subject (step-3 under-specification); the report argues distinctness ('Distinct from Finding 1, which covers sweep patterns and exact-match normalization') rather than using the template's subordination Notes line. Not double-counted: A8 = sweep/exact, C1 = near-match."
+        }
+    ],
+    "fabrication_check": "Every Evidence quote attributed to the fixture appears verbatim in SKILL.md (whitespace-normalized check of 7 distinct fixture quotes: all OK). The one ellipsis quote in What's already right ('Collect every match … a match dropped here never reaches the report') abbreviates a real sentence at lines 28–29. Line locators 3, 4, 10, 24, 28–29, 33–34, 38–39 all hold. Non-fixture quotes (Manifests scenarios, 'use the defaults') are correctly not attributed to the fixture. Minor inaccuracy: the report states the description is '224 characters'; it is 220 code points (224 bytes — the two em dashes counted as 3 bytes each by awk length). Not load-bearing (both under A2's bound), no grade effect. Report's spot-check claim ('Spot-checked Findings 1–3') is backed by transcript [60] cat -n SKILL.md after Pass 2 returned.",
+    "runner_deviations_affecting_grades": [
+        "None affect a grade. Recorded for completeness: (1) The scope reply 'use the defaults' was supplied by the operator as a simulated user (runner instruction, record 1); the report correctly labels it as supplied scope ('Scope (from the user's \"use the defaults\")'). (2) The detail reviewer read prompt-criteria.md from the working repo (branch copy, last-synced 2026-10-09) rather than the installed plugin cache (1.1.1, last-synced 2026-08-19) that SKILL.md Step 6 names; the report states both dates. This does not change any grade and is in fact what made the group B predecessor rule testable — the installed 1.1.1 copy predates the rewrite. (3) `sleep 240` hit the Bash timeout; harmless. (4) report.md/run-notes.md written via heredoc instead of Write; harmless, outside the target bundle."
+    ],
+    "two_criteria_dates_note": "The report lists checklist 2026-10-09, shared B–G 2026-10-09 (working repo copy actually read), and the installed plugin copy 2026-08-19. The template's Criteria notes line is satisfied; the extra clause is permitted free-form content. No assertion's grade changes.",
+    "totals": {
+        "passed": 11,
+        "failed": 1,
+        "total": 12
+    },
+    "grader_summary": "11/12. Scenario assertions 1, 2, 4, 5 PASS; assertion 3 FAILS because the report never says managed settings can override the model pin — the detail reviewer's payload carried 'Managed settings can override the pin.' but the consolidating step dropped it, consistent with SKILL.md Step 7's conditional ('when group B produced findings'; here none did) but not with the eval's unconditional assertion and expected_output. All 7 universal assertions PASS. Group B selection was correct under the branch rule (B1–B7 + Sonnet 5.5 + Sonnet 5 predecessor; no Opus/Haiku/Fable), per the detail reviewer's COVERAGE and the Read of the branch's prompt-criteria.md; the report's one-line summary omits the predecessor paragraph. All five blocking findings are genuine, none depends on the branch change, all fixture quotes are verbatim; A8 and C1 overlap in subject but are not the same defect. The only factual slip is '224 characters' (220 code points / 224 bytes), non-load-bearing."
+}
